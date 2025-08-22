@@ -1,6 +1,6 @@
 import { useState, createError } from '#imports'
 import { EventType, emitBus } from 'eventbus'
-import { clientApi } from 'api'
+import { clientApi, adminApi } from 'api'
 import type Keycloak from 'keycloak-js'
 
 import type { UserDTO } from 'api/src/generate/client'
@@ -173,7 +173,9 @@ export function logout() {
  */
 async function getFeature() {
   const features = useFeature()
-  const { data } = await clientApi.api.getSystemfeatureGetfeatures()
+  const appPlatform = useAppPlatform()
+  const api = appPlatform.value === 'admin' ? adminApi : clientApi
+  const { data } = await api.api.getSystemfeatureGetfeatures()
   if (!data) throw new Error('get license feature error')
   features.value = data
 }

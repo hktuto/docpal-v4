@@ -99,7 +99,7 @@ onMounted(() => {
   <div class="pageContainer--padding smartFolder">
     <div class="smartFolder-left-header">{{ $t('smartFolder.searchQuery') }}</div>
     <div class="smartFolder-left-main">
-      <SearchGroupBar2 ref="filterRef"></SearchGroupBar2>
+      <SearchGroupBarFilter ref="filterRef"></SearchGroupBarFilter>
     </div>
     <div class="smartFolder-left-bottom">
       <div class="flex-x-center">

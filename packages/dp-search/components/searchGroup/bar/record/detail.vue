@@ -88,7 +88,7 @@ defineExpose({ filterRef, init })
         class="search-bar-detail__main--label"
         :placeholder="$t('dpTable_label')"
       ></el-input>
-      <SearchGroupBar2 ref="filterRef" @search="handleSearch"></SearchGroupBar2>
+      <SearchGroupBarFilter ref="filterRef" id="record" @search="handleSearch"></SearchGroupBarFilter>
     </div>
     <div v-show="mode === 'recordDetailAgg'" class="search-bar-detail__main">
       <SearchGroupBarAggregation

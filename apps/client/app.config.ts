@@ -15,6 +15,9 @@ export default defineAppConfig({
   // ],
   appMenu: [
     {
+      name: "client-work-panel"
+    },
+    {
       name: "client-browse"
     },
     {
@@ -22,7 +25,7 @@ export default defineAppConfig({
     },
     {
       label: "file_uploads",
-      icon: "hugeicons:cloud-upload",
+      icon: "uil:upload",
       children: [
         {
           name: "client-ai-upload"
@@ -34,7 +37,7 @@ export default defineAppConfig({
     },
     {
       label: "file_share_module",
-      icon: "lucide:file-symlink",
+      icon: "meteor-icons:share",
       children: [
         {
           name: "client-share"
@@ -72,16 +75,7 @@ export default defineAppConfig({
       ]
     },
     {
-      label: "adminMenu.dashboardManagement",
-      icon: "material-symbols:dashboard-customize-outline-rounded",
-      children: [
-        {
-          name: "client-work-panel"
-        },
-        {
-          name: "client-dashboard"
-        }
-      ]
+      name: "client-dashboard"
     },
     {
       name: "client-master-table"
@@ -99,7 +93,7 @@ export default defineAppConfig({
       name :"user-role-file-action"
     },
     {
-      name: "RBAC-page"
+      name: "RBAC-client-page"
     }
   ],
   adminMenu:[
@@ -120,16 +114,20 @@ export default defineAppConfig({
         },
         {
           name: 'RBAC-page'
-        }
+        },
+        {
+          name: 'admin-profile-setting'
+        },
+        {
+          name: 'admin-setting'
+        },
+        
       ]
     },
     {
-      name: 'admin-bulk-import'
-    },
-    {
       label: 'adminMenu.shareModule',
-      icon: 'lucide:file-symlink',
-      hoverIcon: 'lucide:file-symlink',
+      icon: 'lucide:share-2',
+      hoverIcon: 'lucide:share-2',
       children: [
         {
           name: 'admin-internal-share'
@@ -144,8 +142,8 @@ export default defineAppConfig({
     },
     {
       label: 'adminMenu.browse',
-      icon: 'lucide:file-pen',
-      hoverIcon: 'lucide:file-symlink',
+      icon: 'ri:folder-5-line',
+      hoverIcon: 'ri:folder-5-line',
       children: [
         {
           name: 'admin-smart-folder'
@@ -187,7 +185,7 @@ export default defineAppConfig({
     },
     {
       label: 'adminMenu.dashboardManagement',
-      icon: 'material-symbols:dashboard-customize-outline-rounded',
+      icon: 'carbon:dashboard',
       children: [
         {
           name: 'admin-dashboard'
@@ -204,9 +202,6 @@ export default defineAppConfig({
         {
           name: 'admin-document-template'
         },
-        // {
-        //   name: 'admin-doc-template-collaboration'
-        // },
         {
           name: 'admin-email-template'
         },
@@ -232,7 +227,7 @@ export default defineAppConfig({
     },
     {
       label: 'adminMenu.log',
-      icon: 'lucide:logs',
+      icon: 'dp-icon:log',
       children: [
         {
           name: 'admin-log-manage'
@@ -261,32 +256,15 @@ export default defineAppConfig({
         {
           name: 'admin-password-policy'
         },
-        {
-          name: 'admin-setting'
-        },
-        {
-          name: 'admin-profile-setting'
-        }
+        
       ]
-    },
-    {
-      name: 'admin-azure'
     },
     {
       name: 'admin-case-management'
     },
     {
-      name: 'admin-easy-form'
-    },
-    {
-      name: 'admin-calendar-setting'
-    },
-    {
       name: 'admin-unique-id-generator'
     },
-    // {
-    //   name: 'admin-doc-template-collaboration'
-    // },
     {
       name: 'admin-company-profile'
     },
@@ -294,7 +272,27 @@ export default defineAppConfig({
       name: 'admin-external-storage'
     },
     {
+      name: 'admin-bulk-import'
+    },
+    {
       name: 'admin-import-jobs'
-    }
+    },
+    
+    {
+      name: 'admin-azure'
+    },
+   
+    {
+      name: 'admin-easy-form'
+    },
+    {
+      name: 'admin-calendar-setting'
+    },
+    
+    // {
+    //   name: 'admin-doc-template-collaboration'
+    // },
+   
+    
   ]
 });

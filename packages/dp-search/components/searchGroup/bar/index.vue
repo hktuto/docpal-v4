@@ -11,7 +11,7 @@
       <SearchGroupBarRecentSearch ref="recentRef" @search="handleLogSearch" />
     </div>
     <div class="search-group-bar__content" v-show="mode === 'filter'">
-      <SearchGroupBar2 ref="filterRef" @search="handleSearch"></SearchGroupBar2>
+      <SearchGroupBarFilter ref="filterRef" @search="handleSearch"></SearchGroupBarFilter>
     </div>
     <div class="search-group-bar__content" v-show="mode === 'agg'">
       <SearchGroupBarAggregation ref="aggRef" :aggregation="aggregation" @filters="handleAgg"></SearchGroupBarAggregation>

@@ -25,8 +25,8 @@ export default defineAppConfig({
     },
     {
       label: 'adminMenu.shareModule',
-      icon: 'lucide:file-symlink',
-      hoverIcon: 'lucide:file-symlink',
+      icon: 'lucide:share-2',
+      hoverIcon: 'lucide:share-2',
       children: [
         {
           name: 'admin-internal-share'
@@ -41,8 +41,8 @@ export default defineAppConfig({
     },
     {
       label: 'adminMenu.browse',
-      icon: 'lucide:file-pen',
-      hoverIcon: 'lucide:file-symlink',
+      icon: 'ri:folder-5-line',
+      hoverIcon: 'ri:folder-5-line',
       children: [
         {
           name: 'admin-smart-folder'
@@ -84,7 +84,7 @@ export default defineAppConfig({
     },
     {
       label: 'adminMenu.dashboardManagement',
-      icon: 'material-symbols:dashboard-customize-outline-rounded',
+      icon: 'carbon:dashboard',
       children: [
         {
           name: 'admin-dashboard'

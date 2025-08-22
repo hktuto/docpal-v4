@@ -277,6 +277,11 @@
     "scanProfile": "Azure 設定檔",
     "scanType": "掃描類型"
   },
+  "bpmn": {
+    "addRule": "新增字段並設定規則",
+    "globalRuleTip": "修改或刪除規則會同步到所有任務節點，並清空操作歷史",
+    "updateRule": "編輯規則並同步到所有節點"
+  },
   "browse": {
     "confirmMoveFile": "確認將 <b>{source}</b> 移到 <b>{target}</b> 嗎？",
     "selectedItem": "{count} 個檔案",
@@ -2193,6 +2198,7 @@
       "number": {
         "maximum": "最大值",
         "minimum": "最小值",
+        "multipleOf": "倍數",
         "precision": "精度"
       },
       "object": {
@@ -2222,7 +2228,7 @@
     "onlyOneFileAllow": "僅允許一個文件"
   },
   "msg_confirmWhetherToCancel": "您要取消文件上傳嗎？",
-  "msg_confirmWhetherToDelete": "確認刪除該條項嗎？",
+  "msg_confirmWhetherToDelete": "{tip}確認刪除該條項嗎？",
   "msg_confirmWhetherToDeletes": "確認刪除已選項嗎？",
   "msg_confirmWhetherToDownloadJar": "是否下載最新jar包?",
   "msg_confirmWhetherToExecuteCommand": "是否執行命令",

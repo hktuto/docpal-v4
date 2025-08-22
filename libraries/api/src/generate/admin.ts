@@ -490,6 +490,8 @@ export interface Workflows {
     key?: string;
     /** Workflow Name */
     name?: string;
+    /** Workflow Template Key */
+    type?: string;
 }
 
 export interface ResultEventCalendarSetting {
@@ -518,6 +520,65 @@ export interface ResultVoid {
     data?: object;
     messageKey?: string;
     locale?: string;
+}
+
+/** Validation Rule Request DTO */
+export interface ValidationRuleRequestDTO {
+    /** Validation Rule ID */
+    id?: string;
+    /** Draft ID */
+    draftId: string;
+    /**
+     * Version number
+     * @format int32
+     */
+    version: number;
+    /** Node name */
+    nodeName: string;
+    /** JSON Schema validation rules */
+    validationRules: object;
+}
+
+export interface ResultValidationRuleResponseDTO {
+    result?: boolean;
+    /** @format int32 */
+    code?: number;
+    message?: string;
+    /** Validation Rule Response DTO */
+    data?: ValidationRuleResponseDTO;
+    messageKey?: string;
+    locale?: string;
+}
+
+/** Validation Rule Response DTO */
+export interface ValidationRuleResponseDTO {
+    /** Validation Rule ID */
+    id?: string;
+    /** Draft ID */
+    draftId?: string;
+    /**
+     * Version number
+     * @format int32
+     */
+    version?: number;
+    /** Node name */
+    nodeName?: string;
+    /** JSON Schema validation rules */
+    validationRules?: object;
+    /** Created by */
+    createdBy?: string;
+    /** Modified by */
+    modifiedBy?: string;
+    /**
+     * Created date
+     * @format date-time
+     */
+    createdDate?: string;
+    /**
+     * Modified date
+     * @format date-time
+     */
+    modifiedDate?: string;
 }
 
 export interface ActiveUserRequestDTO {
@@ -4082,7 +4143,6 @@ export interface ProcessDefinitionDraft {
     publishStatus?: string;
     latestVersion?: string;
     productionVersion?: string;
-    folderCabinetSettingId?: string;
     bytes?: string[];
     jsonValue?: string;
     createdBy?: string;
@@ -4091,7 +4151,6 @@ export interface ProcessDefinitionDraft {
     createdDate?: string;
     /** @format date-time */
     modifiedDate?: string;
-    folderCabinetSettingName?: string;
     latestVersionId?: string;
     productionVersionId?: string;
 }
@@ -4155,6 +4214,37 @@ export interface ResultPaginationDTOProcessDefinitionDraft {
     data?: PaginationDTOProcessDefinitionDraft;
     messageKey?: string;
     locale?: string;
+}
+
+export interface WorkflowDraftRequestDTO {
+    /** Process Definition Draft ID */
+    draftId?: string;
+    /** Whether draft */
+    isDraft?: boolean;
+    /** Process Definition Draft Key */
+    key?: string;
+    /** Process Definition Draft Name */
+    name?: string;
+    /** Process Definition Draft Status */
+    status?: string;
+    /** Publish Status of process definition */
+    publishStatus?: string;
+    /** Process Definition Name Space */
+    nameSpace?: string;
+    /** Process Definition Json */
+    jsonValue?: string;
+    /** @format binary */
+    file?: File;
+    /** Email Template List */
+    templateIds?: string[];
+    /** Folder Cabinet Setting ID */
+    folderCabinetSettingId?: string;
+    /**  Permissions [Start Or View] */
+    permissions?: Record<string, string>[];
+    /** Process Definition Version Id */
+    versionId?: string;
+    /** Process Definition Version Number */
+    versionNumber?: string;
 }
 
 export interface ConditionValidationReq {
@@ -8149,6 +8239,21 @@ export interface ResultListMTRelationResponseDTO {
     locale?: string;
 }
 
+export interface ResultListSelectOptionDTO {
+    result?: boolean;
+    /** @format int32 */
+    code?: number;
+    message?: string;
+    data?: SelectOptionDTO[];
+    messageKey?: string;
+    locale?: string;
+}
+
+export interface SelectOptionDTO {
+    value?: object;
+    label?: string;
+}
+
 export interface MTFieldTypeMapping {
     value?: string;
     label?: string;
@@ -8767,7 +8872,7 @@ export class HttpClient<SecurityDataType = unknown> {
     constructor({ securityWorker, secure, format, ...axiosConfig }: ApiConfig<SecurityDataType> = {}) {
         this.instance = axios.create({
             ...axiosConfig,
-            baseURL: axiosConfig.baseURL || "http://admin.sit-v2.wclsolution.com",
+            baseURL: axiosConfig.baseURL || "http://sit-v2.wclsolution.com",
         });
         this.secure = secure;
         this.format = format;
@@ -8862,7 +8967,7 @@ export class HttpClient<SecurityDataType = unknown> {
 /**
  * @title OpenAPI definition
  * @version v0
- * @baseUrl http://admin.sit-v2.wclsolution.com
+ * @baseUrl http://sit-v2.wclsolution.com
  */
 export class Admin<SecurityDataType extends unknown> extends HttpClient<SecurityDataType> {
     api = {
@@ -9530,7 +9635,7 @@ export class Admin<SecurityDataType extends unknown> extends HttpClient<Security
          *
          * @tags EventCalendarController
          * @name DeleteEventCalendarsSettingId
-         * @summary Delete Event Calendar Setting
+         * @summary Remove Event Calendar Setting
          * @request DELETE:/api/event/calendars/setting/{id}
          */
         deleteEventCalendarsSettingId: (id: string, params: RequestParams = {}) =>
@@ -9550,6 +9655,42 @@ export class Admin<SecurityDataType extends unknown> extends HttpClient<Security
         putWhatsappUpdateWhatsappSetting: (data: WhatsAppSettingDTO, params: RequestParams = {}) =>
             this.request<ResultVoid, Result | (ResultObject | Result | ResultString)>({
                 path: `/docpal/whatsapp/update_whatsapp_setting`,
+                method: "PUT",
+                body: data,
+                type: ContentType.Json,
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags ValidationRuleController
+         * @name GetValidationRulesVersiondraftid
+         * @summary Get validation rule by version:draftId
+         * @request GET:/api/docpal/validation-rules/{versionDraftId}
+         */
+        getValidationRulesVersiondraftid: (versionDraftId: string, params: RequestParams = {}) =>
+            this.request<ResultValidationRuleResponseDTO, Result | (ResultObject | Result | ResultString)>({
+                path: `/docpal/validation-rules/${versionDraftId}`,
+                method: "GET",
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags ValidationRuleController
+         * @name PutValidationRulesVersiondraftid
+         * @summary Update validation rule by version:draftId
+         * @request PUT:/api/docpal/validation-rules/{versionDraftId}
+         */
+        putValidationRulesVersiondraftid: (
+            versionDraftId: string,
+            data: ValidationRuleRequestDTO,
+            params: RequestParams = {},
+        ) =>
+            this.request<ResultValidationRuleResponseDTO, Result | (ResultObject | Result | ResultString)>({
+                path: `/docpal/validation-rules/${versionDraftId}`,
                 method: "PUT",
                 body: data,
                 type: ContentType.Json,
@@ -13597,6 +13738,27 @@ export class Admin<SecurityDataType extends unknown> extends HttpClient<Security
          * No description
          *
          * @tags Workflow Process Definition Controller
+         * @name PostWorkflowProcessDefinitionCopyCopiedkey
+         * @summary Copy workflow (process definition)
+         * @request POST:/api/docpal/workflow/process/definition/copy/{copiedKey}
+         */
+        postWorkflowProcessDefinitionCopyCopiedkey: (
+            copiedKey: string,
+            data: WorkflowDraftRequestDTO,
+            params: RequestParams = {},
+        ) =>
+            this.request<ResultProcessDefinitionResponseDTO, Result | (ResultObject | Result | ResultString)>({
+                path: `/docpal/workflow/process/definition/copy/${copiedKey}`,
+                method: "POST",
+                body: data,
+                type: ContentType.Json,
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags Workflow Process Definition Controller
          * @name PostWorkflowProcessDefinitionCopyFromFlowable
          * @summary Data Patch API
          * @request POST:/api/docpal/workflow/process/definition/copy/from/flowable
@@ -13810,6 +13972,23 @@ export class Admin<SecurityDataType extends unknown> extends HttpClient<Security
             this.request<ResultWatermarkSettingsDTO, Result | (ResultObject | Result | ResultString)>({
                 path: `/docpal/watermark/settings`,
                 method: "PATCH",
+                body: data,
+                type: ContentType.Json,
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags ValidationRuleController
+         * @name PostValidationRules
+         * @summary Create validation rule
+         * @request POST:/api/docpal/validation-rules
+         */
+        postValidationRules: (data: ValidationRuleRequestDTO, params: RequestParams = {}) =>
+            this.request<ResultValidationRuleResponseDTO, Result | (ResultObject | Result | ResultString)>({
+                path: `/docpal/validation-rules`,
+                method: "POST",
                 body: data,
                 type: ContentType.Json,
                 ...params,
@@ -17404,42 +17583,6 @@ export class Admin<SecurityDataType extends unknown> extends HttpClient<Security
         /**
          * No description
          *
-         * @tags Workflow Process Definition Controller
-         * @name DeleteWorkflowProcessDefinitionDraftDraftidCabinetSetting
-         * @summary Delete folder cabinet setting into the process definition
-         * @request DELETE:/api/docpal/workflow/process/definition/draft/{draftId}/cabinet/setting
-         */
-        deleteWorkflowProcessDefinitionDraftDraftidCabinetSetting: (draftId: string, params: RequestParams = {}) =>
-            this.request<ResultBoolean, Result | (ResultObject | Result | ResultString)>({
-                path: `/docpal/workflow/process/definition/draft/${draftId}/cabinet/setting`,
-                method: "DELETE",
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Workflow Process Definition Controller
-         * @name PatchWorkflowProcessDefinitionDraftDraftidCabinetSetting
-         * @summary Update folder cabinet setting into the process definition
-         * @request PATCH:/api/docpal/workflow/process/definition/draft/{draftId}/cabinet/setting
-         */
-        patchWorkflowProcessDefinitionDraftDraftidCabinetSetting: (
-            draftId: string,
-            data: ProcessDefinitionDraftRequestDTO,
-            params: RequestParams = {},
-        ) =>
-            this.request<ResultBoolean, Result | (ResultObject | Result | ResultString)>({
-                path: `/docpal/workflow/process/definition/draft/${draftId}/cabinet/setting`,
-                method: "PATCH",
-                body: data,
-                type: ContentType.Json,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
          * @tags Watermark Template
          * @name PatchWatermarkTemplatesDeprecate
          * @summary Modify watermark template and watermark setting list
@@ -18631,10 +18774,17 @@ export class Admin<SecurityDataType extends unknown> extends HttpClient<Security
          * @summary Get All Event Calendar Settings
          * @request GET:/api/event/calendars/settings
          */
-        getEventCalendarsSettings: (params: RequestParams = {}) =>
+        getEventCalendarsSettings: (
+            query: {
+                /** Event Calendar Setting */
+                eventCalendarSetting: EventCalendarSetting;
+            },
+            params: RequestParams = {},
+        ) =>
             this.request<ResultListEventCalendarSetting, Result | (ResultObject | Result | ResultString)>({
                 path: `/event/calendars/settings`,
                 method: "GET",
+                query: query,
                 ...params,
             }),
 
@@ -20397,6 +20547,20 @@ export class Admin<SecurityDataType extends unknown> extends HttpClient<Security
         getMasterTablesRelationId: (id: string, params: RequestParams = {}) =>
             this.request<ResultListMTRelationResponseDTO, Result | (ResultObject | Result | ResultString)>({
                 path: `/docpal/master/tables/relation/${id}`,
+                method: "GET",
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags MasterTableController
+         * @name GetMasterTablesRecordSortOptionTableid
+         * @request GET:/api/docpal/master/tables/record/sort-option/{tableId}
+         */
+        getMasterTablesRecordSortOptionTableid: (tableId: string, params: RequestParams = {}) =>
+            this.request<ResultListSelectOptionDTO, Result | (ResultObject | Result | ResultString)>({
+                path: `/docpal/master/tables/record/sort-option/${tableId}`,
                 method: "GET",
                 ...params,
             }),
