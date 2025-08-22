@@ -150,7 +150,7 @@ async function setData() {
       selectedCabinet.value = cabinetMapping[0].attr_id
       elementsIdList.value = cabinetMapping.map(item => item.attr_id)
     } else {
-      selectedCabinet.value = cabinetMapping.attr_id
+      selectedCabinet.value = (cabinetMapping as any).attr_id
     }
     await getCabinetDetail(selectedCabinet.value)
   } else {
