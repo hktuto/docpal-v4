@@ -2194,6 +2194,7 @@
       "number": {
         "maximum": "Max",
         "minimum": "Min",
+        "multipleOf": "MultipleOf",
         "precision": "Precision"
       },
       "object": {

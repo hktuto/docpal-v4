@@ -1347,19 +1347,19 @@ export interface EasyShareDocumentDetails {
     id?: number;
     path?: string;
     docId?: string;
+    readOnly?: boolean;
+    watermarkData?: WatermarkData;
+    createdBy?: string;
     watermarkTemplateId?: string;
     watermarkStatus?: string;
+    originFilePath?: string;
+    watermarkFile?: string;
+    previewFile?: string;
     watermarkedLocalPath?: string;
-    readOnly?: boolean;
 }
 
 /** EasyShare (Request) */
 export interface ShareRequestDTO {
-    /**
-     * Document ID List
-     * @deprecated
-     */
-    documentIdList?: string[];
     /** Password for shared document(s) */
     password?: string;
     /**
@@ -1369,13 +1369,16 @@ export interface ShareRequestDTO {
     tokenLiveInMinutes?: number;
     /** Document shared to a list of email */
     emailList?: string[];
-    /**
-     * Document watermark template relationship
-     * @deprecated
-     */
-    watermarkList?: Record<string, string>;
     /** The Bind Document List */
     documentList?: EasyShareDocumentDetails[];
+}
+
+export interface WatermarkData {
+    templateId?: string;
+    originFilePath?: string;
+    previewFile?: string;
+    status?: string;
+    watermarkFile?: string;
 }
 
 /** EasyShare */
@@ -1744,12 +1747,20 @@ export interface FormDesignDataDTO {
     params?: Record<string, object>;
 }
 
+export interface FCCreateDocsRequestDTO {
+    createDocsRequest?: FilingCreateDocRequestDTO[];
+    folderCabinetDataMapping?: Record<string, FCDataMappingDTO[]>;
+    variables?: Record<string, object>;
+    operator?: string;
+}
+
 /** folder cabinet data mapping DTO */
 export interface FCDataMappingDTO {
     folderCabinetId?: string;
     folderCabinetName?: string;
     formProperty?: string;
     metadata?: string;
+    file?: string;
 }
 
 export interface FilingCreateDocRequestDTO {
@@ -6586,46 +6597,18 @@ export interface ResultListNestedSearchLogRecord {
 }
 
 export interface EasyShareDocumentResponseDTO {
-    path?: string;
-    type?: string;
-    state?: string;
-    lockOwner?: string;
-    lockCreated?: string;
-    versionLabel?: string;
-    isCheckedOut?: string;
-    lastModified?: string;
-    contextParameters?: Record<string, object>;
-    changeToken?: string;
-    facets?: string[];
-    parentRef?: string;
+    id?: string;
     uid?: string;
     title?: string;
-    name?: string;
-    retainUntil?: string;
-    versionableId?: string;
-    watermarkTemplateId?: string;
-    watermarkStatus?: string;
-    readOnly?: boolean;
+    path?: string;
+    type?: string;
     fileExtension?: string;
     fileSize?: string;
-    id?: string;
-    lock?: string;
-    locked?: boolean;
-    checkedOut?: boolean;
-    record?: boolean;
-    underRetentionOrLegalHold?: boolean;
-    version?: boolean;
-    proxy?: boolean;
-    trashed?: boolean;
-    "entity-type"?: string;
-    repository?: string;
-    properties?: Record<string, object>;
-    isProxy?: boolean;
-    isTrashed?: boolean;
-    isRecord?: boolean;
-    hasLegalHold?: boolean;
-    isUnderRetentionOrLegalHold?: boolean;
-    isVersion?: boolean;
+    lastModified?: string;
+    readOnly?: boolean;
+    watermarkTemplateId?: string;
+    watermarkStatus?: string;
+    status?: string;
 }
 
 export interface ResultEasyShareDocumentResponseDTO {
@@ -7803,6 +7786,21 @@ export interface ResultListMTRelationResponseDTO {
     data?: MTRelationResponseDTO[];
     messageKey?: string;
     locale?: string;
+}
+
+export interface ResultListSelectOptionDTO {
+    result?: boolean;
+    /** @format int32 */
+    code?: number;
+    message?: string;
+    data?: SelectOptionDTO[];
+    messageKey?: string;
+    locale?: string;
+}
+
+export interface SelectOptionDTO {
+    value?: object;
+    label?: string;
 }
 
 export interface ResultListFormDesignResponseDTO {
@@ -11293,6 +11291,25 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
         postNuxeoRegisteredserverFormDesignSubmitData: (data: FormDesignDataDTO, params: RequestParams = {}) =>
             this.request<ResultBoolean, ResultString | (ResultString | Result)>({
                 path: `/nuxeo/registeredServer/form/design/submit/data`,
+                method: "POST",
+                body: data,
+                type: ContentType.Json,
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags Document (Nuxeo)
+         * @name PostNuxeoRegisteredserverFoldercabinetCreateDocuments
+         * @request POST:/api/nuxeo/registeredServer/folderCabinet/create/documents
+         */
+        postNuxeoRegisteredserverFoldercabinetCreateDocuments: (
+            data: FCCreateDocsRequestDTO,
+            params: RequestParams = {},
+        ) =>
+            this.request<ResultListDocumentDTO, ResultString | (ResultString | Result)>({
+                path: `/nuxeo/registeredServer/folderCabinet/create/documents`,
                 method: "POST",
                 body: data,
                 type: ContentType.Json,
@@ -18447,6 +18464,7 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
          *
          * @tags Public (Nuxeo)
          * @name GetNuxeoPublicDocument
+         * @summary use token to get document path from DB and take document.
          * @request GET:/api/nuxeo/public/document
          */
         getNuxeoPublicDocument: (
@@ -18467,6 +18485,7 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
          *
          * @tags Public (Nuxeo)
          * @name GetNuxeoPublicShareDocument
+         * @summary use token to get document path from DB and take document.
          * @request GET:/api/nuxeo/public/share/document
          */
         getNuxeoPublicShareDocument: (
@@ -20789,6 +20808,20 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
          * No description
          *
          * @tags MasterTableController
+         * @name GetMasterTablesRecordSortOptionTableid
+         * @request GET:/api/docpal/master/tables/record/sort-option/{tableId}
+         */
+        getMasterTablesRecordSortOptionTableid: (tableId: string, params: RequestParams = {}) =>
+            this.request<ResultListSelectOptionDTO, ResultString | (ResultString | Result)>({
+                path: `/docpal/master/tables/record/sort-option/${tableId}`,
+                method: "GET",
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags MasterTableController
          * @name GetMasterTablesNameName
          * @summary Obtain structure of master table through table label
          * @request GET:/api/docpal/master/tables/name/{name}
@@ -22340,6 +22373,21 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
         deleteNuxeoDocumentDocumentid: (documentId: string, params: RequestParams = {}) =>
             this.request<ResultBoolean, ResultString | (ResultString | Result)>({
                 path: `/nuxeo/document/${documentId}`,
+                method: "DELETE",
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags Document (Nuxeo)
+         * @name DeleteNuxeoDocumentTrashDocumentid
+         * @summary Move a document to trash list
+         * @request DELETE:/api/nuxeo/document/trash/{documentId}
+         */
+        deleteNuxeoDocumentTrashDocumentid: (documentId: string, params: RequestParams = {}) =>
+            this.request<ResultBoolean, ResultString | (ResultString | Result)>({
+                path: `/nuxeo/document/trash/${documentId}`,
                 method: "DELETE",
                 ...params,
             }),
