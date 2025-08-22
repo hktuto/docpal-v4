@@ -1,5 +1,5 @@
 <template>
-  <div class="pageContent" v-if="shareState">
+  <div class="sharePageContent" v-if="shareState">
     <template v-if="shareState === 'list'">
       <main v-loading="state.loading">
         <ShareTable ref="tableRef" :tableData="state.shareList">
@@ -79,8 +79,8 @@ onMounted(() => {
 </script>
 
 <style lang="scss" scoped>
-.pageContent {
-  height: 100%;
+.sharePageContent {
+  height: 100vh;
   overflow: hidden;
 }
 
