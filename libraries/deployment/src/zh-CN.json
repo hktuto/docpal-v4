@@ -2193,6 +2193,7 @@
       "number": {
         "maximum": "最大值",
         "minimum": "最小值",
+        "multipleOf": "倍数",
         "precision": "精度"
       },
       "object": {
