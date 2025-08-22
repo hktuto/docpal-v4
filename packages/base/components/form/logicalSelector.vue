@@ -1,16 +1,14 @@
 <template>
   <div class="search-group-bar-filter" v-if="formData && formData.resourceRules">
     <div v-for="(rule, index) in formData.resourceRules" :key="'rule' + index">
-      <ElSelect
+      <el-select-v2
         class="attribute-row"
         v-model="rule.attribute"
-        :placeholder="$t('render.hint.selectPlaceholder')"
-        clearable
+        :options="resourceAttributes"
         filterable
+        :placeholder="$t('render.hint.selectPlaceholder')"
         @change="(val: string) => onResourceAttributeChange(rule, val)"
-      >
-        <ElOption v-for="attr in resourceAttributes" :key="attr.value" :label="attr.label" :value="attr.value" />
-      </ElSelect>
+      />
       <div v-if="rule.type === 'number'" class="filter-row">
         <ElSelect v-model="rule.condition" :placeholder="$t('dhList.condition')">
           <ElOption v-for="cond in numberConditions" :key="cond.value" :label="cond.label" :value="cond.value" />
@@ -24,25 +22,27 @@
           <ElInput v-model.number="rule.value[0]" :placeholder="$t('dataField.apiFieldValue')" />
         </template>
       </div>
-      <div v-else-if="rule.type === 'string'" class="filter-row">
+      <div v-else-if="rule.type === 'string' || rule.type === 'boolean'" class="filter-row">
         <ElSelect v-model="rule.condition" :placeholder="$t('dhList.condition')">
           <ElOption v-for="cond in stringConditions" :key="cond.value" :label="cond.label" :value="cond.value" />
         </ElSelect>
-        <ElInput v-model="rule.value[0]" :placeholder="$t('dataField.apiFieldValue')" />
+        <ElInput v-if="rule.type === 'string'" v-model="rule.value[0]" :placeholder="$t('dataField.apiFieldValue')" />
+        <ElSwitch v-else v-model="rule.value[0]" />
       </div>
-      <div v-else-if="rule.type === 'select'" class="filter-row">
+      <div v-else-if="rule.type === 'select' || rule.type === 'select-dynamic'" class="filter-row">
         <ElSelect v-model="rule.condition" :placeholder="$t('dhList.condition')">
           <ElOption v-for="cond in stringConditions" :key="cond.value" :label="cond.label" :value="cond.value" />
         </ElSelect>
-        <ElSelect v-model="rule.value[0]" :placeholder="$t('dataField.apiFieldValue')" clearable filterable>
+        <ElSelect v-if="rule.type === 'select'" v-model="rule.value[0]" :placeholder="$t('dataField.apiFieldValue')" clearable filterable>
           <ElOption
-            v-for="opt in resourceAttributes.find((a) => a.value === rule.attribute)?.options || []"
+            v-for="opt in rule.options"
             :key="opt.value"
             :label="opt.label"
             :value="opt.value"
             :disabled="opt.disabled"
           />
         </ElSelect>
+        <el-select-v2 v-else v-model="rule.value[0]" :options="rule.selectOptions" filterable clearable :placeholder="$t('dataField.apiFieldValue')" />
       </div>
       <el-divider v-if="index !== formData.resourceRules.length - 1 || formData.resourceRules.length > 1" content-position="left">
         <template v-if="index !== formData.resourceRules.length - 1">
@@ -68,6 +68,7 @@
   </div>
 </template>
 <script lang="ts" setup>
+import { getMasterTableOptions, getUserList, getUserGroupList, getRoleList } from '../meta/metadata'
 import { ArrowUp } from '@element-plus/icons-vue'
 const props = defineProps({
   isOr: {
@@ -101,14 +102,45 @@ const stringConditions = [
 ]
 const selectConditions = stringConditions
 // 监听 attribute 变化，自动设置 type
-function onResourceAttributeChange(rule: any, attrValue: string) {
+async function onResourceAttributeChange(rule: any, attrValue: string) {
   const attr = props.resourceAttributes.find((a) => a.value === attrValue)
+  if (attr?.selectConfig) {
+    rule.selectOptions = await getSelectOptions(attr?.selectConfig)
+    rule.selectConfig = attr?.selectConfig
+  }
   rule.type = attr?.type || ''
   rule.condition = 'eq'
-  rule.value = []
+  rule.value = attr?.type === 'boolean' ? false : []
   emits('update:formData', props.formData)
 }
-
+async function getSelectOptions(selectConfig: any) {
+  if (selectConfig.type === 'user') {
+    return await getUserList()
+  } else if (selectConfig.type === 'user_role_user_group') {
+     const options = []
+    if (selectConfig.allow !== 'USER_GROUP') {
+      options.push({
+        label: $t('user_role'),
+        value: 'role____',
+        options: await getRoleList()
+      })
+    }
+    if (selectConfig.allow !== 'USER_ROLE') {
+      options.push({
+        label: $t('user_group'),
+        value: 'group____',
+        options: await getUserGroupList()
+      })
+    }
+    return options.length > 1 ? options : options[0].options
+  } else if (selectConfig.type === 'mastertable') {
+    return await getMasterTableOptions({
+      masterTableName: selectConfig.masterTableName,
+      displayColumn: selectConfig.displayColumn,
+      valueColumn: selectConfig.valueColumn
+    })
+  }
+}
 // 添加/删除规则
 function addResourceRule() {
   const newRules = [...props.formData.resourceRules, { attribute: '', type: 'string', condition: 'eq', value: [] }]

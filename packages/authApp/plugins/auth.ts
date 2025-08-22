@@ -10,7 +10,8 @@ export default defineNuxtPlugin(async (nuxtApp) => {
   nuxtApp.hook('app:created', async () => {
     const publicPage = usePublicPageState();
     // check is path public
-    if (publicPage.value.includes(window.location.pathname)) {
+    if (publicPage.value.includes(window.location.pathname) || window.location.pathname.startsWith('/public')) {
+      console.log("publicPage", publicPage.value)
       return;
     }
     const { data } = await clientApi.api.getRelationGetkeycloakproperty();
@@ -30,7 +31,7 @@ export default defineNuxtPlugin(async (nuxtApp) => {
   nuxtApp.hook('app:mounted', async () => {
     const publicPage = usePublicPageState();
     // check is path public
-    if (publicPage.value.includes(window.location.pathname)) {
+    if (publicPage.value.includes(window.location.pathname) || window.location.pathname.startsWith('/public')) {
       return;
     }
     const isSuperAdmin = sessionStorage.getItem('superAdmin');

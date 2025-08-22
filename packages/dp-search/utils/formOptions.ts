@@ -1,4 +1,4 @@
-import { clientApi, adminApi } from 'api'
+import { globalApi, clientApi,adminApi } from 'api'
 
 export const conditionType = [
   { label: 'authors', value: 'authors' },
@@ -100,19 +100,14 @@ export function sortListWithI18n(list: any, prefix = '') {
 }
 export const getMetadataOptions = async () => {
   try {
-    const {
-      public: { platform }
-    } = useRuntimeConfig()
-    /// TODO: depecate in next version
-    let globalType
+    let metadataOpts
+    const platform = window.location.pathname.includes('admin') ? 'admin' : 'client'
     if (platform === 'admin') {
-      const { data }: any = await adminApi.api.getDocpaltypeSettingsMetadataDocumenttype('GlobalFile')
-      globalType = data.keywords
+      metadataOpts = await adminApi.api.getDocpaltypeSettingsMetadataV2QueryCache().then((res: any) => res.data)
     } else {
-      const { data } = await clientApi.api.getNuxeoTypesDocumenttype('GlobalFile')
-      globalType = data?.keywords
+      metadataOpts = await clientApi.api.getTypesMetadataV2QueryCache().then((res: any) => res.data)
     }
-    const optionList = globalType.map((item: any) => ({
+    const optionList = metadataOpts.map((item: any) => ({
       ...item,
       label: item.name,
       value: item.name
@@ -122,8 +117,9 @@ export const getMetadataOptions = async () => {
     return []
   }
 }
+
 export const getGroupList = async () => {
-  const { data } = (await clientApi.api.postNuxeoIdentityGroups()) as any
+  const { data } = (await globalApi.api.postNuxeoIdentityGroups()) as any
   const optionList = data.map((item: any) => ({
     ...item,
     label: item.name,

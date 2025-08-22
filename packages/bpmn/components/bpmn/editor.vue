@@ -24,10 +24,18 @@ const props = defineProps<{
   currentVersionId: string
   readonly: boolean
   processKey: string
+  id: string
 }>()
 
 const { options = {}, workflowData, currentVersion, readonly } = toRefs(props)
-
+const workflowDetail = inject<{saveDraft:()=>void}>('workflowDetail')
+const BpmnRule = useBpmnRule({
+  versionDraftId: props.currentVersionId,
+  version: props.currentVersion.replace('V', ''),
+  taskName: 'global',
+  draftId: props.id,
+  workflowDetail
+})
 const graphOptions = ref({})
 const bpmn = ref('')
 function init(bpmnXml: string, x6Json?: any) {
@@ -383,7 +391,12 @@ provide(EDITOR_PROVIDER, {
   copyObj,
   copyKey,
   conditionSetting,
-  readonly
+  readonly,
+  currentVersionId: props.currentVersionId,
+  processKey: props.processKey,
+  currentVersion: props.currentVersion,
+  draftId: props.id,
+  BpmnRule
 })
 
 defineExpose({

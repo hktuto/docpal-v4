@@ -17,7 +17,7 @@ export const routeSmartFolderDetail  = function(params: any){
     name: "admin-smart-folder-versions-" + params.id,
     icon: 'fluent:folder-people-24-regular',
     label: params.name,
-    component: 'LazySmartFolderDetail',
+    component: 'LazyAdminSmartFolderDetail',
     props: {
       id: params.id,
     }

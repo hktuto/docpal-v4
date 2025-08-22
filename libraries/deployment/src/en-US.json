@@ -277,6 +277,11 @@
     "scanProfile": "Azure Scan Profile",
     "scanType": "Scan Type"
   },
+  "bpmn": {
+    "addRule": "Add fields and set rules",
+    "globalRuleTip": "Modifying or deleting a rule will be synchronized to all task nodes and the operation history will be cleared",
+    "updateRule": "Edit rule and synchronize it to all nodes"
+  },
   "browse": {
     "confirmMoveFile": "Confirm to move <b>{source}</b> to <b>{target}</b> ?",
     "selectedItem": "Selected {count} File(s)",
@@ -2194,6 +2199,7 @@
       "number": {
         "maximum": "Max",
         "minimum": "Min",
+        "multipleOf": "MultipleOf",
         "precision": "Precision"
       },
       "object": {
@@ -2223,7 +2229,7 @@
     "onlyOneFileAllow": "Only one file allow"
   },
   "msg_confirmWhetherToCancel": "Would you like to cancel the file upload?",
-  "msg_confirmWhetherToDelete": "Confirm to delete the item?",
+  "msg_confirmWhetherToDelete": "{tip}Confirm to delete the item?",
   "msg_confirmWhetherToDeletes": "Confirm to delete the items?",
   "msg_confirmWhetherToDownloadJar": "Whether to download the latest jar package?",
   "msg_confirmWhetherToExecuteCommand": "Whether to execute the command",

@@ -8,8 +8,8 @@ export default defineAppConfig({
       id: 'admin-password-policy',
       name: 'admin-password-policy',
       label: 'adminMenu.passwordPolicy',
-      icon: 'tdesign:user-password',
-      hoverIcon: 'tdesign:user-password',
+      icon: 'dp-icon:key',
+      hoverIcon: 'dp-icon:key',
       component: 'LazyPasswordPolicyPage',
       props: {}
     }

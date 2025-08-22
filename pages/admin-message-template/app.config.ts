@@ -8,8 +8,8 @@ export default defineAppConfig({
       id:"admin-message-template",
       name: 'admin-message-template',
       label: "adminMenu.messageTemplate",
-      icon: "lucide:message-circle-code",
-      hoverIcon: "lucide:message-circle-code",
+      icon: "dp-icon:chat",
+      hoverIcon: "dp-icon:chat",
       component: "MessageTemplateList",
       props:{
         id:""
