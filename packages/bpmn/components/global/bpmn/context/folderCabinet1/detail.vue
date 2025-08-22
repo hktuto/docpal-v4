@@ -16,7 +16,7 @@ if (!editorProvider) {
 function filterOption(item: any) {
   const set: any = []
   field.value.forEach((i: any) => {
-    if (!i.isFolder) {
+    if (!i.attr_isFolder) {
       i.field.forEach((f: any) => {
         if (f.attr_file && item.attr_file !== f.attr_file && f.attr_formProperty !== '') {
           set.push(f.attr_formProperty)
@@ -77,6 +77,10 @@ function handleCheckBox(status: boolean, item: any) {
         break
       }
       field.value[i].check = false
+      // 解除數據綁定
+      field.value[i].field.forEach((f: any) => {
+        f.attr_formProperty = undefined
+      })
     }
   }
 
@@ -100,6 +104,10 @@ function jsonParse(str: any) {
     return str
   }
 }
+
+function setFieldsList(item: any) {
+  return item.attr_isFolder ? item.field : item.field.slice(0, item.field.length - 1)
+}
 </script>
 
 <template>
@@ -109,7 +117,8 @@ function jsonParse(str: any) {
         <template #title>
           <div class="collapseTitleContainer">
             <div class="indentItem" v-for="i in item.attr_level" :key="i"></div>
-            <el-checkbox @click.stop v-model="item.check" @change="(value: boolean) => handleCheckBox(value,item)" />
+            <el-checkbox @click.stop :disabled="editorProvider.readonly.value" v-model="item.check"
+                         @change="(value: boolean) => handleCheckBox(value,item)" />
             <SvgIcon :src="item.attr_isFolder?'/icons/folder-general.svg':'/icons/file-general.svg'" />
             {{ item.attr_name }}
           </div>
@@ -118,7 +127,7 @@ function jsonParse(str: any) {
           <div class="indentItem" v-for="i in item.attr_level" :key="i"></div>
           <div style="width: 100%">
             <div class="content">
-              <ElForm label-position="top" @sumit.stop>
+              <ElForm label-position="top" @sumit.stop :disabled="!item.check">
                 <div>
                   Folder name rule:
                   <template v-for="(i, index) in getLabelList(item.rule)" :key="index">
@@ -126,7 +135,7 @@ function jsonParse(str: any) {
                     <template v-if="index !== getLabelList(item.rule).length - 1"> -</template>
                   </template>
                 </div>
-                <ElFormItem v-for="metaField in item.field.slice(0, item.field.length - 1)" :key="metaField.metadata"
+                <ElFormItem v-for="metaField in setFieldsList(item)" :key="metaField.metadata"
                             :label="metaField.attr_metadata">
                   <ElSelect v-model="metaField.attr_formProperty" :disabled="editorProvider.readonly.value" clearable
                             @change="handleUpdateField(item)">
@@ -135,9 +144,9 @@ function jsonParse(str: any) {
                   </ElSelect>
                 </ElFormItem>
 
-                <el-divider v-if="!item.isFolder" />
+                <el-divider v-if="!item.attr_isFolder" />
 
-                <ElFormItem v-if="!item.isFolder" label="File">
+                <ElFormItem v-if="!item.attr_isFolder" label="File">
                   <ElSelect v-model="item.field[item.field.length - 1].attr_formProperty" clearable
                             :disabled="editorProvider.readonly.value" @change="handleUpdateField(item)">
                     <ElOption v-for="option in fileFieldOption(item.field[item.field.length - 1])"

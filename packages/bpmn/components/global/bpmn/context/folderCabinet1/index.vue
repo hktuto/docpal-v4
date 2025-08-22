@@ -121,10 +121,16 @@ async function getCabinetDetail(id: string) {
   } else {
     form.value = arr.map(item => {
       const field = item.displayMeta.map((meta: any) => ({
-        attr_ormProperty: '',
+        attr_formProperty: '',
         attr_metadata: meta
       }))
 
+      if (!item.folder) {
+        field.push({
+          attr_formProperty: '',
+          attr_file: item.id
+        })
+      }
       return {
         attr_id: item.id,
         attr_name: item.label,
@@ -146,7 +152,7 @@ async function setData() {
   const processData = processNode.getData().data
   if (processData.extensionElements && processData.extensionElements['flowable:folderCabinetMapping']) {
     const cabinetMapping: object = processData.extensionElements['flowable:folderCabinetMapping']
-    if (Array.isArray(cabinetMapping)) {
+    if (Array.isArray(cabinetMapping) && cabinetMapping.length > 0) {
       selectedCabinet.value = cabinetMapping[0].attr_id
       elementsIdList.value = cabinetMapping.map(item => item.attr_id)
     } else {
