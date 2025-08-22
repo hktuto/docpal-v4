@@ -277,6 +277,11 @@
     "scanProfile": "Azure 扫描類",
     "scanType": "扫描类型"
   },
+  "bpmn": {
+    "addRule": "添加字段并设置规则",
+    "globalRuleTip": "修改或删除规则会同步到所有任务节点，并清空操作历史",
+    "updateRule": "编辑规则并同步到所有节点"
+  },
   "browse": {
     "confirmMoveFile": "确认将 <b>{source}</b> 移动到<b>{target}</b> 吗？",
     "selectedItem": "{count} 个文件",
@@ -2223,7 +2228,7 @@
     "onlyOneFileAllow": "仅允许一个文件"
   },
   "msg_confirmWhetherToCancel": "您要取消文件上传吗？",
-  "msg_confirmWhetherToDelete": "确认删除该条项吗？",
+  "msg_confirmWhetherToDelete": "{tip}确认删除该条项吗？",
   "msg_confirmWhetherToDeletes": "确认删除已选项吗？",
   "msg_confirmWhetherToDownloadJar": "是否下载最新jar包?",
   "msg_confirmWhetherToExecuteCommand": "是否执行命令",
