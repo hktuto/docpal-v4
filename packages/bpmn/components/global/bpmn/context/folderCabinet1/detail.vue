@@ -8,6 +8,11 @@ const emits = defineEmits(['update:fields', 'update:fieldData'])
 const activeName = ref('')
 const { t } = useI18n()
 
+const editorProvider = inject(EDITOR_PROVIDER)
+if (!editorProvider) {
+  throw createError('editor provider not found')
+}
+
 function filterOption(item: any) {
   const set: any = []
   field.value.forEach((i: any) => {
@@ -26,9 +31,28 @@ function filterOption(item: any) {
   return filteredList
 }
 
-const editorProvider = inject(EDITOR_PROVIDER)
-if (!editorProvider) {
-  throw createError('editor provider not found')
+function fileFieldOption(item: any) {
+  const set = new Set()
+
+  // 篩選沒有使用是的Field
+  field.value.forEach((treeItem: any) => {
+    treeItem.field.forEach((f: any) => {
+      if (f.attr_formProperty && item.attr_file !== f.attr_file && f.attr_formProperty !== '') {
+        set.add(f.attr_formProperty)
+      }
+    })
+  })
+
+  if (props.allField) {
+    const filteredData = Object.fromEntries(
+      Object.entries(props.allField).filter(([key, value]) => value.attr_type === 'string')
+    )
+    set.forEach((property: string) => {
+      delete filteredData[property]
+    })
+    return filteredData
+  }
+  return {}
 }
 
 function handleCheckBox(status: boolean, item: any) {
@@ -116,7 +140,7 @@ function jsonParse(str: any) {
                 <ElFormItem v-if="!item.isFolder" label="File">
                   <ElSelect v-model="item.field[item.field.length - 1].attr_formProperty" clearable
                             :disabled="editorProvider.readonly.value" @change="handleUpdateField(item)">
-                    <ElOption v-for="option in filterOption(item.field[item.field.length - 1])"
+                    <ElOption v-for="option in fileFieldOption(item.field[item.field.length - 1])"
                               :key="option.attr_id" :label="option.attr_name" :value="option.attr_id" />
                   </ElSelect>
                 </ElFormItem>
