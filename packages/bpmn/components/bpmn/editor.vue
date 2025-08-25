@@ -148,10 +148,6 @@ function openInfo() {
   sidebarRef.value.openInfo()
 }
 
-function openCabinet() {
-  sidebarRef.value.openFolderCabinet()
-}
-
 function openPermission() {
   sidebarRef.value.openPermission()
 }
@@ -414,7 +410,6 @@ defineExpose({
           <BpmnHistory />
           <BpmnInfo @click="openInfo" />
           <BpmnPermission @click="openPermission" />
-          <BpmnFolderCabinet @click="openCabinet" />
         </div>
         <div v-if="!readonly" class="group">
           <div v-for="(item, index) in dropActionsItems" :key="index" class="icon handlers" @mousedown.native="(ev) => itemDrop(item, ev)">
