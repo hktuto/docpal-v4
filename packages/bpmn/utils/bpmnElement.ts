@@ -283,7 +283,7 @@ export const bpmnElement: BpmnElement = {
     clickHandler: () => {
     },
     contextMenuComponent: (item: any) => {
-      if (item && item['attr_docpal:formType'] && item['attr_docpal:formType'] === 'signature') {
+      if (item && item['attr_docpal:formType'] === 'signature') {
         return 'LazyBpmnContextSignature'
       }
       return 'LazyBpmnContextUserTask'

@@ -26,11 +26,16 @@ const templateVariables = ref<any>([]);
 
 const allFieldOptions = computed(() => {
     if(!graphProvider.allFormField.value) return []
-    return Object.keys(graphProvider.allFormField.value).map((key) => {
-    return {
-      label: graphProvider.allFormField.value[key].attr_name,
-      value: '${variables:get(' + graphProvider.allFormField.value[key].attr_id + ')}'
-    }
+
+    const allField = Object.fromEntries(
+      Object.entries(graphProvider.allFormField.value).filter(([key, value]) => value.attr_type === 'string')
+    )
+
+    return Object.keys(allField).map((key) => {
+      return {
+        label: graphProvider.allFormField.value[key].attr_name,
+        value: '${variables:get(' + graphProvider.allFormField.value[key].attr_id + ')}'
+      }
   })
 }); 
 
