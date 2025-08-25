@@ -28,7 +28,6 @@ export const useMetadata = () => {
   let count = 0
 
   const initVformVariableList = async (type: string, initOptions: any) => {
-    console.log(type, initOptions)
     if (!initOptions) initOptions = {}
     if (!initOptions.hiddenFields) initOptions.hiddenFields = []
     if (!initOptions.requiredFields) initOptions.requiredFields = []
@@ -267,7 +266,6 @@ export const useMetadata = () => {
     return `${prefix}_${random}${count++}`
   }
   function vFormWidgetListDecorator(variableList: VariableItem[]) {
-    console.log(variableList)
     const widgetList: WidgetItem[] = []
     variableList.forEach((item: VariableItem, index: number) => {
       const id = generateId(item.type)
