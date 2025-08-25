@@ -42,18 +42,18 @@ async function getGroupList() {
   }, [])
 }
 async function getRoleList() {
-  // try {
-    const data = await $api.get('/docpal/acl/role/root').then((res) => res.data)
+  try {
+    const data = await $api.get('/docpal/acl/role/root').then((res) => res.data.data)
     const roleList = data ? makeFlapRoleList([data]) : []
     return roleList.map((item) => ({
       label: item.name,
       value: item.id,
       type: 'role'
     }))
-  // } catch (error) {
-  //   console.error(error)
-  //   return []
-  // }
+  } catch (error) {
+    console.error(error)
+    return []
+  }
 }
 
 function makeFlapRoleList(data, roleList = []) {

@@ -74,7 +74,6 @@ async function autoGenerate() {
     return
   }
   const backendMetadataList = turnWorkflowRuleToBackendMetadata(props.fieldListApi.data)
-  console.log({backendMetadataList})
   const metadataVariableList = await initMetadataVformOptions(backendMetadataList, false)
   const variableList = getVFormVariableListByMetadata(metadataVariableList)
   const widgetList = vFormWidgetListDecorator(variableList)
