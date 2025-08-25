@@ -16,7 +16,7 @@ export async function initMasterTableOpts() {
   masterTableOpts.value = data.entryList.map((item: any) => ({ label: item.name, value: item.name, id: item.id }))
 }
 export async function initMetadataOpts() {
-  if (metadataOpts.value.length > 0) return metadataOpts.value
+  // if (metadataOpts.value.length > 0) return metadataOpts.value
   const data = await adminApi.api
     .getDocpaltypeSettingsMetadataV2QueryCache()
     .then((res: any) => res.data)
