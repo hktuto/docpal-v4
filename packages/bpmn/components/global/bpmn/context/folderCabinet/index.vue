@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import type { Node } from '@antv/x6'
-import { adminApi } from 'api'
+import { adminApi, clientApi } from 'api'
 
 const { node } = defineProps<{
   node: Node
@@ -23,12 +23,35 @@ const selectedCabinet = ref()
 const form = ref<any[]>([])
 
 async function loopChildren(all: any, item: any, level = 0) {
-  const response = await adminApi.api.postDocpaltypeSettingsDocpalTypeV2MetadataQuery({ docpalTypeName: item.documentType })
-  const meta = response.data
+  let { data } = await clientApi.api.getTypesMetadataGenerateJsonSchemaDocpaltypename(item.documentType, {
+    headers: { noThrowError: 'true' }
+  })
+  const displayMata = [
+    {
+      key: 'folderCabinetId',
+      maxLength: 255,
+      type: 'string',
+      validationName: 'text'
+    },
+    {
+      key: 'fc:docTitle',
+      maxLength: 255,
+      type: 'string',
+      validationName: 'text'
+    }
+  ]
+
+  let propertiesArray: any = []
+  if (data && data.properties) {
+    propertiesArray = Object.entries(data.properties).length > 0
+      ? Object.entries(data.properties).map(([key, value]) => ({ key, ...value }))
+      : []
+  }
+
   all.push({
     ...item,
     level,
-    displayMeta: (meta && meta.metadataList?.length > 0) ? ['folderCabinetId', 'fc:docTitle', ...meta.metadataList?.map((item: any) => item.name)] : ['folderCabinetId', 'fc:docTitle']
+    displayMeta: [...displayMata, ...propertiesArray]
   })
 
   if (item.children) {
@@ -81,12 +104,14 @@ async function getCabinetDetail(id: string) {
           const formItem = bpmnItem.field.find((item: any) => item.attr_metadata === meta)
           allMeta.push({
             attr_formProperty: formItem ? formItem.attr_formProperty : '',
-            attr_metadata: meta
+            attr_metadata: meta.key,
+            attr_metaDataType: meta.type
           })
         } else {
           allMeta.push({
             attr_formProperty: '',
-            attr_metadata: meta
+            attr_metadata: meta.key,
+            attr_metaDataType: meta.type
           })
         }
         return allMeta
@@ -97,12 +122,14 @@ async function getCabinetDetail(id: string) {
           const formItem = bpmnItem.field.find((fieldItem: any) => fieldItem.attr_file && fieldItem.attr_file === item.id)
           fields.push({
             attr_formProperty: formItem ? formItem.attr_formProperty : '',
-            attr_file: item.id
+            attr_file: item.id,
+            attr_metaDataType: 'string'
           })
         } else {
           fields.push({
             attr_formProperty: '',
-            attr_file: item.id
+            attr_file: item.id,
+            attr_metaDataType: 'string'
           })
         }
       }
@@ -122,13 +149,15 @@ async function getCabinetDetail(id: string) {
     form.value = arr.map(item => {
       const field = item.displayMeta.map((meta: any) => ({
         attr_formProperty: '',
-        attr_metadata: meta
+        attr_metadata: meta.key,
+        attr_metaDataType: meta.type
       }))
 
       if (!item.folder) {
         field.push({
           attr_formProperty: '',
-          attr_file: item.id
+          attr_file: item.id,
+          attr_metaDataType: 'string'
         })
       }
       return {
