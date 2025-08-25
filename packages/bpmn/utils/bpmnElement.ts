@@ -473,7 +473,7 @@ export const bpmnElement: BpmnElement = {
             color = '#7B61FF'
             break
           case '${documentFolderCabinetDelegate}':
-            icon = 'lucide:folder-closed'
+            icon = '/bpmn/icons/browse.svg'
             type = 'Folder Cabinet'
             color = '#7B61FF'
             break
@@ -874,7 +874,7 @@ export const bpmnElement: BpmnElement = {
         })
       },
       {
-        icon: 'bpmn:folder-cabinet',
+        icon: 'bpmn:browse',
         label: 'Folder Cabinet',
         group: '',
         order: 0,
@@ -948,7 +948,7 @@ export const bpmnElement: BpmnElement = {
         case '${pdfFormWriter}':
           return 'LazyBpmnContextPDFWriter'
         case '${documentFolderCabinetDelegate}':
-          return 'LazyBpmnContextFolderCabinet1'
+          return 'LazyBpmnContextFolderCabinet'
         default:
           return 'LazyBpmnContextCustomeService'
       }
