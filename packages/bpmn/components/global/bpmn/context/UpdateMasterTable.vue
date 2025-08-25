@@ -12,7 +12,13 @@ if(!graphProvider){
 }
 
 const allFields = computed(() => {
-    return Object.keys(graphProvider.allFormField.value).map((key:string) => {
+  if (!graphProvider.allFormField.value) return []
+
+  const allField = Object.fromEntries(
+    Object.entries(graphProvider.allFormField.value).filter(([key, value]) => value.attr_type === 'string')
+  )
+
+  return Object.keys(allField).map((key: string) => {
     return graphProvider.allFormField.value[key]
   })
 })
