@@ -2,22 +2,23 @@
 import { set } from '@vueuse/core'
 import { formTypeOptions } from '../../utils/bpmnType'
 import { METADATA_OPTIONS, type MetadataOption } from '../../../../pages/admin-document-type/utils/metadataHelper'
+const props = defineProps<{
+  mode?: 'global' | 'task'
+}>()
 const opened = ref(false)
 const emits = defineEmits(['created', 'updated'])
-const graphProvider = inject(BPMN_PROVIDER)
-if (!graphProvider) {
-  throw createError('graph provider not found')
+
+const editorProvider = inject(EDITOR_PROVIDER)
+if (!editorProvider) {
+  throw createError('editor provider not found')
 }
-
-const allFieldOptions = computed(() => {
-  if (!graphProvider.allFormField.value) return []
-  return Object.keys(graphProvider.allFormField.value).map((key) => graphProvider.allFormField.value[key])
-})
-
+const { bpmnGlobalRules } = editorProvider.BpmnRule
+let exitRules = []
 const idFieldRef = ref()
-function handleOpen(editField?: any) {
-  formData.value = editField ? { ...editField } : { ...initData }
-  isEdit.value = !!editField
+function handleOpen(editField: any = {}) {
+  formData.value = editField.type ? { ...editField } : { ...initData, ...editField }
+  isEdit.value = editField.type
+  exitRules = isEdit.value ? bpmnGlobalRules.value.filter((item: any) => item.id !== editField.id) : bpmnGlobalRules.value
   opened.value = true
   setTimeout(() => {
     if (idFieldRef.value) {
@@ -54,7 +55,6 @@ const newFieldRules = reactive({
     }
   ]
 })
-
 function idChanged(rule: any, value: any, callback: any) {
   if (!value) {
     return callback(new Error('Please input id'))
@@ -63,7 +63,7 @@ function idChanged(rule: any, value: any, callback: any) {
   if (!/^[a-zA-Z0-9_]+$/.test(value)) {
     return callback(new Error('Id can only contain letters, numbers and underscores'))
   }
-  const isDuplicatedItem = allFieldOptions.value.find((item: any) => item.id === value)
+  const isDuplicatedItem = exitRules.find((item: any) => item.id === value)
   if (isDuplicatedItem) {
     return callback(new Error('Id is duplicated'))
   }
@@ -87,7 +87,7 @@ function newNameChanged(rule: any, value: any, callback: any) {
   if (!value) {
     return callback(new Error('Please input Name'))
   }
-  const isDuplicatedItem = allFieldOptions.value.some((item: any) => item.name === value)
+  const isDuplicatedItem = exitRules.some((item: any) => item.name === value)
   if (isDuplicatedItem) {
     return callback(new Error('Name is duplicated'))
   }
@@ -95,15 +95,19 @@ function newNameChanged(rule: any, value: any, callback: any) {
 }
 
 async function confirmHandler() {
-  await FormRef.value.validate()
-  if (isEdit.value) {
-    emits('updated', { ...formData.value })
-  } else {
-    emits('created', { ...formData.value })
+  try {
+    await FormRef.value.validate()
+    if (isEdit.value) {
+      emits('updated', { ...formData.value })
+    } else {
+      emits('created', { ...formData.value })
+    }
+  
+    opened.value = false
+    FormRef.value.resetFields()
+  } catch (error) {
+    console.error(error)
   }
-
-  opened.value = false
-  FormRef.value.resetFields()
 }
 
 defineExpose({
@@ -112,7 +116,13 @@ defineExpose({
 </script>
 
 <template>
-  <ElDialog v-model="opened" width="75%" append-to-body destroy-on-close :title="isEdit ? $t('bpmn.updateRule') : $t('bpmn.addRule')">
+  <ElDialog
+    v-model="opened"
+    width="75%"
+    append-to-body
+    destroy-on-close
+    :title="isEdit ? $t('bpmn.updateRule') : mode === 'global' ? $t('bpmn.addGlobalRule') : $t('bpmn.addRule')"
+  >
     <ElForm ref="FormRef" :model="formData" :rules="newFieldRules" label-position="top" status-icon @submit.stop>
       <ElFormItem label="Id" prop="id">
         <ElInput ref="idFieldRef" v-model="formData.id" placeholder="id" :disabled="isEdit" />

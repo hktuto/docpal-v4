@@ -33,8 +33,17 @@ const selectedField = computed(() => {
 })
 
 function taskAddField(value: string[]) {
-  const newFields = bpmnGlobalRules.value.filter((item: any) => value.includes(item.id))
-  emits('change', newFields)
+  if (value.length === 0) {
+    return emits('change', [])
+  }
+  const position = value.length - 1
+  const index = bpmnGlobalRules.value.findIndex((item: any) => item.id === value[position])
+  if (index === -1) {
+    FormDialogRef.value?.handleOpen({ name: value[position], id: value[position] })
+  } else {
+    const newFields = bpmnGlobalRules.value.filter((item: any) => value.includes(item.id))
+    emits('change', newFields)
+  }
 }
 function taskRuleAdd(value: any) {
   emits('rule-add', value, () => {
@@ -42,7 +51,6 @@ function taskRuleAdd(value: any) {
   })
 }
 async function taskRuleChange(value: any) {
-  console.log('taskRuleChange', value)
   const nodes = graphProvider?.graph.value?.getNodes()
   await setBpmnRules(value, nodes)
   emits('update-rule', value)
@@ -50,7 +58,6 @@ async function taskRuleChange(value: any) {
 }
 
 function handleDblclick(row: any) {
-  console.log('handleDblclick', row)
   FormDialogRef.value?.handleOpen({ ...row, ...row.validationRule })
 }
 
@@ -87,7 +94,6 @@ const { tableConfig, tableEvent, tableRef, query, reload, cleanSelectedRows } = 
           const action = await ElMessageBox.confirm(`${t('msg_confirmWhetherToDelete', { tip: t('bpmn.globalRuleTip') + '，' })}`)
           if (action !== 'confirm') return
           const nodes = graphProvider?.graph.value?.getNodes()
-          console.log('deleteBpmnRule', nodes)
           await deleteBpmnRule(row, nodes)
           emits('delete-rule', row.id)
           reload()
@@ -127,7 +133,7 @@ defineExpose({
       <div class="tableSection">
         <VxeGrid ref="tableRef" v-bind="tableConfig" v-on="tableEvent">
           <template #toolbar_buttons>
-            <div>Global Fields</div>
+            <div>{{ $t('bpmn.globalRules') }}</div>
           </template>
         </VxeGrid>
       </div>

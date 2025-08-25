@@ -278,8 +278,10 @@
     "scanType": "扫描类型"
   },
   "bpmn": {
+    "addGlobalRule": "添加全局规则",
     "addRule": "添加字段并设置规则",
     "globalRuleTip": "修改或删除规则会同步到所有任务节点，并清空操作历史",
+    "globalRules": "全局规则",
     "updateRule": "编辑规则并同步到所有节点"
   },
   "browse": {

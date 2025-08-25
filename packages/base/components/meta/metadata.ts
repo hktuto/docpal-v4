@@ -26,7 +26,19 @@ export const useMetadata = () => {
     'sec:securityKeyword'
   ]
   let count = 0
-  const getDocumentMetadata = async (type: string, initOptions = true): Promise<any> => {
+  
+  const initVformVariableList = async (type: string, initOptions: any) => {
+    console.log(type, initOptions)
+    if (!initOptions) initOptions = {}
+    if (!initOptions.hiddenFields) initOptions.hiddenFields = []
+    if (!initOptions.requiredFields) initOptions.requiredFields = []
+    if (!initOptions.readonlyFields) initOptions.readonlyFields = []
+    const metadataList = await getDocumentMetadata(type)
+    const variableList: VariableItem[] = getVFormVariableListByMetadata(metadataList, initOptions)
+    return variableList
+  }
+  // get document type metadata
+  const getDocumentMetadata = async (type: string, isInitOption = true): Promise<any> => {
     if (metadataMap.value[type]) return metadataMap.value[type]
     try {
       // type = 'testOy'
@@ -34,13 +46,14 @@ export const useMetadata = () => {
         headers: { noThrowError: 'true' }
       })
       const metadataSchema: any = data.properties || {}
-      metadataMap.value[type] = await initMetadataVformOptions(metadataSchema, initOptions)
+      metadataMap.value[type] = await initMetadataVformOptions(metadataSchema, isInitOption)
       return metadataMap.value[type]
     } catch (error) {
       return null
     }
   }
-  const initMetadataVformOptions = async (metadataSchema: any, initOptions = true) => {
+  // turn metadata to vform options
+  const initMetadataVformOptions = async (metadataSchema: any, isInitOption = true) => {
     const promises: Promise<any>[] = []
     const properties: DocumentMetadata = {}
     Object.keys(metadataSchema).forEach(async (key) => {
@@ -58,7 +71,7 @@ export const useMetadata = () => {
             value: item
           }))
         } else if (item.items.validationName === 'mastertable') {
-          if (initOptions) {
+          if (isInitOption) {
             promises.push(
               getMasterTableOptions(item.items.info).then((options) => {
                 metadataItem.options = options
@@ -68,7 +81,7 @@ export const useMetadata = () => {
             metadataItem.onMounted = mounteMasterTableOptions(item.items.info.masterTableName, item.items.info.displayColumn, item.items.info.valueColumn)
           }
         } else if (item.items.validationName === 'user_role_user_group') {
-          if (initOptions) {
+          if (isInitOption) {
             // allow USER_ROLE, USER_GROUP, ALL
             metadataItem.options = []
             if (item.items.allow !== 'USER_GROUP') {
@@ -98,7 +111,7 @@ export const useMetadata = () => {
           }
         } else if (item.items.validationName === 'user') {
           metadataItem.options = []
-          if (initOptions) {
+          if (isInitOption) {
             promises.push(
               getUserList().then((options) => {
                 metadataItem.options = options
@@ -121,7 +134,11 @@ export const useMetadata = () => {
     await Promise.all(promises)
     return properties
   }
-  const getVFormVariableListByMetadata = (metadataListMap: DocumentMetadata, initOptions: any): VariableItem[] => {
+  const getVFormVariableListByMetadata = (metadataListMap: DocumentMetadata, initOptions: any = {}): VariableItem[] => {
+    console.log(metadataListMap)
+    if(!initOptions.hiddenFields) initOptions.hiddenFields = []
+    if(!initOptions.readonlyFields) initOptions.readonlyFields = []
+    if(!initOptions.requiredFields) initOptions.requiredFields = []
     const widgetVariableList: VariableItem[] = []
     Object.keys(metadataListMap).forEach((key) => {
       if (ignoreList.indexOf(key) !== -1 || initOptions.hiddenFields.includes(key)) return
@@ -185,15 +202,6 @@ export const useMetadata = () => {
     return widgetVariableList
   }
   
-  const initVformVariableList = async (type: string, initOptions: any) => {
-    if (!initOptions) initOptions = {}
-    if (!initOptions.hiddenFields) initOptions.hiddenFields = []
-    if (!initOptions.requiredFields) initOptions.requiredFields = []
-    if (!initOptions.readonlyFields) initOptions.readonlyFields = []
-    const metadataList = await getDocumentMetadata(type)
-    const variableList: VariableItem[] = getVFormVariableListByMetadata(metadataList, initOptions)
-    return variableList
-  }
   function getStringfyData(data: Record<string, any>, variableList: VariableItem[]) {
     const result: any =  {}
     variableList.forEach((item) => {
@@ -252,6 +260,7 @@ export const useMetadata = () => {
     return `${prefix}_${random}${count++}`
   }
   function vFormWidgetListDecorator(variableList: VariableItem[]) {
+    console.log(variableList)
     const widgetList: WidgetItem[] = []
     variableList.forEach((item: VariableItem, index: number) => {
       const id = generateId(item.type)
@@ -315,7 +324,26 @@ export const useMetadata = () => {
     })
     return widgetList
   }
+  function turnWorkflowRuleToBackendMetadata(ruleList: any[]) {
+    console.log(ruleList)
+    const backendMetadataListMap: DocumentMetadata = {}
+    ruleList.forEach((ruleItem) => {
+      const key = ruleItem.attr_id
+      if(ruleItem.validationName === 'select' && ruleItem.options) {
+        ruleItem.options = ruleItem.options.map((item: any) => item.value)
+      } else if(ruleItem.validationName === 'mastertable' && ruleItem.options) {
+        ruleItem.options = ruleItem.options.map((item: any) => item.value)
+      } else if(ruleItem.validationName === 'user_role_user_group' && ruleItem.options) {
+        ruleItem.options = ruleItem.options.map((item: any) => item.value)
+      } else if(ruleItem.validationName === 'user' && ruleItem.options) {
+        ruleItem.options = ruleItem.options.map((item: any) => item.value)
+      }
+      backendMetadataListMap[key] = ruleItem
+    })
+    return backendMetadataListMap
+  }
   return {
+    turnWorkflowRuleToBackendMetadata,
     vFormWidgetListDecorator,
     getVFormVariableListByMetadata,
     initVformVariableList,
