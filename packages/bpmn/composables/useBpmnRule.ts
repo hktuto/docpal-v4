@@ -36,6 +36,7 @@ export const useBpmnRule = ({ versionDraftId, version, taskName, draftId, workfl
       isNew = true
     }
   }
+  // set bpmn 1
   async function addBpmnRule(rule: any) {
     try {
       bpmnGlobalRules.value.push(rule)
@@ -52,6 +53,7 @@ export const useBpmnRule = ({ versionDraftId, version, taskName, draftId, workfl
       console.log('error', error)
     }
   }
+  // set bpmn 2
   async function updateBpmnRule(rule: any, nodes: any) {
     try {
       const index = bpmnGlobalRules.value.findIndex((item: any) => item.id === rule.id)
@@ -70,18 +72,27 @@ export const useBpmnRule = ({ versionDraftId, version, taskName, draftId, workfl
       }
       const res = await adminApi.api.putValidationRulesVersiondraftid(versionDraftId, params)
       if (index !== -1) {
+        let isChanged = false
         nodes.forEach((node: any) => {
           if (node.data?.data?.extensionElements?.['flowable:formProperty']) {
             const formItems = node.data.data.extensionElements['flowable:formProperty']
             const updateFormItem = formItems.find((item: any) => item.attr_id === rule.id)
             if (updateFormItem) {
-              updateFormItem.attr_name = rule.name
-              updateFormItem.attr_type = getBpmnRuleType(rule.type)
+              if (updateFormItem.attr_name !== rule.name) {
+                updateFormItem.attr_name = rule.name
+                isChanged = true
+              }
+              if (updateFormItem.attr_type !== getBpmnRuleType(rule.type)) {
+                updateFormItem.attr_type = getBpmnRuleType(rule.type)
+                isChanged = true
+              }
             }
-            setNodeData(node, formItems)
+            if (isChanged) {
+              setNodeData(node, formItems)
+            }
           }
         })
-        if (workflowDetail) {
+        if (workflowDetail && isChanged) {
           workflowDetail.saveDraft()
         }
       }
@@ -115,14 +126,7 @@ export const useBpmnRule = ({ versionDraftId, version, taskName, draftId, workfl
         return 'string'
     }
   }
-  function getTaskFieldRules(taskFields: any[]) {
-    return taskFields.map((item: any) => {
-      const rule = bpmnGlobalRules.value.find((rule: any) => rule.id === item.attr_id)
-      return {
-        ...rule
-      }
-    })
-  }
+
   async function deleteBpmnRule(deleteRule: any, nodes: any) {
     bpmnGlobalRules.value = bpmnGlobalRules.value.filter((item: any) => item.id !== deleteRule.id)
     const params: any = {
@@ -133,21 +137,30 @@ export const useBpmnRule = ({ versionDraftId, version, taskName, draftId, workfl
       validationRules: bpmnGlobalRules.value
     }
     await adminApi.api.putValidationRulesVersiondraftid(versionDraftId, params)
+    let isChanged = false
     nodes.forEach((node: any) => {
       if (node.data?.data?.extensionElements?.['flowable:formProperty']) {
         const formItems = node.data.data.extensionElements['flowable:formProperty']
         const newFormItems = formItems.filter((item: any) => item.attr_id !== deleteRule.id)
-        setNodeData(node, newFormItems)
+        if (newFormItems.length !== formItems.length) {
+          setNodeData(node, newFormItems)
+          isChanged = true
+        }
       }
     })
-    if (workflowDetail) {
+    if (workflowDetail && isChanged) {
       workflowDetail.saveDraft()
     }
-    console.log('deleteBpmnRule', nodes)
   }
-
+  function getTaskFieldRules(taskFields: any[]) {
+    return taskFields.map((item: any) => {
+      const rule = bpmnGlobalRules.value.find((rule: any) => rule.id === item.attr_id)
+      return {
+        ...rule
+      }
+    })
+  }
   onMounted(() => {
-    console.log('onMounted', versionDraftId, version, taskName, draftId)
     getBpmnRules()
   })
   return {
@@ -155,8 +168,8 @@ export const useBpmnRule = ({ versionDraftId, version, taskName, draftId, workfl
     getBpmnRules,
     setBpmnRules,
     getBpmnRuleType,
-    getTaskFieldRules,
-    deleteBpmnRule
+    deleteBpmnRule,
+    getTaskFieldRules
   }
 }
 export function setNodeData(node: any, formPropertys: any) {

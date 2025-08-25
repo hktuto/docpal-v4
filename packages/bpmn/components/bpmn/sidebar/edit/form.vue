@@ -232,7 +232,7 @@ watch(
     </div>
     <div class="actionsContainer">
       <ElButton type="primary" @click="editField" :disabled="editorProvider.readonly.value"> Edit Field </ElButton>
-      <ElButton type="primary" @click="editorProvider.openForm(node, getTaskFieldRules(formItems))"> Edit Form </ElButton>
+      <ElButton type="primary" @click="editorProvider.openForm(node)"> Edit Form </ElButton>
       <ElButton type="primary" @click="editorProvider.previewForm(node)"> Preview Form </ElButton>
     </div>
     <Eldivider />
