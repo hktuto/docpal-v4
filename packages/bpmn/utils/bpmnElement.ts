@@ -425,11 +425,6 @@ export const bpmnElement: BpmnElement = {
             type = 'Document'
             color = '#7B61FF'
             break
-          case '${filingGenerateDocumentDelegate}':
-            icon = '/bpmn/icons/browse.svg'
-            type = 'Filing'
-            color = '#7B61FF'
-            break
           case '${conditionValidateDelegate}':
             icon = '/bpmn/icons/condition.svg'
             type = 'condition'
@@ -572,26 +567,6 @@ export const bpmnElement: BpmnElement = {
                 }
               ]
             }
-          })
-        })
-      },
-      {
-        icon: 'bpmn:browse',
-        label: 'filing',
-        group: '',
-        order: 0,
-        dropData: (id: string) => ({
-          id,
-          ...bpmnElement.serviceTask.nodeStyle({
-            ['attr_flowable:delegateExpression']: '${filingGenerateDocumentDelegate}',
-            extensionElements: ''
-          }),
-          label: 'New Filing',
-          data: bpmnElement.serviceTask.newNodeData(id, 'New Filing', {
-            attr_id: id,
-            attr_name: 'New Filing',
-            ['attr_flowable:delegateExpression']: '${filingGenerateDocumentDelegate}',
-            extensionElements: ''
           })
         })
       },
@@ -929,8 +904,6 @@ export const bpmnElement: BpmnElement = {
           return 'LazyBpmnContextEmail'
         case '${generateDocumentDelegate}':
           return 'LazyBpmnContextDocument'
-        case '${filingGenerateDocumentDelegate}':
-          return 'LazyBpmnContextFiling'
         case '${conditionValidateDelegate}':
           return 'LazyBpmnContextCondition'
         case '${sendWhatsAppMsgDelegate}':
