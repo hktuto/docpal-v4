@@ -14,6 +14,13 @@ if (!editorProvider) {
 }
 
 function filterOption(item: any) {
+  // Search the option for the corresponding data type
+  const type = item.attr_metaDataType
+  const filteredList = Object.fromEntries(
+    Object.entries(props.allField).filter(([key, value]) => value.attr_type === type)
+  )
+
+  // Retrieve the used and currently selected option
   const set: any = []
   field.value.forEach((i: any) => {
     if (!i.attr_isFolder) {
@@ -24,7 +31,8 @@ function filterOption(item: any) {
       })
     }
   })
-  const filteredList = deepCopy(props.allField)
+
+  // Exclude used options
   set.forEach((property: string) => {
     delete filteredList[property]
   })
@@ -34,7 +42,7 @@ function filterOption(item: any) {
 function fileFieldOption(item: any) {
   const set = new Set()
 
-  // 篩選沒有使用是的Field
+  // Search the Field that is not used
   field.value.forEach((treeItem: any) => {
     treeItem.field.forEach((f: any) => {
       if (f.attr_formProperty && item.attr_file !== f.attr_file && f.attr_formProperty !== '') {

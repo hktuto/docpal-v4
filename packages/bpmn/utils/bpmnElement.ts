@@ -983,7 +983,7 @@ export const bpmnElement: BpmnElement = {
     },
     embed: false,
     toolbar: [{
-      icon: 'bpmn:form',
+      icon: 'bpmn:script',
       label: 'Script Task',
       group: '',
       order: 0,
