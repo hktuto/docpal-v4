@@ -61,7 +61,7 @@ watch(node, ()=> {
             <CmmnSidePanelUiLabel :node="node" />
             <!-- <CmmnSidePanelUiLabel :node="node" disabled/> -->
             <el-tabs v-model="state.activeName" @tab-click="handleClick">
-                <el-tab-pane :label="$t('workflowEdior.formField')" name="field">111
+                <el-tab-pane :label="$t('workflowEdior.formField')" name="field">
                     <CmmnSidePanelDraggable 
                         :list="state.data" 
                         :dragHeader="dragHeader" 
