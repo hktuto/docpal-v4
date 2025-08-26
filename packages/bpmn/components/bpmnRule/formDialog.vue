@@ -1,6 +1,5 @@
 <script lang="ts" setup>
 import { set } from '@vueuse/core'
-import { formTypeOptions } from '../../utils/bpmnType'
 import { METADATA_OPTIONS, type MetadataOption } from '../../../../pages/admin-document-type/utils/metadataHelper'
 const props = defineProps<{
   mode?: 'global' | 'task'
@@ -81,6 +80,7 @@ function typeChanged(value: any) {
       ...type.validation
     }
     delete formData.value.validationRuleName
+    if (formData.value.type !== 'text') delete formData.value.maxLength
   }
 }
 function newNameChanged(rule: any, value: any, callback: any) {
