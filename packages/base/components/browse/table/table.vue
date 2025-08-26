@@ -47,7 +47,6 @@ const {
   },
   hooks:{
     afterFind: async(result:DocumentColumnData[], where:any, options:any)=>{
-
       const list = await loadData([], where.parentRef) as DocumentApiData[]
 
       // step 2 calculate diff between apiList and result
@@ -552,6 +551,7 @@ const { tableConfig, tableEvent, tableRef, reload, cleanSelectedRows } = useVxeT
 
           const entry = await find({parentRef:params.row.id},{},{skipIfEmpty:true})
           if(entry.length === 0){
+            console.log('loadData', params.row.id)
             const apiData = await loadData([], params.row.id) as DocumentApiData[]
             const syncList = {
               create: apiData.map((item:DocumentApiData) => apiToColumn(item)),
@@ -561,11 +561,12 @@ const { tableConfig, tableEvent, tableRef, reload, cleanSelectedRows } = useVxeT
             await syncData(syncList)
             return apiData.sort(sortEntry)
           }else{
+            console.log('loadData', params.row.id)
             return entry.map((item:DocumentColumnData) => columnToApi(item)).sort(sortEntry)
           }
         }catch(e){
           // if error, return empty array and remove item from expandedItems
-          
+          console.error(e)
           return []
         }
       }

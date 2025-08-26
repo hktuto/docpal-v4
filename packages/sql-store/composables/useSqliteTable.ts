@@ -161,7 +161,8 @@ export function useSqliteTable<T = any, U extends DatabaseRecord = any>(config: 
 
       // Call after hook if provided
       if (config.hooks?.afterFind && typeof config.hooks.afterFind === 'function') {
-        if(!hookOptions ||!hookOptions?.skipIfEmpty && result.length > 0){
+        console.log('afterFind', hookOptions, result.length)
+        if(!hookOptions || (!hookOptions?.skipIfEmpty && result.length > 0) || result.length > 0){
           config.hooks.afterFind(result, where, options)
         }
       }
