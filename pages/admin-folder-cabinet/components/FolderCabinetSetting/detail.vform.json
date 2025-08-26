@@ -148,38 +148,6 @@
       "id": "grid42547"
     },
     {
-      "key": 47799,
-      "type": "switch",
-      "icon": "switch-field",
-      "formItemFlag": true,
-      "options": {
-        "name": "useNotification",
-        "label": "Use Notification",
-        "labelAlign": "",
-        "defaultValue": false,
-        "columnWidth": "200px",
-        "labelWidth": null,
-        "labelHidden": false,
-        "disabled": false,
-        "hidden": false,
-        "customClass": "",
-        "labelIconClass": null,
-        "labelIconPosition": "rear",
-        "labelTooltip": null,
-        "switchWidth": 40,
-        "activeText": "",
-        "inactiveText": "",
-        "activeColor": null,
-        "inactiveColor": null,
-        "onCreated": "",
-        "onMounted": "",
-        "onChange": "const _this = this\nconst notificationList = [\n  { key: 'notificationReminder.intervalTime', required: true },\n  { key: 'notificationReminder.tos', required: true },\n  { key: 'emailReminder.intervalTime', required: true },\n  { key: 'emailReminder.tos', required: true },\n  { key: 'emailReminder.ccs', required: false },\n  { key: 'emailReport.intervalTime', required: true },\n  { key: 'emailReport.tos', required: true },\n  { key: 'emailReport.ccs', required: false }\n]\nconst showNotification = _this.getWidgetRef(\"showNotification\");\nnotificationList.forEach(item => {\n  const widgetRef = _this.getWidgetRef(item.key)\n  widgetRef.setHidden(!value)\n  widgetRef.setRequired(value ? item.required : false)\n})",
-        "onValidate": "",
-        "required": false
-      },
-      "id": "switch45518"
-    },
-    {
       "key": 73467,
       "type": "grid",
       "category": "container",
@@ -624,37 +592,6 @@
         ]
       },
       "id": "grid70386"
-    },
-    {
-      "key": 32675,
-      "type": "switch",
-      "icon": "switch-field",
-      "formItemFlag": true,
-      "options": {
-        "name": "showNotification",
-        "label": "showNotification",
-        "labelAlign": "",
-        "defaultValue": false,
-        "columnWidth": "200px",
-        "labelWidth": null,
-        "labelHidden": false,
-        "disabled": false,
-        "hidden": true,
-        "customClass": [],
-        "labelIconClass": null,
-        "labelIconPosition": "rear",
-        "labelTooltip": null,
-        "switchWidth": 40,
-        "activeText": "",
-        "inactiveText": "",
-        "activeColor": null,
-        "inactiveColor": null,
-        "onCreated": "",
-        "onMounted": "",
-        "onChange": "const _this = this\nconst notificationList = [\n  { key: 'notificationReminder.intervalTime', required: true },\n  { key: 'notificationReminder.tos', required: true },\n  { key: 'emailReminder.intervalTime', required: true },\n  { key: 'emailReminder.tos', required: true },\n  { key: 'emailReminder.ccs', required: false },\n  { key: 'emailReport.intervalTime', required: true },\n  { key: 'emailReport.tos', required: true },\n  { key: 'emailReport.ccs', required: false }\n]\nconst showNotification = _this.getWidgetRef(\"useNotification\");\nnotificationList.forEach(item => {\n  showNotification.setHidden(!value);\n  const widgetRef = _this.getWidgetRef(item.key)\n  const show = showNotification.getValue()\n  widgetRef.setHidden(!value || !show)\n  widgetRef.setRequired(value && show ? item.required : false)\n})\n",
-        "onValidate": ""
-      },
-      "id": "switch28303"
     },
     {
       "key": 93668,
