@@ -22,6 +22,9 @@ export const useToken = () => useState<string>('auth-token')
 export const useOcrSetting = () => useState<any>('ocr-setting')
 export const useLoginState = () => useState<boolean>('auth-login-state', () => false)
 export const useUserRole = () => useState<string>(() => '')
+export const useIsAdmin = () => useState<boolean>(() => false)
+export const useOsSuperAdmin = () => useState<boolean>(() => false)
+
 export const useAuth = () => {
   const loggedIn = useLoginState()
   return {
@@ -37,11 +40,22 @@ export const userDisplayTimeSetting = () => {
   return userPreference.value?.metaDateFormat ? userPreference.value.metaDateFormat : 'YYYY-MM-DD'
 }
 export async function verifly() {
+
   const logedIn = useLoginState()
   const isDesktopMode = useDesktopMode()
   await Promise.all([getUser(), getFeature(), getUserPreference(), getOCRSetting()])
   isDesktopMode.value = !(!window || !window.navigator || !window.navigator.userAgent || !window.navigator.userAgent.toLowerCase().includes('electron'))
   logedIn.value = true
+  const token = localStorage.getItem('access_token') || ''
+  const decodedToken = parseJwt(token)
+  if(decodedToken) {
+    const isAdmin = useIsAdmin()
+    const isSuperAdmin = useOsSuperAdmin()
+    const hasAdmin = decodedToken.roles.includes('ROLE_ADMIN')
+    const hasSuperAdmin = decodedToken.roles.includes('ROLE_SUPER_ADMIN')
+    isAdmin.value = hasAdmin
+    isSuperAdmin.value = hasSuperAdmin
+  }
   // check if user in in db
   const userId = useUserId()
   const user = useUserState()
@@ -89,6 +103,15 @@ export async function verifly() {
  *  登陸後先  {@link useFeature}
  *  再
  */
+
+function parseJwt(token: string) {
+  if (!token) {
+    return;
+  }
+  const base64Url = token.split('.')[1];
+  const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+  return JSON.parse(window.atob(base64));
+}
 export async function login() {
   const keyCloakState = useKeyCloakState()
   const token = useToken()
@@ -114,6 +137,9 @@ export async function login() {
     localStorage.setItem('access_token', data.access_token)
     localStorage.setItem('token', data.access_token)
     localStorage.setItem('refresh_token', data.refresh_token)
+
+    // decode token to get user info
+    
     token.value = data.access_token
     await checkPassword()
     await verifly()

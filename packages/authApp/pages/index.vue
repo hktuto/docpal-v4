@@ -17,7 +17,9 @@ defaultTabStore.value =  defaultTab
               <AuthUser />
               <AuthSetting />
             </template>
-            <template #footer> </template>
+            <template #footer>
+              <AppSwitchMenu />
+            </template>
           </AppMenu>
         </template>
       </AppEntry>
