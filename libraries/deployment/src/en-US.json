@@ -2770,7 +2770,8 @@
     "summary": "Summary",
     "summaryKey": "Summary Key",
     "templateId": "Template Id",
-    "to": "To"
+    "to": "To",
+    "user_role_group": "User / User Group / User Role"
   },
   "tableHeader_access": "Access",
   "tableHeader_actions": "Actions",
