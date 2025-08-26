@@ -7,7 +7,12 @@ import { useEventBus, EventType, emitBus } from 'eventbus'
  */
 
 /**
- * Converts a string from snake_case to camelCase
+ * @deprecated, 
+ */
+const ignoreCaseConversion = ['/auth/nuxeo/login', '/docpal/systemfeature/keycloak-token-verification', '/api/docpal/workflow/variables/']; // which url need to ignore case conversion
+
+/**
+ *  @deprecated,  Converts a string from snake_case to camelCase
  */
 function toCamelCase(str: string): string {
   if (!str) return str
@@ -15,6 +20,7 @@ function toCamelCase(str: string): string {
 }
 
 /**
+ *  @deprecated, 
  * Converts all keys in an object from snake_case to camelCase
  * Handles nested objects and arrays
  */
@@ -34,6 +40,7 @@ function convertKeysToCamelCase(obj: any): any {
 }
 
 /**
+ *  @deprecated, 
  * Automatically detects and converts API response keys to camelCase
  * Only converts if snake_case keys are detected
  */
@@ -93,18 +100,7 @@ export const requestErrorHelper = (error: any, axiosInstance: AxiosInstance) => 
   return Promise.reject(error)
 }
 
-const ignoreCaseConversion = ['/auth/nuxeo/login', '/docpal/systemfeature/keycloak-token-verification']; // which url need to ignore case conversion
-
 export const responseSuccessHelper = (response: any, axiosInstance: AxiosInstance) => {
-  // Skip case conversion if explicitly disabled via header
-  if (response.config.responseType === 'blob') return response
-  if (ignoreCaseConversion.includes(response.config.url)) {
-    return response
-  }
-  // Normalize response data to camelCase if it contains snake_case keys
-  if (response.data && !(response.data instanceof Blob)) {
-    response.data = normalizeApiResponse(response.data)
-  }
 
   return response
 }
