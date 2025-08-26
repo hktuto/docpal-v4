@@ -2768,7 +2768,8 @@
     "summary": "概要",
     "summaryKey": "总结要点",
     "templateId": "模板编号",
-    "to": "发送给"
+    "to": "发送给",
+    "user_role_group": "用户/用户组/用户角色"
   },
   "tableHeader_access": "使用权",
   "tableHeader_actions": "操作",
