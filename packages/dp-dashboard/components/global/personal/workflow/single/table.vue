@@ -40,12 +40,9 @@ function getRecursiveValue(obj: any, path: string) {
 
 function displayValue(f: string) {
   // check if f is a string date
-  console.log('displayValue')
-  const d = dayjs(f)
-  console.log(f, d.isValid())
-  if (d.isValid()) {
-    const date = d.format('YYYY-MM-DD HH:mm')
-    console.log(date)
+  const d = dayjs(f, 'YYYY-MM-DD', true).isValid()
+  if (d) {
+    const date = dayjs(f).format('YYYY-MM-DD HH:mm')
     return date
   }
   return f
@@ -56,6 +53,7 @@ function setupTable() {
   const addedColumn = newColumn.map((item: any) => {
     if (item.field.length > 1) {
       item.field = item.field.join(',')
+
       item.formatter = (args: any) => {
         let result = ''
         const field = args.column.field.split(',')
@@ -83,6 +81,7 @@ function setupTable() {
     return item
   })
   columns.splice(0, 0, ...addedColumn)
+  console.log('columns', columns)
   tableConfig.columns = columns
 }
 

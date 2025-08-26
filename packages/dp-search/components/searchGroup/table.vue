@@ -19,21 +19,12 @@
     </template>
 
     <template #summary="{ row }">
-      <div v-if="row.properties && row.properties.summarys">
-        <div v-if="row.properties.summarys.length > 1" @click="row.expandSummary = !row.expandSummary">
-          <el-icon :class="row.expandSummary ? 'revert' : 'rotate'">
-            <ArrowUp />
-          </el-icon>
-        </div>
-        <template v-if="row.properties.summarys.length <= 1 || row.expandSummary">
-          <div
-            v-for="(item, index) in row.properties.summarys"
-            class="summaryItem"
-            :key="item.summaryKey + index"
-            :title="`${$t(item.summaryKey)}:${item.summaryValue}`"
-          >
-            [{{ $t(item.summaryKey) }}]: <b>{{ item.summaryValue }}</b>
-          </div>
+      <div v-if="row.properties && row.properties.field_summaries">
+        <template v-if="row.properties.field_summaries.name">
+          <span class="summary" v-html="row.properties.field_summaries.name" />
+        </template>
+        <template v-else-if="row.properties.field_summaries.content">
+          <span class="summary" v-html="row.properties.field_summaries.content" />
         </template>
       </div>
     </template>
@@ -146,11 +137,11 @@ const { tableConfig, tableEvent, tableRef, reload, query } = useVxeTable({
     },
     {
       title: 'docInfo.fileExtension',
-      field: 'fileSuffix'
+      field: 'file_suffix'
     },
     {
       title: "searchGroup.creators",
-      field: 'createBy',
+      field: 'create_by',
       width: 120
     },
     {
@@ -163,7 +154,7 @@ const { tableConfig, tableEvent, tableRef, reload, query } = useVxeTable({
     
     {
       title: 'search.size',
-      field: 'fileContent.length',
+      field: 'file_content.length',
       width: 120,
       formatter: ({ cellValue }: any) => {
         if (!cellValue) return '-'
@@ -175,12 +166,12 @@ const { tableConfig, tableEvent, tableRef, reload, query } = useVxeTable({
       field: 'path',
       width: 200,
       slots: {
-        default: 'logicalPath'
+        default: 'logical_path'
       }
     },
     {
       title: 'tableHeader.summary',
-      field: 'properties.summaryValue',
+      field: 'properties.fieldSummaries',
       width: 200,
       slots: {
         default: 'summary'
@@ -188,7 +179,7 @@ const { tableConfig, tableEvent, tableRef, reload, query } = useVxeTable({
     },
     {
       title: 'tableHeader_creationDate',
-      field: 'createDate',
+      field: 'create_date',
       width: 200,
       formatter: ({ cellValue }: any) => {
         return formatDate(cellValue)
@@ -196,7 +187,7 @@ const { tableConfig, tableEvent, tableRef, reload, query } = useVxeTable({
     },
     {
       title: 'tableHeader_modifiedDate',
-      field: 'modifyDate',
+      field: 'modify_date',
       width: 200,
       formatter: ({ cellValue }: any) => {
         return formatDate(cellValue)
@@ -206,7 +197,7 @@ const { tableConfig, tableEvent, tableRef, reload, query } = useVxeTable({
       title: 'dpTable_tags',
       width: 120,
       slots: {
-        default: 'docTags'
+        default: 'doc_tags'
       }
     }
   ],
