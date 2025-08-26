@@ -133,7 +133,6 @@ async function handleRefreshChild(childId: string) {
     const tableData: any = tableRef.value?.tableRef?.getData()
     const cItem = findNodeById({ children: tableData }, childId)
     if (!!cItem) tableRef.value?.tableRef?.reloadTreeExpand(cItem)
-    console.log('handleRefreshChild', cItem)
   }
 
   function findNodeById(node: any, targetId) {
@@ -198,6 +197,7 @@ bus.on((ids: any) => {
   if (!ids) return
   const relatedIdOrPath = ids?.relatedIdOrPath
   emitBus(EventType.FILE_CLEAN_SELECTED_ROWS)
+  console.log('bus', ids)
   // console.log(relatedIdOrPath, docDetail.value.id)
   if (!relatedIdOrPath || !docDetail.value?.id) return
   if (relatedIdOrPath !== docDetail.value?.id) {
