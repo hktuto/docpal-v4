@@ -1,7 +1,6 @@
 
 <script lang="ts" setup>
 import { clientApi } from 'api'
-
 const tableData = defineModel<any>('tableData', { required: true })
 
 
@@ -15,6 +14,7 @@ const emit = defineEmits([
 const { tableConfig, tableEvent, tableRef, reload} = useVxeTable({
     id: 'client-share-table',
     saveColumnOrder: false,
+    virtualScroll: true,
     columns: [
         { title: 'table_name', field: 'name',},
         { slots: {default:'watermark'}, title: 'watermark.watermark' },
@@ -74,15 +74,21 @@ onMounted(async() => {
         state.watermarkList = data.sort((a, b) => a.name.localeCompare(b.name))
     }
 })
-
+function loadData (){
+  
+  tableRef.value.loadData(tableData.value)
+}
+onMounted(() => {
+  nextTick(() => {
+    loadData()
+  })
+})
 watch(tableData, () => {
     if(tableRef.value) {
-        console.log("tableData", tableData.value)
-        tableRef.value.loadData(tableData.value)
+      loadData()
     }
 },{
     deep: true,
-    immediate: true
 })
 </script>
 
