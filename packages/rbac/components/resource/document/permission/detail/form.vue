@@ -5,7 +5,7 @@
       prop="targetId"
       :rules="[{ required: true, message: $t('render.hint.fieldRequired', { name: $t('user_role') }), trigger: 'change' }]"
     >
-      <el-select v-model="formData.targetId" :disabled="isEdit" :placeholder="$t('choose', { name: $t('user_role') })">
+      <el-select v-model="formData.targetId" :disabled="isEdit" :placeholder="$t('choose', { name: $t('user_role') })" filterable>
         <el-option-group v-for="options in _targetOptions" :key="options.label" :label="$t(options.label)">
           <el-option v-for="item in options.options" :key="item.value" :label="item.label" :value="item.value" :disabled="item.disabled" />
         </el-option-group>
