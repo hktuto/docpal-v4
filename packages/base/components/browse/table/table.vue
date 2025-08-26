@@ -77,10 +77,11 @@ const {
           }
         }
       })
+
       // update table
-      tableRef.value?.insert(batchData.create)
-      tableRef.value?.setRow(batchData.update)
-      tableRef.value?.remove(batchData.delete)
+      tableRef.value?.insert(batchData.create.map(item => columnToApi(item)))
+      tableRef.value?.setRow(batchData.update.map(item => columnToApi(item)))
+      tableRef.value?.remove(batchData.delete.map(item => columnToApi(item)))
       syncData(batchData)
       tableRef.value?.sort([{
         field: 'isFolder',
