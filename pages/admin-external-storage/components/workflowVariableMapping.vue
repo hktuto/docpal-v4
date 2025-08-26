@@ -13,6 +13,7 @@ import { adminApi } from 'api'
 const props = defineProps<{
   workflow: string
   varList: any[]
+  setting: any[]
 }>()
 const workflowProps = ref([])
 function getTargetLabel(value) {
@@ -31,11 +32,37 @@ async function getWorkflowProps(processKey: string) {
     return []
   }
 }
-watch(() => props.workflow, async (newVal) => {
-  if (newVal) {
-    workflowProps.value = await getWorkflowProps(newVal)
-  }
-}, { immediate: true })
+function getData() {
+  return workflowProps.value.reduce((acc, item) => {
+    if (item.source) {
+      acc.push({
+        source: item.source,
+        target: item.value
+      })
+    }
+    return acc
+  }, [])
+}
+watch(
+  () => props.workflow,
+  async (newVal) => {
+    if (newVal) {
+      workflowProps.value = await getWorkflowProps(newVal)
+      if (props.setting?.workflowMapping) {
+        props.setting?.workflowMapping.forEach((item) => {
+          const index = workflowProps.value.findIndex((i) => i.value === item.target)
+          if (index !== -1) {
+            workflowProps.value[index].source = item.source
+          }
+        })
+      }
+    }
+  },
+  { immediate: true }
+)
+defineExpose({
+  getData
+})
 </script>
 
 <style scoped lang="scss">
