@@ -35,7 +35,9 @@ if(platform === 'admin') {
               <AuthUser />
               <AuthSetting />
             </template>
-            <template #footer> </template>
+            <template #footer>
+              <AppSwitchMenu />
+            </template>
           </AppMenu>
         </template>
       </AppEntry>

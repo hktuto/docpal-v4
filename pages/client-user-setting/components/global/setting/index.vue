@@ -35,6 +35,7 @@ async function init() {
 
     if (state.list.length > 0) {
       const data = await clientApi.api.getNuxeoUserGetapplication().then((res: any) => res.data)
+     
       state.form.id = data.id
       state.list.forEach((item: any) => {
         state.form[item.key] = data[item.key]
