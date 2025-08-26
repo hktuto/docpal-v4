@@ -17,7 +17,7 @@
   "DAM_editNewConvertion": "Edit New Convertion",
   "DAM_fileType": "File Type",
   "DAM_operation": "Operation",
-  "DAM_setupFileExtension": "Setup file extension",
+  "DAM_setupFileExtension": "Setup file type",
   "DAM_targetFormat": "Target Format",
   "Dashboard": {
     "Home": {
@@ -1025,7 +1025,7 @@
     "isFolder": "Is Folder"
   },
   "docInfo": {
-    "fileExtension": "File Extension"
+    "fileExtension": "File Type"
   },
   "docTemplate": {
     "export": {
