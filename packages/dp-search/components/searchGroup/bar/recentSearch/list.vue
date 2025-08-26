@@ -23,7 +23,7 @@
                   effect="dark"
                 >
                   {{ c.queryType }}：
-                  <b>{{ c.value }}</b>
+                  <b>{{ displayValueMap(c.queryType, c.value) }}</b>
                 </el-tag>
               </div>
               <span v-if="cIndex !== q.matchs.length - 1">{{
@@ -45,6 +45,8 @@
 <script lang="ts" setup>
 import { clientApi } from "api";
 import { conditionDecorators } from "~/utils/searchFormHelper";
+import * as mime from 'mime-types';
+
 const state = reactive<any>({
   list: [],
   scrollNoMore: false,
@@ -59,6 +61,22 @@ function handleSearch(item: any) {
   const data = { ...item.searchRequest };
   conditionDecorators(data);
   emits("search", data);
+}
+
+function displayValueMap(type: string, value: any) {
+
+  switch (type) {
+    case 'mimeTypes':
+      const v = Array.isArray(value) ? value : [value];
+      return v.map((v: string) => {
+        if(v &&v.includes('*')){
+          return v.split('*')[0];
+        }
+        return mime.extension(v);
+      }).join(', ');
+    default:
+      return value;
+  }
 }
 async function getList() {
   if (state.loading) return;
