@@ -69,7 +69,7 @@ function displayValueMap(type: string, value: any) {
     case 'mimeTypes':
       const v = Array.isArray(value) ? value : [value];
       return v.map((v: string) => {
-        if(v &&v.includes('*')){
+        if(v && v.includes('*')){
           return v.split('*')[0];
         }
         return mime.extension(v);
