@@ -51,7 +51,11 @@ function assigneeChanged(newVal: string) {
 
 const allFields = computed(() => {
     if(!graphProvider?.allFormField.value) return []
-    const fields = graphProvider?.allFormField.value
+
+    const fields = Object.fromEntries(
+      Object.entries(graphProvider.allFormField.value).filter(([key, value]) => value.attr_type === 'string')
+    )
+
     fields.user_creator_id  = {
       attr_id: "user_creator_id",
       attr_name:"Creator",

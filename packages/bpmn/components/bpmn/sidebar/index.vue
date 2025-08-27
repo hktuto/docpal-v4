@@ -22,15 +22,6 @@ function openInfo() {
     openSidebar('LazyBpmnContextInfo', cell)
 }
 
-function openFolderCabinet() {
-    const id = graphProvider?.bpmnJson.value.definitions.process.attr_id
-    const cell = graphProvider?.graph.value?.getCellById(id)
-    if(!cell){
-        throw createError('Process node not found')
-    }
-    openSidebar('LazyBpmnContextFolderCabinet', cell)
-}
-
 function openPermission() {
     const id = graphProvider?.bpmnJson.value.definitions.process.attr_id
     const cell = graphProvider?.graph.value?.getCellById(id)
@@ -56,7 +47,6 @@ defineExpose({
     openSidebar,
     closeSidebar,
     openInfo,
-    openFolderCabinet,
     openPermission,
 })
 </script>
