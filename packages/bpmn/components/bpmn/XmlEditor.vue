@@ -152,8 +152,8 @@ function closeDialog() {
       t('bpmn_adminXmlEditor_unsaved_changes_confirm') || 'You have unsaved changes. Are you sure you want to close?',
       t('common_warning') || 'Warning',
       {
-        confirmButtonText: t('common_ok') || 'OK',
-        cancelButtonText: t('common_cancel') || 'Cancel',
+        confirmButtonText: t('confirmText') || 'OK',
+        cancelButtonText: t('vxe.button.cancel') || 'Cancel',
         type: 'warning',
       }
     ).then(() => {
