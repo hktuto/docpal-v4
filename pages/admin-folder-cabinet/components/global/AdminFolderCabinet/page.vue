@@ -64,7 +64,7 @@ const {
         if (!row.binds) return ''
         let list = []
         row.binds.forEach(bind => {
-          list.push(bind.bindId)
+          list.push(bind.label || bind.bindId)
         })
         return list.join(', ')
       }
