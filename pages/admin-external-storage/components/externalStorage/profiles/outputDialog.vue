@@ -94,7 +94,7 @@
           </el-select>
         </el-form-item>
         <el-divider />
-        <WorkflowVariableMapping v-if="form.workflow" :workflow="form.workflow" :varList="workflowVOpts" />
+        <WorkflowVariableMapping v-if="form.workflow" ref="WorkflowVariableMappingRef" :setting="setting" :workflow="form.workflow" :varList="workflowVOpts" />
       </template>
       <el-form-item v-if="form.destination === 'external'" :label="$t('externalStorage.duplicateNameStrategy')" prop="duplicateNameStrategy" required>
         <el-select class="duplicateNameStrategy" v-model="form.duplicateNameStrategy" filterable clearable>
@@ -172,6 +172,7 @@ const rules = {
   useBlankLineAsParaSep: [{ required: true, message: t('render.hint.fieldRequired', { name: t('externalStorage.useBlankLineAsParaSep') }), trigger: 'change' }], // 新增
   duplicateNameStrategy: [{ required: true, message: t('render.hint.fieldRequired', { name: t('externalStorage.duplicateNameStrategy') }), trigger: 'change' }] // 新增
 }
+const WorkflowVariableMappingRef = ref<any>(null)
 
 function handleOpen(data: any, _isEdit = false) {
   isEdit.value = _isEdit
@@ -207,14 +208,18 @@ function handleVariableSelect(variable: string, attr = 'fileName') {
     input.focus()
   })
 }
-
 async function save() {
   try {
     await formRef.value.validate()
+    const workflowMapping = WorkflowVariableMappingRef.value.getData()
+    const params = {
+      ...form.value,
+      workflowMapping
+    }
     if (isEdit.value) {
-      await adminApi.api.patchExternalstorageProfilesProfileidOutputrecordOutputrecordid(props.id as string, setting.value.id, form.value)
+      await adminApi.api.patchExternalstorageProfilesProfileidOutputrecordOutputrecordid(props.id as string, setting.value.id, params)
     } else {
-      await adminApi.api.postExternalstorageProfilesProfileidOutputrecord(props.id as string, form.value)
+      await adminApi.api.postExternalstorageProfilesProfileidOutputrecord(props.id as string, params)
     }
     emits('refresh')
     dialogVisible.value = false

@@ -1,0 +1,157 @@
+<script lang="ts" setup>
+import { set } from '@vueuse/core'
+import { METADATA_OPTIONS, type MetadataOption } from '../../../../pages/admin-document-type/utils/metadataHelper'
+const props = defineProps<{
+  mode?: 'global' | 'task'
+}>()
+const opened = ref(false)
+const emits = defineEmits(['created', 'updated'])
+
+const editorProvider = inject(EDITOR_PROVIDER)
+if (!editorProvider) {
+  throw createError('editor provider not found')
+}
+const { bpmnGlobalRules } = editorProvider.BpmnRule
+let exitRules = []
+const idFieldRef = ref()
+function handleOpen(editField: any = {}) {
+  formData.value = editField.type ? { ...editField } : { ...initData, ...editField }
+  isEdit.value = editField.type
+  exitRules = isEdit.value ? bpmnGlobalRules.value.filter((item: any) => item.id !== editField.id) : bpmnGlobalRules.value
+  opened.value = true
+  setTimeout(() => {
+    if (idFieldRef.value) {
+      idFieldRef.value?.focus()
+    }
+  }, 100)
+}
+
+const FormRef = ref()
+const isEdit = ref(false)
+const initData = {
+  id: '',
+  name: '',
+  type: 'text',
+  maxLength: 200
+}
+const formData = ref({
+  ...initData
+})
+const ruleForm = ref<any>({})
+const newFieldRules = reactive({
+  id: [
+    {
+      required: true,
+      validator: idChanged,
+      trigger: 'blur'
+    }
+  ],
+  name: [
+    {
+      required: true,
+      validator: newNameChanged,
+      trigger: 'blur'
+    }
+  ]
+})
+function idChanged(rule: any, value: any, callback: any) {
+  if (!value) {
+    return callback(new Error('Please input id'))
+  }
+  // check if id has space and other special characters
+  if (!/^[a-zA-Z0-9_]+$/.test(value)) {
+    return callback(new Error('Id can only contain letters, numbers and underscores'))
+  }
+  const isDuplicatedItem = exitRules.find((item: any) => item.id === value)
+  if (isDuplicatedItem) {
+    return callback(new Error('Id is duplicated'))
+  }
+  callback()
+}
+function typeChanged(value: any) {
+  const options = METADATA_OPTIONS.reduce((acc: any, item: any) => {
+    acc.push(...item.options)
+    return acc
+  }, [])
+  const type = options.find((item: any) => item.validation.validationRuleName === value)
+  if (type) {
+    formData.value = {
+      ...formData.value,
+      ...type.validation
+    }
+    delete formData.value.validationRuleName
+    if (formData.value.type !== 'text') delete formData.value.maxLength
+  }
+}
+function newNameChanged(rule: any, value: any, callback: any) {
+  if (!value) {
+    return callback(new Error('Please input Name'))
+  }
+  const isDuplicatedItem = exitRules.some((item: any) => item.name === value)
+  if (isDuplicatedItem) {
+    return callback(new Error('Name is duplicated'))
+  }
+  callback()
+}
+
+async function confirmHandler() {
+  try {
+    await FormRef.value.validate()
+    if (isEdit.value) {
+      emits('updated', { ...formData.value })
+    } else {
+      emits('created', { ...formData.value })
+    }
+  
+    opened.value = false
+    FormRef.value.resetFields()
+  } catch (error) {
+    console.error(error)
+  }
+}
+
+defineExpose({
+  handleOpen
+})
+</script>
+
+<template>
+  <ElDialog
+    v-model="opened"
+    width="75%"
+    append-to-body
+    destroy-on-close
+    :title="isEdit ? $t('bpmn.updateRule') : mode === 'global' ? $t('bpmn.addGlobalRule') : $t('bpmn.addRule')"
+  >
+    <ElForm ref="FormRef" :model="formData" :rules="newFieldRules" label-position="top" status-icon @submit.stop>
+      <ElFormItem label="Id" prop="id">
+        <ElInput ref="idFieldRef" v-model="formData.id" placeholder="id" :disabled="isEdit" />
+      </ElFormItem>
+      <ElFormItem label="Name" prop="name">
+        <ElInput v-model="formData.name" placeholder="Name" />
+      </ElFormItem>
+      <ElFormItem label="Type" prop="type">
+        <el-select v-model="formData.type" placeholder="Select" @change="typeChanged">
+          <el-option-group v-for="group in METADATA_OPTIONS" :key="group.group" :label="$t(group.group)">
+            <el-option v-for="option in group.options" :key="option.name" :label="$t(option.name)" :value="option.validation.validationRuleName" />
+          </el-option-group>
+        </el-select>
+      </ElFormItem>
+      <BpmnRuleFieldText v-if="formData.type === 'text'" :form="formData" />
+      <BpmnRuleFieldNumber v-else-if="formData.type === 'number'" :form="formData" />
+      <BpmnRuleFieldBoolean v-else-if="formData.type === 'boolean'" :form="formData" />
+      <BpmnRuleFieldSelect v-else-if="formData.type === 'select'" :form="formData" />
+      <BpmnRuleFieldDate v-else-if="formData.type === 'date'" :form="formData" />
+      <BpmnRuleFieldDocument v-else-if="formData.type === 'document'" :form="formData" />
+      <BpmnRuleFieldCase v-else-if="formData.type === 'case'" :form="formData" />
+      <BpmnRuleFieldWorkflow v-else-if="formData.type === 'workflow'" :form="formData" />
+      <BpmnRuleFieldMasterTable v-else-if="formData.type === 'mastertable'" :form="formData" />
+      <BpmnRuleFieldUser v-else-if="formData.type === 'user'" :form="formData" />
+      <BpmnRuleFieldUserRoleUserGroup v-else-if="formData.type === 'user_role_user_group'" :form="formData" />
+      <!-- 根据type显示不同的表单项 -->
+      <ElFormItem>
+        <ElButton type="primary" @click="confirmHandler"> Confirm </ElButton>
+      </ElFormItem>
+    </ElForm>
+  </ElDialog>
+</template>

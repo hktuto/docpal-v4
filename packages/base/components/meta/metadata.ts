@@ -26,7 +26,18 @@ export const useMetadata = () => {
     'sec:securityKeyword'
   ]
   let count = 0
-  const getDocumentMetadata = async (type: string, initOptions = true): Promise<any> => {
+
+  const initVformVariableList = async (type: string, initOptions: any) => {
+    if (!initOptions) initOptions = {}
+    if (!initOptions.hiddenFields) initOptions.hiddenFields = []
+    if (!initOptions.requiredFields) initOptions.requiredFields = []
+    if (!initOptions.readonlyFields) initOptions.readonlyFields = []
+    const metadataList = await getDocumentMetadata(type)
+    const variableList: VariableItem[] = getVFormVariableListByMetadata(metadataList, initOptions)
+    return variableList
+  }
+  // get document type metadata
+  const getDocumentMetadata = async (type: string, isInitOption = true): Promise<any> => {
     if (metadataMap.value[type]) return metadataMap.value[type]
     try {
       // type = 'testOy'
@@ -34,13 +45,14 @@ export const useMetadata = () => {
         headers: { noThrowError: 'true' }
       })
       const metadataSchema: any = data.properties || {}
-      metadataMap.value[type] = await initMetadataVformOptions(metadataSchema, initOptions)
+      metadataMap.value[type] = await initMetadataVformOptions(metadataSchema, isInitOption)
       return metadataMap.value[type]
     } catch (error) {
       return null
     }
   }
-  const initMetadataVformOptions = async (metadataSchema: any, initOptions = true) => {
+  // turn backend metadata to vform options
+  const initMetadataVformOptions = async (metadataSchema: any, isInitOption = true) => {
     const promises: Promise<any>[] = []
     const properties: DocumentMetadata = {}
     Object.keys(metadataSchema).forEach(async (key) => {
@@ -58,7 +70,7 @@ export const useMetadata = () => {
             value: item
           }))
         } else if (item.items.validationName === 'mastertable') {
-          if (initOptions) {
+          if (isInitOption) {
             promises.push(
               getMasterTableOptions(item.items.info).then((options) => {
                 metadataItem.options = options
@@ -68,7 +80,7 @@ export const useMetadata = () => {
             metadataItem.onMounted = mounteMasterTableOptions(item.items.info.masterTableName, item.items.info.displayColumn, item.items.info.valueColumn)
           }
         } else if (item.items.validationName === 'user_role_user_group') {
-          if (initOptions) {
+          if (isInitOption) {
             // allow USER_ROLE, USER_GROUP, ALL
             metadataItem.options = []
             if (item.items.allow !== 'USER_GROUP') {
@@ -98,7 +110,7 @@ export const useMetadata = () => {
           }
         } else if (item.items.validationName === 'user') {
           metadataItem.options = []
-          if (initOptions) {
+          if (isInitOption) {
             promises.push(
               getUserList().then((options) => {
                 metadataItem.options = options
@@ -121,7 +133,10 @@ export const useMetadata = () => {
     await Promise.all(promises)
     return properties
   }
-  const getVFormVariableListByMetadata = (metadataListMap: DocumentMetadata, initOptions: any): VariableItem[] => {
+  const getVFormVariableListByMetadata = (metadataListMap: DocumentMetadata, initOptions: any = {}): VariableItem[] => {
+   if (!initOptions.hiddenFields) initOptions.hiddenFields = []
+    if (!initOptions.readonlyFields) initOptions.readonlyFields = []
+    if (!initOptions.requiredFields) initOptions.requiredFields = []
     const widgetVariableList: VariableItem[] = []
     Object.keys(metadataListMap).forEach((key) => {
       if (ignoreList.indexOf(key) !== -1 || initOptions.hiddenFields.includes(key)) return
@@ -142,7 +157,12 @@ export const useMetadata = () => {
         case 'select':
           const selectResult = selectDecorator(metadataItem)
           _item.options = selectResult.options
-          _item.type = selectResult.type
+          if (metadataItem.validationName === 'user_role_user_group') {
+            _item.type = 'select-v2'
+            _item.options.optionItems = []
+          } else {
+            _item.type = selectResult.type
+          }
           break
         case 'date':
           const dateResult = dateDecorator(metadataItem)
@@ -158,7 +178,7 @@ export const useMetadata = () => {
           _item.type = 'textarea'
           _item.options.maxLength = metadataItem.maxLength || 0
           const row60 = (_item.options.maxLength / 60).toFixed(0)
-          _item.options.rows = Number(row60) > 0 ? Number(row60) : 1 
+          _item.options.rows = Number(row60) > 0 ? Number(row60) : 1
           break
         case 'boolean':
           _item.type = 'switch'
@@ -184,18 +204,9 @@ export const useMetadata = () => {
     })
     return widgetVariableList
   }
-  
-  const initVformVariableList = async (type: string, initOptions: any) => {
-    if (!initOptions) initOptions = {}
-    if (!initOptions.hiddenFields) initOptions.hiddenFields = []
-    if (!initOptions.requiredFields) initOptions.requiredFields = []
-    if (!initOptions.readonlyFields) initOptions.readonlyFields = []
-    const metadataList = await getDocumentMetadata(type)
-    const variableList: VariableItem[] = getVFormVariableListByMetadata(metadataList, initOptions)
-    return variableList
-  }
+  // get vform data
   function getStringfyData(data: Record<string, any>, variableList: VariableItem[]) {
-    const result: any =  {}
+    const result: any = {}
     variableList.forEach((item) => {
       if (!item.options) return
       if (item.options.validationType === 'array') {
@@ -213,24 +224,27 @@ export const useMetadata = () => {
           }
           return JSON.stringify(selectItem)
         })
-      } else if(item.options.validationName === 'boolean') {
+      } else if (item.options.validationName === 'boolean') {
         result[item.name] = data[item.name] ? true : false
-      } else if(data[item.name]) {
+      } else if (data[item.name]) {
         result[item.name] = data[item.name]
       }
     })
     return result
   }
+  // set vform data
   function getParseData(data: Record<string, any>, variableList: VariableItem[]) {
     const result = { ...data }
     Object.keys(result).forEach((key) => {
       let resultItem = result[key]
       if (Array.isArray(resultItem)) {
-        result[key] = resultItem.map((citem: any) => {
-          const _citem = getParseDataItem(citem)
-          if (!_citem.value) return _citem
-          return _citem.value
-        }).filter((item: any) => !!item)
+        result[key] = resultItem
+          .map((citem: any) => {
+            const _citem = getParseDataItem(citem)
+            if (!_citem.value) return _citem
+            return _citem.value
+          })
+          .filter((item: any) => !!item)
       }
       const variableItem = variableList.find((item) => item.name === key)
       if (!variableItem) return
@@ -283,7 +297,7 @@ export const useMetadata = () => {
           onEnter: ''
         }
       }
-      if (!['date', 'input', 'switch', 'textarea', 'number', 'select', 'json-editor', 'divider', 'select-group', 'date-range'].includes(item.type))
+      if (!['date', 'input', 'switch', 'textarea', 'number', 'select', 'json-editor', 'divider', 'select-group', 'date-range', 'select-v2'].includes(item.type))
         _item.type = 'input'
       if (item.type === 'date') {
         _item.options.format = item.options.type === 'datetime' ? 'YYYY-MM-DD HH:mm' : 'YYYY-MM-DD' //日期显示格式
@@ -315,7 +329,62 @@ export const useMetadata = () => {
     })
     return widgetList
   }
+
+  function turnWorkflowRuleToBackendMetadata(ruleList: any[]) {
+    const backendMetadataListMap: any = {}
+    ruleList.forEach((ruleItem) => {
+      const key = ruleItem.id
+      if (!ruleItem.validationRule) {
+        backendMetadataListMap[key] = ruleItem
+        return
+      }
+      switch (ruleItem.validationRule?.type) {
+        case 'select':
+          backendMetadataListMap[key] = {
+            isMultiple: ruleItem.validationRule.isMultiple,
+            items: {
+              enum: ruleItem.validationRule.options,
+              validationName: ruleItem.validationRule.type
+            }
+          }
+          break
+        case 'mastertable':
+          backendMetadataListMap[key] = {
+            isMultiple: ruleItem.validationRule.isMultiple,
+            items: {
+              validationName: ruleItem.validationRule.type,
+              info: {
+                masterTableName: ruleItem.validationRule.masterTableName,
+                valueColumn: ruleItem.validationRule.valueColumn,
+                displayColumn: ruleItem.validationRule.displayColumn
+              }
+            }
+          }
+          break
+        case 'user':
+        case 'user_role_user_group':
+        case 'workflow':
+        case 'document':
+        case 'case':
+        case 'date':
+          backendMetadataListMap[key] = {
+            isMultiple: ruleItem.validationRule.isMultiple,
+            items: {
+              ...ruleItem.validationRule,
+              validationName: ruleItem.validationRule.type
+            }
+          }
+          break
+        default:
+          backendMetadataListMap[key] = { ...ruleItem, ...ruleItem.validationRule, validationName: ruleItem.validationRule?.type }
+          delete backendMetadataListMap[key].validationRule
+          break
+      }
+    })
+    return backendMetadataListMap
+  }
   return {
+    turnWorkflowRuleToBackendMetadata,
     vFormWidgetListDecorator,
     getVFormVariableListByMetadata,
     initVformVariableList,

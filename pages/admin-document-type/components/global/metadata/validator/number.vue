@@ -9,7 +9,8 @@
     </ElFormItem>
 
     <ElFormItem :label="t('marsterTable.type.decimal')" :required="true">
-      <ElInput v-model="validation.multipleOf" :placeholder="t('marsterTable.type.decimal')" type="number" min="0" />
+      <ElInput v-model="validation.multipleOf" :placeholder="t('marsterTable.type.decimal')" type="number" :min="0"
+               :max="20" />
     </ElFormItem>
   </ElForm>
 </template>
