@@ -44,6 +44,7 @@ watch(
 </script>
 
 <template>
+  <!-- TODO: 現在的Field包含了其他數據類型(select,Date)，當Form Info選擇新的數據類型，value：沒有對應數據類型所需要的組件  -->
   <ElFormItem label="Form Info">
     <ElSelect v-model="condition.attr_updateFieldName" placeholder="Form Info" :disabled="disabled">
       <ElOption v-for="item in allFields" :key="item.attr_id" :label="item.attr_name" :value="item.attr_id" />
@@ -64,6 +65,9 @@ watch(
     <ElSwitch v-model="condition.attr_value" />
   </ElFormItem>
   <ElFormItem v-else-if="infoType !== 'boolean'" label="Value">
+    <ElInput v-model="condition.attr_value" />
+  </ElFormItem>
+  <ElFormItem v-else label="Value">
     <ElInput v-model="condition.attr_value" />
   </ElFormItem>
 </template>
