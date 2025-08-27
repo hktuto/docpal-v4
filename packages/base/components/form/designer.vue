@@ -13,7 +13,8 @@
 import type { FormJson, FieldListApiType, FormConfig, FormDesigner } from '@/types/vform'
 import { useMetadata } from '@/components/meta/metadata'
 import { ElMessage } from 'element-plus'
-const { initMetadataVformOptions, getVFormVariableListByMetadata, vFormWidgetListDecorator } = useMetadata()
+
+const { initMetadataVformOptions, getVFormVariableListByMetadata, vFormWidgetListDecorator, turnWorkflowRuleToBackendMetadata } = useMetadata()
 const props = defineProps<{
   fieldListApi?: FieldListApiType
   designerConfig?: FormConfig
@@ -68,18 +69,12 @@ function getFormJson(): any {
 }
 
 async function autoGenerate() {
-  if (!props.fieldListApi) {
+  if (!props.fieldListApi || !props.fieldListApi.data || props.fieldListApi.data.length === 0) {
     ElMessage.info(t('dpMsg_noDataUpdate'))
     return
   }
-  const list = props.fieldListApi?.data.reduce((prev, item) => {
-    prev[item[props.fieldListApi.nameKey]] = {
-      validationName: 'input',
-      label: item[props.fieldListApi.labelKey],
-    }
-    return prev
-  }, {})
-  const metadataVariableList = await initMetadataVformOptions(list, false)
+  const backendMetadataList = turnWorkflowRuleToBackendMetadata(props.fieldListApi.data)
+  const metadataVariableList = await initMetadataVformOptions(backendMetadataList, false)
   const variableList = getVFormVariableListByMetadata(metadataVariableList)
   const widgetList = vFormWidgetListDecorator(variableList)
   const oldFieldList = vFormDesignerRef.value?.getFieldWidgets()

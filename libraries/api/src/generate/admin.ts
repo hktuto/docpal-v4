@@ -522,6 +522,65 @@ export interface ResultVoid {
     locale?: string;
 }
 
+/** Validation Rule Request DTO */
+export interface ValidationRuleRequestDTO {
+    /** Validation Rule ID */
+    id?: string;
+    /** Draft ID */
+    draftId: string;
+    /**
+     * Version number
+     * @format int32
+     */
+    version: number;
+    /** Node name */
+    nodeName: string;
+    /** JSON Schema validation rules */
+    validationRules: object;
+}
+
+export interface ResultValidationRuleResponseDTO {
+    result?: boolean;
+    /** @format int32 */
+    code?: number;
+    message?: string;
+    /** Validation Rule Response DTO */
+    data?: ValidationRuleResponseDTO;
+    messageKey?: string;
+    locale?: string;
+}
+
+/** Validation Rule Response DTO */
+export interface ValidationRuleResponseDTO {
+    /** Validation Rule ID */
+    id?: string;
+    /** Draft ID */
+    draftId?: string;
+    /**
+     * Version number
+     * @format int32
+     */
+    version?: number;
+    /** Node name */
+    nodeName?: string;
+    /** JSON Schema validation rules */
+    validationRules?: object;
+    /** Created by */
+    createdBy?: string;
+    /** Modified by */
+    modifiedBy?: string;
+    /**
+     * Created date
+     * @format date-time
+     */
+    createdDate?: string;
+    /**
+     * Modified date
+     * @format date-time
+     */
+    modifiedDate?: string;
+}
+
 export interface ActiveUserRequestDTO {
     /** Id */
     id?: string;
@@ -8180,6 +8239,21 @@ export interface ResultListMTRelationResponseDTO {
     locale?: string;
 }
 
+export interface ResultListSelectOptionDTO {
+    result?: boolean;
+    /** @format int32 */
+    code?: number;
+    message?: string;
+    data?: SelectOptionDTO[];
+    messageKey?: string;
+    locale?: string;
+}
+
+export interface SelectOptionDTO {
+    value?: object;
+    label?: string;
+}
+
 export interface MTFieldTypeMapping {
     value?: string;
     label?: string;
@@ -9581,6 +9655,42 @@ export class Admin<SecurityDataType extends unknown> extends HttpClient<Security
         putWhatsappUpdateWhatsappSetting: (data: WhatsAppSettingDTO, params: RequestParams = {}) =>
             this.request<ResultVoid, Result | (ResultObject | Result | ResultString)>({
                 path: `/docpal/whatsapp/update_whatsapp_setting`,
+                method: "PUT",
+                body: data,
+                type: ContentType.Json,
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags ValidationRuleController
+         * @name GetValidationRulesVersiondraftid
+         * @summary Get validation rule by version:draftId
+         * @request GET:/api/docpal/validation-rules/{versionDraftId}
+         */
+        getValidationRulesVersiondraftid: (versionDraftId: string, params: RequestParams = {}) =>
+            this.request<ResultValidationRuleResponseDTO, Result | (ResultObject | Result | ResultString)>({
+                path: `/docpal/validation-rules/${versionDraftId}`,
+                method: "GET",
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags ValidationRuleController
+         * @name PutValidationRulesVersiondraftid
+         * @summary Update validation rule by version:draftId
+         * @request PUT:/api/docpal/validation-rules/{versionDraftId}
+         */
+        putValidationRulesVersiondraftid: (
+            versionDraftId: string,
+            data: ValidationRuleRequestDTO,
+            params: RequestParams = {},
+        ) =>
+            this.request<ResultValidationRuleResponseDTO, Result | (ResultObject | Result | ResultString)>({
+                path: `/docpal/validation-rules/${versionDraftId}`,
                 method: "PUT",
                 body: data,
                 type: ContentType.Json,
@@ -13862,6 +13972,23 @@ export class Admin<SecurityDataType extends unknown> extends HttpClient<Security
             this.request<ResultWatermarkSettingsDTO, Result | (ResultObject | Result | ResultString)>({
                 path: `/docpal/watermark/settings`,
                 method: "PATCH",
+                body: data,
+                type: ContentType.Json,
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags ValidationRuleController
+         * @name PostValidationRules
+         * @summary Create validation rule
+         * @request POST:/api/docpal/validation-rules
+         */
+        postValidationRules: (data: ValidationRuleRequestDTO, params: RequestParams = {}) =>
+            this.request<ResultValidationRuleResponseDTO, Result | (ResultObject | Result | ResultString)>({
+                path: `/docpal/validation-rules`,
+                method: "POST",
                 body: data,
                 type: ContentType.Json,
                 ...params,
@@ -20420,6 +20547,20 @@ export class Admin<SecurityDataType extends unknown> extends HttpClient<Security
         getMasterTablesRelationId: (id: string, params: RequestParams = {}) =>
             this.request<ResultListMTRelationResponseDTO, Result | (ResultObject | Result | ResultString)>({
                 path: `/docpal/master/tables/relation/${id}`,
+                method: "GET",
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags MasterTableController
+         * @name GetMasterTablesRecordSortOptionTableid
+         * @request GET:/api/docpal/master/tables/record/sort-option/{tableId}
+         */
+        getMasterTablesRecordSortOptionTableid: (tableId: string, params: RequestParams = {}) =>
+            this.request<ResultListSelectOptionDTO, Result | (ResultObject | Result | ResultString)>({
+                path: `/docpal/master/tables/record/sort-option/${tableId}`,
                 method: "GET",
                 ...params,
             }),

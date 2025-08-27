@@ -1,1 +1,533 @@
-{"widgetList":[{"key":60885,"type":"select-group","icon":"select-group-field","formItemFlag":true,"options":{"name":"ids","label":"rightDetail_userGroup","labelAlign":"","defaultValue":[],"placeholder":"","prefixIcon":"","columnWidth":"200px","size":"","labelWidth":null,"labelHidden":false,"disabled":false,"hidden":false,"clearable":true,"filterable":true,"allowCreate":false,"remote":false,"automaticDropdown":false,"multiple":true,"multipleLimit":0,"optionItems":[],"required":true,"requiredHint":"","validation":"","validationHint":"","customClass":[],"labelIconClass":null,"labelIconPosition":"rear","labelTooltip":null,"onCreated":"","onMounted":"// rightDetail_userGroup\nconst _this = this\nasync function getOptions() {\n  const options = [\n        { value: 'user_users', label: $i18n.t('user_users'), options: await userListFilter() },\n        { value: 'user_groups', label: $i18n.t('user_groups'), options: await groupListFilter() }\n  ]\n  _this.loadOptions(options)\n}\nasync function userListFilter () {\n  const data = await $api.post('/nuxeo/identity/users', {}).then(res => res.data.data)\n  return data.reduce((prev,item) => {\n    if (item.userId) prev.push({\n      label: item.username,\n      value: 'user---' + item.userId\n    })\n    return prev\n  }, [])\n}\nasync function groupListFilter () {\n  const data = await $api.post('/nuxeo/identity/groups', {}).then(res => res.data.data)\n  return data.reduce((prev,item) => {\n    if (item.id) prev.push({\n      label: item.name,\n      value: 'group---' + item.id\n    })\n    return prev\n  }, [])\n}\ngetOptions()","onRemoteQuery":"","onChange":"const groudIds = []\nconst userIds = []\nvalue.forEach(item => {\n  const ids = item.split('---')\n  if(ids[0] === 'group') {\n    groudIds.push(ids[1])\n  } else {\n    userIds.push(ids[1])\n  }\n})\n\nconst shareToUserIds = this.getWidgetRef('shareToUserIds')\nconst shareToGroupIds = this.getWidgetRef('shareToGroupIds')\nshareToUserIds.setValue(userIds)\nshareToGroupIds.setValue(groudIds)","onFocus":"","onBlur":"","onValidate":""},"id":"selectgroup90601"},{"key":30924,"type":"select","icon":"select-field","formItemFlag":true,"options":{"name":"permission","label":"dpTable_right","labelAlign":"","defaultValue":"ReadWrite","placeholder":"","columnWidth":"200px","size":"","labelWidth":null,"labelHidden":false,"disabled":false,"hidden":false,"clearable":true,"filterable":true,"allowCreate":false,"remote":false,"automaticDropdown":false,"multiple":false,"multipleLimit":0,"optionItems":[{"label":"Read","value":"Read"},{"label":"Write","value":"ReadWrite"},{"label":"Manage","value":"Everything"}],"required":true,"requiredHint":"","validation":"","validationHint":"","customClass":[],"labelIconClass":null,"labelIconPosition":"rear","labelTooltip":null,"onCreated":"","onMounted":"","onRemoteQuery":"","onChange":"","onFocus":"","onBlur":"","onValidate":""},"id":"select77632"},{"key":51263,"type":"radio","icon":"radio-field","formItemFlag":true,"options":{"name":"time","label":"dpTable_validityPeriod","labelAlign":"","defaultValue":"permanent","columnWidth":"200px","size":"","displayStyle":"inline","buttonStyle":false,"border":false,"labelWidth":null,"labelHidden":false,"disabled":false,"hidden":false,"optionItems":[{"label":"Permanent","value":"permanent"},{"label":"Limited","value":"dateBase"}],"required":true,"requiredHint":"","validation":"","validationHint":"","customClass":["labelLeft"],"labelIconClass":null,"labelIconPosition":"rear","labelTooltip":null,"onCreated":"this.loadOptions([\n  { label: $t('dpTable_permanent'), value: 'permanent'},\n  { label: $t('dpTable_dateBase'), value: 'dateBase'},\n])","onMounted":"","onChange":"const dateRangeRef = this.getWidgetRef('dateRange')\nconsole.log({dateRangeRef})\nif(value === 'permanent') {\n  dateRangeRef.setHidden(true)\n  dateRangeRef.setRequired(false)\n} else {\n  dateRangeRef.setHidden(false)\n  dateRangeRef.setRequired(true)\n}","onValidate":""},"id":"radio26932"},{"key":34672,"type":"date-range","icon":"date-range-field","formItemFlag":true,"options":{"name":"dateRange","label":"dpTable_dateRange","labelAlign":"","type":"daterange","defaultValue":null,"startPlaceholder":"","endPlaceholder":"","columnWidth":"200px","size":"","autoFullWidth":true,"labelWidth":null,"labelHidden":false,"readonly":false,"disabled":false,"hidden":true,"clearable":true,"editable":true,"format":"YYYY-MM-DD HH:mm","valueFormat":"YYYY-MM-DDTHH:mm:ss.000Z","defaultTime":["2000-01-01 00:00:00","2000-01-01 23:59:00"],"required":false,"requiredHint":"","validation":"","validationHint":"","customClass":[],"labelIconClass":null,"labelIconPosition":"rear","labelTooltip":null,"onCreated":"","onMounted":"","onChange":"","onFocus":"","onBlur":"","onValidate":"","onDisabledDate":"return dateTime.getTime() <= new Date().getTime() - 60 * 1000 * 24 * 60;"},"id":"daterange97077"},{"key":89905,"type":"checkbox","icon":"checkbox-field","formItemFlag":true,"options":{"name":"isSendEmail","label":"isSendEmail","labelAlign":"","defaultValue":["1"],"columnWidth":"200px","size":"","displayStyle":"inline","buttonStyle":false,"border":false,"labelWidth":null,"labelHidden":true,"disabled":false,"hidden":false,"optionItems":[{"label":"Send Email Notification","value":"1"}],"required":false,"requiredHint":"","validation":"","validationHint":"","customClass":[],"labelIconClass":null,"labelIconPosition":"rear","labelTooltip":null,"onCreated":"this.loadOptions([\n  { label: $t('dpTable_isSendEmail'), value: '1' }\n])","onMounted":"","onChange":"","onValidate":""},"id":"checkbox85705"},{"key":92857,"type":"select","icon":"select-field","formItemFlag":true,"options":{"name":"shareToGroupIds","label":"shareToGroupIds","labelAlign":"","defaultValue":"","placeholder":"","columnWidth":"200px","size":"","labelWidth":null,"labelHidden":false,"disabled":false,"hidden":true,"clearable":true,"filterable":true,"allowCreate":false,"popperClass":[],"remote":false,"automaticDropdown":false,"multiple":false,"multipleLimit":0,"optionItems":[],"required":false,"requiredHint":"","validation":"","validationHint":"","customClass":[],"labelIconClass":null,"labelIconPosition":"rear","labelTooltip":null,"onCreated":"","onMounted":"","onRemoteQuery":"","onChange":"","onFocus":"","onBlur":"","onValidate":""},"id":"select11704"},{"key":92857,"type":"select","icon":"select-field","formItemFlag":true,"options":{"name":"shareToUserIds","label":"shareToUserIds","labelAlign":"","defaultValue":"","placeholder":"","columnWidth":"200px","size":"","labelWidth":null,"labelHidden":false,"disabled":false,"hidden":true,"clearable":true,"filterable":true,"allowCreate":false,"popperClass":[],"remote":false,"automaticDropdown":false,"multiple":false,"multipleLimit":0,"optionItems":[],"required":false,"requiredHint":"","validation":"","validationHint":"","customClass":"","labelIconClass":null,"labelIconPosition":"rear","labelTooltip":null,"onCreated":"","onMounted":"","onRemoteQuery":"","onChange":"","onFocus":"","onBlur":"","onValidate":""},"id":"select98304"}],"formConfig":{"modelName":"formData","refName":"vForm","rulesName":"rules","labelWidth":80,"labelPosition":"top","size":"","labelAlign":"label-left-align","cssCode":".el-form-item.labelLeft{\n  display: flex;\n  align-items: center;\n}\n.el-form-item.labelLeft .el-form-item__label {\n  margin-bottom: unset!important;\n}\n","customClass":[],"functions":"","layoutType":"PC","jsonVersion":3,"onFormCreated":"","onFormMounted":"","onFormDataChange":"","dhList":[],"onFormValidate":"","saveRemoteOptions":"never","labelFormUniqueName":true,"dataSources":[]}}
+{
+  "widgetList": [
+    {
+      "key": 60885,
+      "type": "select-group",
+      "icon": "select-group-field",
+      "formItemFlag": true,
+      "options": {
+        "name": "ids",
+        "label": "tableHeader.user_role_group",
+        "labelAlign": "",
+        "defaultValue": [],
+        "placeholder": "",
+        "prefixIcon": "",
+        "columnWidth": "200px",
+        "size": "",
+        "labelWidth": null,
+        "labelHidden": false,
+        "disabled": false,
+        "hidden": false,
+        "clearable": true,
+        "filterable": true,
+        "allowCreate": false,
+        "remote": false,
+        "automaticDropdown": false,
+        "multiple": true,
+        "multipleLimit": 0,
+        "optionItems": [
+          {
+            "value": "user_users",
+            "label": "用户",
+            "options": [
+              {
+                "label": "jack5",
+                "value": "user---jack5"
+              },
+              {
+                "label": "jack_li",
+                "value": "user---jack_li"
+              },
+              {
+                "label": "jack_li1",
+                "value": "user---jack_li1"
+              },
+              {
+                "label": "jack_li2",
+                "value": "user---jack_li2"
+              },
+              {
+                "label": "jack_li5",
+                "value": "user---jack_li5"
+              },
+              {
+                "label": "johnson",
+                "value": "user---johnson"
+              },
+              {
+                "label": "joshua",
+                "value": "user---joshua"
+              },
+              {
+                "label": "lyle",
+                "value": "user---lyle"
+              },
+              {
+                "label": "lyletest",
+                "value": "user---lyletest"
+              },
+              {
+                "label": "nine",
+                "value": "user---nine"
+              },
+              {
+                "label": "nineadmin",
+                "value": "user---nineadmin"
+              },
+              {
+                "label": "nineins",
+                "value": "user---nineins"
+              },
+              {
+                "label": "ninerabbit",
+                "value": "user---ninerabbit"
+              },
+              {
+                "label": "ooyy",
+                "value": "user---ooyy"
+              },
+              {
+                "label": "ooyycdbd",
+                "value": "user---ooyycdbd"
+              },
+              {
+                "label": "roy",
+                "value": "user---roy"
+              },
+              {
+                "label": "teststatu",
+                "value": "user---teststatu"
+              },
+              {
+                "label": "testuser",
+                "value": "user---testuser"
+              },
+              {
+                "label": "will_du",
+                "value": "user---will_du"
+              }
+            ]
+          },
+          {
+            "value": "user_groups",
+            "label": "分配的用户群组",
+            "options": [
+              {
+                "label": "Adhoc Group",
+                "value": "group---Adhoc_Group"
+              },
+              {
+                "label": "Administrators Group",
+                "value": "group---administrators"
+              },
+              {
+                "label": "Bedfordshire Dept",
+                "value": "group---BedfordshireDept"
+              },
+              {
+                "label": "BOOK",
+                "value": "group---BOOK"
+              },
+              {
+                "label": "CPA-Members",
+                "value": "group---CPA-Members"
+              },
+              {
+                "label": "HR deptartment",
+                "value": "group---HR_dept"
+              },
+              {
+                "label": "IT Group",
+                "value": "group---IT_Group"
+              },
+              {
+                "label": "IT Dept",
+                "value": "group---ITDept"
+              },
+              {
+                "label": "Market Group",
+                "value": "group---Market_Group"
+              },
+              {
+                "label": "Sales Group",
+                "value": "group---Sales_Group"
+              },
+              {
+                "label": "Show Group",
+                "value": "group---Show_Group"
+              },
+              {
+                "label": "USB Dept",
+                "value": "group---USBDept"
+              }
+            ]
+          }
+        ],
+        "required": true,
+        "requiredHint": "",
+        "validation": "",
+        "validationHint": "",
+        "customClass": [],
+        "labelIconClass": null,
+        "labelIconPosition": "rear",
+        "labelTooltip": null,
+        "onCreated": "",
+        "onMounted": "// rightDetail_userGroup\nconst _this = this\nasync function getOptions() {\n  const options = [\n        { value: 'user_roles', label: $i18n.t('user_role'), options: await roleListFilter() },\n        { value: 'user_users', label: $i18n.t('user_users'), options: await userListFilter() },\n        { value: 'user_groups', label: $i18n.t('user_groups'), options: await groupListFilter() },\n  ]\n  _this.loadOptions(options)\n}\nasync function userListFilter () {\n  const data = await $api.post('/nuxeo/identity/users', {}).then(res => res.data.data)\n  return data.reduce((prev,item) => {\n    if (item.userId) prev.push({\n      label: item.username,\n      value: 'user---' + item.userId\n    })\n    return prev\n  }, [])\n}\nasync function groupListFilter () {\n  const data = await $api.post('/nuxeo/identity/groups', {}).then(res => res.data.data)\n  return data.reduce((prev,item) => {\n    if (item.id) prev.push({\n      label: item.name,\n      value: 'group---' + item.id\n    })\n    return prev\n  }, [])\n}\nasync function roleListFilter () {\n  try {\n    const data = await $api.get('/docpal/acl/role/root').then((res) => res.data.data)\n    const roleList = data ? makeFlapRoleList([data]) : []\n    return roleList.map((item) => ({\n      label: item.name,\n      value: 'role---' + item.id\n    }))\n  } catch (error) {\n    console.error(error)\n    return []\n  }\n}\nfunction makeFlapRoleList(data, roleList = []) {\n  data.forEach((node) => {\n    const _node = { ...node }\n    delete _node.children\n    roleList.push(_node)\n    if (node.children) {\n      makeFlapRoleList(node.children, roleList)\n    }\n  })\n  return roleList\n}\ngetOptions()",
+        "onRemoteQuery": "",
+        "onChange": "const groudIds = []\nconst userIds = []\nconst roleIds = []\nvalue.forEach(item => {\n  const ids = item.split('---')\n  if(ids[0] === 'group') {\n    groudIds.push(ids[1])\n  } else if(ids[0] === 'role') {\n    roleIds.push(ids[1])\n  }else {\n    userIds.push(ids[1])\n  }\n})\n\nconst shareToUserIds = this.getWidgetRef('shareToUserIds')\nconst shareToGroupIds = this.getWidgetRef('shareToGroupIds')\nconst shareToRoleIds = this.getWidgetRef('shareToRoleIds')\nshareToUserIds.setValue(userIds)\nshareToGroupIds.setValue(groudIds)\nshareToRoleIds.setValue(roleIds)",
+        "onFocus": "",
+        "onBlur": "",
+        "onValidate": ""
+      },
+      "id": "selectgroup90601"
+    },
+    {
+      "key": 30924,
+      "type": "select",
+      "icon": "select-field",
+      "formItemFlag": true,
+      "options": {
+        "name": "permission",
+        "label": "dpTable_right",
+        "labelAlign": "",
+        "defaultValue": "ReadWrite",
+        "placeholder": "",
+        "columnWidth": "200px",
+        "size": "",
+        "labelWidth": null,
+        "labelHidden": false,
+        "disabled": false,
+        "hidden": false,
+        "clearable": true,
+        "filterable": true,
+        "allowCreate": false,
+        "remote": false,
+        "automaticDropdown": false,
+        "multiple": false,
+        "multipleLimit": 0,
+        "optionItems": [
+          {
+            "label": "Read",
+            "value": "Read"
+          },
+          {
+            "label": "Write",
+            "value": "ReadWrite"
+          },
+          {
+            "label": "Manage",
+            "value": "Everything"
+          }
+        ],
+        "required": true,
+        "requiredHint": "",
+        "validation": "",
+        "validationHint": "",
+        "customClass": [],
+        "labelIconClass": null,
+        "labelIconPosition": "rear",
+        "labelTooltip": null,
+        "onCreated": "",
+        "onMounted": "",
+        "onRemoteQuery": "",
+        "onChange": "",
+        "onFocus": "",
+        "onBlur": "",
+        "onValidate": ""
+      },
+      "id": "select77632"
+    },
+    {
+      "key": 51263,
+      "type": "radio",
+      "icon": "radio-field",
+      "formItemFlag": true,
+      "options": {
+        "name": "time",
+        "label": "dpTable_validityPeriod",
+        "labelAlign": "",
+        "defaultValue": "permanent",
+        "columnWidth": "200px",
+        "size": "",
+        "displayStyle": "inline",
+        "buttonStyle": false,
+        "border": false,
+        "labelWidth": null,
+        "labelHidden": false,
+        "disabled": false,
+        "hidden": false,
+        "optionItems": [
+          {
+            "label": "永久",
+            "value": "permanent"
+          },
+          {
+            "label": "有限",
+            "value": "dateBase"
+          }
+        ],
+        "required": true,
+        "requiredHint": "",
+        "validation": "",
+        "validationHint": "",
+        "customClass": [
+          "labelLeft"
+        ],
+        "labelIconClass": null,
+        "labelIconPosition": "rear",
+        "labelTooltip": null,
+        "onCreated": "this.loadOptions([\n  { label: $t('dpTable_permanent'), value: 'permanent'},\n  { label: $t('dpTable_dateBase'), value: 'dateBase'},\n])",
+        "onMounted": "",
+        "onChange": "const dateRangeRef = this.getWidgetRef('dateRange')\nconsole.log({dateRangeRef})\nif(value === 'permanent') {\n  dateRangeRef.setHidden(true)\n  dateRangeRef.setRequired(false)\n} else {\n  dateRangeRef.setHidden(false)\n  dateRangeRef.setRequired(true)\n}",
+        "onValidate": ""
+      },
+      "id": "radio26932"
+    },
+    {
+      "key": 34672,
+      "type": "date-range",
+      "icon": "date-range-field",
+      "formItemFlag": true,
+      "options": {
+        "name": "dateRange",
+        "label": "dpTable_dateRange",
+        "labelAlign": "",
+        "type": "daterange",
+        "defaultValue": null,
+        "startPlaceholder": "",
+        "endPlaceholder": "",
+        "columnWidth": "200px",
+        "size": "",
+        "autoFullWidth": true,
+        "labelWidth": null,
+        "labelHidden": false,
+        "readonly": false,
+        "disabled": false,
+        "hidden": true,
+        "clearable": true,
+        "editable": true,
+        "format": "YYYY-MM-DD HH:mm",
+        "valueFormat": "YYYY-MM-DDTHH:mm:ss.000Z",
+        "defaultTime": [
+          "2000-01-01 00:00:00",
+          "2000-01-01 23:59:00"
+        ],
+        "required": false,
+        "requiredHint": "",
+        "validation": "",
+        "validationHint": "",
+        "customClass": [],
+        "labelIconClass": null,
+        "labelIconPosition": "rear",
+        "labelTooltip": null,
+        "onCreated": "",
+        "onMounted": "",
+        "onChange": "",
+        "onFocus": "",
+        "onBlur": "",
+        "onValidate": "",
+        "onDisabledDate": "return dateTime.getTime() <= new Date().getTime() - 60 * 1000 * 24 * 60;"
+      },
+      "id": "daterange97077"
+    },
+    {
+      "key": 89905,
+      "type": "checkbox",
+      "icon": "checkbox-field",
+      "formItemFlag": true,
+      "options": {
+        "name": "isSendEmail",
+        "label": "isSendEmail",
+        "labelAlign": "",
+        "defaultValue": [
+          "1"
+        ],
+        "columnWidth": "200px",
+        "size": "",
+        "displayStyle": "inline",
+        "buttonStyle": false,
+        "border": false,
+        "labelWidth": null,
+        "labelHidden": true,
+        "disabled": false,
+        "hidden": false,
+        "optionItems": [
+          {
+            "label": "发送电邮通知",
+            "value": "1"
+          }
+        ],
+        "required": false,
+        "requiredHint": "",
+        "validation": "",
+        "validationHint": "",
+        "customClass": [],
+        "labelIconClass": null,
+        "labelIconPosition": "rear",
+        "labelTooltip": null,
+        "onCreated": "this.loadOptions([\n  { label: $t('dpTable_isSendEmail'), value: '1' }\n])",
+        "onMounted": "",
+        "onChange": "",
+        "onValidate": ""
+      },
+      "id": "checkbox85705"
+    },
+    {
+      "key": 92857,
+      "type": "select",
+      "icon": "select-field",
+      "formItemFlag": true,
+      "options": {
+        "name": "shareToGroupIds",
+        "label": "shareToGroupIds",
+        "labelAlign": "",
+        "defaultValue": "",
+        "placeholder": "",
+        "columnWidth": "200px",
+        "size": "",
+        "labelWidth": null,
+        "labelHidden": false,
+        "disabled": false,
+        "hidden": true,
+        "clearable": true,
+        "filterable": true,
+        "allowCreate": false,
+        "popperClass": [],
+        "remote": false,
+        "automaticDropdown": false,
+        "multiple": false,
+        "multipleLimit": 0,
+        "optionItems": [],
+        "required": false,
+        "requiredHint": "",
+        "validation": "",
+        "validationHint": "",
+        "customClass": [],
+        "labelIconClass": null,
+        "labelIconPosition": "rear",
+        "labelTooltip": null,
+        "onCreated": "",
+        "onMounted": "",
+        "onRemoteQuery": "",
+        "onChange": "",
+        "onFocus": "",
+        "onBlur": "",
+        "onValidate": ""
+      },
+      "id": "select11704"
+    },
+    {
+      "key": 92857,
+      "type": "select",
+      "icon": "select-field",
+      "formItemFlag": true,
+      "options": {
+        "name": "shareToUserIds",
+        "label": "shareToUserIds",
+        "labelAlign": "",
+        "defaultValue": "",
+        "placeholder": "",
+        "columnWidth": "200px",
+        "size": "",
+        "labelWidth": null,
+        "labelHidden": false,
+        "disabled": false,
+        "hidden": true,
+        "clearable": true,
+        "filterable": true,
+        "allowCreate": false,
+        "popperClass": [],
+        "remote": false,
+        "automaticDropdown": false,
+        "multiple": false,
+        "multipleLimit": 0,
+        "optionItems": [],
+        "required": false,
+        "requiredHint": "",
+        "validation": "",
+        "validationHint": "",
+        "customClass": "",
+        "labelIconClass": null,
+        "labelIconPosition": "rear",
+        "labelTooltip": null,
+        "onCreated": "",
+        "onMounted": "",
+        "onRemoteQuery": "",
+        "onChange": "",
+        "onFocus": "",
+        "onBlur": "",
+        "onValidate": ""
+      },
+      "id": "select98304"
+    },
+    {
+      "key": 44223,
+      "type": "select",
+      "icon": "select-field",
+      "formItemFlag": true,
+      "options": {
+        "name": "shareToRoleIds",
+        "label": "shareToRoleIds",
+        "labelAlign": "",
+        "defaultValue": "",
+        "placeholder": "",
+        "columnWidth": "200px",
+        "size": "",
+        "labelWidth": null,
+        "labelHidden": false,
+        "disabled": false,
+        "hidden": true,
+        "clearable": true,
+        "filterable": true,
+        "allowCreate": false,
+        "popperClass": "",
+        "remote": false,
+        "automaticDropdown": false,
+        "multiple": false,
+        "multipleLimit": 0,
+        "optionItems": [],
+        "required": false,
+        "requiredHint": "",
+        "validation": "",
+        "validationHint": "",
+        "customClass": "",
+        "labelIconClass": null,
+        "labelIconPosition": "rear",
+        "labelTooltip": null,
+        "onCreated": "",
+        "onMounted": "",
+        "onRemoteQuery": "",
+        "onChange": "",
+        "changeSettings": [],
+        "onChangeSetting": true,
+        "onFocus": "",
+        "onBlur": "",
+        "onValidate": ""
+      },
+      "id": "select24667"
+    }
+  ],
+  "formConfig": {
+    "modelName": "formData",
+    "refName": "vForm",
+    "rulesName": "rules",
+    "labelWidth": 80,
+    "labelPosition": "top",
+    "size": "",
+    "labelAlign": "label-left-align",
+    "cssCode": ".el-form-item.labelLeft{\n  display: flex;\n  align-items: center;\n}\n.el-form-item.labelLeft .el-form-item__label {\n  margin-bottom: unset!important;\n}\n",
+    "customClass": [],
+    "functions": "",
+    "layoutType": "PC",
+    "jsonVersion": 3,
+    "isCreateDynamicCode": true,
+    "onFormCreated": "",
+    "onFormMounted": "",
+    "onFormDataChange": "",
+    "dhList": [],
+    "saveRemoteOptions": "never",
+    "labelFormUniqueName": true,
+    "onFormValidate": "",
+    "dataSources": []
+  }
+}

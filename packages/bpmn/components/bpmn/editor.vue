@@ -24,10 +24,19 @@ const props = defineProps<{
   currentVersionId: string
   readonly: boolean
   processKey: string
+  id: string
 }>()
 
 const { options = {}, workflowData, currentVersion, readonly } = toRefs(props)
-
+const workflowDetail = inject<{saveDraft:()=>void}>('workflowDetail')
+const BpmnRule = useBpmnRule({
+  versionDraftId: props.currentVersionId,
+  version: props.currentVersion.replace('V', ''),
+  taskName: 'global',
+  draftId: props.id,
+  workflowDetail
+})
+const { getTaskFieldRules } = BpmnRule
 const graphOptions = ref({})
 const bpmn = ref('')
 function init(bpmnXml: string, x6Json?: any) {
@@ -81,6 +90,11 @@ function init(bpmnXml: string, x6Json?: any) {
 }
 const viewerRef = ref()
 const ready = ref(false)
+const workflowFieldList: any = ref({
+  labelKey: 'name',
+  nameKey: 'id',
+  data: []
+})
 
 // el
 const nodeEl = ref()
@@ -140,16 +154,12 @@ function openInfo() {
   sidebarRef.value.openInfo()
 }
 
-function openCabinet() {
-  sidebarRef.value.openFolderCabinet()
-}
-
 function openPermission() {
   sidebarRef.value.openPermission()
 }
 
 // #region form
-const fromDesignRef = ref()
+const FormDesignRef = ref()
 const formDialogVisible = ref(false)
 const selectedStep = ref()
 
@@ -172,33 +182,8 @@ function itemDrop(item: any, ev: any) {
   dnd.value.start(newNode, ev)
 }
 
-const fieldListApi = computed(() => {
-  let data: any[] = []
-  // if selected step is end step, return allField
-  if (selectedStep.value?.id === 'end') {
-    const allField = viewerRef.value.allFormField
-    data = Object.keys(allField).map((key) => {
-      return {
-        attr_name: allField[key].attr_name,
-        attr_id: allField[key].attr_id
-      }
-    })
-    // data =
-  } else if (
-    selectedStep.value?.data.extensionElements['flowable:formProperty'] &&
-    selectedStep.value?.data.extensionElements['flowable:formProperty'].length > 0
-  ) {
-    data = [...selectedStep.value?.data.extensionElements['flowable:formProperty']]
-  }
-  return {
-    labelKey: 'attr_name',
-    nameKey: 'attr_id',
-    data
-  }
-})
-
 async function formSubmit() {
-  const json = fromDesignRef.value.getFormJson()
+  const json = FormDesignRef.value.getFormJson()
   await adminApi.api.postRelationSave({
     processKey: props.processKey,
     userTaskId: selectedStep.value.id,
@@ -235,7 +220,6 @@ async function saveFormByNode(node: Node, json: any) {
 const formRenderVisible = ref(false)
 const fromRenderRef = ref()
 async function previewForm(node: Node) {
-  console.log()
   const id = node.data.type === 'endEvent' ? 'end' : node.id
   const response = await adminApi.api.getRelationQuery({
     processKey: props.processKey,
@@ -270,30 +254,37 @@ const getGraphValue = computed(() => {
 })
 
 async function openForm(node: Node) {
-  const id = node.data ? node.data.id : node.id === 'end' ? 'complete' : node.id
-
-  const response = await adminApi.api.getRelationQuery({
-    processKey: props.processKey,
-    userTaskId: id,
-    versionId: props.currentVersionId
-  })
-  if (!response || !response.data) {
-    throw createError('Server Error')
-  }
-  selectedStep.value = node.getData()
-  formDialogVisible.value = true
-  nextTick(() => {
-    if (!response || !response.data) return
-    if (response?.data.length > 0) {
-      fromDesignRef.value.setFormJson({})
-      const json = JSON.parse(response.data[0].jsonValue || '{}')
-      fromDesignRef.value.setFormJson(json)
-    } else {
-      fromDesignRef.value.setFormJson({})
+  try {
+    const formProperty = node.data?.data?.extensionElements?.['flowable:formProperty']
+    if(!formProperty) {
+      ElMessage.warning('Empty Form Property')
+      return
     }
-  })
-
-  // console.log(selectedStep.value?.data.extensionElements['flowable:formProperty'] , fieldListApi.value)
+    const id = node.data ? node.data.id : node.id === 'end' ? 'complete' : node.id
+    const response = await adminApi.api.getRelationQuery({
+      processKey: props.processKey,
+      userTaskId: id,
+      versionId: props.currentVersionId
+    })
+    if (!response || !response.data) {
+      throw createError('Server Error')
+    }
+    selectedStep.value = node.getData()
+    workflowFieldList.value.data = getTaskFieldRules(formProperty)
+    formDialogVisible.value = true
+    nextTick(() => {
+      if (!response || !response.data) return
+      if (response?.data.length > 0) {
+        FormDesignRef.value.setFormJson({})
+        const json = JSON.parse(response.data[0].jsonValue || '{}')
+        FormDesignRef.value.setFormJson(json)
+      } else {
+        FormDesignRef.value.setFormJson({})
+      }
+    })
+  } catch (error) {
+    
+  }
 }
 
 const copyKey = useState('copy-key', () => "")
@@ -383,7 +374,12 @@ provide(EDITOR_PROVIDER, {
   copyObj,
   copyKey,
   conditionSetting,
-  readonly
+  readonly,
+  currentVersionId: props.currentVersionId,
+  processKey: props.processKey,
+  currentVersion: props.currentVersion,
+  draftId: props.id,
+  BpmnRule
 })
 
 defineExpose({
@@ -401,7 +397,6 @@ defineExpose({
           <BpmnHistory />
           <BpmnInfo @click="openInfo" />
           <BpmnPermission @click="openPermission" />
-          <BpmnFolderCabinet @click="openCabinet" />
         </div>
         <div v-if="!readonly" class="group">
           <div v-for="(item, index) in dropActionsItems" :key="index" class="icon handlers" @mousedown.native="(ev) => itemDrop(item, ev)">
@@ -423,7 +418,7 @@ defineExpose({
       />
     </BpmnViewer>
     <ElDialog v-model="formDialogVisible" fullscreen class="bpmn-vform--dialog" width="100%" top="0" append-to-body destroy-on-close>
-      <FormDesigner ref="fromDesignRef" :fieldListApi="fieldListApi">
+      <FormDesigner ref="FormDesignRef" :fieldListApi="workflowFieldList">
         <template #submit>
           <ElButton type="primary" @click="formSubmit">{{ $t('submit') }}</ElButton>
         </template>

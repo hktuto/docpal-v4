@@ -23,7 +23,7 @@
     </div>
 
     <template #footer>
-      <el-button :loading="state.loading" @click="handleConfirm">{{ $t('common_confirm') }}</el-button>
+      <el-button :loading="state.loading" @click="handleConfirm">{{ $t('vxe.button.confirm') }}</el-button>
     </template>
   </el-dialog>
 </template>
