@@ -2766,7 +2766,8 @@
     "summary": "概要",
     "summaryKey": "總結要點",
     "templateId": "模板編號",
-    "to": "發送給"
+    "to": "發送給",
+    "user_role_group": "用户/用户组/用户角色"
   },
   "tableHeader_access": "使用權",
   "tableHeader_actions": "操作",
