@@ -369,25 +369,6 @@ watch(() => node, async () => {
       </el-select>
     </el-form-item>
 
-    <!--    <el-form-item label-position="left">-->
-    <!--      <template #label>-->
-    <!--        <div style="display: flex; align-items: center; gap: 4px;">-->
-    <!--          <span>{{ t('Save Response Variable As Json') }}</span>-->
-    <!--          <el-popover width="300" title="Info" placement="top"-->
-    <!--                      content="If enabled, the response body will be saved as a JSON variable instead of a String.-->
-    <!--                      If your HTTP service returns JSON, you can get the data value through punctuation (e.g. ResponseDody.user.name)">-->
-    <!--            <template #reference>-->
-    <!--              <el-icon style="cursor: pointer; color: #909399;">-->
-    <!--                <QuestionFilled />-->
-    <!--              </el-icon>-->
-    <!--            </template>-->
-    <!--          </el-popover>-->
-    <!--        </div>-->
-    <!--      </template>-->
-    <!--      <el-switch v-model="state.saveResponseVariableAsJson"-->
-    <!--                 @change="(val:any) => fieldBooleanMappingUpdate(val, 'saveResponseVariableAsJson')" />-->
-    <!--    </el-form-item>-->
-
     <el-form-item label-position="left">
       <template #label>
         <div style="display: flex; align-items: center; gap: 4px;">

@@ -224,6 +224,7 @@ export const bpmnElement: BpmnElement = {
           label: 'New User Task',
           data: bpmnElement.userTask.newNodeData(id, 'New User Task', {
             ['attr_flowable:candidateGroups']: '',
+            ['attr_flowable:candidateRoles']: '',
             ['attr_flowable:formFieldValidation']: true,
             attr_id: id,
             attr_name: 'New User Task',
