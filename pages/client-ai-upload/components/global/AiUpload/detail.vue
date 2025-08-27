@@ -34,9 +34,7 @@
             <template #default="{ node, data }">
               <div :class="['flex-x-between', 'tree-item', { 'disabled-line': data.isUpload === false }]">
                 <span :class="['flex-x-start', { color__danger: state.repearNameIdList.includes(data.id) }]">
-                   <div class="iconContainer">
-                            <img :src="extensionToIcon(data)" alt="">
-                        </div>
+                  <BrowseItemIcon class="el-icon--left" :type="data.isFolder ? 'folder' : 'file'" />
                   {{ data.name }}
                 </span>
                 <div class="flex-x-start" style="--icon-size: 1.14rem">
@@ -113,7 +111,6 @@ import { ElMessageBox, ElNotification, ElMessage } from 'element-plus'
 import { emitBus, EventType } from 'eventbus'
 import { clientApi } from 'api'
 import { Splitpanes, Pane } from 'splitpanes'
-import * as mime from 'mime-types'
 import 'splitpanes/dist/splitpanes.css'
 
 const { status, id } = defineProps<{
@@ -143,51 +140,6 @@ const rightSize = ref(30)
 const leftMin = ref(5)
 const rightMin = ref(5)
 const dragging = ref(false)
-
-
-function extensionToIcon(uploadItem:any) {
-  if(uploadItem.isFolder){
-    return '/icons/doc/folder.svg'
-  }
-  const extension = uploadItem.name.split('.').pop()
-  const mimeType = mime.types[extension] || false
-  if(!mimeType){
-    return '/icons/doc/file.svg'
-  }
-  if (mimeType?.startsWith('image')) {
-    return '/icons/doc/image.svg'
-  }
-  if (mimeType?.startsWith('video')) {
-    return '/icons/doc/video.svg'
-  }
-  if (mimeType?.startsWith('audio')) {
-    return '/icons/doc/audio.svg'
-  }
-  if (mimeType?.startsWith('application/pdf')) {
-    return '/icons/doc/pdf.svg'
-  }
-  if (mimeType?.startsWith('text')) {
-    return '/icons/doc/text.svg'
-    
-  }
-  if (mimeType?.startsWith('application/zip')) {
-    return '/icons/doc/zip.svg'
-  }
-  if (mimeType?.startsWith('application/vnd.ms-excel') || mimeType?.startsWith('application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')) {
-    return '/icons/doc/excel.svg'
-  }
-  if (mimeType?.startsWith('application/msword') || mimeType?.startsWith('application/vnd.openxmlformats-officedocument.wordprocessingml.document')) {
-    return '/icons/doc/word.svg'
-  }
-  // if mimetype is ppt, return ppt src
-  if (
-    mimeType?.startsWith('application/vnd.ms-powerpoint') ||
-    mimeType?.startsWith('application/vnd.openxmlformats-officedocument.presentationml.presentation')
-  ) {
-    return '/icons/doc/ppt.svg'
-  }
-  return '/icons/doc/file.svg'
-}
 
 function reCalcuate() {
   if (leftSize.value + middleSize.value + rightSize.value < 100) {
@@ -468,15 +420,6 @@ onMounted(async () => {
 </script>
 
 <style lang="scss" scoped>
-.iconContainer{
-    width: 28px;
-    height: 28px;
-    position: relative;
-    img{
-        width: 100%;
-        height: 100%;
-    }
-}
 .pageContainer {
   height: 100%;
   width: 100%;

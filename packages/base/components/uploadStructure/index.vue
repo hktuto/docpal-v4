@@ -24,9 +24,7 @@
                         <el-button v-if="uploadItem.status === 'success'" type="success" :icon="Check" text></el-button>
                         <el-button v-else-if="uploadItem.status === 'loading'" loading text></el-button>
                         <el-button v-else :icon="Close" type="danger" text></el-button>
-                        <div class="iconContainer">
-                            <img :src="extensionToIcon(uploadItem)" alt="">
-                        </div>
+                        <BrowseItemIcon class="el-icon--left" :type="uploadItem.isFolder ? 'folder' : 'file'" />
                         <span> {{ uploadItem.name }} </span>
                     </div>
                     <div v-if="uploadItem.status === 'exception'" class="uploadStatus-exception">
@@ -44,56 +42,11 @@
 
 <script lang="ts" setup>
 import * as XLSX from 'xlsx'
-import * as mime from 'mime-types'
 import { Check, Close, Loading } from '@element-plus/icons-vue'
 const drawerOpen = ref(false);
 const router = useRouter()
 const activeNames = ref(['0'])
 const { uploadState }  = useUploadAIStore()
-
-function extensionToIcon(uploadItem:any) {
-  if(uploadItem.isFolder){
-    return '/icons/doc/folder.svg'
-  }
-  const extension = uploadItem.name.split('.').pop()
-  const mimeType = mime.types[extension] || false
-  if(!mimeType){
-    return '/icons/doc/file.svg'
-  }
-  if (mimeType?.startsWith('image')) {
-    return '/icons/doc/image.svg'
-  }
-  if (mimeType?.startsWith('video')) {
-    return '/icons/doc/video.svg'
-  }
-  if (mimeType?.startsWith('audio')) {
-    return '/icons/doc/audio.svg'
-  }
-  if (mimeType?.startsWith('application/pdf')) {
-    return '/icons/doc/pdf.svg'
-  }
-  if (mimeType?.startsWith('text')) {
-    return '/icons/doc/text.svg'
-    
-  }
-  if (mimeType?.startsWith('application/zip')) {
-    return '/icons/doc/zip.svg'
-  }
-  if (mimeType?.startsWith('application/vnd.ms-excel') || mimeType?.startsWith('application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')) {
-    return '/icons/doc/excel.svg'
-  }
-  if (mimeType?.startsWith('application/msword') || mimeType?.startsWith('application/vnd.openxmlformats-officedocument.wordprocessingml.document')) {
-    return '/icons/doc/word.svg'
-  }
-  // if mimetype is ppt, return ppt src
-  if (
-    mimeType?.startsWith('application/vnd.ms-powerpoint') ||
-    mimeType?.startsWith('application/vnd.openxmlformats-officedocument.presentationml.presentation')
-  ) {
-    return '/icons/doc/ppt.svg'
-  }
-  return '/icons/doc/file.svg'
-}
 
 function handleOpen(){
     drawerOpen.value = true
@@ -172,15 +125,6 @@ useEventListener(document, 'closeUploadDrawer', (event: any) => handleClose())
 </script>
 
 <style lang="scss" scoped>
-.iconContainer{
-    width: 28px;
-    height: 28px;
-    position: relative;
-    img{
-        width: 100%;
-        height: 100%;
-    }
-}
 .el-divider {
     margin: 3px 0 12px 0;
 }
