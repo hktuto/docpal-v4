@@ -1950,7 +1950,7 @@
   "folder_cabinetReportNotificationToNotBeEmpty": "Report Notification – To cannot be empty.",
   "folder_cabinetStatus": "狀態",
   "folder_cabinetSystemReminderToNotBeEmpty": "System Reminder – To cannot be empty.",
-  "folder_cabinetUserOrGroup": "指派的用戶 / 用戶群組",
+  "folder_cabinetUserOrGroup": "指派的@:tableHeader.user_role_group",
   "folder_entireFolderCabinet": "整個文件夾櫃",
   "folder_folderCabinetDetails": "資料夾櫃詳細",
   "folder_folderUnder": "資料夾下",

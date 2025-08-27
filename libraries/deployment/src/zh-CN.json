@@ -1952,7 +1952,7 @@
   "folder_cabinetReportNotificationToNotBeEmpty": "Report Notification – To cannot be empty.",
   "folder_cabinetStatus": "状态",
   "folder_cabinetSystemReminderToNotBeEmpty": "System Reminder – To cannot be empty.",
-  "folder_cabinetUserOrGroup": "分配的用户 / 用户群组",
+  "folder_cabinetUserOrGroup": "分配的@:tableHeader.user_role_group",
   "folder_entireFolderCabinet": "整个文件柜",
   "folder_folderCabinetDetails": "文件柜详情",
   "folder_folderUnder": "文件夹下",
