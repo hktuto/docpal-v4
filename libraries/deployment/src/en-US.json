@@ -1954,7 +1954,7 @@
   "folder_cabinetReportNotificationToNotBeEmpty": "Report Notification – To cannot be empty.",
   "folder_cabinetStatus": "Status",
   "folder_cabinetSystemReminderToNotBeEmpty": "System Reminder – To cannot be empty.",
-  "folder_cabinetUserOrGroup": "Assigned User / User Group",
+  "folder_cabinetUserOrGroup": "Assigned @:tableHeader.user_role_group",
   "folder_entireFolderCabinet": "entire folder cabinet",
   "folder_folderCabinetDetails": "folder cabinet details",
   "folder_folderUnder": "folder under",
