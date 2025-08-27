@@ -12,7 +12,6 @@
       <PathTabButton :path="row.path" :fileName="row.name" :openParent="!row.isFolder" :displayPath="row.logicalPath" canOpen />
     </template>
     <template #contributors="{ row }">
-
       <div v-if="row && row.contributors">
         <el-tag v-for="item in row.contributors" :key="item">{{ item }}</el-tag>
       </div>
@@ -231,7 +230,6 @@ const { tableConfig, tableEvent, tableRef, reload, query } = useVxeTable({
   },
   optionalEvent: {
     pageChange: ({ currentPage, pageSize }: any) => {
-      console.log('pageChange', currentPage, pageSize)
       tableConfig.pagerConfig.currentPage = currentPage
       tableConfig.pagerConfig.pageSize = pageSize
       getList({ pageNum: currentPage - 1, pageSize })
@@ -241,15 +239,18 @@ const { tableConfig, tableEvent, tableRef, reload, query } = useVxeTable({
 
 async function getList(param: any) {
   try {
-    if (!state.barParams.docId && (!state.barParams.query || state.barParams.query.length === 0)) {
+    const cleanBarParams = barParamsDecorator(state.barParams)
+    if (cleanBarParams.query.length === 0) {
       state.tableData = []
       state.aggregation = {}
       return {
-        entryList: [],
-        totalSize: 0
+        data:{
+          entryList: [],
+          totalSize: 0
+        }
       }
     }
-    const { data: res } = (await globalApi.api.postNuxeoSearchOpenSearch({ ...state.barParams, ...state.aggParams, ...param })) as any
+    const { data: res } = (await globalApi.api.postNuxeoSearchOpenSearch({ ...cleanBarParams, ...state.aggParams, ...param })) as any
     if (!res.page)
       res.page = {
         data:{
@@ -267,7 +268,6 @@ async function getList(param: any) {
       }
       return _item
     })
-    console.log('list', list)
     state.aggregation = res.aggregation
     state.options.paginationConfig.total = res.page.totalSize
     // tableConfig.pagerConfig.total = state.options.paginationConfig.total
@@ -287,7 +287,7 @@ async function getList(param: any) {
     }
     // tableRef.value?.loadData(state.tableData)
   } catch (error) {
-    console.log('getList error', error)
+    console.error('getList error', error)
     state.tableData = []
     state.aggregation = {}
     return {
@@ -372,12 +372,23 @@ function initAgg(searchParams: any, isSearch: boolean = true) {
   if (isSearch)   reload()
 
 }
+function barParamsDecorator(barParams: any) {
+  const resule = {
+    query: [],
+    ...barParams,
+  }
+  resule.query = barParams.query.reduce((qPrev: any, qItem: any) => {
+    let matchs = []
+    if (qItem.matchs) matchs = qItem.matchs.filter((mItem: any) => mItem.value)
+    if (matchs.length > 0) qPrev.push({ ...qItem, matchs })
+    return qPrev
+  }, [])
 
+  return resule
+}
 function initSearch(searchParams: any) {
-  console.log(searchParams)
   state.barParams = searchParams
   reload()
-
 }
 
 defineExpose({ initBar, initAgg, initSearch, cleanSelected })
