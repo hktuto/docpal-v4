@@ -20,10 +20,6 @@ function handleCreate() {
   state.variables.push({ key: '', value: '' })
 }
 
-function emitValue(index: number) {
-
-}
-
 function handleDelete(index: number) {
   state.variables.splice(index, 1)
 }
@@ -47,7 +43,7 @@ defineExpose({ openDrawer })
       <el-table :data="state.variables" style="width: 100%">
         <el-table-column :label="t('Key')" prop="key">
           <template #default="{ row, $index }">
-            <el-input v-model="row.key" @input="emitValue($index)" />
+            <el-input v-model="row.key"/>
           </template>
         </el-table-column>
         <el-table-column prop="value">
@@ -65,7 +61,7 @@ defineExpose({ openDrawer })
             </div>
           </template>
           <template #default="{ row, $index }">
-            <el-input v-model="row.value" @input="emitValue($index)" />
+            <el-input v-model="row.value" />
           </template>
         </el-table-column>
         <el-table-column align="right" :label="t('dpTable_actions')">
