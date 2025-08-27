@@ -7,19 +7,16 @@
         prop="permission"
         :rules="[{ required: true, message: $t('user_UserGroup') + $t('render.hint.fieldRequired') }]"
       >
-        <el-select
+        <el-select-v2
           v-model="form.permission"
+          :options="state.options"
           multiple
           filterable
           clearable
           :placeholder="t('common_selectedIsMultiSelectRequiredMsg')"
           :disabled="state.loading"
           @change="handleChange"
-        >
-          <template v-for="item in state.groups">
-            <el-option v-if="item.id" :key="item.id" :label="item.name" :value="item.id"></el-option>
-          </template>
-        </el-select>
+        ></el-select-v2>
       </el-formItem>
     </el-form>
   </el-card>
@@ -33,7 +30,8 @@ const props = defineProps(['detail'])
 
 const state = reactive<any>({
   groups: '',
-  loading: false
+  loading: false,
+  options: []
 })
 const form = ref({
   permission: ''
@@ -43,9 +41,14 @@ async function handleChange() {
   try {
     state.loading = true
     if (form.value.permission.length === 0) return
+    const groups = state.options[0].options.filter((item: any) => form.value.permission.includes(item.value))
+    const roles = state.options[1].options.filter((item: any) => form.value.permission.includes(item.value))
     await adminApi.api.postFormDesignSavePermission({
       id: props.detail.id,
-      permission: form.value.permission.join(',')
+      permissions: {
+        group: groups.map((item: any) => item.value),
+        role: roles.map((item: any) => item.value)
+      }
     })
     routerProvider?.message.success(t('dpMsg_success'))
   } catch (error) {
@@ -53,12 +56,28 @@ async function handleChange() {
     state.loading = false
   }
 }
+const { flatRole } = useRBAC()
 
-async function getAllUserGroup() {
-  state.groups = await adminApi.api.postNuxeoIdentityGroups().then((res) => res.data)
+async function init() {
+  const groupList = await adminApi.api.postNuxeoIdentityGroups().then((res) => res.data)
+  state.options =[
+    {
+      label: t('user_groups'),
+      options: groupList.map((item: any) => ({
+        label: item.name,
+        value: item.id
+      }))
+    },
+    {
+      label: t('user_role'),
+      options: flatRole.value.map((item: any) => ({
+        label: item.name,
+        value: item.id
+      }))
+    }
+  ]
 }
-
-onMounted(() => getAllUserGroup())
+onMounted(() => init())
 watch(
   () => props.detail,
   (newValue, oldValue) => {
