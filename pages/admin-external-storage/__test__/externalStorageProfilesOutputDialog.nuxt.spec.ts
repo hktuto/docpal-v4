@@ -282,6 +282,15 @@ describe('[admin-external-storage]ExternalStorageProfilesOutputDialog', () => {
 
   describe('Save Functionality', () => {
     it('should call create API when not in edit mode', async () => {
+      const workflowMapping = {
+        workflowId: '1',
+        workflowName: 'Workflow 1'
+      }
+      wrapper.vm.WorkflowVariableMappingRef = {
+        getData: vi.fn().mockReturnValue({
+          ...workflowMapping
+        })
+      }
       const validateSpy = vi.fn().mockResolvedValue(true)
       wrapper.vm.formRef = {
         validate: validateSpy
@@ -290,14 +299,26 @@ describe('[admin-external-storage]ExternalStorageProfilesOutputDialog', () => {
       adminApi.api.postExternalstorageProfilesProfileidOutputrecord.mockResolvedValue({})
 
       await wrapper.vm.save()
-
       expect(validateSpy).toHaveBeenCalled()
-      expect(adminApi.api.postExternalstorageProfilesProfileidOutputrecord).toHaveBeenCalledWith('1', wrapper.vm.form)
+      
+      expect(adminApi.api.postExternalstorageProfilesProfileidOutputrecord).toHaveBeenCalledWith('1', {
+        ...wrapper.vm.form,
+        workflowMapping
+      })
       expect(wrapper.vm.dialogVisible).toBe(false)
       expect(wrapper.emitted('refresh')).toBeTruthy()
     })
 
     it('should call update API when in edit mode', async () => {
+      const workflowMapping = {
+        workflowId: '1',
+        workflowName: 'Workflow 1'
+      }
+      wrapper.vm.WorkflowVariableMappingRef = {
+        getData: vi.fn().mockReturnValue({
+          ...workflowMapping
+        })
+      }
       const validateSpy = vi.fn().mockResolvedValue(true)
       wrapper.vm.formRef = {
         validate: validateSpy
@@ -310,7 +331,10 @@ describe('[admin-external-storage]ExternalStorageProfilesOutputDialog', () => {
       await wrapper.vm.save()
 
       expect(validateSpy).toHaveBeenCalled()
-      expect(adminApi.api.patchExternalstorageProfilesProfileidOutputrecordOutputrecordid).toHaveBeenCalledWith('1', '1', wrapper.vm.form)
+      expect(adminApi.api.patchExternalstorageProfilesProfileidOutputrecordOutputrecordid).toHaveBeenCalledWith('1', '1', {
+        ...wrapper.vm.form,
+        workflowMapping
+      })
       expect(wrapper.vm.dialogVisible).toBe(false)
       expect(wrapper.emitted('refresh')).toBeTruthy()
     })
@@ -420,6 +444,15 @@ describe('[admin-external-storage]ExternalStorageProfilesOutputDialog', () => {
     })
 
     it('should handle empty form data', async () => {
+      const workflowMapping = {
+        workflowId: '1',
+        workflowName: 'Workflow 1'
+      }
+      wrapper.vm.WorkflowVariableMappingRef = {
+        getData: vi.fn().mockReturnValue({
+          ...workflowMapping
+        })
+      }
       wrapper.vm.form = {}
       const validateSpy = vi.fn().mockResolvedValue(true)
       wrapper.vm.formRef = {
@@ -430,7 +463,10 @@ describe('[admin-external-storage]ExternalStorageProfilesOutputDialog', () => {
 
       await wrapper.vm.save()
 
-      expect(adminApi.api.postExternalstorageProfilesProfileidOutputrecord).toHaveBeenCalledWith('1', {})
+      expect(adminApi.api.postExternalstorageProfilesProfileidOutputrecord).toHaveBeenCalledWith('1', {
+        ...wrapper.vm.form,
+        workflowMapping
+      })
     })
   })
 }) 

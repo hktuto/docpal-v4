@@ -8,28 +8,11 @@ const useUserId = vi.fn(() => {
     value: 'unit-test',
   };
 });
-const mockEndPoint = {
-  upload: 'http://example.com'
-};
-const useRBAC = vi.fn(() => {
-  return {
-    flatRole: {
-      value: []
-    }
-  }
-})
-const useRuntimeConfig = vi.fn(() => {
-  return {
-    public: {
-      endPoint: mockEndPoint,
-    },
-  };
-});
+
 vi.stubGlobal('MenuRouterKey', 'MenuRouterKey');
 vi.stubGlobal('useUserId', useUserId);
-vi.stubGlobal('useRuntimeConfig', useRuntimeConfig);
 vi.stubGlobal('useVxeTable', useVxeTable);
-vi.stubGlobal('useRBAC', useRBAC)
+
 // vi.stubGlobal('useLayout', useLayout)
 // vi.stubGlobal('deepCopy', deepCopy)
 

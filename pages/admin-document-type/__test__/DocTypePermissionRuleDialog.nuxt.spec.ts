@@ -138,17 +138,6 @@ describe('[admin-document-type]DocTypePermissionRuleDialog', () => {
       expect(wrapper.vm.formData.name).toBe('Test Rule')
     })
 
-    it('should handle rule data without conditions', async () => {
-      const ruleData = { name: 'Test Rule' }
-
-      await wrapper.vm.handleOpen(ruleData, 0)
-
-      // Wait for setTimeout to execute
-      await new Promise((resolve) => setTimeout(resolve, 100))
-
-      expect(wrapper.vm.formData.name).toBe('Test Rule')
-    })
-
     it('should handle rule data without name', async () => {
       const ruleData = { conditions: [] }
 

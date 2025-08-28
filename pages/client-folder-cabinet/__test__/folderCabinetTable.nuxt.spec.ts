@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach, test } from 'vitest'
 import { mount } from '@vue/test-utils'
 import { FolderCabinetTable } from '#components'
-import { clientApi } from '~/test/mock/api'
+import { clientApi } from './mock/api'
 import { ElMessageBox } from 'element-plus'
 import { mockRouterProvider } from './util'
 import { VxeGrid } from 'vxe-table'

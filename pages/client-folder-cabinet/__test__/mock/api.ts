@@ -11,6 +11,7 @@ export const clientApi = {
     patchNuxeoDocumentReplacefileV2: vi.fn(() => Promise.resolve(true)),
     postNuxeoDocumentIsduplicatename: vi.fn(() => Promise.resolve(true)),
     postNuxeoDocumentCreatedocument: vi.fn(() => Promise.resolve(true)),
+    postNuxeoDocumentCreatefolders: vi.fn(() => Promise.resolve(true)),
     postCabinetCreate: vi.fn(() => Promise.resolve(true)),
   }
 }

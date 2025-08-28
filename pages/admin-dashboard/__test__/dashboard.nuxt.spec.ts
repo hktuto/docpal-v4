@@ -43,7 +43,7 @@ const ReaderDialog = {
 describe('[admin-dashboard]DashboardManagePage', () => {
   let wrapper: any
   const mockTabProvider = {}
-
+ console.log(process.env)
   beforeEach(async () => {
     wrapper = mount(DashboardManagePage, {
       props: {
