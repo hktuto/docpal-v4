@@ -34,7 +34,7 @@ const createMockNode = (data: any = {}) => ({
   }))
 })
 
-describe('FolderCabinet Component', () => {
+describe('[bpmn-workflow-folder-cabinet] FolderCabinet Component', () => {
   let mockNode: Node
 
   beforeEach(() => {

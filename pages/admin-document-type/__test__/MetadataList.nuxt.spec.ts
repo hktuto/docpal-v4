@@ -227,10 +227,9 @@ describe('[admin-document-type]MetadataList', () => {
 
       await wrapper.vm.handleRemove(testRow)
 
-      expect(ElMessageBox.confirm).toHaveBeenCalledWith('metadata.confirm_delete', 'metadata.confirm_delete_title', {
-        confirmButtonText: 'common_confirm',
-        cancelButtonText: 'common_cancel',
-        type: 'warning'
+      expect(ElMessageBox.confirm).toHaveBeenCalledWith('tip_deleteMsg', {
+        confirmButtonText: 'common_confirmDelete',
+        confirmButtonClass: 'el-button el-button--warning',
       })
       expect(adminApi.api.deleteDocpaltypeSettingsMetadataV2DeleteMetadataid).toHaveBeenCalledWith('1')
       expect(ElMessage.success).toHaveBeenCalledWith('metadata.remove_success')
