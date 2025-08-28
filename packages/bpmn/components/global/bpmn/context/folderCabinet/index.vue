@@ -101,7 +101,7 @@ async function getCabinetDetail(id: string) {
       const bpmnItem = cabinetMapping.find((oldItem: any) => item.id === oldItem.attr_id)
       const fields = item.displayMeta.reduce((allMeta: any, meta: any) => {
         if (bpmnItem && bpmnItem.field) {
-          const formItem = bpmnItem.field.find((item: any) => item.attr_metadata === meta)
+          const formItem = bpmnItem.field.find((item: any) => item.attr_metadata === meta.key)
           allMeta.push({
             attr_formProperty: formItem ? formItem.attr_formProperty : '',
             attr_metadata: meta.key,
