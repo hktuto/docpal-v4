@@ -5437,6 +5437,8 @@ export interface FormDesignRequestDTO {
     processDefinitionKey?: string;
     /** Form Design Permission */
     permission?: string;
+    /** Form Design Permission List */
+    permissions?: Record<string, string[]>;
     /** Disable or Enable form design */
     enable?: boolean;
     /** Form Design Information List */
@@ -5490,6 +5492,8 @@ export interface FormDesignResponseDTO {
     processDefinitionKey?: string;
     /** Form Design Permission */
     permission?: string;
+    /** Form Design Permission List */
+    permissions?: Record<string, string[]>;
     /** Disable or Enable form design */
     enable?: boolean;
     /** Form Design Information List */
@@ -6686,6 +6690,7 @@ export interface FolderCabinetBinds {
     folderCabinetId?: string;
     bindId?: string;
     type?: string;
+    label?: string;
 }
 
 /** Folder Cabinet RequestDTO */
@@ -8419,7 +8424,14 @@ export interface ResultListCmmnInstance {
 
 /** Case Model Data Permission DTO */
 export interface CmmnDataFilterPermission {
-    /** User Group Id */
+    /** Bind Business Id */
+    bindId?: string;
+    /** Bind Business Type */
+    bindType?: string;
+    /**
+     * User Group Id
+     * @deprecated
+     */
     userGroupId?: string;
     /** metadata */
     metadata?: string;
@@ -8460,6 +8472,7 @@ export interface CmmnPlanPermissionDTO {
     referenceTable?: string;
     name?: string;
     group?: string;
+    role?: string;
     dataPermissions?: PlanTableFieldDTO[];
     filterPermissions?: CmmnDataFilterPermission[];
 }
@@ -15658,20 +15671,6 @@ export class Admin<SecurityDataType extends unknown> extends HttpClient<Security
         /**
          * No description
          *
-         * @tags FormDesignController
-         * @name PostFormDesignDatapatch
-         * @request POST:/api/docpal/form/design/dataPatch
-         */
-        postFormDesignDatapatch: (params: RequestParams = {}) =>
-            this.request<ResultVoid, Result | (ResultObject | Result | ResultString)>({
-                path: `/docpal/form/design/dataPatch`,
-                method: "POST",
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
          * @tags DocPalEmailController
          * @name PostEmailTemplateSend
          * @request POST:/api/docpal/email/template/send
@@ -16987,6 +16986,23 @@ export class Admin<SecurityDataType extends unknown> extends HttpClient<Security
             }),
 
         /**
+         * @description Get user list grouped by role IDs
+         *
+         * @tags Role-User Management
+         * @name PostAclRoleUsersByRoles
+         * @summary Get Users by Role IDs
+         * @request POST:/api/docpal/acl/role/users/by-roles
+         */
+        postAclRoleUsersByRoles: (data: string[], params: RequestParams = {}) =>
+            this.request<string, Result | (ResultObject | Result | ResultString)>({
+                path: `/docpal/acl/role/users/by-roles`,
+                method: "POST",
+                body: data,
+                type: ContentType.Json,
+                ...params,
+            }),
+
+        /**
          * @description Get paginated role list
          *
          * @tags Role Permission Management
@@ -16997,6 +17013,23 @@ export class Admin<SecurityDataType extends unknown> extends HttpClient<Security
         postAclRolePage: (data: BasePageDTO, params: RequestParams = {}) =>
             this.request<RoleUserDTO, Result | (ResultObject | Result | ResultString)>({
                 path: `/docpal/acl/role/page`,
+                method: "POST",
+                body: data,
+                type: ContentType.Json,
+                ...params,
+            }),
+
+        /**
+         * @description Get role list
+         *
+         * @tags Role Permission Management
+         * @name PostAclRoleList
+         * @summary Role List
+         * @request POST:/api/docpal/acl/role/list
+         */
+        postAclRoleList: (data: BaseQueryConditionDTO[], params: RequestParams = {}) =>
+            this.request<RoleUserDTO, Result | (ResultObject | Result | ResultString)>({
+                path: `/docpal/acl/role/list`,
                 method: "POST",
                 body: data,
                 type: ContentType.Json,
@@ -20923,6 +20956,20 @@ export class Admin<SecurityDataType extends unknown> extends HttpClient<Security
         getFormDesignDatatypeMapping: (params: RequestParams = {}) =>
             this.request<ResultListMTFieldTypeMapping, Result | (ResultObject | Result | ResultString)>({
                 path: `/docpal/form/design/dataType/mapping`,
+                method: "GET",
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags FormDesignController
+         * @name GetFormDesignDataPatchPermission
+         * @request GET:/api/docpal/form/design/data/patch/permission
+         */
+        getFormDesignDataPatchPermission: (params: RequestParams = {}) =>
+            this.request<ResultBoolean, Result | (ResultObject | Result | ResultString)>({
+                path: `/docpal/form/design/data/patch/permission`,
                 method: "GET",
                 ...params,
             }),
