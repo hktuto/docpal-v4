@@ -19,22 +19,11 @@ const candidateRoles = ref()
 const allUserRole = ref([])
 
 async function getUserRule() {
-  // TODO api: /docpal/acl/role/defList
-  // const { data } = await adminApi.api.postAclRolePage()
-  const data = [
-    {
-      id: 'it',
-      name: 'IT'
-    },
-    {
-      id: 'test',
-      name: 'Test1'
-    },
-    {
-      id: 'test2',
-      name: 'Test2'
-    }
-  ]
+  const data: any = await adminApi.api.postAclRoleList([{
+    column: 'status',
+    type: 'EQ',
+    values: '1'
+  }]).then((res) => res.data)
 
   if (!data || data.length === 0) {
     allUserRole.value = []
@@ -82,8 +71,8 @@ watch(() => node, () => {
 <template>
   <div class="itemContainer">
     <ElForm label-position="top" label-width="100px" size="small">
-      <ElFormItem label="Candidate Rule">
-        <ElSelect v-model="candidateRoles" placeholder="Select Group" :disabled="editorProvider.readonly.value"
+      <ElFormItem label="Candidate Role">
+        <ElSelect v-model="candidateRoles" placeholder="Select Role" :disabled="editorProvider.readonly.value"
                   filterable @change="candidateRoleChanged" clearable multiple>
           <ElOption v-for="item in allUserRole" :key="item.id" :label="item.name" :value="item.id" />
         </ElSelect>
