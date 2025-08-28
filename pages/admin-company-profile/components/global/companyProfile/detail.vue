@@ -2,23 +2,29 @@
 import { onMounted } from 'vue'
 import formJson from '../../companyProfile/newDialog.vform.json'
 import { adminApi } from 'api'
+
 const props = defineProps<{
   id: string
 }>()
 const loading = ref(false)
 const FormRendererRef = ref()
+const { t } = useI18n()
+const routerProvider = inject(MenuRouterKey)
+
 async function handleSave() {
   try {
     const data = await FormRendererRef.value.getFormData()
     data.status = data.status ? 'A' : 'D'
     loading.value = true
-    const result = await adminApi.api.putCompanyprofilesCompanyid(props.id, data)
+    const result = await adminApi.api.putCompanyprofilesCompanyid(props.id, data).then(r => r.data)
+    if (result) routerProvider?.message.success(t('dpMsg_success'))
   } catch (error: any) {
     console.error(error)
   } finally {
     loading.value = false
   }
 }
+
 async function init() {
   try {
     loading.value = true
@@ -32,13 +38,14 @@ async function init() {
     loading.value = false
   }
 }
+
 onMounted(() => {
   init()
 })
 </script>
 <template>
   <div class="container">
-    <FormRenderer ref="FormRendererRef" :form-json="formJson"> </FormRenderer>
+    <FormRenderer ref="FormRendererRef" :form-json="formJson"></FormRenderer>
     <div style="width: 100%; text-align: right">
       <el-button :loading="loading" type="primary" @click="handleSave">{{ $t('button.save') }}</el-button>
     </div>
