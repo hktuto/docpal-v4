@@ -3,7 +3,8 @@
     <VxeGrid ref="tableRef" v-bind="tableConfig" v-on="tableEvent">
       <template #toolbar_buttons>
         <div class="actions">
-          <ResponsiveFilter ref="ResponsiveFilterRef" inputKey="name" @form-change="handleFilterFormChange" inputPlaceHolder="companyProfile.filterTip" />
+          <ResponsiveFilter ref="ResponsiveFilterRef" inputKey="name" @form-change="handleFilterFormChange"
+                            inputPlaceHolder="companyProfile.filterTip" />
           <el-button id="EasyForm__CreateNewForm" type="primary" @click="handleAdd()">
             {{ $t('companyProfile.create') }}
           </el-button>
@@ -21,6 +22,7 @@
 import { adminApi } from 'api'
 import { ElMessageBox } from 'element-plus'
 import { routeCompanyProfileDetailPage } from '../../../util/routerHelper'
+
 const ResponsiveFilterRef = ref()
 const routerProvider = inject(MenuRouterKey)
 if (!routerProvider) {
@@ -133,8 +135,11 @@ async function handleActive(row: any, status: string) {
     const result = await adminApi.api.patchCompanyprofilesCompanyidStatus(row.id, { status: status }).then((res) => res.data)
     if (!!result) {
       row.status = status
+      routerProvider?.message.success(t('tip_updateSuccessMsg', { modelName: null, name: row.name }))
     }
-  } catch (error) {}
+  } catch (error) {
+    console.log(error)
+  }
 }
 
 function handleFilterFormChange(formModel: any) {
@@ -149,14 +154,21 @@ const DialogRef = ref()
 async function handleAdd() {
   DialogRef.value.handleOpen()
 }
+
 async function handleDelete(row: any) {
   try {
     const action = await ElMessageBox.confirm(`${t('msg_confirmWhetherToDelete')}`)
     if (action !== 'confirm') return
-    await adminApi.api.deleteCompanyprofilesCompanyid(row.id).then((res) => res.data)
+    let result = await adminApi.api.deleteCompanyprofilesCompanyid(row.id).then((res) => res.data)
+    if (result) routerProvider?.message.success(t('tip_deleteSuccessMsg', {
+      modelName: t('adminMenu.companyProfile'),
+      name: row.name
+    }))
     reload()
-  } catch (error) {}
+  } catch (error) {
+  }
 }
+
 function getFilter() {
   const data = [
     {
