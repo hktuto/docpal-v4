@@ -87,10 +87,10 @@ const { tableConfig, tableEvent, tableRef, reload, query } = useVxeTable({
           return `<span class="browseNameCell"><img src="${icon}" class="browseFileIcon" /> ${cellValue} ${row.source === 'tempFile' ? '(temp)' : ''}</span> `
         }
         // get differnent icon base on row.mimeType
-        if (!row.fileContent?.mimeType) {
+        if (!row.file_content?.mime_type) {
           return `<span class="browseNameCell"><img src="${icon}" class="browseFileIcon" /> ${cellValue} ${row.source === 'tempFile' ? '(temp)' : ''}</span> `
         }
-        const mimeType = row.fileContent.mimeType
+        const mimeType = row.file_content.mime_type
         if (mimeType?.startsWith('image')) {
           icon = '/icons/doc/image.svg'
           return `<span class="browseNameCell"><img src="${icon}" class="browseFileIcon" /> ${cellValue} ${row.source === 'tempFile' ? '(temp)' : ''}</span> `
@@ -165,7 +165,7 @@ const { tableConfig, tableEvent, tableRef, reload, query } = useVxeTable({
       field: 'path',
       width: 200,
       slots: {
-        default: 'logical_path'
+        default: 'logicalPath'
       }
     },
     {
