@@ -20,23 +20,28 @@ interface WorkerResponse<T = any> {
 const clientId = `client_${Math.random().toString(36).substr(2, 9)}_${Date.now()}`
 
 // Use SharedWorker if available, fallback to regular Worker
-let worker: Worker | SharedWorker
+let worker: Worker | SharedWorker | null = null
 let port: MessagePort | null = null
 let isSharedWorker = false
+let isWorkerAvailable = false
 
-// Check if SharedWorker is available
-if (typeof window !== 'undefined' && 'SharedWorker' in window) {
-  // Use SharedWorker
-  worker = new SharedWorker('/workers/sqlite.shared-worker.js', { type: 'module' })
-  port = (worker as SharedWorker).port
-  port.start()
-  isSharedWorker = true
-
-} else {
-  // Fallback to regular Worker
-  worker = new Worker('/workers/sqlite.standalone-worker.js', { type: 'module' })
-  isSharedWorker = false
-  console.log('SharedWorker not supported, using regular Worker for SQLite bridge')
+// Check if workers are available (not in test environment)
+if (typeof window !== 'undefined' && typeof Worker !== 'undefined') {
+  isWorkerAvailable = true
+  
+  // Check if SharedWorker is available
+  if ('SharedWorker' in window) {
+    // Use SharedWorker
+    worker = new SharedWorker('/workers/sqlite.shared-worker.js', { type: 'module' })
+    port = (worker as SharedWorker).port
+    port.start()
+    isSharedWorker = true
+  } else {
+    // Fallback to regular Worker
+    worker = new Worker('/workers/sqlite.standalone-worker.js', { type: 'module' })
+    isSharedWorker = false
+    console.log('SharedWorker not supported, using regular Worker for SQLite bridge')
+  }
 }
 
 // Track pending requests
@@ -85,38 +90,66 @@ function handleDisconnect(error?: string) {
   }
 }
 
-// Set up message handlers
-if (port) {
-  // SharedWorker
-  port.onmessage = handleWorkerMessage
-  // Note: MessagePort doesn't have onerror, errors are handled in onmessage
-} else {
-  // Regular Worker
-  (worker as Worker).onmessage = handleWorkerMessage
-  ;(worker as Worker).onerror = (event: ErrorEvent) => {
-    console.error('Worker error:', event.error)
-    handleDisconnect('Worker error')
+// Set up message handlers only if workers are available
+if (isWorkerAvailable && worker) {
+  if (port) {
+    // SharedWorker
+    port.onmessage = handleWorkerMessage
+    // Note: MessagePort doesn't have onerror, errors are handled in onmessage
+  } else {
+    // Regular Worker
+    (worker as Worker).onmessage = handleWorkerMessage
+    ;(worker as Worker).onerror = (event: ErrorEvent) => {
+      console.error('Worker error:', event.error)
+      handleDisconnect('Worker error')
+    }
   }
 }
 
 export function useSqliteBridge() {
+  // No-op functions for when workers are not available
+  function noOpOpen() {
+    return Promise.resolve()
+  }
+  
+  function noOpMigrate(migrations: string[]) {
+    return Promise.resolve()
+  }
+  
+  function noOpExec(sql: string, params?: any[]) {
+    return Promise.resolve()
+  }
+  
+  function noOpQuery<T = any>(sql: any, params?: any[]) {
+    return Promise.resolve([] as T)
+  }
+  
+  function noOpTransaction(ops: Array<{ kind: 'exec'|'query', sql: string, params?: any[] }>) {
+    return Promise.resolve()
+  }
+
   function open() {
+    if (!isWorkerAvailable) return noOpOpen()
     return send('open')
   }
   
   function migrate(migrations: string[]) {
+    if (!isWorkerAvailable) return noOpMigrate(migrations)
     return send('migrate', { migrations })
   }
   
   function exec(sql: string, params?: any[]) {
+    if (!isWorkerAvailable) return noOpExec(sql, params)
     return send('exec', { sql, params })
   }
   
   function query<T = any>(sql: any, params?: any[]) {
+    if (!isWorkerAvailable) return noOpQuery<T>(sql, params)
     return send<T>('query', { sql, params })
   }
   
   function transaction(ops: Array<{ kind: 'exec'|'query', sql: string, params?: any[] }>) {
+    if (!isWorkerAvailable) return noOpTransaction(ops)
     return send('transaction', { ops })
   }
   
@@ -141,9 +174,13 @@ export function useSqliteBridge() {
         if (port) {
           // SharedWorker
           port.postMessage(request)
-        } else {
+        } else if (worker) {
           // Regular Worker
           (worker as Worker).postMessage(request)
+        } else {
+          // Silently reject if no worker available
+          reject(new Error('No worker available'))
+          return
         }
         
         // Set a timeout to clean up pending requests
@@ -173,9 +210,10 @@ export function useSqliteBridge() {
   // Get connection status
   function getConnectionStatus() {
     return {
-      isConnected,
+      isConnected: isWorkerAvailable ? isConnected : false,
       isSharedWorker,
-      connectionError,
+      isWorkerAvailable,
+      connectionError: isWorkerAvailable ? connectionError : null,
       clientId,
       pendingRequestsCount: pendingRequests.size
     }
@@ -183,12 +221,16 @@ export function useSqliteBridge() {
 
   onUnmounted(() => {
     cleanup()
-    window.removeEventListener('beforeunload', cleanup)
+    if (typeof window !== 'undefined') {
+      window.removeEventListener('beforeunload', cleanup)
+    }
   })
 
   onMounted(() => {
     open()
-    window.addEventListener('beforeunload', cleanup)
+    if (typeof window !== 'undefined') {
+      window.addEventListener('beforeunload', cleanup)
+    }
   })
 
   
@@ -201,7 +243,8 @@ export function useSqliteBridge() {
     cleanup,
     getConnectionStatus,
     clientId, // Expose clientId for debugging
-    isSharedWorker // Expose worker type for debugging
+    isSharedWorker, // Expose worker type for debugging
+    isWorkerAvailable // Expose worker availability for debugging
   }
 }
 
