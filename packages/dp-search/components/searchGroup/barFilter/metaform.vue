@@ -22,7 +22,7 @@
 import { getMasterTableOptions, getUserList, getUserGroupList, getRoleList } from '../../../../base/components/meta/metadata'
 const props = defineProps(['config'])
 const emits = defineEmits(['formChange'])
-
+const { t } = useI18n()
 const selectTypes = ['select', 'mastertable', 'user', 'user_role_user_group']
 const state = reactive<any>({
   value: '',
@@ -52,6 +52,11 @@ async function getOptions(type: string) {
       value: item
     }))
   } else if (type === 'mastertable') {
+    console.log('mastertable', '=========', await getMasterTableOptions({
+      masterTableName: rule.masterTableName,
+      displayColumn: rule.displayColumn,
+      valueColumn: rule.valueColumn
+    }));
     state.options = await getMasterTableOptions({
       masterTableName: rule.masterTableName,
       displayColumn: rule.displayColumn,
@@ -63,14 +68,14 @@ async function getOptions(type: string) {
     const options = []
     if (rule.allow !== 'USER_GROUP') {
       options.push({
-        label: $t('user_role'),
+        label: t('user_role'),
         value: 'role____',
         options: await getRoleList()
       })
     }
     if (rule.allow !== 'USER_ROLE') {
       options.push({
-        label: $t('user_group'),
+        label: t('user_groups'),
         value: 'group____',
         options: await getUserGroupList()
       })
