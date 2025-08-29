@@ -211,10 +211,10 @@ function handleVariableSelect(variable: string, attr = 'fileName') {
 async function save() {
   try {
     await formRef.value.validate()
-    const workflowMapping = WorkflowVariableMappingRef.value.getData()
-    const params = {
-      ...form.value,
-      workflowMapping
+    const params = { ...form.value }
+    if (form.value.workflow) {
+      const workflowMapping = WorkflowVariableMappingRef.value.getData()
+      params.workflowMapping = workflowMapping
     }
     if (isEdit.value) {
       await adminApi.api.patchExternalstorageProfilesProfileidOutputrecordOutputrecordid(props.id as string, setting.value.id, params)
