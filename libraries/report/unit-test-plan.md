@@ -78,7 +78,7 @@
 - [ ] dp-masterTable
 - [ ] dp-notification
 - [ ] dp-related-folder
-- [ ] dp-search
+- [x] dp-search
 - [ ] dp-watermark
 - [ ] rbac
 - [ ] user-setting
