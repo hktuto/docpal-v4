@@ -37,7 +37,7 @@ const state = reactive<any>({
   aggProps: {}
 })
 const signleAgg = ['modified', 'createdDate']
-
+const { t } = useI18n()
 function clear() {
   state.filters = {}
   // setDefaultFilter({})
@@ -62,7 +62,7 @@ function setDefaultFilter(filter: any) {
 const dateFileds = ['modified', 'createdDate']
 function getI18n(value: any, key: string) {
   if (!value) return '-'
-  if (dateFileds.includes(key)) return $i18n.t(`searchType.${value}`)
+  if (dateFileds.includes(key)) return t(`searchType.${value}`)
   return value
 }
 function handleInputChange(value: string, key: string) {
