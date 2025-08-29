@@ -223,21 +223,15 @@ export const bpmnElement: BpmnElement = {
           ...bpmnElement.userTask.nodeStyle(),
           label: 'New User Task',
           data: bpmnElement.userTask.newNodeData(id, 'New User Task', {
-            ['attr_flowable:candidateGroups']: '',
             ['attr_flowable:candidateRoles']: '',
             ['attr_flowable:formFieldValidation']: true,
             attr_id: id,
             attr_name: 'New User Task',
             ['attr_docpal:formType']: 'form',
             extensionElements: {
-              ['flowable:formProperty']: [],
-              ['modeler:activiti-idm-candidate-group']: {
-                'attr_xmlns:modeler': 'http://flowable.org/modeler',
-                __cdata: 'true'
-              },
-              ['modeler:initiator-can-complete']: {
-                'attr_xmlns:modeler': 'http://flowable.org/modeler',
-                __cdata: 'false'
+              ['flowable:taskListener']: {
+                ['attr_delegateExpression']: '${customTaskAssignmentListener}',
+                ['attr_event']: 'create'
               }
             }
           })
