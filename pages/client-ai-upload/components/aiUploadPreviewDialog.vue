@@ -4,7 +4,7 @@
       <template #default="{ node, data }">
         <div class="flex-x-between tree-item">
           <span class="flex-x-start">
-            <BrowseItemIcon class="el-icon--left" :type="data.isFolder ? 'folder' : 'file'" />
+            <BrowseItemIcon class="el-icon--left" :type="data.isFolder ? 'folder' : 'file'" :fileName="data.name" />
             {{ data.name }}
           </span>
         </div>

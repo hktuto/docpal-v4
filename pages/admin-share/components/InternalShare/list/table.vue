@@ -82,7 +82,7 @@ defineExpose({
     </template>
     <template #docIcon="{ row, index }">
       <div class="nameItem">
-        <BrowseItemIcon v-if="!!row" :type="row.isFolder !== 'false' ? 'folder' : 'file'" />
+        <BrowseItemIcon v-if="!!row" :type="row.isFolder !== 'false' ? 'folder' : 'file'" :fileName="row.documentName || row.documentNames" />
         <div class="label">{{ row.documentName || row.documentNames }}</div>
       </div>
     </template>

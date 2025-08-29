@@ -34,7 +34,7 @@
             <template #default="{ node, data }">
               <div :class="['flex-x-between', 'tree-item', { 'disabled-line': data.isUpload === false }]">
                 <span :class="['flex-x-start', { color__danger: state.repearNameIdList.includes(data.id) }]">
-                  <BrowseItemIcon class="el-icon--left" :type="data.isFolder ? 'folder' : 'file'" />
+                  <BrowseItemIcon :type="data.isFolder ? 'folder' : 'file'" :fileName="data.name" />
                   {{ data.name }}
                 </span>
                 <div class="flex-x-start" style="--icon-size: 1.14rem">
@@ -150,6 +150,8 @@ function reCalcuate() {
     middleSize.value = 100 - (leftSize.value + rightSize.value)
   }
 }
+
+
 
 function CalMax() {
   const el = document.getElementById('panesContainer')
@@ -420,6 +422,15 @@ onMounted(async () => {
 </script>
 
 <style lang="scss" scoped>
+.iconContainer{
+    width: 28px;
+    height: 28px;
+    position: relative;
+    img{
+        width: 100%;
+        height: 100%;
+    }
+}
 .pageContainer {
   height: 100%;
   width: 100%;
@@ -517,6 +528,13 @@ onMounted(async () => {
   padding-right: var(--app-space-xs);
   display: flex;
   gap: var(--app-space-xs);
+  overflow: hidden;
+  position: relative;
+  .fileName{
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
 }
 
 :deep(.el-tree-node.is-current > .el-tree-node__content) {
