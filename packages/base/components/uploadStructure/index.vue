@@ -24,7 +24,7 @@
                         <el-button v-if="uploadItem.status === 'success'" type="success" :icon="Check" text></el-button>
                         <el-button v-else-if="uploadItem.status === 'loading'" loading text></el-button>
                         <el-button v-else :icon="Close" type="danger" text></el-button>
-                        <BrowseItemIcon class="el-icon--left" :type="uploadItem.isFolder ? 'folder' : 'file'" />
+                        <BrowseItemIcon class="el-icon--left" :type="uploadItem.isFolder ? 'folder' : 'file'" :fileName="uploadItem.name"  />
                         <span> {{ uploadItem.name }} </span>
                     </div>
                     <div v-if="uploadItem.status === 'exception'" class="uploadStatus-exception">

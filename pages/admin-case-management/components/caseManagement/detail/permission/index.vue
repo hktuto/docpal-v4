@@ -8,6 +8,7 @@
     <div class="permissionItemContainer">
       <CaseManagementDetailPermissionCard v-for="(item, index) in state.groups" :key="index" :data="item"
                                           :caseInformation="state.caseInformation"
+                                          :roleList="flatRole"
                                           @refresh="(data) => handleRefresh(data, index)"
                                           @delete="handleDelete"/>
     </div>
@@ -32,29 +33,39 @@ const dialogRef = ref()
 function handleAdd() {
   dialogRef.value.handleOpen()
 }
+const { flatRole, getRoleTree } = useRBAC()
+async function getRole() {
+  if(flatRole.value.length === 0) {
+    await getRoleTree()
+  }
+  
+}
 
 // #endregion
 function init(nodeData: any) {
+  getRole()
   const permission = deepCopy(getExtentionProperties(nodeData.data.casePlanModel, 'docpal:attributes'))
   const filter = deepCopy(getExtentionProperties(nodeData.data.casePlanModel, 'docpal:data_filter'))
-  console.log("nodeData", nodeData, filter)
+
   state.caseInformation = getExtentionProperties(nodeData.data.casePlanModel, 'docpal:form')
   if (!state.caseInformation) state.caseInformation = []
   permission.forEach(item => {
-    let index = state.groups.findIndex(g => g.name === item.group)
+    let index = state.groups.findIndex(g => g.group === item.group || g.role === item.role)
     if (index === -1) {
       state.groups.push({
-        name: item.group
+        group: item.group,
+        role: item.role
       })
       index = state.groups.length - 1
     }
     state.groups[index].permission = getWholePermissionField(item)
   })
   filter.forEach(item => {
-    let index = state.groups.findIndex(g => g.name === item.group)
+    let index = state.groups.findIndex(g => g.group === item.group || g.role === item.role)
     if (index === -1) {
       state.groups.push({
-        name: item.group
+        group: item.group,
+        role: item.role
       })
       index = state.groups.length - 1
     }
@@ -96,16 +107,18 @@ function handleSave(attributes, filters) {
 }
 
 function handleDelete(data) {
-  const index = state.groups.findIndex(item => item.name === data.name)
+  const index = state.groups.findIndex(item => item.group === data.group || item.role === data.role)
   state.groups.splice(index, 1)
   const _data = [...state.groups]
 
   handleSave(_data.map(item => ({
     ...item.permission,
-    group: item.name
+    group: item.group,
+    role: item.role
   })), _data.map(item => ({
     ...item.filter,
-    group: item.name
+    group: item.group,
+    role: item.role
   })))
 }
 
@@ -121,11 +134,13 @@ function handleRefresh(data, index) {
   handleSave(_data.map(item => ({
     ...item.permission,
     casetable: props.node.id,
-    group: item.name
+    group: item.group,
+    role: item.role
   })), _data.map(item => ({
     ...item.filter,
     casetable: props.node.id,
-    group: item.name
+    group: item.group,
+    role: item.role
   })))
 }
 

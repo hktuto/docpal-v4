@@ -4,14 +4,34 @@
              :close-on-click-modal="false" class="scroll-dialog" append-to-body
   >
     <el-form ref="FormRef" style="--icon-size: 1.2rem;" label-position="top" :model="form">
-      <el-form-item prop="name" :label="$t('user_UserGroup')"
-                    :rules="[{required: true, message: $t('user_UserGroup') + $t('render.hint.fieldRequired'), trigger: 'change'}]">
-        <el-select-v2 v-model="form.name"
+      <el-form-item prop="isGroup" >
+        <el-switch v-model="form.isGroup" :active-text="$t('user_UserGroup')" :inactive-text="$t('user_role')" @change="handleIsGroupChange" />
+      </el-form-item>
+      <template v-if="!form.isGroup">
+
+        <el-form-item prop="role" :label="$t('user_role')"
+                    :rules="[{required: !form.isGroup, message: $t('user_UserGroup') + $t('render.hint.fieldRequired'), trigger: 'change'}]">
+          <el-select-v2 v-model="form.role"
+                        :options="state.roleList"
+                        clearable
+                        @change="handleRecordChange"
+                        filterable
+                        :placeholder="$t('common_selectedIsRequiredMsg')"/>
+        </el-form-item>
+      </template>
+      <template v-else>
+        <el-form-item prop="group" :label="$t('user_UserGroup')"
+                    :rules="[{required: form.isGroup, message: $t('user_UserGroup') + $t('render.hint.fieldRequired'), trigger: 'change'}]">
+        <el-select-v2 v-model="form.group"
                       :options="state.groupList"
                       clearable
+                      filterable
                       @change="handleRecordChange"
                       :placeholder="$t('common_selectedIsRequiredMsg')"/>
       </el-form-item>
+      </template>
+      
+      
       <el-form-item prop="record" :label="$t('caseManagement_record')"
                     :rules="[{required: true, message: $t('caseManagement_record') + $t('render.hint.fieldRequired'), trigger: 'change'}]">
         <el-select-v2 v-model="form.record"
@@ -71,8 +91,8 @@
 </template>
 <script lang="ts" setup>
 const { t } = useI18n()
-const inputRule = {required: true, message: $i18n.t('tip.input'), trigger: 'blur'}
-const selectRule = {required: true, message: $i18n.t('el.select.placeholder'), trigger: 'change'}
+const inputRule = {required: true, message: t('tip.input'), trigger: 'blur'}
+const selectRule = {required: true, message: t('el.select.placeholder'), trigger: 'change'}
 import {clientApi} from 'api'
 
 const emits = defineEmits([
@@ -103,14 +123,24 @@ const state = reactive<any>({
     {label: 'In Between', value: 'In Between'},
     {label: 'Not Between', value: 'Not Between'}
   ],
-  groupList: []
+  groupList: [],
+  roleList: []
 })
 const form = ref<any>({
-  name: '',
+  group: '',
+  role: '',
   record: 'all',
   filed_condition: []
 })
 const FormRef = ref()
+
+function handleIsGroupChange(value: boolean) {
+  if(value) {
+    form.value.role = ''
+  } else {
+    form.value.group = ''
+  }
+}
 
 async function handleSubmit() {
   try {
@@ -121,11 +151,8 @@ async function handleSubmit() {
   }
 
   state.visible = false
-  let permission: any = {
-    group: form.value.name,
-  }
+  let permission:any = {}
   let filter: any = {
-    group: form.value.name,
     filed_condition: form.value?.filed_condition?.map((item: any) => ({
       id: item.id,
       condition: item.condition,
@@ -134,6 +161,14 @@ async function handleSubmit() {
       label: item.label
     })) || []
   }
+  if(form.value.isGroup) {
+    permission.group = form.value.group
+    filter.group = form.value.group
+  } else {
+    permission.role = form.value.role
+    filter.role = form.value.role
+  }
+  
   if (state.setting?.permission) permission = {
     ...state.setting.permission, ...permission
   }
@@ -149,14 +184,16 @@ async function handleSubmit() {
     return prev
   }, [])
   // throw new Error('test')
-  console.log({
-    filter
-  })
-  emits('refresh', {
-    name: form.value.name,
+  let result:any = {
     permission,
     filter
-  })
+  }
+  if(form.value.isGroup) {
+    result.group = form.value.group
+  } else {
+    result.role = form.value.role
+  }
+  emits('refresh', result)
 
   // } catch (error) {
   // } finally {
@@ -179,6 +216,7 @@ function handleOpen(setting: any) {
   }
   if (!!setting) {
     state.isEdit = true
+    const isGroupOrRole = setting.permission.group ? 'group' : 'role'
     state.setting = setting
     Object.keys(setting.fieldList).forEach(key => {
       state.permissionField[key] = [...setting.fieldList[key]]
@@ -187,7 +225,9 @@ function handleOpen(setting: any) {
   setTimeout(() => {
     initOptions()
     if (!!setting) {
-      form.value.name = setting.name
+      form.value.isGroup = setting.group ? true : false
+      form.value.group = setting.group
+      form.value.role = setting.role
       form.value.record = setting?.filter?.filed_condition?.length > 0 ? 'some' : 'all'
       form.value.filed_condition = setting.filter.filed_condition.map((item: any) => {
         const info = getRowInfo(item.id)
@@ -311,8 +351,20 @@ async function getGroup() {
   }))
 }
 
+async function getRole() {
+  const { flatRole, getRoleTree } = useRBAC()
+  if(flatRole.value.length === 0) {
+    await getRoleTree()
+  }
+  state.roleList = flatRole.value.map((item: any) => ({
+    label: item.name,
+    value: item.id
+  }))
+}
+
 onMounted(async () => {
   getGroup()
+  getRole()
 })
 defineExpose({handleOpen})
 </script>
