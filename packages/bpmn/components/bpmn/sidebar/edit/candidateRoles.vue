@@ -37,7 +37,9 @@ async function getUserRule() {
 
 function refreshData() {
   const data = node.getData()
-  candidateRoles.value = data.data['attr_flowable:candidateRoles'].split(', ').map((item: string) => item).filter((item: string) => item !== '')
+  if (data.data['attr_flowable:candidateRoles'] && data.data['attr_flowable:candidateRoles'] !== '') {
+    candidateRoles.value = data.data['attr_flowable:candidateRoles'].split(', ').map((item: string) => item).filter((item: string) => item !== '')
+  }
 }
 
 function candidateRoleChanged(newVal: any) {
