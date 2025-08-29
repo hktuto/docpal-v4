@@ -1,7 +1,13 @@
 <template>
   <div v-if="!!data" class="permissionCard" >
-    <el-row class="title">{{$t('user_groupName')}}</el-row>
-    <el-row class="content">{{data.name}}</el-row>
+    <template v-if="data.group">
+      <el-row class="title">{{$t('user_groupName')}}</el-row>
+      <el-row class="content">{{data.group}}</el-row>
+    </template>
+    <template v-if="data.role">
+      <el-row class="title">{{$t('user_role')}}</el-row>
+      <el-row class="content">{{ getRoleName(data.role) }}</el-row>
+    </template>
 
     <template v-if="filedCondition.length > 0">
       <el-row class="title">{{$t('caseManage.recordPermission')}}</el-row>
@@ -29,8 +35,12 @@
 </template>
 <script lang="ts" setup>
 import { Setting } from '@element-plus/icons-vue'
-const props = defineProps(['data', 'caseInformation'])
+const props = defineProps(['data', 'caseInformation', 'roleList'])
 const emits = defineEmits(['refresh', 'delete'])
+
+function getRoleName(roleId: string) {
+  return props.roleList.find(item => item.id === roleId)?.name
+}
 const fieldList = computed(() => {
   try {
     const result = props.data.permission.field.reduce((prev,item) => {
