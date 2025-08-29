@@ -52,11 +52,6 @@ async function getOptions(type: string) {
       value: item
     }))
   } else if (type === 'mastertable') {
-    console.log('mastertable', '=========', await getMasterTableOptions({
-      masterTableName: rule.masterTableName,
-      displayColumn: rule.displayColumn,
-      valueColumn: rule.valueColumn
-    }));
     state.options = await getMasterTableOptions({
       masterTableName: rule.masterTableName,
       displayColumn: rule.displayColumn,
