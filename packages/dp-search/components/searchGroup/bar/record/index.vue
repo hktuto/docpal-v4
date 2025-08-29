@@ -55,10 +55,14 @@ function handleDblclick(row: any) {
 }
 
 async function handleDelete(row: any) {
-  const action = await ElMessageBox.confirm(t('msg_confirmWhetherToDelete'))
-  if (action !== 'confirm') throw new Error('cancel')
-  await clientApi.api.deleteNuxeoSearchDeleteNestedSearchLogId(row.id)
-  getList()
+  try {
+    const action = await ElMessageBox.confirm(t('msg_confirmWhetherToDelete'))
+    if (action !== 'confirm') return
+    await clientApi.api.deleteNuxeoSearchDeleteNestedSearchLogId(row.id)
+    getList()
+  } catch (error) {
+    
+  }
 }
 
 function handleSearch() {

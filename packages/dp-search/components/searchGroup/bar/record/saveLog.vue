@@ -62,10 +62,14 @@ async function getList() {
   state._searchList = [ ...data ]
 }
 async function handleDelete(item: any) {
-  const action = await ElMessageBox.confirm(t('msg_confirmWhetherToDelete'))
-  if (action !== "confirm") throw new Error("cancel");
-  await clientApi.api.deleteNuxeoSearchDeleteNestedSearchLogId(item.id)
-  getList()
+  try {
+    const action = await ElMessageBox.confirm(t('msg_confirmWhetherToDelete'))
+    if (action !== "confirm") return
+    await clientApi.api.deleteNuxeoSearchDeleteNestedSearchLogId(item.id)
+    getList()
+  } catch (error) {
+    console.error(error)
+  }
 }
 onMounted(() => {
   getList()
