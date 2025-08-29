@@ -13,7 +13,7 @@
     @current-change="handleCurrentChange"
   >
     <template #default="{ node, data }">
-      <BrowseItemIcon class="file-icon el-icon--left" :type="data.folder ? 'folder' : 'file'"/>
+      <BrowseItemIcon class="file-icon el-icon--left" :type="data.folder ? 'folder' : 'file'" :fileName="data.label" />
       <div class="label ellipsis">{{ data.label }}</div>
       <el-tooltip
         class="box-item"
