@@ -9,7 +9,7 @@
     </div>
     <div class="table-container">
       <el-table :data="state.tableData" style="width: 100%; height: 100%" :default-sort="{ prop: 'userId', order: 'descending' }">
-        <el-table-column sortable prop="userId" :label="$t('dpTable_name')"> </el-table-column>
+        <el-table-column sortable prop="userId" :label="$t('tableHeader.user_role_group')"> </el-table-column>
         <el-table-column
           v-for="item in ['read', 'edit', 'create', 'enable']"
           :key="item"

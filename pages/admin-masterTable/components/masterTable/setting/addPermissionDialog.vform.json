@@ -7,7 +7,7 @@
       "formItemFlag": true,
       "options": {
         "name": "userId",
-        "label": "user_UserAndUserGroup",
+        "label": "tableHeader.user_role_group",
         "labelAlign": "",
         "defaultValue": "",
         "placeholder": "",
@@ -190,6 +190,7 @@
     "functions": "",
     "layoutType": "PC",
     "jsonVersion": 3,
+    "isCreateDynamicCode": true,
     "onFormCreated": "",
     "onFormMounted": "",
     "onFormDataChange": "",

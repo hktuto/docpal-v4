@@ -26,7 +26,7 @@ const state = reactive<any>({
   visible: false
 })
 let userList: UserDTO[] | any = []
-let groupList:GroupDTO[] | any = []
+let groupList: GroupDTO[] | any = []
 const FormRendererRef = ref()
 
 async function handleSubmit() {
@@ -56,20 +56,27 @@ async function handleSubmit() {
 async function handleOpen() {
   state.visible = true
   await new Promise((resolve) => setTimeout(resolve, 10))
-  console.log(FormRendererRef);
-  
+
   FormRendererRef.value.vFormRenderRef.resetForm()
   handleOptions()
 }
-
+const { flatRole } = useRBAC()
 function handleOptions() {
   const userIdRef = FormRendererRef.value.vFormRenderRef.getWidgetRef('userId')
   const options = [
+    {
+      key: 'role',
+      label: t('user_role'),
+      type: 'string',
+      isMultiple: false,
+      options: flatRole.value.map((item) => ({
+        label: item.name,
+        value: item.id
+      }))
+    },
     { value: 'user_groups', label: t('user_groups'), options: groupListFilter() },
     { value: 'user_users', label: t('user_users'), options: userListFilter() }
   ]
-  console.log(userIdRef);
-  
   userIdRef.loadOptions(options)
 
   function userListFilter() {
