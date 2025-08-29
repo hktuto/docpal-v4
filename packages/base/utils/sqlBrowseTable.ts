@@ -62,7 +62,7 @@ export const documentColumn:ColumnDefinition[] = [
   {
     name: "path",
     type: 'TEXT',
-    nullable: false,
+    nullable: true,
   },
   {
     name: "isFolder",
@@ -88,12 +88,12 @@ export const documentColumn:ColumnDefinition[] = [
   {
     name: "docPalType",
     type: 'TEXT',
-    nullable: false
+    nullable: true
   },
   {
     name: "documentType",
     type: 'TEXT',
-    nullable: false
+    nullable: true
   },
   {
     name: "fileModifiedDate",
@@ -109,12 +109,12 @@ export const documentColumn:ColumnDefinition[] = [
   {
     name: "modifiedDate",
     type: 'DATE',
-    nullable: false
+    nullable: true
   },
   {
     name: "name",
     type: 'TEXT',
-    nullable: false
+    nullable: true
   },
   {
     name: "source",
@@ -124,7 +124,7 @@ export const documentColumn:ColumnDefinition[] = [
   {
     name: "status",
     type: 'INTEGER',
-    nullable: false
+    nullable: true
   },
   {
     name: "statusName",
@@ -139,7 +139,7 @@ export const documentColumn:ColumnDefinition[] = [
   {
     name: "version",
     type: 'TEXT',
-    nullable: false
+    nullable: true
   },
   {
     name: "mimeType",
