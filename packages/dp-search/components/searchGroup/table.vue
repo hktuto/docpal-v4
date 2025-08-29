@@ -377,6 +377,7 @@ function barParamsDecorator(barParams: any) {
     query: [],
     ...barParams,
   }
+  if(!barParams.query) return resule
   resule.query = barParams.query.reduce((qPrev: any, qItem: any) => {
     let matchs = []
     if (qItem.matchs) matchs = qItem.matchs.filter((mItem: any) => mItem.value)
