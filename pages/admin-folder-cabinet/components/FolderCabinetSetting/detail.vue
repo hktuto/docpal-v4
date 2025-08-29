@@ -2,7 +2,7 @@
   <div class="detail-container" v-loading="state.loading" :class="{ 'not-root': !isRoot }">
     <div style="overflow: auto; padding: 0 var(--app-space-xs)">
       <div class="flex-x-start">
-        <BrowseItemIcon class="file-icon el-icon--left" :type="state.setting.folder ? 'folder' : 'file'" />
+        <BrowseItemIcon class="file-icon el-icon--left" :type="state.setting.folder ? 'folder' : 'file'" :fileName="state.setting.label" />
         {{ state.setting.label }}
       </div>
       <FormRenderer ref="FormRendererRef" :form-json="formJson" @formChange="formChange"></FormRenderer>
