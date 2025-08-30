@@ -79,13 +79,13 @@ async function handleSubmit(shareInfo: any) {
 defineExpose({ query, reload })
 </script>
 <style lang="scss" scoped>
-:deep .vxe-buttons--wrapper {
+:deep(.vxe-buttons--wrapper) {
   display: flex;
   justify-content: space-between;
 }
 .responsive-container {
   width: 70%;
-  :deep .el-input {
+  :deep(.el-input) {
     width: 200px;
   }
 }

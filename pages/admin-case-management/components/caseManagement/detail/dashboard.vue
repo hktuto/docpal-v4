@@ -236,14 +236,14 @@ onMounted(() => {
 </script>
 <style lang="scss" scoped>
 .responsive-container {
-  :deep .el-input {
+  :deep(.el-input) {
     width: 200px;
   }
 
   width: 100%;
 }
 
-:deep .el-card__body {
+:deep(.el-card__body) {
   height: 70vh;
 }
 

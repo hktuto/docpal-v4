@@ -133,11 +133,11 @@ defineExpose({ reload })
 </script>
 
 <style lang="scss" scoped>
-:deep .el-input {
+:deep(.el-input) {
   width: 200px;
 }
 
-:deep .vxe-buttons--wrapper {
+:deep(.vxe-buttons--wrapper) {
   justify-content: space-between;
 
   .responsive-container {

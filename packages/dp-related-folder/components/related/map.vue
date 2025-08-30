@@ -154,8 +154,8 @@ function handleRefresh(){
     flex-flow: row nowrap;
 }
 
-:deep {
-  .actionIconContainer{
+:deep(.actionIconContainer)
+  {
     font-size: var(--icon-size);
     background: var(--color-grey-150);
     padding: 8px;
@@ -168,5 +168,4 @@ function handleRefresh(){
       background: var(--color-grey-200);
     }
   }
-}
 </style>

@@ -104,11 +104,7 @@ onMounted(async () => {
   width: 100%
 }
 
-:deep .el-dialog__body {
-  //padding: 0 20px 30px;
-}
-
-:deep .el-date-editor {
+:deep(.el-date-editor) {
   width: 100%;
 
   .el-range-separator {

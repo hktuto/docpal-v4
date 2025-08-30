@@ -76,14 +76,14 @@ defineExpose({treeRef})
   background-color: var(--color-b5);
   overflow: auto;
   // padding: var(--app-space-xs);
-  & > :deep .el-tree-node {
+  & > :deep(.el-tree-node) {
     & > .el-tree-node__content {
       padding-left: 8px !important;
     }
   }
 }
 
-:deep .el-tree-node__content {
+:deep(.el-tree-node__content) {
   padding: var(--app-space-xs) 4px;
   height: 42px;
   display: grid;

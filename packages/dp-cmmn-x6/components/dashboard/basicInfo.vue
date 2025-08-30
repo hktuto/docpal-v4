@@ -159,7 +159,7 @@ function needRefresh(detail: any) {
 }
 </script>
 <style lang="scss" scoped>
-:deep .flex-zoom {
+:deep(.flex-zoom) {
   display: flex;
   flex-wrap: wrap;
   align-content: flex-start;

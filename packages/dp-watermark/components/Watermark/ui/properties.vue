@@ -40,11 +40,10 @@ const emit = defineEmits(['delete'])
   box-shadow: 0 0 4px rgba(0, 0, 0, 0.1);
   background: var(--app-grey-1000);
 
-  :deep {
-    .el-input-number {
+  :deep(.el-input-number)
+     {
       width: 100%;
     }
-  }
 }
 
 .el-form-item {

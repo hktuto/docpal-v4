@@ -306,7 +306,7 @@ useEventListener(window, 'resize', calMinWidth)
   }
 }
 .noSupportContainer,
-:deep .noSupportContainer {
+:deep(.noSupportContainer) {
   color: var(--app-grey-000);
   display: flex;
   justify-content: center;
@@ -328,8 +328,7 @@ useEventListener(window, 'resize', calMinWidth)
   align-items: center;
 }
 
-:deep {
-  .actionIconContainer {
+:deep(.noSupportContainer) {
     font-size: var(--icon-size);
     background: var(--app-grey-150);
     padding: 8px;
@@ -342,5 +341,4 @@ useEventListener(window, 'resize', calMinWidth)
       background: var(--app-grey-200);
     }
   }
-}
 </style>

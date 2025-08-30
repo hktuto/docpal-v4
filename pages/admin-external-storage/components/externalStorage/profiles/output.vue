@@ -176,7 +176,7 @@ watch(() => props.captureSetting, (newVal) => {
   --icon-size: var(--app-font-size-m);
 }
 
-:deep .el-input {
+:deep(.el-input) {
   width: 200px;
 }
 </style>

@@ -106,30 +106,26 @@ function getFileExtension(mimeType) {
   :deep(.el-divider--horizontal) {
     margin: var(--app-space-m) 0 !important;
   }
-
-  :deep {
-    > * {
-      flex: 1 0 auto;
-    }
-
-    .infoSection {
-      margin-bottom: var(--app-space-s);
-    }
-    .infoTitle {
+  :deep( > * ) {
+    flex: 1 0 auto;
+  }
+  :deep(.infoSection) {
+    margin-bottom: var(--app-space-s);
+  }
+  :deep(.infoTitle){
       font-size: var(--app-font-size-s);
       display: block;
       color: var(--app-grey-600);
       margin-bottom: 2px;
     }
-    .infoContent {
-      font-size: var(--app-font-size-m);
-      font-weight: 500;
-      min-height: 1rem;
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      --icon-size: var(--app-font-size-m);
-    }
+  :deep(.infoContent) {
+    font-size: var(--app-font-size-m);
+    font-weight: 500;
+    min-height: 1rem;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    --icon-size: var(--app-font-size-m);
   }
 }
 .tagList {

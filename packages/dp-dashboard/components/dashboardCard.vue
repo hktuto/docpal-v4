@@ -77,7 +77,7 @@ defineExpose({
   container-type: inline-size;
   border-radius: 12px;
 }
-:deep .el-card__header {
+:deep(.el-card__header) {
   margin: 0;
   --icon-size: 1.2rem;
   --icon-color: var(--app-grey-525);
@@ -102,47 +102,47 @@ defineExpose({
 }
 .dp-dashboard--card__padding {
   padding: var(--app-space-s);
-  :deep .el-card__body {
+  :deep(.el-card__body) {
     padding: var(--el-card-padding);
   }
-  :deep .el-card__header {
+  :deep(.el-card__header) {
     padding: var(--el-card-padding) !important;
   }
 }
 .dp-dashboard--card__scroll {
-  :deep .el-card__body {
+  :deep(.el-card__body) {
     overflow: auto;
   }
 }
-:deep .el-card__body {
+:deep(.el-card__body) {
   padding: 0;
   margin: 0 auto;
   width: 100%;
   overflow: hidden;
 }
-:deep h4 {
+:deep(h4) {
   padding: unset;
   margin: unset;
   flex: 1 0 auto;
 }
-:deep .table-container {
+:deep(.table-container) {
   height: 100%;
   overflow: hidden;
   .vxe-toolbar {
     display: none;
   }
 }
-:deep .tab-container {
+:deep(.tab-container) {
   .el-tabs__header {
     margin-bottom: 0;
   }
 }
-:deep .iconify {
+:deep(.iconify) {
   width: 1.2rem;
   height: 1.2rem;
   background-color: var(--app-grey-525);
 }
-:deep .iconify.icon-right {
+:deep(.iconify.icon-right) {
   margin-right: var(--app-space-xxs);
   cursor: pointer;
 }

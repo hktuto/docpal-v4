@@ -197,7 +197,7 @@ defineExpose({ vFormRenderRef, setFormJson, setFormData, getFormData })
     width: 100%;
   }
 }
-:deep .el-select-group__wrap {
+:deep(.el-select-group__wrap) {
   display: unset !important;
 }
 </style>
