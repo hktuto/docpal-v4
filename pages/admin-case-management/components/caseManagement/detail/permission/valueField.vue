@@ -262,7 +262,7 @@ watch(
   display: grid;
   grid-template-columns: 1fr min-content 1fr;
   gap: 0 5px;
-  :deep .el-date-editor.el-input {
+  :deep(.el-date-editor.el-input) {
     width: 100% !important;
   }
 }

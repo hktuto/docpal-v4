@@ -103,7 +103,7 @@ defineExpose({})
 </script>
 
 <style lang="scss" scoped>
-:deep .tableHeader {
+:deep(.tableHeader) {
   width: 100%;
   display: flex;
   margin-bottom: 10px;

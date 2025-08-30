@@ -122,7 +122,7 @@ watch(
   margin: var(--app-space-xs) 0;
 }
 
-:deep .el-card__body {
+:deep(.el-card__body) {
   display: grid;
   grid-template-columns: 250px 1fr;
   gap: var(--app-space-xs);

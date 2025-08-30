@@ -362,7 +362,7 @@ defineExpose({ reload, getFilter })
   margin-bottom: 5px;
 }
 
-:deep .headerLeftExpand {
+:deep(.headerLeftExpand ){
   .el-input {
     width: 200px;
   }
@@ -384,7 +384,7 @@ defineExpose({ reload, getFilter })
   --icon-size: 1.2rem;
 }
 
-:deep .tableHeader {
+:deep(.tableHeader) {
   gap: unset;
 }
 
@@ -392,7 +392,7 @@ defineExpose({ reload, getFilter })
   height: 1.5rem;
 }
 
-:deep .el-input {
+:deep(.el-input) {
   width: 200px;
 }
 

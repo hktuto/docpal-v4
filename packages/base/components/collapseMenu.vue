@@ -53,7 +53,7 @@ watch(opened,(bool) => {
   font-size: var(--app-font-size-m);
   --icon-size: var(--app-font-size-m);
   color: var(--app-grey-300);
-  :deep .el-dropdown {
+  :deep(.el-dropdown) {
     font-size: var(--app-font-size-m);
   }
   

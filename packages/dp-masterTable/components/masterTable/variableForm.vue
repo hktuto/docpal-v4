@@ -396,7 +396,7 @@ defineExpose({ init, getData, getWidgetRef });
 .formContainer {
   min-height: 200px;
 }
-:deep .static-content-item {
+:deep(.static-content-item) {
   display: flex !important;
 }
 </style>

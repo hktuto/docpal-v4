@@ -150,7 +150,7 @@ defineExpose({save, getAllForm})
     width: 100%;
     overflow: hidden;
 
-    :deep .el-card__body {
+    :deep(.el-card__body) {
         display: grid;
         grid-template-rows: min-content 1fr;
         gap: var(--app-space-xs);

@@ -186,7 +186,7 @@ defineExpose({
 </script>
 <style lang="scss" scoped>
 .plain-dropdown {
-  :deep .el-button {
+  :deep(.el-button) {
     border: none;
   }
 }

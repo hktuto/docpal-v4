@@ -249,7 +249,7 @@ defineExpose({ query, reload })
 
 <style lang="scss" scoped>
 .table-container {
-  :deep .vxe-toolbar {
+  :deep(.vxe-toolbar) {
     display: flex;
     padding-top: 0;
   }

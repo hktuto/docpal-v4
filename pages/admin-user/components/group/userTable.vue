@@ -172,7 +172,7 @@ watch(() => props.group, async (newValue) => {
   justify-content: flex-start;
 }
 
-:deep .el-input {
+:deep(.el-input) {
   width: 200px;
 }
 

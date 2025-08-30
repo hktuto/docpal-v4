@@ -104,17 +104,5 @@ defineExpose({
   grid-template-rows: min-content 1fr;
   container: table-container / size;
 }
-// .el-card {
-//   container-type: inline-size;
-//   container-name: container;
-// }
-@container table-container(height > 100px) {
-  h3 {
-    background-color: red;
-  }
-  .el-card__body {
-    display: grid;
-    grid-template-rows: min-content 1fr;
-  }
-}
+
 </style>

@@ -176,7 +176,7 @@ function importWorkflowField() {
   --icon-color: #1995a0;
   --icon-size: 8px;
 
-  :deep .svg-icon {
+  :deep(.svg-icon ){
     margin-bottom: 4.8px;
   }
 }
