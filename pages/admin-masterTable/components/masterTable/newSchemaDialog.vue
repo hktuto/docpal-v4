@@ -225,7 +225,7 @@ defineExpose({handleOpen});
   justify-content: space-between;
 }
 
-:deep .slot-wrapper-render .formContainer {
+:deep(.slot-wrapper-render .formContainer) {
   min-height: unset;
 }
 </style>

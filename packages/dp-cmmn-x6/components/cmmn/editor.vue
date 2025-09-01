@@ -304,14 +304,12 @@ defineExpose({ getGraphJson, init, centerGraph, save, graph })
         min-width: initial !important;
     }
 }
-:deep{
-    .splitpanes.default-theme .splitpanes__pane{
-        background-color: var(--app-grey-1000);
-    }
-    .splitpanes__splitter{
+:deep(.splitpanes.default-theme .splitpanes__pane){
+  background-color: var(--app-grey-1000);
+}
+:deep(.splitpanes__splitter){
         z-index: 2;
     }
-}
 .editorContainer{
     width: 100%;
     height : 100%;
@@ -322,9 +320,5 @@ defineExpose({ getGraphJson, init, centerGraph, save, graph })
         height:100%;
     }
 }
-:deep{
-    .splitpanes.default-theme .splitpanes__pane{
-        background-color: var(--app-grey-1000);
-    }
-}
+
 </style>

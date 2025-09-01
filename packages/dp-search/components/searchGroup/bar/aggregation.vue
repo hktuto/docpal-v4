@@ -107,7 +107,7 @@ defineExpose({
     width: 100%;
     overflow-x: hidden;
     margin-right: unset;
-    :deep .el-checkbox__label {
+    :deep(.el-checkbox__label ){
       overflow: hidden;
       text-overflow: ellipsis;
       line-height: 32px;

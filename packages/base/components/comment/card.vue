@@ -190,7 +190,7 @@ function replyBoxShow() {
   }
 }
 
-:deep .commentCard_mention {
+:deep(.commentCard_mention) {
   color: var(--app-primary-color);
   font-weight: bold;
 }

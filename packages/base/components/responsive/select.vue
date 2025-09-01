@@ -75,7 +75,7 @@ function handleChange(data: typeof ResSelectData) {
   width: calc(100% - 30px);
   white-space: pre-wrap;
   overflow: hidden;
-  :deep .el-checkbox__label {
+  :deep(.el-checkbox__label) {
     overflow: hidden;
     text-overflow: ellipsis;
     width: 100%;

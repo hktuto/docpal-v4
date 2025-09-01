@@ -88,11 +88,10 @@ onMounted(() => getAllTags());
 
 .tags-input-root{
   font-size: 1rem;
-  :deep {
-    .tags-input-wrapper-default.active{
+  :deep(.tags-input-wrapper-default.active)
+    {
       border-color: var(--primary-color);
       box-shadow: none;
     }
-  }
 }
 </style>

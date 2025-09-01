@@ -115,7 +115,7 @@ provide(BulkImportListProviderKey, {
 </template>
 
 <style lang="scss" scoped>
-:deep .vxe-buttons--wrapper {
+:deep(.vxe-buttons--wrapper) {
   display: flex;
   justify-content: space-between;
   flex-direction: row-reverse;

@@ -35,7 +35,7 @@ const { tableConfig, tableEvent, tableRef, reload, query } = useVxeTable({
 defineExpose({ reload, query })
 </script>
 <style lang="scss" scoped>
-:deep .el-input {
+:deep(.el-input) {
   width: 200px;
 }
 
@@ -43,7 +43,7 @@ defineExpose({ reload, query })
   position: relative;
   margin-top: var(--app-space-s);
 
-  :deep .el-card__body {
+  :deep(.el-card__body) {
     height: 70vh;
     overflow: hidden;
     display: grid;

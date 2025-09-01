@@ -41,7 +41,7 @@ const { cardRef, refresh, loading } = useDashboardCard({
 defineExpose({})
 </script>
 <style lang="scss" scoped>
-:deep .vxe-toolbar {
+:deep(.vxe-toolbar) {
   display: none;
 }
 </style>

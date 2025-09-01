@@ -168,7 +168,7 @@ defineExpose({ handleOpen })
 </script>
 
 <style scoped lang="scss">
-:deep .el-input {
+:deep(.el-input) {
   width: 100% !important;
 }
 </style>
