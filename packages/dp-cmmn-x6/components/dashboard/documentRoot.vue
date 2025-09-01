@@ -29,12 +29,12 @@ async function getCDBasciInfo() {
   try {
     if (caseData?.fields?.length > 0) return caseData
     const id = caseProvider.instanceId?.value || null
-    const caseVersionId = caseProvider.caseVersionId?.value || null
+    const versionId = caseProvider.versionId?.value || null
     if (id) {
       const { data } = await clientApi.api.getCaseDashboardInstanceCaseidPrimaryformData(id)
       caseData = data
-    } else if (caseVersionId) {
-      const { data } = await adminApi.api.getCaseDashboardVersionVersionidPrimaryform(caseVersionId)
+    } else if (versionId) {
+      const { data } = await adminApi.api.getCaseDashboardVersionVersionidPrimaryform(versionId)
       caseData = data
     } else {
       caseData = {
