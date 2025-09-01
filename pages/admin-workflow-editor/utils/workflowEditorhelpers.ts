@@ -7,7 +7,7 @@ export async function saveWorkflowFormToNewVersion(xml: string, processKey: stri
 
   // convert xml to json
   const allForm = await getAllFormFromXML(xml, processKey, oldVersion)
-  await batchSaveForm(allForm, processKey, newVersion)
+  await batchSaveForm(allForm, processKey, newVersion, oldVersion)
   getBpmnRuleAndSave(oldVersion, newVersion)
 }
 export async function getBpmnRuleAndSave(oldVersion: string, newVersion: string) {
@@ -91,14 +91,16 @@ export async function getAllFormFromXML(xml: string, processKey: string, version
   return result
 }
 
-export async function batchSaveForm(forms: BatchForms, processKey: string, version: string) {
+export async function batchSaveForm(forms: BatchForms, processKey: string, version: string, oldVersion: string) {
   console.log('batchSaveForm', forms, processKey, version)
   forms.forEach(async (form) => {
     const res = await adminApi.api.postRelationSave({
       processKey: processKey,
       userTaskId: form.formId,
       jsonValue: form.json,
-      versionId: version
+      versionId: version,
+      // @ts-ignore
+      oldVersion: oldVersion
     })
     console.log('forms', form.formId, processKey, version, res)
   })
