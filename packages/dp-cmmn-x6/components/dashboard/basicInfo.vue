@@ -25,7 +25,7 @@
 import { useEventBus, EventType } from 'eventbus'
 
 import { set, watchDebounced } from '@vueuse/core'
-import { adminApi } from 'api'
+import { adminApi, clientApi, globalApi } from 'api'
 const platform = useAppPlatform()
 
 const props = withDefaults(
@@ -91,15 +91,17 @@ async function getCDBasciInfo() {
     // remove this line, cause it will cause refresh data
     // if (state.data?.fields?.length > 0) return state.data
     const id = caseProvider.instanceId?.value || null
-    const caseVersionId = caseProvider.caseVersionId?.value || null
+    const versionId = caseProvider.versionId?.value || null
+    console.log("getCDBasciInfo", id, versionId)
     const appPlatform = useAppPlatform()
     if (id) {
       state.mode = 'normal'
-      const { data } = appPlatform.value === 'admin' ? await adminApi.api.getCaseDashboardInstanceCaseidPrimaryformData(id) : await clientApi.api.getCaseDashboardInstanceCaseidPrimaryformData(id)
+      const { data } = await globalApi.api.getCaseDashboardInstanceCaseidPrimaryformData(id) 
+      console.log("------------ case form data", data)
       state.data = data
-    } else if (caseVersionId) {
+    } else if (versionId) {
       state.mode = 'develop'
-      const { data: form }: any = await adminApi.api.getCaseDashboardVersionVersionidPrimaryform(caseVersionId)
+      const { data: form }: any = await clientApi.api.getCaseDashboardInstanceCaseidPrimaryformData(versionId)
       form.rows = form.fields.reduce((prev: any, item: any) => {
         let value = item.type
         if (item.type === 'date') value = '2024-01-01'
@@ -116,6 +118,7 @@ async function getCDBasciInfo() {
       }
     }
   } catch (error) {
+    console.log("getCDBasciInfo error", error)
     state.data = {
       fields: [],
       rows: []

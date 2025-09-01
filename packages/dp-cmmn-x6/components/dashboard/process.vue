@@ -94,12 +94,12 @@ async function getCDProcess() {
   try {
     if (state.allList.length > 0) return state.allList
     const id = CMDProvider?.instanceId?.value || null
-    const caseVersionId = CMDProvider?.caseVersionId?.value || null
+    const versionId = CMDProvider?.versionId?.value || null
     if (id) {
       const { data } = await adminApi.api.getCaseDashboardInstanceCaseidStages(id)
       state.allList = data
-    } else if (caseVersionId) {
-      const { data: caseTypeData } = await adminApi.api.getCaseDashboardVersionVersionidStages(caseVersionId)
+    } else if (versionId) {
+      const { data: caseTypeData } = await adminApi.api.getCaseDashboardVersionVersionidStages(versionId)
       state.allList = caseTypeData
     }
   } catch (error) {

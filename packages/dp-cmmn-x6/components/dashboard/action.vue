@@ -55,7 +55,7 @@ const userId: string = useUserId().value
 async function init() {
   const id = CMDProvider?.instanceId?.value || null
   // const _caseTypeId = CMDProvider.caseTypeId?.value || null
-  const _caseVersionId = CMDProvider?.caseVersionId?.value || null
+  const _versionId = CMDProvider?.versionId?.value || null
   const appPlatform = useAppPlatform()
   if (id) {
     const { data: userAction } = appPlatform.value === 'admin' ? await adminApi.api.getCaseDashboardInstanceCaseidActions(id, { userId }) : await clientApi.api.getCaseDashboardInstanceCaseidActions(id, { userId })
@@ -65,8 +65,8 @@ async function init() {
   //   const { data: dashboardActions } = await adminApi.api.getCaseDashboardCasetypeCasetypeidActions(_caseTypeId)
   //   state.data = dashboardActions?.filter(s => s.state !== 'completed')
   // }
-  else if (_caseVersionId) {
-    const { data: dashboardActions } = await adminApi.api.getCaseDashboardVersionVersionidActions(_caseVersionId)
+  else if (_versionId) {
+    const { data: dashboardActions } = await adminApi.api.getCaseDashboardVersionVersionidActions(_versionId)
     state.data = dashboardActions?.filter(filterActions)
   }
 }
