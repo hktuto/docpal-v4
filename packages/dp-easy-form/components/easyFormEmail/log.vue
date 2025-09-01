@@ -100,12 +100,14 @@ const {
     },
     {
       title: 'tableHeader.relatedWorkflow',
+      field: 'relatedWorkflows',
       slots: {
         default: 'relatedWorkflow'
       }
     },
     {
       title: 'tableHeader.relatedCase',
+      field: 'relateCases',
       slots: {
         default: 'relatedCase'
       }

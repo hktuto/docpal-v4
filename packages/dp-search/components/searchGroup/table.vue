@@ -143,7 +143,7 @@ const { tableConfig, tableEvent, tableRef, reload, query } = useVxeTable({
     },
     {
       title: 'searchGroup.authors',
-      fields: 'contributors',
+      field: 'contributors',
       slots: {
         default: 'contributors'
       }
@@ -192,6 +192,7 @@ const { tableConfig, tableEvent, tableRef, reload, query } = useVxeTable({
     },
     {
       title: 'dpTable_tags',
+      field: 'tags',
       width: 120,
       slots: {
         default: 'doc_tags'

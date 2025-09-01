@@ -52,6 +52,7 @@ const { tableConfig, tableEvent, tableRef, query, reload, cleanSelectedRows } = 
     },
     {
       title: 'externalStorage.profile.sourcePath',
+      field: 'importSetting.path',
       formatter({ row }: any) {
         return row.importSetting?.path
       }

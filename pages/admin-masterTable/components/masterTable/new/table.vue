@@ -93,6 +93,7 @@ const { tableConfig, tableEvent, tableRef, reload, query } = useVxeTable({
     },
     {
       title: 'dpTable_actions',
+      field: 'more',
       slots: {
         default: 'more'
       }
