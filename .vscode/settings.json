@@ -36,7 +36,7 @@
   "editor.gotoLocation.multipleDefinitions": "goto",
   // Folder Settings
   "explorer.fileNesting.enabled": true,
-  "explorer.excludeGitIgnore": true,
+  "explorer.excludeGitIgnore": false,
   "explorer.fileNesting.patterns": {
     "package.json": "*.lock, *.json, pnpm-workspace.yaml, pnpm-lock.yaml, .pnpmfile.cjs",
     ".env": "env.*, .env.*",
