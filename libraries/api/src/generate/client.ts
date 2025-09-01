@@ -908,7 +908,7 @@ export interface AclUserPermission {
     /** the id of acl user or user group */
     belongTo: string;
     /** the type of business, may be from business sub project */
-    belongType: "U" | "G";
+    belongType: "U" | "G" | "R";
     /** the id of business, may be from business sub project */
     businessId: string;
     /** the type of business, may be from business sub project */
@@ -6559,6 +6559,31 @@ export interface ResultListDocumentTemplate {
     locale?: string;
 }
 
+export interface EasyShareDocumentResponseDTO {
+    id?: string;
+    uid?: string;
+    title?: string;
+    path?: string;
+    type?: string;
+    fileExtension?: string;
+    fileSize?: string;
+    lastModified?: string;
+    readOnly?: boolean;
+    watermarkTemplateId?: string;
+    watermarkStatus?: string;
+    status?: string;
+}
+
+export interface ResultListEasyShareDocumentResponseDTO {
+    result?: boolean;
+    /** @format int32 */
+    code?: number;
+    message?: string;
+    data?: EasyShareDocumentResponseDTO[];
+    messageKey?: string;
+    locale?: string;
+}
+
 export interface ResultSmartFolderResponseDTO {
     result?: boolean;
     /** @format int32 */
@@ -6625,37 +6650,12 @@ export interface ResultListNestedSearchLogRecord {
     locale?: string;
 }
 
-export interface EasyShareDocumentResponseDTO {
-    id?: string;
-    uid?: string;
-    title?: string;
-    path?: string;
-    type?: string;
-    fileExtension?: string;
-    fileSize?: string;
-    lastModified?: string;
-    readOnly?: boolean;
-    watermarkTemplateId?: string;
-    watermarkStatus?: string;
-    status?: string;
-}
-
 export interface ResultEasyShareDocumentResponseDTO {
     result?: boolean;
     /** @format int32 */
     code?: number;
     message?: string;
     data?: EasyShareDocumentResponseDTO;
-    messageKey?: string;
-    locale?: string;
-}
-
-export interface ResultListEasyShareDocumentResponseDTO {
-    result?: boolean;
-    /** @format int32 */
-    code?: number;
-    message?: string;
-    data?: EasyShareDocumentResponseDTO[];
     messageKey?: string;
     locale?: string;
 }
@@ -18144,6 +18144,49 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
          * No description
          *
          * @tags Share (Nuxeo)
+         * @name GetNuxeoSharePreview
+         * @request GET:/api/nuxeo/share/preview
+         */
+        getNuxeoSharePreview: (
+            query: {
+                /** @format int64 */
+                shareId: number;
+                documentId: string;
+            },
+            params: RequestParams = {},
+        ) =>
+            this.request<string[], ResultString | (ResultString | Result)>({
+                path: `/nuxeo/share/preview`,
+                method: "GET",
+                query: query,
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags Share (Nuxeo)
+         * @name GetNuxeoSharePreviewRetry
+         * @request GET:/api/nuxeo/share/preview/retry
+         */
+        getNuxeoSharePreviewRetry: (
+            query: {
+                /** @format int64 */
+                easyShareDetailsId: number;
+            },
+            params: RequestParams = {},
+        ) =>
+            this.request<string[], ResultString | (ResultString | Result)>({
+                path: `/nuxeo/share/preview/retry`,
+                method: "GET",
+                query: query,
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags Share (Nuxeo)
          * @name GetNuxeoSharePrepareDownloadDocid
          * @summary Get Status of download file is complete
          * @request GET:/api/nuxeo/share/prepare/download/{docId}
@@ -18152,6 +18195,71 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
             this.request<ResultString, ResultString | (ResultString | Result)>({
                 path: `/nuxeo/share/prepare/download/${docId}`,
                 method: "GET",
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags Share (Nuxeo)
+         * @name GetNuxeoShareDownload
+         * @request GET:/api/nuxeo/share/download
+         */
+        getNuxeoShareDownload: (
+            query: {
+                /** @format int64 */
+                shareId: number;
+                documentId: string;
+            },
+            params: RequestParams = {},
+        ) =>
+            this.request<string[], ResultString | (ResultString | Result)>({
+                path: `/nuxeo/share/download`,
+                method: "GET",
+                query: query,
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags Share (Nuxeo)
+         * @name GetNuxeoShareDownloadRetry
+         * @request GET:/api/nuxeo/share/download/retry
+         */
+        getNuxeoShareDownloadRetry: (
+            query: {
+                /** @format int64 */
+                easyShareDetailsId: number;
+            },
+            params: RequestParams = {},
+        ) =>
+            this.request<string[], ResultString | (ResultString | Result)>({
+                path: `/nuxeo/share/download/retry`,
+                method: "GET",
+                query: query,
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags Share (Nuxeo)
+         * @name GetNuxeoShareDocuments
+         * @summary Get sharing documents through ID
+         * @request GET:/api/nuxeo/share/documents
+         */
+        getNuxeoShareDocuments: (
+            query: {
+                /** @format int64 */
+                id: number;
+            },
+            params: RequestParams = {},
+        ) =>
+            this.request<ResultListEasyShareDocumentResponseDTO, ResultString | (ResultString | Result)>({
+                path: `/nuxeo/share/documents`,
+                method: "GET",
+                query: query,
                 ...params,
             }),
 
