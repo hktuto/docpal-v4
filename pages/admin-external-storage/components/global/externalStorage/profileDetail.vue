@@ -5,16 +5,16 @@
         <ExternalStorageProfilesGenerate v-bind="props" :settings="profile" @update="init" />
       </el-tab-pane>
       <el-tab-pane :label="$t('externalStorage.import')" name="import">
-        <ExternalStorageProfilesImport lazy v-bind="props" :settings="profile?.importSetting" @update="init" />
+        <ExternalStorageProfilesImport lazy v-bind="props" :settings="profile?.import_setting" @update="init" />
       </el-tab-pane>
       <el-tab-pane :label="$t('externalStorage.process')" name="process">
-        <ExternalStorageProfilesProcess lazy v-bind="props" :settings="profile?.processSetting" @update="init" />
+        <ExternalStorageProfilesProcess lazy v-bind="props" :settings="profile?.process_setting" @update="init" />
       </el-tab-pane>
       <el-tab-pane :label="$t('externalStorage.capture')" name="capture">
-        <ExternalStorageProfilesCapture lazy v-bind="props" :settings="profile?.captureSetting" @update="init" />
+        <ExternalStorageProfilesCapture lazy v-bind="props" :settings="profile?.capture_setting" @update="init" />
       </el-tab-pane>
       <el-tab-pane :label="$t('externalStorage.output')" name="output">
-        <ExternalStorageProfilesOutput lazy v-bind="props" :captureSetting="profile?.captureSetting" />
+        <ExternalStorageProfilesOutput lazy v-bind="props" :captureSetting="profile?.capture_setting" />
       </el-tab-pane>
     </el-tabs>
   </div>

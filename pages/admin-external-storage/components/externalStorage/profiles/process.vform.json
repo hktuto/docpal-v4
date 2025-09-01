@@ -6,7 +6,7 @@
       "icon": "select-field",
       "formItemFlag": true,
       "options": {
-        "name": "separationType",
+        "name": "separation_type",
         "label": "externalStorage.separationType",
         "labelAlign": "",
         "defaultValue": "",
@@ -52,7 +52,7 @@
       "icon": "switch-field",
       "formItemFlag": true,
       "options": {
-        "name": "isOcr",
+        "name": "is_ocr",
         "label": "OCR",
         "labelAlign": "",
         "defaultValue": false,
@@ -95,6 +95,10 @@
     "onFormCreated": "",
     "onFormMounted": "",
     "onFormDataChange": "",
-    "dhList": []
+    "dhList": [],
+    "saveRemoteOptions": "never",
+    "labelFormUniqueName": true,
+    "onFormValidate": "",
+    "dataSources": []
   }
 }

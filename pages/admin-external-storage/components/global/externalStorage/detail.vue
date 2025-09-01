@@ -42,7 +42,7 @@ const { tableConfig, tableEvent, tableRef, query, reload, cleanSelectedRows } = 
   api: (pageParams: any) => adminApi.api.postExternalstorageIdProfilesPage(props.id, { ...pageParams, ...extraParams }),
   columns: [
     { field: 'name', title: 'dpTable.name', fixed: 'left' },
-    { field: 'profileType', title: 'docType_type' },
+    { field: 'profile_type', title: 'docType_type' },
     {
       field: 'status',
       title: 'common_status',
@@ -57,9 +57,9 @@ const { tableConfig, tableEvent, tableRef, query, reload, cleanSelectedRows } = 
         return row.importSetting?.path
       }
     },
-    { field: 'createdBy', title: 'search.createdBy' },
+    { field: 'created_by', title: 'search.createdBy' },
     {
-      field: 'createdDate',
+      field: 'created_date',
       title: 'dpTable_createdDate',
       formatter({ cellValue }: any) {
         return formatDate(cellValue)
@@ -67,7 +67,7 @@ const { tableConfig, tableEvent, tableRef, query, reload, cleanSelectedRows } = 
     },
 
     {
-      field: 'modifiedDate',
+      field: 'modified_date',
       title: 'table_modifiedDate',
       formatter({ cellValue }: any) {
         return formatDate(cellValue)
