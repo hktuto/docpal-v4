@@ -112,7 +112,7 @@ onMounted(() => {
           </ElRow>
         </ElForm>
       </div>
-      <CalendarSettingCategories v-if="categoriesColumn"/>
+      <CalendarSettingCategories />
     </template>
   </div>
 </template>
