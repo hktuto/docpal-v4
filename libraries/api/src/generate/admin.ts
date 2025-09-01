@@ -373,68 +373,72 @@ export interface ExternalStorageDTO {
     status?: string;
     /** Type of storage (FILE, DATABASE, etc.) */
     type?: string;
-    /** Work group associated with the storage */
-    workGroup?: string;
     /** Event ID for storage operations */
     eventId?: string;
     /** Authentication credentials for the storage */
     credentials?: Record<string, object>;
+    /** Type of connection (e.g., S3, FTP, SFTP, etc.) */
+    connection_type?: string;
+    /** Connection settings configuration */
+    connection_settings?: Record<string, object>;
+    /** Work group associated with the storage */
+    work_group?: string;
     /** Extended data and metadata */
-    extendData?: Record<string, object>;
-    /** Creation User */
-    createdBy?: string;
+    extend_data?: Record<string, object>;
     /**
-     * Creation timestamp
+     * Creation timestamp of the external storage profile
      * @format date-time
      */
-    createdDate?: string;
-    /** User who last modified the storage configuration */
-    lastModifyBy?: string;
+    created_date?: string;
     /**
-     * Last modification timestamp
+     * Last modification timestamp of the external storage profile
      * @format date-time
      */
-    modifiedDate?: string;
+    modified_date?: string;
+    /** User who created the external storage profile */
+    created_by?: string;
+    /** User who last modified the external storage profile */
+    last_modify_by?: string;
 }
 
 /** External Storage Profile Configuration */
 export interface ExternalProfileDTO {
     /** Unique identifier for the external storage profile */
     id?: string;
-    /** External storage ID that this external storage profile belongs to */
-    externalStorageId?: string;
     /** Name of the external storage profile */
     name?: string;
-    /** Profile type (e.g., READ_ONLY, READ_WRITE, ADMIN) of the external storage profile */
-    profileType?: string;
     /** Status of the external storage profile (ACTIVE, INACTIVE, etc.) */
     status?: string;
+    /** External storage ID that this external storage profile belongs to */
+    external_storage_id?: string;
+    /** Profile type (e.g., READ_ONLY, READ_WRITE, ADMIN) of the external storage profile */
+    profile_type?: string;
     /**
      * Creation timestamp of the external storage profile
      * @format date-time
      */
-    createdDate?: string;
+    created_date?: string;
     /**
      * Last modification timestamp of the external storage profile
      * @format date-time
      */
-    modifiedDate?: string;
+    modified_date?: string;
     /** User who created the external storage profile */
-    createdBy?: string;
+    created_by?: string;
     /** User who last modified the external storage profile */
-    lastModifyBy?: string;
+    last_modify_by?: string;
     /** Event ID of the external storage profile */
-    eventId?: string;
+    event_id?: string;
     /** Profile import setting */
-    importSetting?: Record<string, object>;
+    import_setting?: Record<string, object>;
     /** Profile Process setting */
-    processSetting?: Record<string, object>;
+    process_setting?: Record<string, object>;
     /** Batch Id Setting of the external storage profile */
-    batchIdSetting?: Record<string, object>;
+    batch_id_setting?: Record<string, object>;
     /** Capture setting of the external storage profile */
-    captureSetting?: Record<string, object>;
+    capture_setting?: Record<string, object>;
     /** Output Setting of External Storage Profile */
-    outputSettings?: Record<string, object>[];
+    output_settings?: Record<string, object>[];
 }
 
 /** Event Calendar Setting */
@@ -1770,7 +1774,7 @@ export interface AclUserPermission {
     /** the id of acl user or user group */
     belongTo: string;
     /** the type of business, may be from business sub project */
-    belongType: "U" | "G";
+    belongType: "U" | "G" | "R";
     /** the id of business, may be from business sub project */
     businessId: string;
     /** the type of business, may be from business sub project */
@@ -2961,44 +2965,44 @@ export interface ExternalProfileRequestDTO {
     isDesc?: boolean;
     /** Unique identifier for the external storage profile */
     id?: string;
-    /** External storage ID that this external storage profile belongs to */
-    externalStorageId?: string;
     /** Name of the external storage profile */
     name?: string;
-    /** Profile type (e.g., READ_ONLY, READ_WRITE, ADMIN) of the external storage profile */
-    profileType?: string;
     /** Status of the external storage profile (ACTIVE, INACTIVE, etc.) */
     status?: string;
-    /**
-     * Creation timestamp of the external storage profile
-     * @format date-time
-     */
-    createdDate?: string;
-    /**
-     * Last modification timestamp of the external storage profile
-     * @format date-time
-     */
-    modifiedDate?: string;
-    /** User who created the external storage profile */
-    createdBy?: string;
-    /** User who last modified the external storage profile */
-    lastModifyBy?: string;
-    /** Event ID of the external storage profile */
-    eventId?: string;
-    /** Profile import setting */
-    importSetting?: Record<string, object>;
-    /** Profile Process setting */
-    processSetting?: Record<string, object>;
-    /** Batch Id Setting of the external storage profile */
-    batchIdSetting?: Record<string, object>;
-    /** Capture setting of the external storage profile */
-    captureSetting?: Record<string, object>;
-    /** Output Setting of External Storage Profile */
-    outputSetting?: Record<string, object>;
     sort?: SortObject;
     descSort?: SortObject;
     desc?: boolean;
     orderByValue?: string;
+    /** External storage ID that this external storage profile belongs to */
+    external_storage_id?: string;
+    /** Profile type (e.g., READ_ONLY, READ_WRITE, ADMIN) of the external storage profile */
+    profile_type?: string;
+    /**
+     * Creation timestamp of the external storage profile
+     * @format date-time
+     */
+    created_date?: string;
+    /**
+     * Last modification timestamp of the external storage profile
+     * @format date-time
+     */
+    modified_date?: string;
+    /** User who created the external storage profile */
+    created_by?: string;
+    /** User who last modified the external storage profile */
+    last_modify_by?: string;
+    /** Event ID of the external storage profile */
+    event_id?: string;
+    /** Profile import setting */
+    import_setting?: Record<string, object>;
+    /** Profile Process setting */
+    process_setting?: Record<string, object>;
+    /** Batch Id Setting of the external storage profile */
+    batch_id_setting?: Record<string, object>;
+    /** Capture setting of the external storage profile */
+    capture_setting?: Record<string, object>;
+    /** Output Setting of External Storage Profile */
+    output_setting?: Record<string, object>;
 }
 
 /** External Storage Request DTO */
@@ -3023,26 +3027,26 @@ export interface ExternalStorageRequestDTO {
     id?: string;
     /** Name of the external storage */
     name?: string;
-    /** Type of connection (e.g., S3, FTP, SFTP, etc.) */
-    connectionType?: string;
     /** Storage path or directory */
     path?: string;
     /** Platform [WINDOW|LINUX] */
     platform?: string;
     /** Status of the external storage (ACTIVE, INACTIVE, etc.) */
     status?: string;
-    /** Work group associated with the storage */
-    workGroup?: string;
-    /** Connection settings configuration */
-    connectionSettings?: Record<string, object>;
     /** Authentication credentials for the storage */
     credentials?: Record<string, object>;
-    /** Extended data and metadata */
-    extendData?: Record<string, object>;
     sort?: SortObject;
     descSort?: SortObject;
     desc?: boolean;
     orderByValue?: string;
+    /** Type of connection (e.g., S3, FTP, SFTP, etc.) */
+    connection_type?: string;
+    /** Connection settings configuration */
+    connection_settings?: Record<string, object>;
+    /** Work group associated with the storage */
+    work_group?: string;
+    /** Extended data and metadata */
+    extend_data?: Record<string, object>;
 }
 
 export interface BasePageRequest {
