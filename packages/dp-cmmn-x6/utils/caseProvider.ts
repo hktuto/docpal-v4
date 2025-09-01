@@ -3,7 +3,7 @@ import { InjectionKey, Ref } from "vue";
 interface CaseDashboardProvider {
     caseTypeId: Ref<string | null>,
     instanceId?: Ref<string | null>,
-    caseVersionId?: Ref<string | null>,
+    versionId?: Ref<string | null>,
     name: Ref<string | null>,
 }
 
