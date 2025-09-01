@@ -18,7 +18,8 @@
     </template>
 
     <template #summary="{ row }">
-      <div v-if="row.properties && row.properties.field_summaries">
+      <div v-if="row.properties && row.properties.field_summaries" v-tooltip="calculateTooltip(row)">
+        
         {{
           row.properties.field_summaries.name && 'File Name' ||
           row.properties.field_summaries.path && 'path' ||
@@ -40,6 +41,21 @@ const { tableId, showCheckbox } = defineProps<{
 
 const routerProvider = inject(MenuRouterKey)
 const emits = defineEmits(['updateAgg', 'selectChange'])
+
+function calculateTooltip(row: any) {
+  const maxWords = 10
+  function trimToWords(str: string, max: number) {
+    if (!str) return ''
+    const words = str.split(/\s+/)
+    return words.length > max ? words.slice(0, max).join(' ') + '...' : str
+  }
+  return `
+${row.properties.field_summaries.name ? `File Name : ${trimToWords(row.properties.field_summaries.name, maxWords)} <br/>` : ''}
+${row.properties.field_summaries.path ? `Path : ${trimToWords(row.properties.field_summaries.path, maxWords)} <br/>` : ''}
+${row.properties.field_summaries.content ? `Content : ${trimToWords(row.properties.field_summaries.content, maxWords)}` : ''}
+  `
+}
+
 // #region module: page
 const route = useRoute()
 const router = useRouter()
@@ -220,12 +236,7 @@ const { tableConfig, tableEvent, tableRef, reload, query } = useVxeTable({
         const value = row[key]
         // TODO : check to send html
         if(key === 'properties.fieldSummaries'){
-          const tmp = `
-            File Name : ${row.properties.field_summaries.name} \n
-            Path : ${row.properties.field_summaries.path} \n
-            Content : ${row.properties.field_summaries.content}
-          `
-          return tmp
+          return null;
         }
         if (typeof value === 'string') {
           return value

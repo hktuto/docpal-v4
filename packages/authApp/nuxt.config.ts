@@ -13,7 +13,7 @@ const config = {
   runtimeConfig:{
     public: {
       needAuth: true,
-      updateInterval: 300000,
+      updateInterval: 1000,
       endPoint: {
         clientUrl : process.env.CLIENTURL,
         admin : process.env.ADMIN_END_POINT,
@@ -25,7 +25,7 @@ const config = {
   },
   experimental:{
     appManifest: true,
-    checkOutdatedBuildInterval: 10000,
+    checkOutdatedBuildInterval: 300000,
   }
 } as any
 if(process.env.NODE_ENV === 'development'){
