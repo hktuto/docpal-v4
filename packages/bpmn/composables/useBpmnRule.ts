@@ -30,7 +30,12 @@ export const useBpmnRule = ({ versionDraftId, version, taskName, draftId, workfl
           }
         })
         .then((res) => res.data)
-      bpmnGlobalRules.value = rule?.validationRules || []
+      if (!rule || !rule.validationRules) {
+        isNew = true
+        bpmnGlobalRules.value = []
+      } else {
+        bpmnGlobalRules.value = rule?.validationRules || []
+      }
     } catch (error) {
       console.log('error', error)
       isNew = true

@@ -1,10 +1,10 @@
 <script lang="ts" setup>
-import {MenuRouterKey, type NewWorkflowVersionDetailParams, type NewWorkflowVersionListParams} from '#imports'
-import {ElNotification} from 'element-plus'
-import {adminApi} from 'api';
-import {saveWorkflowFormToNewVersion} from '~/utils/workflowEditorhelpers';
+import { MenuRouterKey, type NewWorkflowVersionDetailParams, type NewWorkflowVersionListParams } from '#imports'
+import { ElNotification } from 'element-plus'
+import { adminApi } from 'api'
+import { saveWorkflowFormToNewVersion } from '~/utils/workflowEditorhelpers'
 
-const {t} = useI18n()
+const { t } = useI18n()
 
 defineOptions({
   name: 'WorkflowEditorDetailDead'
@@ -12,14 +12,14 @@ defineOptions({
 
 const routerProvider = inject(MenuRouterKey)
 
-const {id, currentVersion, versionId} = defineProps<{
+const { id, currentVersion, versionId } = defineProps<{
   id: string
   versionId: string
-  currentVersion: string,
+  currentVersion: string
 }>()
 
 const draftDetail = ref<any>({})
-const readonly = ref(true);
+const readonly = ref(true)
 const bpmnFile = ref()
 const WorkflowEditorRef = ref()
 const workflowData = ref()
@@ -29,42 +29,43 @@ const state = reactive<any>({
   loading: false,
   newStatus: false
 })
-const loading = ref(false);
+const loading = ref(false)
 const productionVersion = ref()
 const lastestVewsion = ref()
 
 async function getWorkflow() {
   loading.value = true
   const data = await adminApi.api.getWorkflowProcessDefinitionDraftDraftid(id)
-  const blob = await adminApi.api.getWorkflowVersionBpmnxml({draftId: id, versionNumber: currentVersion}, {
-    format: 'blob'
-  })
-  const json = await adminApi.api.getWorkflowVersionJson({draftId: id, versionNumber: currentVersion}, {})
+  const blob = await adminApi.api.getWorkflowVersionBpmnxml(
+    { draftId: id, versionNumber: currentVersion },
+    {
+      format: 'blob'
+    }
+  )
+  const json = await adminApi.api.getWorkflowVersionJson({ draftId: id, versionNumber: currentVersion }, {})
   // @ts-ignore
   const file = await blob.text()
-  draftDetail.value = data.data;
+  draftDetail.value = data.data
   bpmnFile.value = file
 
   // regex to get progress key
   const xmlJson = bpmnStringToJson(file)
   processKey.value = xmlJson.json.definitions.process.attr_id
 
-
-  const {data: draftData}: any = await adminApi.api.getWorkflowProcessDefinitionDraftDraftid(id)
+  const { data: draftData }: any = await adminApi.api.getWorkflowProcessDefinitionDraftDraftid(id)
   if (!draftData) {
-    throw createError("draft not found")
+    throw createError('draft not found')
   }
   productionVersion.value = draftData.productionVersion
   lastestVewsion.value = draftData.latestVersion || currentVersion // if latest version is null , then current version must be latest
 
   // check read only logic
-  readonly.value = !!(currentVersion !== lastestVewsion.value || productionVersion.value && currentVersion === productionVersion.value);
+  readonly.value = !!(currentVersion !== lastestVewsion.value || (productionVersion.value && currentVersion === productionVersion.value))
   workflowData.value = draftData
   // key
   workflowData.value.key = draftData.key || draftData.name
   routerProvider?.updateTabName(draftData.name + ` - (${currentVersion})`)
   nextTick(() => {
-
     if (json && json.data) {
       WorkflowEditorRef.value.init(bpmnFile.value, JSON.parse(json.data))
     } else {
@@ -74,28 +75,25 @@ async function getWorkflow() {
   loading.value = false
 }
 
-
 async function saveDraft() {
-
-  const {xml, json, x6Json} = WorkflowEditorRef.value.getData()
+  const { xml, json, x6Json } = WorkflowEditorRef.value.getData()
   const newName = json.definitions.process.attr_name
-  const blob = new Blob([xml], {type: "text/xml;charset=utf-8"});
-  const form: any = new FormData();
+  const blob = new Blob([xml], { type: 'text/xml;charset=utf-8' })
+  const form: any = new FormData()
   form.append('name', newName)
   form.append('versionId', versionId)
   form.append('draftId', id)
   form.append('jsonValue', JSON.stringify(x6Json))
   form.append('file', blob, 'workflow.bpmn.xml')
   form.append('isDraft', true)
-  await adminApi.api.postWorkflowProcessDefinitionSave({requestDTO: {}}, form as any)
+  await adminApi.api.postWorkflowProcessDefinitionSave({ requestDTO: {} }, form as any)
   // await adminApi.workflowProcessDefinitionController.postUpload({requestDTO:{}},form)
   // 如果是修改了名称，则更新 tab 的名称
   routerProvider?.updateTabName(newName + ` - (${currentVersion})`)
-
 }
 
 provide('workflowDetail', {
-  saveDraft,
+  saveDraft
 })
 
 function openVersionList() {
@@ -106,25 +104,24 @@ function openVersionList() {
     latestVersion: workflowData.value.latestVersion,
     productionVersion: workflowData.value.productionVersion
   }
-  const newItem = newWorkflowEditorVerionList(params);
-  console.log("newItem", newItem)
+  const newItem = newWorkflowEditorVerionList(params)
+  console.log('newItem', newItem)
   routerProvider?.navigateTo(newItem)
 }
-
 
 async function promoteToProduction() {
   try {
     loading.value = true
-    const {xml, x6Json} = WorkflowEditorRef.value.getData()
-    const blob = new Blob([xml], {type: "text/xml;charset=utf-8"});
-    const form: any = new FormData();
+    const { xml, x6Json } = WorkflowEditorRef.value.getData()
+    const blob = new Blob([xml], { type: 'text/xml;charset=utf-8' })
+    const form: any = new FormData()
     form.append('jsonValue', JSON.stringify(x6Json))
     form.append('file', blob, 'workflow.bpmn.xml')
-    const {data: workflowVersionData} = await adminApi.api.getWorkflowVersion({
+    const { data: workflowVersionData } = (await adminApi.api.getWorkflowVersion({
       draftId: id,
       versionNumber: currentVersion
-    }) as any
-    const {data} = await adminApi.api.postWorkflowVersionVersionidDeploy(workflowVersionData.id, {requestDTO: {}}, form) as any
+    })) as any
+    const { data } = (await adminApi.api.postWorkflowVersionVersionidDeploy(workflowVersionData.id, { requestDTO: {} }, form)) as any
 
     routerProvider?.message?.success(t('dpMsg_success'))
     await getWorkflow()
@@ -135,21 +132,19 @@ async function promoteToProduction() {
   }
 }
 
-
 async function saveAsNewVersion() {
-  const {xml, x6Json} = WorkflowEditorRef.value.getData()
-  const blob = new Blob([xml], {type: "text/xml;charset=utf-8"});
-  const form: any = new FormData();
+  const { xml, x6Json } = WorkflowEditorRef.value.getData()
+  const blob = new Blob([xml], { type: 'text/xml;charset=utf-8' })
+  const form: any = new FormData()
   form.append('jsonValue', JSON.stringify(x6Json))
   form.append('draftId', id)
   form.append('file', blob, 'workflow.bpmn.xml')
   // save all forms to new version
-  const {data} = await adminApi.api.postWorkflowVersionNew({requestDTO: {}}, form) as any
+  const { data } = (await adminApi.api.postWorkflowVersionNew({ requestDTO: {} }, form)) as any
 
   await saveWorkflowFormToNewVersion(xml, workflowData.value.key, versionId, data.id)
 
   routerProvider?.message.success(t('dpMsg_success'))
-
   // TODO : check if this is correct
   routerProvider?.updateProps({
     id,
@@ -160,29 +155,37 @@ async function saveAsNewVersion() {
   await getWorkflow()
 }
 
-
-watch(() => [id, versionId], (newWorkflowId) => {
-  if (newWorkflowId[0] && newWorkflowId[1]) {
-    getWorkflow()
-  } else {
-    console.log("id or versionId not valid")
+watch(
+  () => [id, versionId],
+  (newWorkflowId) => {
+    if (newWorkflowId[0] && newWorkflowId[1]) {
+      getWorkflow()
+    } else {
+      console.log('id or versionId not valid')
+    }
+  },
+  {
+    immediate: true
   }
-}, {
-  immediate: true
-})
-
-
+)
 </script>
 
 <template>
   <div class="pageContainer">
-    <BpmnEditor v-loading="loading" ref="WorkflowEditorRef" :workflow-data="workflowData"
-                :currentVersion="currentVersion" :processKey="processKey" :currentVersionId="versionId" :id="id"
-                :readonly="readonly">
+    <BpmnEditor
+      v-loading="loading"
+      ref="WorkflowEditorRef"
+      :workflow-data="workflowData"
+      :currentVersion="currentVersion"
+      :processKey="processKey"
+      :currentVersionId="versionId"
+      :id="id"
+      :readonly="readonly"
+    >
       <template #actions>
         <template v-if="!productionVersion || productionVersion !== currentVersion">
           <ElButton id="WorkflowEditor__DetailDead__PromoteToProduction" type="primary" @click="promoteToProduction">
-            {{ $t('workflowEditor_promoteToProduction', {currentVersion: currentVersion}) }}
+            {{ $t('workflowEditor_promoteToProduction', { currentVersion: currentVersion }) }}
           </ElButton>
         </template>
         <ElButton id="WorkflowEditor__DetailDead__SaveAsNewVersion" type="primary" @click="saveAsNewVersion">
@@ -200,9 +203,7 @@ watch(() => [id, versionId], (newWorkflowId) => {
   </div>
 </template>
 
-
 <style lang="scss" scoped>
-
 .pageContainer {
   width: 100%;
   height: 100%;

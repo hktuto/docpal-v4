@@ -1,147 +1,148 @@
 <script lang="ts" setup>
-import {ElNotification } from 'element-plus';
+import { ElNotification } from 'element-plus'
 
-import {adminApi} from 'api';
+import { adminApi } from 'api'
 
-import { newWorkflowEditorDetail } from '~/utils/workflowEditorMenu';
-import type { PermissionMethodParams } from 'base/composables/useVxeTable';
+import { newWorkflowEditorDetail } from '~/utils/workflowEditorMenu'
+import type { PermissionMethodParams } from 'base/composables/useVxeTable'
 
 const { id, name, draftId, latestVersion } = defineProps<{
-    id:string,
-    draftId:string,
-    name:string
-    latestVersion:string
+  id: string
+  draftId: string
+  name: string
+  latestVersion: string
 }>()
 const workflowData = ref<any>()
 
 const routerProvider = inject(MenuRouterKey)
-if(!routerProvider ) {
-    throw new Error('MenuRouterKey is not provided')
+if (!routerProvider) {
+  throw new Error('MenuRouterKey is not provided')
 }
-const { t} = useI18n()
-const tableRef = ref();
+const { t } = useI18n()
+const tableRef = ref()
 
-async function getWorkflowDetail(){
-    const {data: draftData}:any = await adminApi.api.getWorkflowProcessDefinitionDraftDraftid(draftId)
-    workflowData.value = draftData
-    routerProvider?.updateTabName(draftData.name + '- versions list' )
-}
-
-function editHandler(row:any, openInNewTab = false){
-    // console.log("row data", row)
-    const params: NewWorkflowVersionDetailParams = {
-        id: row.id,
-        name: row.name,
-        draftId: row.draftId,
-        versionNumber: row.versionNumber,
-        versionId: row.id
-    }
-    const newItem = newWorkflowEditorDetail(params)
-    routerProvider?.navigateTo(newItem, openInNewTab)
+async function getWorkflowDetail() {
+  const { data: draftData }: any = await adminApi.api.getWorkflowProcessDefinitionDraftDraftid(draftId)
+  workflowData.value = draftData
+  routerProvider?.updateTabName(draftData.name + '- versions list')
 }
 
-async function promoteToProductionHandler(row:any) {
-    const blob = await adminApi.api.getWorkflowVersionBpmnxml({draftId:row.draftId, versionNumber:row.versionNumber}, {
-        format: 'blob'
-    }) 
-    let {data:json} = await adminApi.api.getWorkflowVersionJson({draftId:row.draftId, versionNumber:row.versionNumber}, {})
-    const xml = await blob.text()
-    const form:any = new FormData();
-    form.append('file', blob, 'workflow.bpmn.xml')
-    form.append('jsonValue', json || "")
-
-    const {data} = await adminApi.api.postWorkflowVersionVersionidDeploy(row.id,{requestDTO:{}},form) as any
-    // await saveWorkflowFormToNewVersion(xml, workflowData.value.key, row.versionNumber, data.latestVersion)
-    ElNotification.success(t('dpMsg_success'))
-
-    tableRef.value?.reload()
+function editHandler(row: any, openInNewTab = false) {
+  // console.log("row data", row)
+  const params: NewWorkflowVersionDetailParams = {
+    id: row.id,
+    name: row.name,
+    draftId: row.draftId,
+    versionNumber: row.versionNumber,
+    versionId: row.id
+  }
+  const newItem = newWorkflowEditorDetail(params)
+  routerProvider?.navigateTo(newItem, openInNewTab)
 }
 
-async function saveAsNewVersionHandler(row:any) {
-    
-    // get xml from workflow
-    const blob = await adminApi.api.getWorkflowVersionBpmnxml({draftId:row.draftId, versionNumber:row.versionNumber}, {
-        format: 'blob'
-    }) 
-    let {data:json} = await adminApi.api.getWorkflowVersionJson({draftId:row.draftId, versionNumber:row.versionNumber}, {})
-    
-    const form:any = new FormData();
-    form.append('file', blob, 'workflow.bpmn.xml')
-    form.append('jsonValue', json || "")
-    form.append('draftId', row.draftId)
-    
+async function promoteToProductionHandler(row: any) {
+  const blob = await adminApi.api.getWorkflowVersionBpmnxml(
+    { draftId: row.draftId, versionNumber: row.versionNumber },
+    {
+      format: 'blob'
+    }
+  )
+  let { data: json } = await adminApi.api.getWorkflowVersionJson({ draftId: row.draftId, versionNumber: row.versionNumber }, {})
+  const xml = await blob.text()
+  const form: any = new FormData()
+  form.append('file', blob, 'workflow.bpmn.xml')
+  form.append('jsonValue', json || '')
 
-    const xml = await blob.text()
-    const { data } = await adminApi.api.postWorkflowVersionNew({requestDTO:{}},form) as any
-    await saveWorkflowFormToNewVersion(xml, workflowData.value.key, row.id, data.id)
+  const { data } = (await adminApi.api.postWorkflowVersionVersionidDeploy(row.id, { requestDTO: {} }, form)) as any
+  // await saveWorkflowFormToNewVersion(xml, workflowData.value.key, row.versionNumber, data.latestVersion)
+  ElNotification.success(t('dpMsg_success'))
 
-    routerProvider?.message.success(t('dpMsg_success'))
-
-    tableRef.value?.reload()
+  tableRef.value?.reload()
 }
 
-function actionPermission({row, code }:PermissionMethodParams) : {disabled:boolean, visible:boolean}{
-    const isProduction = row.isProduction === 'A'
-    const isLatest = row.versionNumber === workflowData.value.latestVersion
-    let result = {
-        visible : true,
-        disabled: true
-    } 
-    if(!code){
-        return result
-    }  
-    if(code === 'view'){
-        result.visible = !isLatest 
-        result.disabled = false;
-        return result
+async function saveAsNewVersionHandler(row: any) {
+  // get xml from workflow
+  const blob = await adminApi.api.getWorkflowVersionBpmnxml(
+    { draftId: row.draftId, versionNumber: row.versionNumber },
+    {
+      format: 'blob'
     }
-    if(code === 'edit' || code === 'edit_new_tab'){
-        result.visible = isLatest && !isProduction
-        result.disabled = !isLatest || isProduction
-        return result
-    }
-    if(code === 'promote_to_production'){
-        result.disabled = isProduction
-        return result
-    }
-    if(code === 'save_as_new_version'){
-        result.disabled = false
-    }
+  )
+  let { data: json } = await adminApi.api.getWorkflowVersionJson({ draftId: row.draftId, versionNumber: row.versionNumber }, {})
+
+  const form: any = new FormData()
+  form.append('file', blob, 'workflow.bpmn.xml')
+  form.append('jsonValue', json || '')
+  form.append('draftId', row.draftId)
+
+  const xml = await blob.text()
+  const { data } = (await adminApi.api.postWorkflowVersionNew({ requestDTO: {} }, form)) as any
+  await saveWorkflowFormToNewVersion(xml, workflowData.value.key, row.id, data.id)
+  routerProvider?.message.success(t('dpMsg_success'))
+
+  tableRef.value?.reload()
+}
+
+function actionPermission({ row, code }: PermissionMethodParams): { disabled: boolean; visible: boolean } {
+  const isProduction = row.isProduction === 'A'
+  const isLatest = row.versionNumber === workflowData.value.latestVersion
+  let result = {
+    visible: true,
+    disabled: true
+  }
+  if (!code) {
     return result
+  }
+  if (code === 'view') {
+    result.visible = !isLatest
+    result.disabled = false
+    return result
+  }
+  if (code === 'edit' || code === 'edit_new_tab') {
+    result.visible = isLatest && !isProduction
+    result.disabled = !isLatest || isProduction
+    return result
+  }
+  if (code === 'promote_to_production') {
+    result.disabled = isProduction
+    return result
+  }
+  if (code === 'save_as_new_version') {
+    result.disabled = false
+  }
+  return result
 }
 
 onMounted(async () => {
-    await getWorkflowDetail()
+  await getWorkflowDetail()
 })
 
-
-provide(WorkflowEditorVersionListProviderKey,{
-    getListApi: adminApi.api.postWorkflowVersionPage,
-    editHandler,
-    actionPermission,
-    saveAsNewVersionHandler,
-    promoteToProductionHandler,
+provide(WorkflowEditorVersionListProviderKey, {
+  getListApi: adminApi.api.postWorkflowVersionPage,
+  editHandler,
+  actionPermission,
+  saveAsNewVersionHandler,
+  promoteToProductionHandler
 })
-
 </script>
 
-<template> 
-<div class="pageContainer">
-    <LazyWorkflowEditorVersionListTable ref="tableRef" :draftId="draftId" >
-        <template #toolbar_buttons>
-            <h2>{{ name }}</h2>
-        </template>
+<template>
+  <div class="pageContainer">
+    <LazyWorkflowEditorVersionListTable ref="tableRef" :draftId="draftId">
+      <template #toolbar_buttons>
+        <h2>{{ name }}</h2>
+      </template>
     </LazyWorkflowEditorVersionListTable>
-</div>
+  </div>
 </template>
 
 <style lang="scss" scoped>
-h2{
-    margin: 0;
+h2 {
+  margin: 0;
 }
-.pageContainer{
-    padding: var(--app-space-s);
-    height: 100%;
-    overflow: hidden;
+.pageContainer {
+  padding: var(--app-space-s);
+  height: 100%;
+  overflow: hidden;
 }
 </style>
