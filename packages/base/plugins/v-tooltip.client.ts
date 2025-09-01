@@ -35,7 +35,7 @@ const vTooltip = {
       if (tooltip) return;
       const content = getContent();
       if (!content) return;
-      tooltip = createTooltipElement(content, isHtml);
+      tooltip = createTooltipElement(content, true);
       setTooltipPosition(el, tooltip);
       el.setAttribute('aria-describedby', 'v-tooltip-global');
     };
