@@ -91,12 +91,12 @@ export const useWatermark = () => {
 
 
   async function createWatermarkTemplate(template: {name:string}) {
-    const { data } = await clientApi.api.postWatermarkTemplates(template) as any
+    const { data } = await globalApi.api.postWatermarkTemplates(template) as any
     return data;
   }
 
   async function removeWatermarkTemplate(id:string) {
-    const { data } = await clientApi.api.deleteWatermarkTemplatesId(id) as any
+    const { data } = await globalApi.api.deleteWatermarkTemplatesId(id) as any
     return data;
   }
 
@@ -106,7 +106,7 @@ export const useWatermark = () => {
   //   return data;
   // }
   async function getWatermarkTemplateDetail(id:string):Promise<WatermarkTemplateDetail> {
-    const { data } = await clientApi.api.getWatermarkTemplatesId(id) as any
+    const { data } = await globalApi.api.getWatermarkTemplatesId(id) as any
     // const { data } = await api.get<Response<WatermarkTemplateDetail>>(`/docpal/watermark/templates/${id}`).then(res => res.data);
     return data
   }
