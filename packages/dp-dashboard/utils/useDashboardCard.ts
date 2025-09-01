@@ -103,7 +103,6 @@ export const useDashboardCard = (params: useDashboardCardParams) => {
   watchDebounced(
     () => [props.setting, props.dates],
     (newValue, oldValue) => {
-      console.log(newValue, oldValue)
 
       if (!props.setting) return
       if (!oldValue || JSON.stringify(newValue) !== JSON.stringify(oldValue)) {
