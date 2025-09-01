@@ -48,8 +48,8 @@ watch(
   async (newVal) => {
     if (newVal) {
       workflowProps.value = await getWorkflowProps(newVal)
-      if (props.setting?.workflowMapping) {
-        props.setting?.workflowMapping.forEach((item) => {
+      if (props.setting?.workflow_mapping) {
+        props.setting?.workflow_mapping.forEach((item) => {
           const index = workflowProps.value.findIndex((i) => i.value === item.target)
           if (index !== -1) {
             workflowProps.value[index].source = item.source

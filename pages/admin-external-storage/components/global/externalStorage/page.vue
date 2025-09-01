@@ -33,7 +33,7 @@ const { tableConfig, tableEvent, tableRef, query, reload, cleanSelectedRows } = 
   api: (pageParams: any) => adminApi.api.postExternalstoragePage({ ...pageParams, ...extraParams }),
   columns: [
     { field: 'name', title: 'dpTable.name', fixed: 'left' },
-    { field: 'connectionType', title: 'externalStorage.connection' },
+    { field: 'connection_type', title: 'externalStorage.connection' },
     { field: 'path', title: 'table_path' },
     {
       field: 'status',
@@ -42,9 +42,9 @@ const { tableConfig, tableEvent, tableRef, query, reload, cleanSelectedRows } = 
         default: 'status'
       }
     },
-    { field: 'createdBy', title: 'search.createdBy' },
+    { field: 'created_by', title: 'search.createdBy' },
     {
-      field: 'createdDate',
+      field: 'created_date',
       title: 'dpTable_createdDate',
       formatter({ cellValue }: any) {
         return formatDate(cellValue)
@@ -161,9 +161,9 @@ function getFilter() {
       isMultiple: false,
       options: [
         { label: 'dpTable.name', value: 'name' },
-        { label: 'dpTable_createdDate', value: 'createdDate' },
+        { label: 'dpTable_createdDate', value: 'created_date' },
         { label: 'common_status', value: 'status' },
-        { label: 'table_modifiedDate', value: 'modifiedDate' }
+        { label: 'table_modifiedDate', value: 'modified_date' }
       ]
     },
     {

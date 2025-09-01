@@ -38,10 +38,10 @@ async function handleSubmit() {
     state.loading = true
     const params: any = {
       name: data.name,
-      connectionType: data.connectionType,
+      connection_type: data.connection_type,
       path: data.path,
       status: data.status ? 'A' : 'D',
-      workGroup: data.workGroup,
+      work_group: data.work_group,
       platform: data.platform,
       credentials: {
         port: data.port,
@@ -82,10 +82,10 @@ function handleEdit(data: any) {
   state.setting = { ...data }
   const params = {
     name: data.name,
-    connectionType: data.connectionType,
+    connection_type: data.connection_type,
     path: data.path,
     status: data.status === 'A' ? true : false,
-    workGroup: data.workGroup,
+    work_group: data.work_group,
     password: data.credentials?.password,
     secret: data.credentials?.secret,
     username: data.credentials?.username,

@@ -170,7 +170,7 @@
       "icon": "text-field",
       "formItemFlag": true,
       "options": {
-        "name": "startNumber",
+        "name": "start_number",
         "label": "externalStorage.batchId_startNumber",
         "labelAlign": "",
         "type": "text",
@@ -285,9 +285,9 @@
     "onFormMounted": "",
     "onFormDataChange": "",
     "dhList": [],
-    "onFormValidate": "",
     "saveRemoteOptions": "never",
     "labelFormUniqueName": true,
+    "onFormValidate": "",
     "dataSources": []
   }
 }

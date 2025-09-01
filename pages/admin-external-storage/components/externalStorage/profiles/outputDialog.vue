@@ -1,39 +1,39 @@
 <template>
   <el-dialog v-model="dialogVisible" class="scroll-dialog outputDialog" :title="isEdit ? $t('externalStorage.outputEdit') : $t('externalStorage.outputNew')">
     <el-form label-position="top" :model="form" :rules="rules" ref="formRef">
-      <el-form-item :label="$t('docType_documentType')" prop="documentType">
-        <el-select class="documentType" v-model="form.documentType" filterable clearable>
+      <el-form-item :label="$t('docType_documentType')" prop="document_type">
+        <el-select class="documentType" v-model="form.document_type" filterable clearable>
           <el-option v-for="item in documentTypeOpts" :key="item.value" :label="item.label" :value="item.value" />
         </el-select>
       </el-form-item>
-      <el-form-item :label="$t('externalStorage.outputFormat')" prop="outputFormat">
-        <el-select class="outputFormat" v-model="form.outputFormat" filterable clearable>
+      <el-form-item :label="$t('externalStorage.outputFormat')" prop="output_format">
+        <el-select class="outputFormat" v-model="form.output_format" filterable clearable>
           <el-option v-for="item in outputFormatOpts" :key="item.value" :label="item.label" :value="item.value" />
         </el-select>
       </el-form-item>
-      <template v-if="form.outputFormat === 'Text'">
-        <el-form-item :label="$t('externalStorage.keepLineBreaks')" prop="keepLineBreaks" required>
-          <el-select class="keepLineBreaks" v-model="form.keepLineBreaks" filterable clearable>
+      <template v-if="form.output_format === 'Text'">
+        <el-form-item :label="$t('externalStorage.keepLineBreaks')" prop="keep_line_breaks" required>
+          <el-select class="keepLineBreaks" v-model="form.keep_line_breaks" filterable clearable>
             <el-option label="Yes" value="Yes" />
             <el-option label="No" value="No" />
           </el-select>
         </el-form-item>
-        <el-form-item :label="$t('externalStorage.insertPageBreakChar')" prop="insertPageBreakChar" required>
-          <el-select class="insertPageBreakChar" v-model="form.insertPageBreakChar" filterable clearable>
+        <el-form-item :label="$t('externalStorage.insertPageBreakChar')" prop="insert_page_break_char" required>
+          <el-select class="insertPageBreakChar" v-model="form.insert_page_break_char" filterable clearable>
             <el-option label="Yes" value="Yes" />
             <el-option label="No" value="No" />
           </el-select>
         </el-form-item>
-        <el-form-item :label="$t('externalStorage.useBlankLineAsParaSep')" prop="useBlankLineAsParaSep" required>
-          <el-select class="useBlankLineAsParaSep" v-model="form.useBlankLineAsParaSep" filterable clearable>
+        <el-form-item :label="$t('externalStorage.useBlankLineAsParaSep')" prop="use_blank_line_as_para_sep" required>
+          <el-select class="useBlankLineAsParaSep" v-model="form.use_blank_line_as_para_sep" filterable clearable>
             <el-option label="Yes" value="Yes" />
             <el-option label="No" value="No" />
           </el-select>
         </el-form-item>
       </template>
-      <template v-if="['Image'].includes(form.outputFormat)">
-        <el-form-item :label="$t('DAM_fileType')" prop="fileType" required>
-          <el-select class="fileType" v-model="form.fileType" filterable clearable>
+      <template v-if="['Image'].includes(form.output_format)">
+        <el-form-item :label="$t('DAM_fileType')" prop="file_type" required>
+          <el-select class="fileType" v-model="form.file_type" filterable clearable>
             <el-option v-for="item in fileTypeOpts" :key="item.value" :label="item.label" :value="item.value" />
           </el-select>
         </el-form-item>
@@ -46,7 +46,7 @@
           <el-input class="quality" v-model="form.quality" type="number" min="1" max="100" />
         </el-form-item>
       </template>
-      <el-form-item v-if="['PDF', 'Image'].includes(form.outputFormat)" :label="$t('externalStorage.color')" prop="color">
+      <el-form-item v-if="['PDF', 'Image'].includes(form.output_format)" :label="$t('externalStorage.color')" prop="color">
         <el-select class="color" v-model="form.color" filterable clearable>
           <el-option v-for="item in colorOpts" :key="item.value" :label="item.label" :value="item.value" />
         </el-select>
@@ -58,8 +58,8 @@
         </el-select>
       </el-form-item>
 
-      <el-form-item v-if="form.destination === 'external'" :label="$t('externalStorage.externalStorageProfile')" prop="shareDriveProfile">
-        <el-select class="shareDriveProfile" v-model="form.shareDriveProfile" filterable clearable>
+      <el-form-item v-if="form.destination === 'external'" :label="$t('externalStorage.externalStorageProfile')" prop="share_drive_profile">
+        <el-select class="shareDriveProfile" v-model="form.share_drive_profile" filterable clearable>
           <el-option v-for="item in externalStorageProfileOpts" :key="item.value" :label="item.label" :value="item.value" />
         </el-select>
       </el-form-item>
@@ -75,9 +75,9 @@
             </template>
           </el-dropdown>
         </el-form-item>
-        <el-form-item :label="$t('externalStorage.fileName')" prop="fileName">
-          <el-input class="fileName" v-model="form.fileName" ref="fileNameInput" />
-          <el-dropdown @command="(value: string) => handleVariableSelect(value, 'fileName')">
+        <el-form-item :label="$t('externalStorage.fileName')" prop="file_name">
+          <el-input class="fileName" v-model="form.file_name" ref="fileNameInput" />
+          <el-dropdown @command="(value: string) => handleVariableSelect(value, 'file_name')">
             <el-button type="primary" class="el-icon--right fileNameAddVariable"> {{ $t('docTemplate.variable.addVariable') }} </el-button>
             <template #dropdown>
               <el-dropdown-menu>
@@ -96,8 +96,8 @@
         <el-divider />
         <WorkflowVariableMapping v-if="form.workflow" ref="WorkflowVariableMappingRef" :setting="setting" :workflow="form.workflow" :varList="workflowVOpts" />
       </template>
-      <el-form-item v-if="form.destination === 'external'" :label="$t('externalStorage.duplicateNameStrategy')" prop="duplicateNameStrategy" required>
-        <el-select class="duplicateNameStrategy" v-model="form.duplicateNameStrategy" filterable clearable>
+      <el-form-item v-if="form.destination === 'external'" :label="$t('externalStorage.duplicateNameStrategy')" prop="duplicate_name_strategy" required>
+        <el-select class="duplicateNameStrategy" v-model="form.duplicate_name_strategy" filterable clearable>
           <el-option v-for="item in duplicateNameStrategyOpts" :key="item.value" :label="item.label" :value="item.value" />
         </el-select>
       </el-form-item>
@@ -119,24 +119,25 @@ const props = defineProps({
 })
 const emits = defineEmits(['refresh'])
 const defaultValue = {
-  fileName: '',
-  documentType: 'File',
-  outputFormat: '',
+  file_name: '',
+  document_type: 'File',
+  output_format: '',
   color: '',
   destination: '',
-  shareDriveProfile: '',
+  share_drive_profile: '',
   path: '/',
-  fileType: '', // 新增
+  file_type: '', // 新增
   resolution: 1, // 新增
   quality: 80, // 新增
-  keepLineBreaks: 'Yes', // 新增
-  insertPageBreakChar: 'Yes', // 新增
-  useBlankLineAsParaSep: 'Yes', // 新增
-  duplicateNameStrategy: '' // 新增
+  keep_line_breaks: 'Yes', // 新增
+  insert_page_break_char: 'Yes', // 新增
+  use_blank_line_as_para_sep: 'Yes', // 新增
+  duplicate_name_strategy: 'replace' // 新增
 }
 const { t } = useI18n()
 const dialogVisible = ref(false)
 const isEdit = ref(false)
+const outputOptioins = inject('outputOptioins')
 const {
   documentTypeOpts,
   outputFormatOpts,
@@ -150,27 +151,27 @@ const {
   fileNameVOpts,
   workflowOpts,
   workflowVOpts
-} = useOutputOptioins()
+} = outputOptioins
 const formRef = ref<any>(null)
 const form = ref<any>({
   ...defaultValue
 })
 const setting = ref<any>(null)
 const rules = {
-  fileName: [{ required: true, message: t('render.hint.fieldRequired', { name: t('docType_documentType') }), trigger: 'blur' }],
-  documentType: [{ required: true, message: t('render.hint.fieldRequired', { name: t('docType_documentType') }), trigger: 'change' }],
-  outputFormat: [{ required: true, message: t('render.hint.fieldRequired', { name: t('externalStorage.outputFormat') }), trigger: 'change' }],
+  file_name: [{ required: true, message: t('render.hint.fieldRequired', { name: t('docType_documentType') }), trigger: 'blur' }],
+  document_type: [{ required: true, message: t('render.hint.fieldRequired', { name: t('docType_documentType') }), trigger: 'change' }],
+  output_format: [{ required: true, message: t('render.hint.fieldRequired', { name: t('externalStorage.outputFormat') }), trigger: 'change' }],
   color: [{ required: true, message: t('render.hint.fieldRequired', { name: t('externalStorage.color') }), trigger: 'change' }],
   destination: [{ required: true, message: t('render.hint.fieldRequired', { name: t('externalStorage.destination') }), trigger: 'change' }],
-  shareDriveProfile: [{ required: true, message: t('render.hint.fieldRequired', { name: t('externalStorage.externalStorageProfile') }), trigger: 'change' }],
+  share_drive_profile: [{ required: true, message: t('render.hint.fieldRequired', { name: t('externalStorage.externalStorageProfile') }), trigger: 'change' }],
   path: [{ required: true, message: t('render.hint.fieldRequired', { name: t('externalStorage.path') }), trigger: 'blur' }],
-  fileType: [{ required: true, message: t('render.hint.fieldRequired', { name: t('DAM_fileType') }), trigger: 'change' }],
+  file_type: [{ required: true, message: t('render.hint.fieldRequired', { name: t('DAM_fileType') }), trigger: 'change' }],
   resolution: [{ required: true, message: t('render.hint.fieldRequired', { name: t('externalStorage.resolution') }), trigger: 'change' }],
   quality: [{ required: true, message: t('render.hint.fieldRequired', { name: t('externalStorage.quality') }), trigger: 'blur' }],
-  keepLineBreaks: [{ required: true, message: t('render.hint.fieldRequired', { name: t('externalStorage.keepLineBreaks') }), trigger: 'change' }], // 新增
-  insertPageBreakChar: [{ required: true, message: t('render.hint.fieldRequired', { name: t('externalStorage.insertPageBreakChar') }), trigger: 'change' }], // 新增
-  useBlankLineAsParaSep: [{ required: true, message: t('render.hint.fieldRequired', { name: t('externalStorage.useBlankLineAsParaSep') }), trigger: 'change' }], // 新增
-  duplicateNameStrategy: [{ required: true, message: t('render.hint.fieldRequired', { name: t('externalStorage.duplicateNameStrategy') }), trigger: 'change' }] // 新增
+  keep_line_breaks: [{ required: true, message: t('render.hint.fieldRequired', { name: t('externalStorage.keepLineBreaks') }), trigger: 'change' }], // 新增
+  insert_page_break_char: [{ required: true, message: t('render.hint.fieldRequired', { name: t('externalStorage.insertPageBreakChar') }), trigger: 'change' }], // 新增
+  use_blank_line_as_para_sep: [{ required: true, message: t('render.hint.fieldRequired', { name: t('externalStorage.useBlankLineAsParaSep') }), trigger: 'change' }], // 新增
+  duplicate_name_strategy: [{ required: true, message: t('render.hint.fieldRequired', { name: t('externalStorage.duplicateNameStrategy') }), trigger: 'change' }] // 新增
 }
 const WorkflowVariableMappingRef = ref<any>(null)
 
@@ -214,7 +215,7 @@ async function save() {
     const params = { ...form.value }
     if (form.value.workflow) {
       const workflowMapping = WorkflowVariableMappingRef.value.getData()
-      params.workflowMapping = workflowMapping
+      params.workflow_mapping = workflowMapping
     }
     if (isEdit.value) {
       await adminApi.api.patchExternalstorageProfilesProfileidOutputrecordOutputrecordid(props.id as string, setting.value.id, params)

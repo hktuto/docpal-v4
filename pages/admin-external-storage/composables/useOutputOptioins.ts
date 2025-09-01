@@ -51,11 +51,7 @@ export const useOutputOptioins = () => {
     { label: 'Capture_date(yyyy-mm-dd)', value: '${Capture_date(yyyy-mm-dd)}' },
     { label: 'Capture_date(yyyy-mm-ddTHH:mm:ss)', value: '${Capture_date(yyyy-mm-ddTHH:mm:ss)}' }
   ])
-  const workflowOpts = useState('workflowOpts', () => [
-    { label: 'Workflow_1', value: 'Workflow_1' },
-    { label: 'Workflow_2', value: 'Workflow_2' },
-    { label: 'Workflow_3', value: 'Workflow_3' }
-  ])
+  const workflowOpts = useState('workflowOpts', () => [])
   const workflowVOpts = useState('workflowVOpts', () => [
     { label: 'Profile_id', value: 'profile_id' },
     { label: 'File_name', value: 'file_name' },
