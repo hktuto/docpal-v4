@@ -17,6 +17,7 @@ function handleSwitch() {
   if (switchRef.value) {
     delete nodeData.data['attr_flowable:candidateRoles']
 
+    nodeData.data['attr_flowable:candidateGroups'] = ''
     nodeData.data.extensionElements = {
       ['modeler:activiti-idm-candidate-group']: {
         ['attr_xmlns:modeler']: 'http://flowable.org/modeler',
@@ -44,14 +45,14 @@ function handleSwitch() {
   node.setData(newData, { overwrite: true, deep: true, silent: false })
 }
 
-onMounted(() => {
-  if (['attr_flowable:candidateGroups'] in node.data.data) {
-    switchRef.value = true
-  } else {
-    switchRef.value = false
+watch(() => node, () => {
+  if (node) {
+    switchRef.value = ['attr_flowable:candidateGroups'] in node.data.data
   }
+}, {
+  immediate: true,
+  deep: true
 })
-
 </script>
 
 <template>
