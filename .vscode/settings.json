@@ -32,6 +32,16 @@
   "[less]": {
     "editor.defaultFormatter": "vscode.css-language-features" // less文件，同上
   },
+  "vue3snippets.enable-compile-vue-file-on-did-save-code": false,
   "editor.gotoLocation.multipleDefinitions": "goto",
-  "vue3snippets.enable-compile-vue-file-on-did-save-code": false
+  // Folder Settings
+  "explorer.fileNesting.enabled": true,
+  "explorer.excludeGitIgnore": true,
+  "explorer.fileNesting.patterns": {
+    "package.json": "*.lock, *.json, pnpm-workspace.yaml, pnpm-lock.yaml, .pnpmfile.cjs",
+    ".env": "env.*, .env.*",
+    "README.md": "*.md",
+    ".npmrc": ".npmrc, .hintrc, .prettierignore, .prettierrc, .eslintignore, .eslintrc, .eslintrc.js, .eslintrc.json, .eslintrc.yaml, .eslintrc.yml",
+  },
+  
 }

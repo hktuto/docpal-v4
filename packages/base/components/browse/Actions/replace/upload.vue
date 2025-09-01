@@ -79,7 +79,7 @@ function handleExceed(files){
 </script>
 
 <style lang="scss" scoped>
-:deep .el-upload-dragger {
+:deep(.el-upload-dragger) {
     width: 100%;
 }
 .el-upload__accept {

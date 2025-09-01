@@ -59,11 +59,10 @@ async function saveData() {
 onMounted(async () => {
   await init()
 })
-
-const header = 'Header'
-const body = 'Body'
-const footer = 'Footer'
-const textMessage = 'TextMessage'
+const header = defineModel<string>('header')
+const body = defineModel<string>('body')
+const footer = defineModel<string>('footer')
+const textMessage = defineModel<string>('textMessage')
 
 </script>
 

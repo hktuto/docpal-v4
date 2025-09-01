@@ -386,7 +386,7 @@ onMounted(() => {
 })
 </script>
 <style lang="scss" scoped>
-:deep .el-input {
+:deep(.el-input) {
   width: 200px;
 }
 </style>

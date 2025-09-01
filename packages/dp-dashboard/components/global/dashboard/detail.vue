@@ -279,7 +279,7 @@ function dragEnd() {
   }
 }
 
-:deep .setting-man-made {
+:deep(.setting-man-made) {
   --icon-size: 1.14rem;
   --icon-color: #8796a4;
   position: absolute;
@@ -288,7 +288,7 @@ function dragEnd() {
   cursor: pointer;
 }
 
-:deep .dashboard-auto {
+:deep(.dashboard-auto) {
   overflow: auto;
 }
 

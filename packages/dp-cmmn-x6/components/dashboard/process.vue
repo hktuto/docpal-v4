@@ -134,8 +134,6 @@ const { settingRef, cardRef, refresh, loading } = useDashboardCard({
 }
 .process-item {
   min-width: 200px;
-  // background-color: #409EFF;
-  // color: #fff;
   .title {
     display: flex;
     flex-wrap: nowrap;

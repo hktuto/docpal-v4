@@ -362,7 +362,7 @@ defineExpose({ handleOpen, initData });
     align-items: flex-start;
     justify-content: flex-start;
     gap: var(--app-space-xs);
-    :deep .el-badge__content {
+    :deep(.el-badge__content) {
       left: -8px;
       top: 5px;
       right: unset;
@@ -378,10 +378,8 @@ defineExpose({ handleOpen, initData });
     align-items: flex-start;
     height: auto;
     padding-block: var(--app-space-xs);
-    :deep {
-      .el-checkbox__label {
-        display: none;
-      }
+    :deep(.el-checkbox__label) {
+      display: none;
     }
   }
   p {

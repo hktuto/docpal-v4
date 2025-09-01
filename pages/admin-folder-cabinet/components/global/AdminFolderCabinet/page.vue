@@ -193,7 +193,7 @@ onMounted(() => {
 })
 </script>
 <style lang="scss" scoped>
-:deep .vxe-buttons--wrapper {
+:deep(.vxe-buttons--wrapper ){
   width: 100%;
   justify-content: space-between;
 
@@ -202,7 +202,7 @@ onMounted(() => {
   }
 }
 
-:deep .el-input {
+:deep(.el-input) {
   width: 200px;
 }
 </style>

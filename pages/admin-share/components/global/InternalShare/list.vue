@@ -138,7 +138,7 @@ provide(InternalShareProviderKey, {
   overflow: hidden;
 }
 
-:deep .el-input {
+:deep(.el-input) {
   width: 200px;
 }
 </style>

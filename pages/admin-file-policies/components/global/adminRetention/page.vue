@@ -260,7 +260,7 @@ onMounted(() => {
 
 </script>
 <style lang="scss" scoped>
-:deep .vxe-buttons--wrapper {
+:deep(.vxe-buttons--wrapper) {
   display: flex;
   justify-content: space-between;
 }
@@ -268,7 +268,7 @@ onMounted(() => {
 .responsive-container {
   width: 70%;
 
-  :deep .el-input {
+  :deep(.el-input) {
     width: 250px;
   }
 }

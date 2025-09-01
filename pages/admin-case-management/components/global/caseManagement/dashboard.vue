@@ -146,7 +146,7 @@ provide(CaseManagementDashboardKey, {
   }
 }
 
-:deep .responsive-container {
+:deep(.responsive-container) {
   margin-bottom: 10px;
 }
 </style>

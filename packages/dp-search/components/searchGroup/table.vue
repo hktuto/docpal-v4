@@ -19,18 +19,16 @@
 
     <template #summary="{ row }">
       <div v-if="row.properties && row.properties.field_summaries">
-        <template v-if="row.properties.field_summaries.name">
-          <span class="summary" v-html="row.properties.field_summaries.name" />
-        </template>
-        <template v-else-if="row.properties.field_summaries.content">
-          <span class="summary" v-html="row.properties.field_summaries.content" />
-        </template>
+        {{
+          row.properties.field_summaries.name && 'File Name' ||
+          row.properties.field_summaries.path && 'path' ||
+          row.properties.field_summaries.content && 'content'
+        }}
       </div>
     </template>
   </VxeGrid>
 </template>
 <script lang="ts" setup>
-import { ArrowLeftBold, ArrowUp } from '@element-plus/icons-vue'
 import { watchDebounced } from '@vueuse/core'
 import * as mime from 'mime-types'
 import { globalApi } from 'api'
@@ -219,6 +217,15 @@ const { tableConfig, tableEvent, tableRef, reload, query } = useVxeTable({
         if(!row) return ''
         const key = column.property
         const value = row[key]
+        // TODO : check to send html
+        if(key === 'properties.fieldSummaries'){
+          const tmp = `
+            File Name : ${row.properties.field_summaries.name} \n
+            Path : ${row.properties.field_summaries.path} \n
+            Content : ${row.properties.field_summaries.content}
+          `
+          return tmp
+        }
         if (typeof value === 'string') {
           return value
         }

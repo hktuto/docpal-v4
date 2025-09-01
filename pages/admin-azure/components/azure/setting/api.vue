@@ -76,7 +76,7 @@ watch(
 .el-card {
   position: relative;
 
-  :deep .p-btn {
+  :deep(.p-btn ){
     position: absolute;
     right: var(--app-space-xs);
     top: var(--app-space-xs);

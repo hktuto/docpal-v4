@@ -143,7 +143,7 @@ watch(() => props.tableData, (newVal) => {
   position: relative;
   margin-top: var(--app-space-s);
 
-  :deep .el-card__body {
+  :deep(.el-card__body) {
     height: 70vh;
     overflow: hidden;
     display: grid;

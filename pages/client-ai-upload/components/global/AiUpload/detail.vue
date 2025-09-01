@@ -445,14 +445,8 @@ onMounted(async () => {
   overflow: hidden;
   position: relative;
   gap: 0;
-
-  :deep {
-    .splitpanes.default-theme .splitpanes__pane {
-      background-color: var(--app-grey-0000);
-    }
-
-    .splitpanes__splitter {
-      width: 2px;
+  :deep(.splitpanes__splitter) {
+    width: 2px;
       background-color: var(--app-grey-050);
       position: relative;
 
@@ -472,45 +466,39 @@ onMounted(async () => {
           opacity: 1;
         }
       }
-    }
-
-    .splitpanes--vertical > .splitpanes__splitter:before {
-      top: 50%;
-      left: -14px;
-      height: 100%;
-      width: 30px;
-    }
-
-    .splitpanes--horizontal > .splitpanes__splitter:before {
-      top: -30px;
-      bottom: -30px;
-      width: 100%;
-    }
   }
-
-  .uploadContent {
-    .main-left {
-    }
-
-    .main-right {
-    }
+  :deep(.splitpanes--vertical > .splitpanes__splitter:before) {
+    top: 50%;
+    left: -14px;
+    height: 100%;
+    width: 30px;
   }
-
-  .upload-footer {
+  :deep(.splitpanes--horizontal > .splitpanes__splitter:before) {
+    top: -30px;
+    bottom: -30px;
+    width: 100%;
+  }
+  :deep(.upload-footer) {
     border-top: 1px solid var(--app-grey-050);
     padding: var(--app-space-xs) calc(var(--app-space-xs) * 2);
   }
+  :deep(.splitpanes.default-theme .splitpanes__pane) {
+      background-color: var(--app-grey-0000);
+    }
+
+
+
 }
 
 .main-left {
-  :deep .contentContainer {
+  :deep(.contentContainer) {
     height: calc(100% - 32px);
     overflow: auto;
   }
 }
 
 .main-center {
-  :deep .contentContainer {
+  :deep(.contentContainer) {
     height: 100%;
     overflow: hidden;
     display: grid;
@@ -552,7 +540,7 @@ onMounted(async () => {
   color: var(--app-grey-500);
 }
 
-:deep .formContainer {
+:deep(.formContainer) {
   margin: 0 var(--app-space-xs);
 }
 

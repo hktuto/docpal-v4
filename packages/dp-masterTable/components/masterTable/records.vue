@@ -427,7 +427,7 @@ defineExpose({ query, reload, initTableColumns })
 
 <style lang="scss" scoped>
 .responsive-container {
-  :deep .el-input {
+  :deep(.el-input) {
     width: 200px;
   }
 }

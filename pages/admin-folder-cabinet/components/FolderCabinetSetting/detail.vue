@@ -349,7 +349,7 @@ defineExpose({ init })
   min-height: unset;
 }
 
-:deep .el-form-item__content {
+:deep(.el-form-item__content) {
   width: 100%;
 
   & > div {

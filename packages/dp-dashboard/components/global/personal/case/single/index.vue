@@ -129,7 +129,7 @@ watch(
 </template>
 <style lang="scss" scoped>
 .table-container {
-  :deep .vxe-toolbar {
+  :deep(.vxe-toolbar) {
     display: flex;
   }
 }

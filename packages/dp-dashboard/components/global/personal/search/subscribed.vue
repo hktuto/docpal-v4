@@ -75,7 +75,7 @@ async function handleDelete() {
 }
 </script>
 <style lang="scss" scoped>
-:deep .vxe-toolbar {
+:deep(.vxe-toolbar) {
   display: none;
 }
 </style>
