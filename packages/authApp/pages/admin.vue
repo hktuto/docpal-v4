@@ -33,7 +33,6 @@ if(platform === 'admin') {
           <AppMenu class="sideMenu" admin>
             <template #header>
               <AuthUser />
-              <AuthSetting />
             </template>
             <template #footer>
               <AppSwitchMenu />
