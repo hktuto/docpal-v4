@@ -59,7 +59,7 @@
       "icon": "select-field",
       "formItemFlag": true,
       "options": {
-        "name": "connectionType",
+        "name": "connection_type",
         "label": "externalStorage.connection",
         "labelAlign": "",
         "defaultValue": "",
@@ -165,7 +165,7 @@
       "icon": "text-field",
       "formItemFlag": true,
       "options": {
-        "name": "workGroup",
+        "name": "work_group",
         "label": "externalStorage.workGroup",
         "labelAlign": "",
         "type": "text",
@@ -583,9 +583,9 @@
     "onFormMounted": "",
     "onFormDataChange": "",
     "dhList": [],
-    "onFormValidate": "",
     "saveRemoteOptions": "never",
     "labelFormUniqueName": true,
+    "onFormValidate": "",
     "dataSources": []
   }
 }

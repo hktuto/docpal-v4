@@ -23,7 +23,8 @@ const props = defineProps<{
   id: string,
   captureSetting: any
 }>()
-const { setDocumentTypeOpts } = useOutputOptioins()
+const outputOptioins = useOutputOptioins()
+const { setDocumentTypeOpts } = outputOptioins
 const routerProvider = inject(MenuRouterKey)
 if (!routerProvider) {
   throw new Error('MenuRouterKey is not provided')
@@ -40,8 +41,8 @@ const { tableConfig, tableEvent, tableRef, query, reload, cleanSelectedRows } = 
     return data
   },
   columns: [
-    { field: 'documentType', title: 'docType_documentType' },
-    { field: 'outputFormat', title: 'externalStorage.outputFormat' },
+    { field: 'document_type', title: 'docType_documentType' },
+    { field: 'output_format', title: 'externalStorage.outputFormat' },
     { field: 'destination', title: 'externalStorage.destination' },
     { field: 'path', title: 'externalStorage.path' },
     {
@@ -154,6 +155,7 @@ async function handleDelete(row: any) {
     reload()
   } catch (error) {}
 }
+provide('outputOptioins', outputOptioins)
 watch(() => props.captureSetting, (newVal) => {
   console.log(newVal, 'captureSetting')
   if(newVal && newVal.documentType?.length > 0) {
