@@ -26,7 +26,7 @@
       }
     }
   },
-  "Deactivated": "Inactive",
+  "Deactivated": "Deactive",
   "ERROR": "ERROR",
   "Email": {
     "fields": "Email Template"
@@ -78,7 +78,7 @@
     "editDetail": "Edit Detail",
     "inactivate": "Inactivate",
     "inactivated": "Inactivated",
-    "inactive": "Inactive",
+    "inactive": "Deactive",
     "inactived": "Inactived",
     "sendEmail": "Send Email",
     "unpublished": "Unpublished",
@@ -860,8 +860,8 @@
       "htmlContent": "HTML",
       "icon": "Icon",
       "importOptions": "Import Options",
-      "inactiveColor": "Inactive Color",
-      "inactiveText": "Inactive Text",
+      "inactiveColor": "Deactive Color",
+      "inactiveText": "Deactive Text",
       "inlineLayout": "inline",
       "inputButton": "Input Button Setting",
       "insertColumnToLeft": "insert column to left",
@@ -2257,7 +2257,7 @@
   "msg_watermark_empty": "Watermark empty",
   "multiple": "Multiple",
   "multipleStepTip": "Suitable for more complex approval, holiday aproval, supplier selection...etc",
-  "noActive": "Inactive",
+  "noActive": "Deactive",
   "noData": "No Data",
   "noMore": "No More",
   "notification": {
@@ -3885,7 +3885,7 @@
   "workflow_editorCreate": "Create New Workflow",
   "workflow_editorCreatedBy": "Created By",
   "workflow_editorEditLatestVersion": "Edit Latest Version",
-  "workflow_editorInactive": "Inactive",
+  "workflow_editorInactive": "Deactive",
   "workflow_editorLastDate": "Last Modified Date",
   "workflow_editorLastModified": "Last Modified By",
   "workflow_editorNewWorkflow": "Save as new workflow",
