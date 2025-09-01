@@ -9,7 +9,7 @@
       </div>
     </template>
     <template #logicalPath="{ row }">
-      <PathTabButton :path="row.path" :fileName="row.name" :openParent="!row.isFolder" :displayPath="row.logicalPath" canOpen />
+      <PathTabButton :path="row.path" :fileName="row.name" :openParent="!row.is_folder" :displayPath="row.logicalPath" canOpen />
     </template>
     <template #contributors="{ row }">
       <div v-if="row && row.contributors">
@@ -80,7 +80,7 @@ const { tableConfig, tableEvent, tableRef, reload, query } = useVxeTable({
       type: 'html',
       formatter: ({ cellValue, row }: any) => {
         let icon = '/icons/doc/file.svg'
-        if (row.isFolder) {
+        if (row.is_folder) {
           icon = '/icons/doc/folder.svg'
           return `<span class="browseNameCell"><img src="${icon}" class="browseFileIcon" /> ${cellValue} ${row.source === 'tempFile' ? '(temp)' : ''}</span> `
         }
