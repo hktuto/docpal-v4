@@ -25,6 +25,7 @@ import {adminApi} from 'api'
 import {ElMessage} from 'element-plus'
 const routerProvider = inject(MenuRouterKey)
 const props = defineProps(["detail"]);
+const emits = defineEmits(["refresh"])
 const {t} = useI18n()
 const route = useRoute()
 const state = reactive<any>({
@@ -58,6 +59,7 @@ async function handlePublish() {
     state.publishLoading = true
     await adminApi.api.postFormDesignPublish({id: props.detail.id})
     routerProvider?.message.success(t('dpMsg_success'))
+    emits('refresh')
   } catch (error) {
 
   } finally {
