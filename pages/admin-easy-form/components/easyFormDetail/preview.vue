@@ -6,13 +6,13 @@
         <el-button id="EasyForm__Detail__FormPreview__EditForm" type="primary" @click="handleOpenFormDesign">
           {{ $t("easyForm.editForm") }}
         </el-button>
-        <el-button id="EasyForm__Detail__FormPreview__CopyUrl" type="primary" @click="handleCopyUrl">
+        <el-button id="EasyForm__Detail__FormPreview__CopyUrl" type="primary" :disabled="props.detail.publishStatus === 'D'" @click="handleCopyUrl">
           {{ $t("easyForm.copyUrl") }}
         </el-button>
-        <el-button id="EasyForm__Detail__FormPreview__CopyEmbedCode" type="primary" @click="handleCopyIframe">
+        <el-button id="EasyForm__Detail__FormPreview__CopyEmbedCode" type="primary" :disabled="props.detail.publishStatus === 'D'" @click="handleCopyIframe">
           {{ $t("easyForm.copyEmbedCode") }}
         </el-button>
-        <el-button id="EasyForm__Detail__FormPreview__SendEmail" type="primary" @click="handleSendEmail">
+        <el-button id="EasyForm__Detail__FormPreview__SendEmail" type="primary" :disabled="props.detail.publishStatus === 'D'" @click="handleSendEmail">
           {{ $t("easyForm.sendEmail") }}
         </el-button>
       </div>
@@ -77,13 +77,13 @@ const copy = (data: any, msg = "common_copySuccess") => {
 };
 
 function handleCopyUrl() {
-  const origin = endPoint?.upload;
-  const url = `${origin}/public-form?id=${props.detail.id}`;
+  const origin = endPoint?.clientUrl;
+  const url = `${origin}/public/public-form?id=${props.detail.id}`;
   copy(url, t("dpTip.urlCopied"));
 }
 
 function handleCopyIframe() {
-  const origin = endPoint?.upload;
+  const origin = endPoint?.clientUrl;
   const url = `${origin}/public-form?id=${props.detail.id}`;
   const iframe = `<iframe width=800 height=500 frameborder="no" scrolling="no" allowtransparency="no"  src="${url}"></iframe>`;
   copy(iframe, t("dpTip.embedCodeCopied"));
