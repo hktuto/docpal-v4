@@ -1,39 +1,27 @@
 <script lang="ts" setup>
-import {adminApi} from 'api';
+import {adminApi, clientApi} from 'api';
 
 const {setting} = useCalendarStore();
 
 const calendarProvider = inject(CalendarSettingKey);
 const detailDialogRef = ref();
-const categoriesColumn = useCategoriesColumn()
 
 
 const {tableConfig, tableEvent, tableRef, reload} = useVxeTable({
   id: 'calendarSetting_categories',
-  api: (params: any) => adminApi.api.postMasterTablesRecordPage({
-    ...params,
-    id: setting.value.category.master_table
-  }),
+  api: async (params: any) => {
+    const data = await clientApi.api.getEventCalendarsSettings({eventCalendarSetting:{}})
+    console.log("data", data)
+    return []
+  },
+  virtualScroll: true,
   pageSize: 5,
-  columns: categoriesColumn.value.map((item: any) => {
-      if (['color', 'Container_Color', 'onContainer'].includes(item.columnName)) {
-        return {
-          field: item.columnName,
-          title: item.columnName,
-          type: 'html',
-          formatter: ({cellValue}) => {
-            return `
-                        <div style="display:inline-block;border:1px solid black; margin-right:var(--app-space-xs);width:var(--app-space-m);height:var(--app-space-m);background-color: ${cellValue}"></div><span>${cellValue}</span>
-                    `
-          }
-        }
-      }
-      return {
-        field: item.columnName,
-        title: item.columnName,
-      }
-    }
-  ),
+  columns: [
+    {
+      field: 'name',
+      title: 'Name',
+    },
+  ],
   bodyActions: [
     [{
       code: 'edit',
@@ -64,11 +52,6 @@ function addRecord() {
 <template>
   <div class="section category">
     <div class="title">{{ $t('calendarSetting.categories') }}</div>
-    <ElForm label-position="top" @submit.stop="">
-      <ElFormItem :label="$t('calendarSetting.location_masterTable')">
-        <ElSelect v-model="setting.category.master_table" disabled></ElSelect>
-      </ElFormItem>
-    </ElForm>
     <div class="categoriesContainer" style="height: 450px">
       <VxeGrid ref="tableRef" v-bind="tableConfig" v-on="tableEvent">
         <template #toolbar_buttons>
