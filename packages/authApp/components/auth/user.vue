@@ -8,7 +8,7 @@ const config = useRuntimeConfig()
 const { locales, locale, setLocale } = useI18n()
 const { uploadState } = useUploadAIStore()
 const isDesktop = useDesktopMode()
-
+const tabProvider = inject(TabManagerKey)
 async function changeLanguage(langCode:string) {
     const perference = useUserPreference()
     perference.value.language = langCode
@@ -29,18 +29,16 @@ function openHelp(){
 
 function openSetting(){
 // TODO: 根據不同的環境進入不同的頁面
-//   const newItem = {
-//     id: "user-profile-setting-" + new Date().getTime(),
-//     name: "user-profile-setting",
-//     icon: 'lucide:file-sliders',
-//     label: "user-profile-setting",
-//     component: 'LazySettingUserProfileSetting',
-//     props: {
-//     }
-//   }
-//   routerProvider?.navigateTo(newItem)
+    const newItem: any = {
+      id: 'client-user-setting',
+      name: 'client-user-setting',
+      icon: 'lucide:user',
+      label: 'admin.setting.title',
+      component: 'Setting',
+      props: {}
+    }
+    tabProvider?.openInCurrentTab(newItem)
 
-    emitBus(EventType.OPEN_SETTINGS, "");
 }
 
 function handleOpenUpload(show: boolean = false, action: 'upload' | 'ai' | '' = 'upload') {

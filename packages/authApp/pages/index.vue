@@ -15,7 +15,6 @@ defaultTabStore.value =  defaultTab
           <AppMenu class="sideMenu" :admin="appPlatform === 'admin'">
             <template #header>
               <AuthUser />
-              <AuthSetting />
             </template>
             <template #footer>
               <AppSwitchMenu />
