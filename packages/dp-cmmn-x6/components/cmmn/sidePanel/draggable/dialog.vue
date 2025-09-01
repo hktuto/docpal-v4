@@ -59,12 +59,18 @@ async function handleSubmit() {
     if (state.isEdit) {
       emits('edit', deepCopy(data))
     } else {
-      data.id = data.name.replaceAll(' ', '_') + '_' + new Date().valueOf().toString()
-      console.log('data', deepCopy(data))
+      if(data.name) {
+        data.id = data.name.replaceAll(' ', '_') + '_' + new Date().valueOf().toString()
+        console.log('data', deepCopy(data))
+      }else{
+        data.id = new Date().valueOf().toString()
+      }
       emits('create', deepCopy(data))
     }
     state.visible = false
-  } catch {}
+  } catch(e) {
+    console.log('error', e)
+  }
 }
 
 function handleOpen(row: any) {
@@ -74,7 +80,7 @@ function handleOpen(row: any) {
     // FormRendererRef.value.vFormRenderRef.setFormJson(formJson)
     FormRendererRef.value.vFormRenderRef.resetForm()
     const idField = FormRendererRef.value.vFormRenderRef.getWidgetRef('id')
-    if (!state.isEdit) {
+    if (!state.isEdit && idField) {
       idField.setRequired(true)
       idField.setHidden(true)
     }

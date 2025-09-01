@@ -40,7 +40,6 @@
     "jszip": "^3.10.1",
     "mime-types": "^2.1.35",
     "nuxt": "^3.17.3",
-    "nuxt-viewport": "^2.2.0",
     "pptx-preview": "^1.0.5",
     "pptxjs": "^0.0.0",
     "splitpanes": "^3.2.0",

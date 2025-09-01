@@ -1,7 +1,6 @@
 import { useEventBus, EventType, emitBus } from 'eventbus'
 
 import { clientApi } from 'api'
-import { useViewport } from '#imports'
 import type { TABLE_CONTEXT_PARAMS } from '#imports'
 import type { VxeGridProps, VxeGridListeners, VxeGridPropTypes, VxeTableDefines, VxeTablePropTypes, VxeGridInstance, VxeGridDefines } from 'vxe-table'
 import { useUserPreference } from '../../authApp/composables/useAuth'
@@ -82,7 +81,6 @@ export const useVxeTable = (params: UseVxeTableParams) => {
   } = params
 
   const tableRef = ref<VxeGridInstance<any>>()
-  const viewport = useViewport()
   const tableData = ref<any>([])
   const tablePageParams = ref<any>({
     currentPage: 1,
@@ -417,8 +415,7 @@ export const useVxeTable = (params: UseVxeTableParams) => {
     }
   }
   async function responsiveScrollHandler({ scrollTop, direction }: VxeGridDefines.ScrollEventParams) {
-    if (params.virtualScroll || !params.api || !viewport.isLessThan('tablet')) {
-      console.log('scrollTop', viewport.isLessThan('tablet'))
+    if (params.virtualScroll || !params.api ) {
       return
     }
     // 不是 virtualScroll 或者 api 或者 大于 mobile 的时候不处理 scroll
@@ -476,29 +473,6 @@ export const useVxeTable = (params: UseVxeTableParams) => {
     lazyLoad()
   }
 
-  // watch(viewport.breakpoint, (newBreakpoint, oldBreakpoint) => {
-  //     if(viewport.isLessThan('tablet')){
-  //         // 如果不是 virtualScroll,
-  //         if(!params.virtualScroll && params.api) {
-  //             setupLazyLoad()
-  //         }
-  //         // mobile setting for table
-  //         return
-  //     }
-  //     if(viewport.isGreaterThan('mobile')){
-  //         // desktop setting for table
-  //         setupPagingnation()
-  //         tablePageParams.value = {
-  //             currentPage: 1,
-  //             pageSize: params.pageSize || 20,
-  //             total:undefined,
-  //         }
-  //         // reload()
-  //         return
-  //     }
-  // }, {
-  //     immediate: true
-  // })
 
   function reload() {
     // if virtualScroll is true, then reload the table

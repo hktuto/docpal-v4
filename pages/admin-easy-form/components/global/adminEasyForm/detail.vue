@@ -1,17 +1,18 @@
 <template>
   <div class="pageContainer--padding main">
-    <EasyFormDetailName :detail="state.detail" />
-    <EasyFormDetailInfomation :detail="state.detail" />
+    <EasyFormDetailName :detail="state.detail" @refresh="getDetail" />
+    <EasyFormDetailInfomation :detail="state.detail" @refresh="getDetail" />
     <EasyFormDetailPreview
       v-if="state.detail.id"
       :detail="state.detail"
       @email-update="handleEmailUpdate"
     />
-    <EasyFormDetailPermission :detail="state.detail" />
+    <EasyFormDetailPermission :detail="state.detail" @refresh="getDetail" />
     <EasyFormAction
       :detail="state.detail"
       @refresh="handleUpdateAction"
       @delete="handleDeleteAction"
+      
     />
     <EasyFormDetailEmailLog ref="logRef" :detail="state.detail" />
   </div>
