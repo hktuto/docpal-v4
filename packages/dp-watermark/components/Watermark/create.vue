@@ -1,8 +1,8 @@
 <template>
   <div class="formContainer">
-    <ElForm :model="form" @submit.native.prevent="submit">
-      <ElFormItem :label="t('admin_watermarkName')">
-        <ElInput v-model="form.name" :placeholder="t('admin_watermarkName')" />
+    <ElForm :model="form" @submit.native.prevent="submit" label-position="top">
+      <ElFormItem :label="$t('admin_watermarkName')">
+        <ElInput v-model="form.name" :placeholder="$t('admin_watermarkName')" />
       </ElFormItem>
     </ElForm>
     <div style="text-align: end">
