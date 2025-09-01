@@ -39,5 +39,10 @@ defaultTabStore.value =  defaultTab
   --icon-size: calc(var(--icon-font-size) + (var(--menu-item-padding) * 2));
 }
 </style>
-
+<style>
+.appFullPage{
+  --app-bg: radial-gradient(72% 72% at 2% -5%, #dbe7ec 0%, #e8efef 51%, #f3f0f0 100%);
+  --app-accent-color: #0077ff;
+}
+</style>
 
