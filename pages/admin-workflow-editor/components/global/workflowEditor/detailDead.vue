@@ -139,6 +139,7 @@ async function saveAsNewVersion() {
   form.append('jsonValue', JSON.stringify(x6Json))
   form.append('draftId', id)
   form.append('file', blob, 'workflow.bpmn.xml')
+  form.append('oldVersion', versionId)
   // save all forms to new version
   const { data } = (await adminApi.api.postWorkflowVersionNew({ requestDTO: {} }, form)) as any
 

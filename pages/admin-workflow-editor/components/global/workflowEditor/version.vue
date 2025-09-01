@@ -74,7 +74,7 @@ async function saveAsNewVersionHandler(row: any) {
   form.append('file', blob, 'workflow.bpmn.xml')
   form.append('jsonValue', json || '')
   form.append('draftId', row.draftId)
-
+  form.append('oldVersion', row.id)
   const xml = await blob.text()
   const { data } = (await adminApi.api.postWorkflowVersionNew({ requestDTO: {} }, form)) as any
   await saveWorkflowFormToNewVersion(xml, workflowData.value.key, row.id, data.id)
