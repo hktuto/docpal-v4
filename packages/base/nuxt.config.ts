@@ -13,8 +13,7 @@ const config = {
     '@nuxt/test-utils/module',
     '@nuxtjs/i18n',
     '@nuxtjs/color-mode',
-    '@vueuse/nuxt',
-    'nuxt-viewport'
+    '@vueuse/nuxt'
   ],
   css:[
     '../assets/styles/main.scss'
