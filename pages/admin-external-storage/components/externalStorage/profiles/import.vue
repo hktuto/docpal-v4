@@ -27,10 +27,14 @@ async function handleSave() {
 watch(() => props.settings, (newVal) => {
   if (newVal) {
     // normalize newVal processingFolder, finishFolder, errorFolder
-    newVal.processingFolder = '/processing'
-    newVal.finishFolder = '/finish'
-    newVal.errorFolder = '/error'
-    FormRendererRef.value.vFormRenderRef.setFormData(newVal)
+    const params = {
+      processing_folder: newVal.processing_folder || '/processing',
+      finish_folder: newVal.finish_folder || '/finish',
+      error_folder: newVal.error_folder || '/error',
+      file_type: newVal.file_type || '',
+      include_folder: newVal.include_folder || true,
+    }
+    FormRendererRef.value.vFormRenderRef.setFormData(params)
   }
 })
 </script>

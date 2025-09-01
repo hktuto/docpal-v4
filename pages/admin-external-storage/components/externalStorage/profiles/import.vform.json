@@ -71,7 +71,7 @@
               "icon": "text-field",
               "formItemFlag": true,
               "options": {
-                "name": "processingFolder",
+                "name": "processing_folder",
                 "label": "externalStorage.processingFolder",
                 "labelAlign": "",
                 "type": "text",
@@ -82,7 +82,7 @@
                 "labelWidth": null,
                 "labelHidden": false,
                 "readonly": true,
-                "disabled": false,
+                "disabled": true,
                 "hidden": false,
                 "clearable": true,
                 "showPassword": false,
@@ -124,7 +124,7 @@
               "icon": "text-field",
               "formItemFlag": true,
               "options": {
-                "name": "finishFolder",
+                "name": "finish_folder",
                 "label": "externalStorage.finishFolder",
                 "labelAlign": "",
                 "type": "text",
@@ -135,7 +135,7 @@
                 "labelWidth": null,
                 "labelHidden": false,
                 "readonly": true,
-                "disabled": false,
+                "disabled": true,
                 "hidden": false,
                 "clearable": true,
                 "showPassword": false,
@@ -177,7 +177,7 @@
               "icon": "text-field",
               "formItemFlag": true,
               "options": {
-                "name": "errorFolder",
+                "name": "error_folder",
                 "label": "externalStorage.errorFolder",
                 "labelAlign": "",
                 "type": "text",
@@ -188,7 +188,7 @@
                 "labelWidth": null,
                 "labelHidden": false,
                 "readonly": true,
-                "disabled": false,
+                "disabled": true,
                 "hidden": false,
                 "clearable": true,
                 "showPassword": false,
@@ -252,7 +252,7 @@
               "icon": "select-field",
               "formItemFlag": true,
               "options": {
-                "name": "fileType",
+                "name": "file_type",
                 "label": "DAM_fileType",
                 "labelAlign": "",
                 "defaultValue": [],
@@ -494,7 +494,7 @@
               "icon": "switch-field",
               "formItemFlag": true,
               "options": {
-                "name": "includeFolder",
+                "name": "include_folder",
                 "label": "externalStorage.includeFolder",
                 "labelAlign": "",
                 "defaultValue": true,
@@ -564,9 +564,9 @@
     "onFormMounted": "",
     "onFormDataChange": "",
     "dhList": [],
-    "onFormValidate": "",
     "saveRemoteOptions": "never",
     "labelFormUniqueName": true,
+    "onFormValidate": "",
     "dataSources": []
   }
 }

@@ -18,10 +18,10 @@ async function handleSave() {
     const params = {
       name: data.name,
       status: data.status ? 'A' : 'D',
-      batchIdSetting: {
+      batch_id_setting: {
         prefix: data.prefix,
         digit: data.digit,
-        startNumber: data.startNumber,
+        start_number: data.start_number,
       }
     }
     await adminApi.api.patchExternalstorageIdProfilesProfileidGeneral(props.storageId, props.id, params)
@@ -38,9 +38,9 @@ watch(() => props.settings, (newVal) => {
     const data = {
       name: newVal.name,
       status: newVal.status === 'A' ? true : false,
-      prefix: newVal.batchIdSetting?.prefix,
-      digit: newVal.batchIdSetting?.digit,
-      startNumber: newVal.batchIdSetting?.startNumber,
+      prefix: newVal.batch_id_setting?.prefix,
+      digit: newVal.batch_id_setting?.digit,
+      startNumber: newVal.batch_id_setting?.start_number,
     }
     FormRendererRef.value.vFormRenderRef.setFormData(data)
   }
