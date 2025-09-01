@@ -127,7 +127,7 @@ export function newCaseManagementEditor(caseTypeId:string, name:string, version:
 }
 
 
-export function saveAllCaseFromToNewVersion(oldCaseVersionId:string, newCaseVersionId:string, cmmnJson:any) {
+export function saveAllCaseFromToNewVersion(oldversionId:string, newversionId:string, cmmnJson:any) {
     // TODO : get all human task from cmmn and try to get form from api. if form exist, then save it to new version
     
 }

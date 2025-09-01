@@ -50,9 +50,9 @@ function calculateTooltip(row: any) {
     return words.length > max ? words.slice(0, max).join(' ') + '...' : str
   }
   return `
-${row.properties.field_summaries.name ? `File Name : ${trimToWords(row.properties.field_summaries.name, maxWords)} <br/>` : ''}
-${row.properties.field_summaries.path ? `Path : ${trimToWords(row.properties.field_summaries.path, maxWords)} <br/>` : ''}
-${row.properties.field_summaries.content ? `Content : ${trimToWords(row.properties.field_summaries.content, maxWords)}` : ''}
+    ${row.properties.field_summaries.name ? `File Name : ${trimToWords(row.properties.field_summaries.name, maxWords)} <br/>` : ''}
+    ${row.properties.field_summaries.path ? `Path : ${trimToWords(row.properties.field_summaries.path, maxWords)} <br/>` : ''}
+    ${row.properties.field_summaries.content ? `Content : ${trimToWords(row.properties.field_summaries.content, maxWords)}` : ''}
   `
 }
 

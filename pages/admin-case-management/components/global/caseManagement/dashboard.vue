@@ -91,12 +91,12 @@ async function handleSave() {
   }
 }
 
-const caseVersionId = ref()
+const versionId = ref()
 
 async function init() {
   try {
     const { data } = await adminApi.api.getCaseDashboardId(props.id)
-    caseVersionId.value = data.cmmnVersionId
+    versionId.value = data.cmmnVersionId
     state.detail = data
     name.value = data.label
     routerProvider?.updateTabName(data.label)
@@ -118,7 +118,7 @@ onMounted( () => {
 
 provide(CaseManagementDashboardKey, {
   caseTypeId,
-  caseVersionId,
+  versionId,
   name
 })
 </script>
