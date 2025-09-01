@@ -63,7 +63,7 @@ const {
     },
     {
       title: "tableHeader_actions",
-
+      field: "logicalPath",
       slots: {
         default: "logicalPath",
       },

@@ -8,7 +8,7 @@ const props = defineProps<{
 
 <template>
     <div class="pageContainer">
-        <SearchGroup v-bind="props"/>
+        <SearchGroup v-bind="props" tableId="client-search"/>
     </div>
 </template>
 

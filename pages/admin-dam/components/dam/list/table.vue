@@ -18,6 +18,7 @@ const { tableRef, tableConfig, tableEvent, reload } = useVxeTable({
     },
     {
       title: 'DAM_convertion',
+      field: 'targetTypes',
       slots: {
         default: 'targetTypes'
       }

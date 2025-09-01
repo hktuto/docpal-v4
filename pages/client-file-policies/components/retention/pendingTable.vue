@@ -92,6 +92,7 @@ const { tableConfig, tableEvent, tableRef, reload, query } = useVxeTable({
     { field: 'applyApprovedBy', title: 'retention_approvedBy' },
     {
       title: 'tableHeader_actions',
+      field: 'commonActions',
       slots: {
         default: 'commonActions'
       },
