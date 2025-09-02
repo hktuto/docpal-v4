@@ -260,36 +260,36 @@ async function getFilter() {
   const userList = await getUserList()
   const groupList = await getGroupList()
   const filterSetting = [
-    {
-      key: 'user',
-      label: 'user_users',
-      type: 'string',
-      isMultiple: true,
-      options: userList.map((item: any) => ({
-        label: item.username,
-        value: item.userId
-      }))
-    },
-    {
-      key: 'group',
-      label: 'user_groups',
-      type: 'string',
-      isMultiple: true,
-      options: groupList.map((item: any) => ({
-        label: item.name,
-        value: item.id
-      }))
-    },
-    {
-      key: 'role',
-      label: 'user_role',
-      type: 'string',
-      isMultiple: false,
-      options: flatRole.value.map((item) => ({
-        label: item.name,
-        value: item.id
-      }))
-    },
+    // {
+    //   key: 'user',
+    //   label: 'user_users',
+    //   type: 'string',
+    //   isMultiple: true,
+    //   options: userList.map((item: any) => ({
+    //     label: item.username,
+    //     value: item.userId
+    //   }))
+    // },
+    // {
+    //   key: 'group',
+    //   label: 'user_groups',
+    //   type: 'string',
+    //   isMultiple: true,
+    //   options: groupList.map((item: any) => ({
+    //     label: item.name,
+    //     value: item.id
+    //   }))
+    // },
+    // {
+    //   key: 'role',
+    //   label: 'user_role',
+    //   type: 'string',
+    //   isMultiple: false,
+    //   options: flatRole.value.map((item) => ({
+    //     label: item.name,
+    //     value: item.id
+    //   }))
+    // },
     {
       key: 'orderBy',
       label: 'tableHeader.sortBy',
