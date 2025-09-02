@@ -14,7 +14,8 @@ export default defineNuxtConfig({
   ],
   extends:[
     "../calendar",
-    "../workflow"
+    "../workflow",
+    "../dp-datatype"
   ],
   icon:{
     customCollections:[
