@@ -36,8 +36,8 @@
 
 <script lang="ts" setup>
 import { ElMessage, type FormInstance } from 'element-plus'
-import { METADATA_OPTIONS, MASK_OPTIONS, type MetadataOption } from '../../../../utils/metadataHelper'
 import { adminApi } from 'api'
+import { METADATA_OPTIONS, MASK_OPTIONS, type MetadataOption } from '../../../../../../packages/dp-datatype/utils/dataTypeHelper'
 import { mapDataType, getDefaultByType } from '../../../../../../packages/dp-datatype/utils/globalDataTypeHelper'
 const { t } = useI18n()
 const validationFormRef = ref<FormInstance>()
