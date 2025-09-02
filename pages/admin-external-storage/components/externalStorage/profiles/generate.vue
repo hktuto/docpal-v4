@@ -40,7 +40,7 @@ watch(() => props.settings, (newVal) => {
       status: newVal.status === 'A' ? true : false,
       prefix: newVal.batch_id_setting?.prefix,
       digit: newVal.batch_id_setting?.digit,
-      startNumber: newVal.batch_id_setting?.start_number,
+      start_number: newVal.batch_id_setting?.start_number,
     }
     FormRendererRef.value.vFormRenderRef.setFormData(data)
   }
