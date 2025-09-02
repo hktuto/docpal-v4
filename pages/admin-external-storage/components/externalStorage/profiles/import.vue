@@ -28,11 +28,13 @@ watch(() => props.settings, (newVal) => {
   if (newVal) {
     // normalize newVal processingFolder, finishFolder, errorFolder
     const params = {
+      ...newVal,
       processing_folder: newVal.processing_folder || '/processing',
       finish_folder: newVal.finish_folder || '/finish',
       error_folder: newVal.error_folder || '/error',
       file_type: newVal.file_type || '',
       include_folder: newVal.include_folder || true,
+      path: newVal.path || '/',
     }
     FormRendererRef.value.vFormRenderRef.setFormData(params)
   }

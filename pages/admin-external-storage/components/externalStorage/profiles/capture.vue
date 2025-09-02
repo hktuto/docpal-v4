@@ -16,13 +16,13 @@ async function handleSave() {
     const data = await FormRendererRef.value.getFormData()
     loading.value = true
     const params = {
-      useDocumentType: data.useDocumentType,
+      use_document_type: data.use_document_type,
     }
-    if (data.useDocumentType) {
-      params.documentType = data.documentType
-      params.needConfirm = data.needConfirm
-      params.confirmUser = data.confirmUser.filter((item: any) => !item.includes('group&&&&'))
-      params.confirmGroup = data.confirmUser.filter((item: any) => item.includes('group&&&&')).map((item: any) => item.replace('group&&&&', ''))
+    if (data.use_document_type) {
+      params.document_type = data.document_type
+      params.need_confirm = data.need_confirm
+      params.confirm_user = data.confirm_user.filter((item: any) => !item.includes('group&&&&'))
+      params.confirm_group = data.confirm_user.filter((item: any) => item.includes('group&&&&')).map((item: any) => item.replace('group&&&&', ''))
     }
     await adminApi.api.patchExternalstorageIdProfilesProfileidCapture(props.storageId, props.id, params)
     ElMessage.success(t('dpMsg_success'))
@@ -36,20 +36,20 @@ async function handleSave() {
 watch(() => props.settings, (newVal) => {
   if (newVal) {
     const data = {
-      useDocumentType: newVal.useDocumentType,
+      use_document_type: newVal.use_document_type,
     }
-    if (newVal.useDocumentType) {
-      data.needConfirm = newVal.needConfirm
-      data.documentType = newVal.documentType
+    if (newVal.use_document_type) {
+      data.need_confirm = newVal.need_confirm
+      data.document_type = newVal.document_type
       let confirmUser = []
       let confirmGroup = []
-      if (newVal.confirmUser) {
-        confirmUser = newVal.confirmUser
+      if (newVal.confirm_user) {
+        confirmUser = newVal.confirm_user
       }
-      if (newVal.confirmGroup) {
-        confirmGroup = newVal.confirmGroup.map((item: any) => 'group&&&&' + item)
+      if (newVal.confirm_group) {
+        confirmGroup = newVal.confirm_group.map((item: any) => 'group&&&&' + item)
       }
-      data.confirmUser = [...confirmUser, ...confirmGroup]
+      data.confirm_user = [...confirmUser, ...confirmGroup]
     }
     FormRendererRef.value.vFormRenderRef.setFormData(data)
   }
