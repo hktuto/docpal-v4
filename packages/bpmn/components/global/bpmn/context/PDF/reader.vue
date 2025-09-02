@@ -167,7 +167,7 @@ watch(() => node, async () => {
           action="#"
           accept=".pdf"
           :limit="1"
-          :auto-upload="true"
+          :auto-upload="false"
           :on-change="handelFileOnChange"
           :before-remove="beforeRemove"
         >
