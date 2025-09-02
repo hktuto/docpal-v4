@@ -21,7 +21,7 @@ async function handleSave() {
       batch_id_setting: {
         prefix: data.prefix,
         digit: data.digit,
-        start_number: data.start_number,
+        start_number: Number(data.start_number),
       }
     }
     await adminApi.api.patchExternalstorageIdProfilesProfileidGeneral(props.storageId, props.id, params)
@@ -40,7 +40,7 @@ watch(() => props.settings, (newVal) => {
       status: newVal.status === 'A' ? true : false,
       prefix: newVal.batch_id_setting?.prefix,
       digit: newVal.batch_id_setting?.digit,
-      start_number: newVal.batch_id_setting?.start_number,
+      start_number: String(newVal.batch_id_setting?.start_number),
     }
     FormRendererRef.value.vFormRenderRef.setFormData(data)
   }
