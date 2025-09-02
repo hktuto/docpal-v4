@@ -95,7 +95,6 @@ const handelFileOnChange = useDebounceFn(
     const formData = new FormData()
     formData.append('file', state.fileList[0].raw)
     loading.value = true
-    console.log("api", adminApi.api.postTemplateDocumentParse)
     const { fields, id } = await adminApi.api.postTemplateDocumentParse({}, formData).then(res => res.data)
     // 轉bpmn json
     state.fields = fields
@@ -168,7 +167,7 @@ watch(() => node, async () => {
           action="#"
           accept=".pdf"
           :limit="1"
-          :auto-upload="true"
+          :auto-upload="false"
           :on-change="handelFileOnChange"
           :before-remove="beforeRemove"
         >
