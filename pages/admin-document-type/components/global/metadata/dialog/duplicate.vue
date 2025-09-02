@@ -15,8 +15,10 @@
         </el-select>
       </el-form-item>
       <!-- validationRuleSection -->
-      <template v-if="selectedType && formData.validationRule && validationComponent">
-        <component :is="validationComponent" ref="validationFormRef" v-model:validation="formData.validationRule" />
+      <template v-if="selectedType && formData.validationRule && mapDataType[selectedType]">
+        <el-form ref="ruleFormRef" :model="formData.validationRule" label-position="top">
+          <component :is="mapDataType[selectedType]" ref="dataTypeRef" :form="formData.validationRule" />
+        </el-form>
       </template>
       <!-- // mask options -->
       <h4>{{ t('meta.mask') }}</h4>
@@ -39,7 +41,7 @@
 import { adminApi } from 'api'
 import { METADATA_OPTIONS, MASK_OPTIONS, type MetadataOption } from '../../../../utils/metadataHelper'
 import { ElMessage, type FormInstance } from 'element-plus'
-
+import { mapDataType, getDefaultByType } from '../../../../../../packages/dp-datatype/utils/globalDataTypeHelper'
 const formData = ref<any>({
   name: '',
   validationRule: {},
@@ -58,11 +60,8 @@ const { t } = useI18n()
 const selectedType = ref<MetadataOption['name']>('Text')
 const originalName = ref('')
 const elFormRef = ref<FormInstance>()
-const validationFormRef = ref<FormInstance>()
-
-const validationComponent = computed(() => {
-  return `MetadataValidator${selectedType.value}`
-})
+const ruleFormRef = ref<FormInstance>()
+const dataTypeRef = ref<any>()
 
 function open(data: any) {
   originalName.value = data.name
@@ -77,10 +76,7 @@ function open(data: any) {
     selectedType.value = data.validationRule.validationRuleName.charAt(0).toUpperCase() + data.validationRule.validationRuleName.slice(1)
   } else {
     selectedType.value = 'Text'
-    const validationRule = METADATA_OPTIONS.reduce((acc, group) => {
-      return acc.concat(group.options)
-    }, [] as MetadataOption[]).find((option) => option.name === selectedType.value)?.validation
-    data.validationRule = validationRule
+    data.validationRule = getDefaultByType(selectedType.value)
   }
   // Ensure maskRule exists
   if (!data.maskRule || !data.maskRule.maskType) {
@@ -95,9 +91,14 @@ function open(data: any) {
     name: '', // Clear the name so user can enter a new one
     id: data.id // Remove the ID since this will be a new record
   }
-  if (formData.value.validationRule.validationRuleName === 'mastertable') {
-    validationFormRef.value?.masterTableChange(formData.value.validationRule.masterTableName, true)
-  }
+
+  setTimeout(() => {
+    if (formData.value.validationRule.validationRuleName === 'mastertable') {
+      dataTypeRef.value?.masterTableChange(formData.value.validationRule.masterTableName, true)
+    } else if (formData.value.validationRule.validationRuleName === 'date') {
+      dataTypeRef.value?.initData()
+    }
+  }, 1000)
   nextTick(() => {
     visible.value = true
   })
@@ -118,48 +119,50 @@ function close() {
 }
 
 async function handleDuplicate() {
-  // validate the form
-  if (elFormRef.value) {
-    // step 1 validate the form
-    const formValid = await elFormRef.value.validate()
-    if (!formValid) {
-      return
-    }
-
-    // check if the validationRule is valid
-    if (validationFormRef.value) {
-      const isValid = await validationFormRef.value.validate()
-      if (!isValid) {
-        ElMessage.error(t('meta.validation_error'))
+  try {
+    // validate the form
+    if (elFormRef.value) {
+      // step 1 validate the form
+      const formValid = await elFormRef.value.validate()
+      if (!formValid) {
         return
       }
-    }
 
-    // step 3 check if the name is already exists
-    const nameExists = await adminApi.api
-      .postDocpaltypeSettingsMetadataV2Query({
-        metadataName: formData.value.name,
-        pageNum: 0,
-        pageSize: 1
-      })
-      .then((res) => (res.data?.entryList?.length ?? 0) > 0)
+      // check if the validationRule is valid
+      if (ruleFormRef.value) {
+        const isValid = await ruleFormRef.value.validate()
+        if (!isValid) {
+          ElMessage.error(t('meta.validation_error'))
+          return
+        }
+      }
 
-    if (nameExists) {
-      ElMessage.error(t('dpTip.exit', { name: formData.value.name }))
-      return
+      // step 3 check if the name is already exists
+      const nameExists = await adminApi.api
+        .postDocpaltypeSettingsMetadataV2Query({
+          metadataName: formData.value.name,
+          pageNum: 0,
+          pageSize: 1
+        })
+        .then((res) => (res.data?.entryList?.length ?? 0) > 0)
+
+      if (nameExists) {
+        ElMessage.error(t('dpTip.exit', { name: formData.value.name }))
+        return
+      }
+      // step 4 create the duplicated metadata
+      const result = await adminApi.api.postDocpaltypeSettingsMetadataV2Duplicate(formData.value).then((res) => res.data)
+      if (result) {
+        ElMessage.success(t('metadata.duplicate_success'))
+        close()
+        setTimeout(() => {
+          emit('reload')
+        }, 100)
+      } else {
+        ElMessage.error(t('metadata.duplicate_error'))
+      }
     }
-    // step 4 create the duplicated metadata
-    const result = await adminApi.api.postDocpaltypeSettingsMetadataV2Duplicate(formData.value).then((res) => res.data)
-    if (result) {
-      ElMessage.success(t('metadata.duplicate_success'))
-      close()
-      setTimeout(() => {
-        emit('reload')
-      }, 100)
-    } else {
-      ElMessage.error(t('metadata.duplicate_error'))
-    }
-  }
+  } catch (error) {}
 }
 
 defineExpose({

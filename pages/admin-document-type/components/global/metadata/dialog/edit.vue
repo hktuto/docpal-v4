@@ -5,7 +5,7 @@
         <el-input v-model="formData.name" />
       </el-form-item>
       <el-form-item :label="t('metadata.dataType')" required>
-        <el-select v-model="selectedType" placeholder="Select">
+        <el-select v-model="selectedType" placeholder="Select" @change="handleTypeChanged">
           <el-option-group v-for="group in METADATA_OPTIONS" :key="group.group" :label="t(group.group)">
             <el-option v-for="option in group.options" :key="option.name" :label="t(option.name)" :value="option.name" />
           </el-option-group>
@@ -13,8 +13,10 @@
       </el-form-item>
       <!-- validationRuleSection -->
       <!-- <MetadataValidatorUserRoleUserGroup v-model:validation="formData.validationRule" /> -->
-      <template v-if="selectedType && formData.validationRule && validationComponent">
-        <component :is="validationComponent" ref="validationFormRef" v-model:validation="formData.validationRule" />
+      <template v-if="selectedType && formData.validationRule && mapDataType[selectedType]">
+        <el-form ref="ruleFormRef" :model="formData.validationRule" label-position="top">
+          <component :is="mapDataType[selectedType]" ref="dataTypeRef" :form="formData.validationRule" />
+        </el-form>
       </template>
       <!-- // mask options -->
       <h4>{{ t('meta.mask') }}</h4>
@@ -37,6 +39,7 @@
 import { adminApi } from 'api'
 import { METADATA_OPTIONS, MASK_OPTIONS, type MetadataOption } from '../../../../utils/metadataHelper'
 import { ElMessage, type FormInstance } from 'element-plus'
+import { mapDataType, getDefaultByType } from '../../../../../../packages/dp-datatype/utils/globalDataTypeHelper'
 
 const formData = ref<any>({
   name: '',
@@ -49,29 +52,21 @@ const formData = ref<any>({
 })
 const emit = defineEmits(['reload'])
 const visible = defineModel<boolean>('visible', { required: true })
-let isInit = false
 const { t } = useI18n()
 
 const selectedType = ref<MetadataOption['name']>('Text')
 const originalName = ref('')
 const elFormRef = ref<FormInstance>()
+const ruleFormRef = ref<FormInstance>()
+const dataTypeRef = ref<any>()
 const loading = ref(false)
-const validationFormRef = ref<FormInstance>()
-
-const validationComponent = computed(() => {
-  return `MetadataValidator${selectedType.value}`
-})
 
 function open(data: any) {
   originalName.value = data.name
-  isInit = true
   // check if data.validationRUle is exist, if not, set the default value
   if (!data.validationRule || !data.validationRule.validationRuleName) {
     selectedType.value = 'Text'
-    const validationRule = METADATA_OPTIONS.reduce((acc, group) => {
-      return acc.concat(group.options)
-    }, [] as MetadataOption[]).find((option) => option.name === selectedType.value)?.validation
-    data.validationRule = validationRule
+    data.validationRule = getDefaultByType(selectedType.value )
   } else if (data.validationRule.validationRuleName === 'mastertable') {
     selectedType.value = 'MasterTable'
   } else if (data.validationRule.validationRuleName === 'user_role_user_group') {
@@ -89,13 +84,12 @@ function open(data: any) {
   formData.value = JSON.parse(JSON.stringify(data))
   nextTick(() => {
     visible.value = true
-    isInit = false
   })
   setTimeout(() => {
     if (formData.value.validationRule.validationRuleName === 'mastertable') {
-      validationFormRef.value?.masterTableChange(formData.value.validationRule.masterTableName, true)
+      dataTypeRef.value?.masterTableChange(formData.value.validationRule.masterTableName, true)
     } else if (formData.value.validationRule.validationRuleName === 'date') {
-      validationFormRef.value?.initData(formData.value.validationRule)
+      dataTypeRef.value?.initData()
     }
   }, 1000)
 }
@@ -127,8 +121,8 @@ async function handleUpdate() {
         return
       }
       // check if the validationRule is valid
-      if (validationFormRef.value) {
-        const isValid = await validationFormRef.value.validate()
+      if (ruleFormRef.value) {
+        const isValid = await ruleFormRef.value.validate()
         if (!isValid) {
           ElMessage.error(t('meta.validation_error'))
           return
@@ -170,28 +164,9 @@ async function handleUpdate() {
     loading.value = false
   }
 }
-
-watch(
-  selectedType,
-  () => {
-    if (isInit) {
-      return
-    }
-    // if selectedType is valid, then get the default value of the validationRule
-    if (selectedType.value) {
-      const validationRule = METADATA_OPTIONS.reduce((acc, group) => {
-        return acc.concat(group.options)
-      }, [] as MetadataOption[]).find((option) => option.name === selectedType.value)?.validation
-      if (validationRule) {
-        formData.value.validationRule = validationRule
-      }
-    }
-  },
-  {
-    immediate: true
-  }
-)
-
+function handleTypeChanged(value: string) {
+  formData.value.validationRule = getDefaultByType(value)
+}
 defineExpose({
   open,
   close
