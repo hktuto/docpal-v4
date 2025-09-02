@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { set } from '@vueuse/core'
-import { METADATA_OPTIONS, type MetadataOption } from '../../../../pages/admin-document-type/utils/metadataHelper'
+import { METADATA_OPTIONS, type MetadataOption } from '../../../../packages/dp-datatype/utils/dataTypeHelper'
 const props = defineProps<{
   mode?: 'global' | 'task'
 }>()
@@ -137,17 +137,17 @@ defineExpose({
           </el-option-group>
         </el-select>
       </ElFormItem>
-      <BpmnRuleFieldText v-if="formData.type === 'text'" :form="formData" />
-      <BpmnRuleFieldNumber v-else-if="formData.type === 'number'" :form="formData" />
-      <BpmnRuleFieldBoolean v-else-if="formData.type === 'boolean'" :form="formData" />
-      <BpmnRuleFieldSelect v-else-if="formData.type === 'select'" :form="formData" />
-      <BpmnRuleFieldDate v-else-if="formData.type === 'date'" :form="formData" />
-      <BpmnRuleFieldDocument v-else-if="formData.type === 'document'" :form="formData" />
-      <BpmnRuleFieldCase v-else-if="formData.type === 'case'" :form="formData" />
-      <BpmnRuleFieldWorkflow v-else-if="formData.type === 'workflow'" :form="formData" />
-      <BpmnRuleFieldMasterTable v-else-if="formData.type === 'mastertable'" :form="formData" />
-      <BpmnRuleFieldUser v-else-if="formData.type === 'user'" :form="formData" />
-      <BpmnRuleFieldUserRoleUserGroup v-else-if="formData.type === 'user_role_user_group'" :form="formData" />
+      <DataTypeText v-if="formData.type === 'text'" :form="formData" />
+      <DataTypeNumber v-else-if="formData.type === 'number'" :form="formData" />
+      <DataTypeBoolean v-else-if="formData.type === 'boolean'" :form="formData" />
+      <DataTypeSelect v-else-if="formData.type === 'select'" :form="formData" />
+      <DataTypeDate v-else-if="formData.type === 'date'" :form="formData" />
+      <DataTypeDocument v-else-if="formData.type === 'document'" :form="formData" />
+      <DataTypeCase v-else-if="formData.type === 'case'" :form="formData" />
+      <DataTypeWorkflow v-else-if="formData.type === 'workflow'" :form="formData" />
+      <DataTypeMasterTable v-else-if="formData.type === 'mastertable'" :form="formData" />
+      <DataTypeUser v-else-if="formData.type === 'user'" :form="formData" />
+      <DataTypeUserRoleUserGroup v-else-if="formData.type === 'user_role_user_group'" :form="formData" />
       <!-- 根据type显示不同的表单项 -->
       <ElFormItem>
         <ElButton type="primary" @click="confirmHandler"> Confirm </ElButton>
