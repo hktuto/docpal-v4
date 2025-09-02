@@ -1,47 +1,44 @@
 <script lang="ts" setup>
-import {adminApi, clientApi} from 'api';
+import { adminApi } from 'api'
 
-const {setting} = useCalendarStore();
+const { setting } = useCalendarStore()
 
-const calendarProvider = inject(CalendarSettingKey);
-const detailDialogRef = ref();
+const calendarProvider = inject(CalendarSettingKey)
+const detailDialogRef = ref()
 
-
-const {tableConfig, tableEvent, tableRef, reload} = useVxeTable({
+const { tableConfig, tableEvent, tableRef, reload } = useVxeTable({
   id: 'calendarSetting_categories',
-  api: async (params: any) => {
-    const data = await clientApi.api.getEventCalendarsSettings({eventCalendarSetting:{}})
-    console.log("data", data)
-    return []
-  },
+  api: async (params: any) => await adminApi.api.getEventCalendarsSettings({ eventCalendarSetting: {} }).then(r => r.data),
   virtualScroll: true,
   pageSize: 5,
   columns: [
     {
       field: 'name',
-      title: 'Name',
-    },
+      title: 'Name'
+    }
   ],
   bodyActions: [
     [{
       code: 'edit',
       name: 'common_edit',
-      action: ({row}: any) => {
+      action: ({ row }: any) => {
         detailDialogRef.value.open(row)
-      },
+      }
     },
       {
         code: 'delete',
-        name: "delete",
-        action: async ({row}: any) => {
-          await adminApi.api.deleteMasterTablesIdRecord(setting.value.category.master_table, {recordId: row.id}, {});
-          reload();
+        name: 'delete',
+        action: async ({ row }: any) => {
+          await adminApi.api.deleteMasterTablesIdRecord(setting.value.category.master_table, { recordId: row.id }, {})
+          reload()
         }
       }
     ]
-  ]
+  ],
+  dblClickAction: ({ row, column, event }: any) => {
+    detailDialogRef.value.open(row)
+  }
 })
-
 
 function addRecord() {
   detailDialogRef.value.open()
@@ -56,12 +53,12 @@ function addRecord() {
       <VxeGrid ref="tableRef" v-bind="tableConfig" v-on="tableEvent">
         <template #toolbar_buttons>
           <ElButton id="CalendarSetting__EventLocations__EventCategories__Add" type="primary" @click="addRecord">
-            {{ $t("Add") }}
+            {{ $t('Add') }}
           </ElButton>
         </template>
       </VxeGrid>
     </div>
-    <CalendarSettingCategoriesDetailDialog ref="detailDialogRef" @submit="reload"/>
+    <CalendarSettingCategoriesDetailDialog ref="detailDialogRef" @submit="reload" />
   </div>
 </template>
 
