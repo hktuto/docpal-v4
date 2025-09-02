@@ -7,7 +7,7 @@
         </el-select>
       </el-form-item>
       <el-form-item :label="$t('externalStorage.outputFormat')" prop="output_format">
-        <el-select class="outputFormat" v-model="form.output_format" filterable clearable>
+        <el-select class="outputFormat" v-model="form.output_format" filterable clearable @change="handleOutputFormatChange">
           <el-option v-for="item in outputFormatOpts" :key="item.value" :label="item.label" :value="item.value" />
         </el-select>
       </el-form-item>
@@ -118,21 +118,46 @@ const props = defineProps({
   settings: Object
 })
 const emits = defineEmits(['refresh'])
+const outputFormatData = {
+  PDF: {
+    color: 'original'
+  },
+  Image: {
+    file_type: 'TIFF',
+    resolution: 1,
+    quality: 80,
+    color: 'original'
+  },
+  Text: {
+    keep_line_breaks: 'Yes',
+    insert_page_break_char: 'Yes',
+    use_blank_line_as_para_sep: 'Yes'
+  },
+  Word: {
+    color: 'original'
+  },
+  originalFile: {
+    color: 'original'
+  }
+}
+const destinationData = {
+  external: {
+    file_name: '${Profile_id}',
+    path: '/',
+    duplicate_name_strategy: 'replace',
+    share_drive_profile: ''
+  },
+  docPal: {
+    file_name: '',
+    path: '/'
+  },
+  workflow: {}
+}
+const publicKeys = ['document_type', 'output_format', 'destination']
 const defaultValue = {
-  file_name: '',
   document_type: 'File',
   output_format: '',
-  color: '',
-  destination: '',
-  share_drive_profile: '',
-  path: '/',
-  file_type: '', // 新增
-  resolution: 1, // 新增
-  quality: 80, // 新增
-  keep_line_breaks: 'Yes', // 新增
-  insert_page_break_char: 'Yes', // 新增
-  use_blank_line_as_para_sep: 'Yes', // 新增
-  duplicate_name_strategy: 'replace' // 新增
+  destination: 'external'
 }
 const { t } = useI18n()
 const dialogVisible = ref(false)
@@ -170,8 +195,12 @@ const rules = {
   quality: [{ required: true, message: t('render.hint.fieldRequired', { name: t('externalStorage.quality') }), trigger: 'blur' }],
   keep_line_breaks: [{ required: true, message: t('render.hint.fieldRequired', { name: t('externalStorage.keepLineBreaks') }), trigger: 'change' }], // 新增
   insert_page_break_char: [{ required: true, message: t('render.hint.fieldRequired', { name: t('externalStorage.insertPageBreakChar') }), trigger: 'change' }], // 新增
-  use_blank_line_as_para_sep: [{ required: true, message: t('render.hint.fieldRequired', { name: t('externalStorage.useBlankLineAsParaSep') }), trigger: 'change' }], // 新增
-  duplicate_name_strategy: [{ required: true, message: t('render.hint.fieldRequired', { name: t('externalStorage.duplicateNameStrategy') }), trigger: 'change' }] // 新增
+  use_blank_line_as_para_sep: [
+    { required: true, message: t('render.hint.fieldRequired', { name: t('externalStorage.useBlankLineAsParaSep') }), trigger: 'change' }
+  ], // 新增
+  duplicate_name_strategy: [
+    { required: true, message: t('render.hint.fieldRequired', { name: t('externalStorage.duplicateNameStrategy') }), trigger: 'change' }
+  ] // 新增
 }
 const WorkflowVariableMappingRef = ref<any>(null)
 
@@ -194,39 +223,58 @@ function handleOpen(data: any, _isEdit = false) {
     formRef.value.clearValidate()
   })
 }
-
+function handleOutputFormatChange(value: string) {
+  const outputFormat = { ...outputFormatData[value] }
+  const destination = destinationData[form.value.destination] ? { ...destinationData[form.value.destination] } : {}
+  form.value = {
+    ...outputFormat,
+    ...destination,
+    ...form.value
+  }
+}
 const pathInput = ref<any>(null)
 const fileNameInput = ref<any>(null)
 function handleVariableSelect(variable: string, attr = 'fileName') {
+  if(!form.value[attr]) form.value[attr] = ''
   // 识别当前光标位置
   const input = attr === 'fileName' ? fileNameInput.value.input : pathInput.value.input
   const start = input.selectionStart
   const end = input.selectionEnd
   form.value[attr] = form.value[attr].substring(0, start) + variable + form.value[attr].substring(end)
-  // 重新聚焦并设置光标
-  nextTick(() => {
-    input.setSelectionRange(start + variable.length, start + variable.length)
-    input.focus()
-  })
 }
 async function save() {
   try {
     await formRef.value.validate()
-    const params = { ...form.value }
+    const _params = getParams()
     if (form.value.workflow) {
       const workflowMapping = WorkflowVariableMappingRef.value.getData()
-      params.workflow_mapping = workflowMapping
+      _params.workflow_mapping = workflowMapping
     }
     if (isEdit.value) {
-      await adminApi.api.patchExternalstorageProfilesProfileidOutputrecordOutputrecordid(props.id as string, setting.value.id, params)
+      await adminApi.api.patchExternalstorageProfilesProfileidOutputrecordOutputrecordid(props.id as string, setting.value.id, _params)
     } else {
-      await adminApi.api.postExternalstorageProfilesProfileidOutputrecord(props.id as string, params)
+      await adminApi.api.postExternalstorageProfilesProfileidOutputrecord(props.id as string, _params)
     }
     emits('refresh')
     dialogVisible.value = false
   } catch (error) {
     console.log(error)
   } finally {
+  }
+  function getParams() {
+    const params = {}
+    const outputFormat = { ...outputFormatData[form.value.output_format] }
+    const destination = destinationData[form.value.destination] ? { ...destinationData[form.value.destination] } : {}
+    publicKeys.forEach((key) => {
+      params[key] = form.value[key] || defaultValue[key]
+    })
+    Object.keys(outputFormat).forEach((key) => {
+      params[key] = form.value[key] || outputFormat[key]
+    })
+    Object.keys(destination).forEach((key) => {
+      params[key] = form.value[key] || destination[key]
+    })
+    return params
   }
 }
 
