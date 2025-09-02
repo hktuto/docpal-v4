@@ -5,15 +5,17 @@
         <el-input v-model="formData.name" />
       </el-form-item>
       <el-form-item :label="t('metadata.dataType')" required>
-        <el-select v-model="selectedType" placeholder="Select">
+        <el-select v-model="selectedType" placeholder="Select" @change="handleTypeChanged">
           <el-option-group v-for="group in METADATA_OPTIONS" :key="group.group" :label="t(group.group)">
             <el-option v-for="option in group.options" :key="option.name" :label="t(option.name)" :value="option.name" />
           </el-option-group>
         </el-select>
       </el-form-item>
       <!-- validationRuleSection -->
-      <template v-if="selectedType && validationComponent">
-        <component :is="validationComponent" ref="validationFormRef" v-model:validation="formData.validationRule" />
+      <template v-if="selectedType && mapDataType[selectedType]">
+        <el-form ref="ruleFormRef" :model="formData.validationRule" label-position="top">
+          <component :is="mapDataType[selectedType]" :form="formData.validationRule" />
+        </el-form>
       </template>
       <!-- // mask options -->
       <h4>{{ t('meta.mask') }}</h4>
@@ -26,7 +28,6 @@
         <el-input-number v-model="formData.maskRule.maskLength" :min="1" :max="24" />
       </el-form-item>
     </el-form>
-
     <template #footer>
       <el-button :loading="loading" type="primary" @click="handleCreate">{{ t('metadata.new') }}</el-button>
     </template>
@@ -37,45 +38,27 @@
 import { ElMessage, type FormInstance } from 'element-plus'
 import { METADATA_OPTIONS, MASK_OPTIONS, type MetadataOption } from '../../../../utils/metadataHelper'
 import { adminApi } from 'api'
-
+import { mapDataType, getDefaultByType } from '../../../../../../packages/dp-datatype/utils/globalDataTypeHelper'
 const { t } = useI18n()
 const validationFormRef = ref<FormInstance>()
 const visible = defineModel<boolean>('visible', { required: true })
 const selectedType = ref<MetadataOption['name']>('Text')
 
-const validationComponent = computed(() => {
-  return `MetadataValidator${selectedType.value}`
-})
 const loading = ref(false)
 const formData = reactive({
   name: '',
-  validationRule: {},
   langs: {},
   maskRule: {
     maskType: 'MASK_ALL',
     maskLength: 10
+  },
+  validationRule: {
+    maxLength: 255,
+    validationRuleName: 'text'
   }
 })
 
 const elFormRef = ref<FormInstance>()
-
-watch(
-  selectedType,
-  () => {
-    // if selectedType is valid, then get the default value of the validationRule
-    if (selectedType.value) {
-      const validationRule = METADATA_OPTIONS.reduce((acc, group) => {
-        return acc.concat(group.options)
-      }, [] as MetadataOption[]).find((option) => option.name === selectedType.value)?.validation
-      if (validationRule) {
-        formData.validationRule = validationRule
-      }
-    }
-  },
-  {
-    immediate: true
-  }
-)
 
 function open() {
   visible.value = true
@@ -84,9 +67,7 @@ function open() {
 function close() {
   // clean the form
   elFormRef.value?.resetFields()
-  // validationFormRef.value?.resetFields()
   formData.name = ''
-  formData.validationRule = {}
   formData.langs = {}
   formData.maskRule = {
     maskType: 'MASK_ALL',
@@ -94,7 +75,7 @@ function close() {
   }
   visible.value = false
 }
-
+const ruleFormRef = ref<FormInstance>()
 async function handleCreate() {
   try {
     loading.value = true
@@ -105,13 +86,9 @@ async function handleCreate() {
       if (!formValid) {
         return
       }
-      // check if the validationRule is valid
-      if (validationFormRef.value) {
-        const isValid = await validationFormRef.value.validate()
-        if (!isValid) {
-          ElMessage.error(t('meta.validation_error'))
-          return
-        }
+      const ruleValid = await ruleFormRef.value.validate()
+      if (!ruleValid) {
+        return
       }
       // step 3 check if the name is already exists
       const nameExists = await adminApi.api
@@ -128,14 +105,18 @@ async function handleCreate() {
       // step 4 create the metadata
       const result = await adminApi.api.postDocpaltypeSettingsMetadataV2Create(formData).then((res) => res.data)
       if (result) {
-        ElMessage.success(t('meta.create_success', {
-          name: formData.name
-        }))
+        ElMessage.success(
+          t('meta.create_success', {
+            name: formData.name
+          })
+        )
         close()
       } else {
-        ElMessage.error(t('meta.create_error', {
-          name: formData.name
-        }))
+        ElMessage.error(
+          t('meta.create_error', {
+            name: formData.name
+          })
+        )
       }
     }
   } catch (error) {
@@ -144,7 +125,9 @@ async function handleCreate() {
     loading.value = false
   }
 }
-
+function handleTypeChanged(value: string) {
+  formData.validationRule = getDefaultByType(value)
+}
 defineExpose({
   open,
   close

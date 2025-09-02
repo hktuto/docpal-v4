@@ -22,7 +22,8 @@
 
 <script lang="ts" setup>
 const props = defineProps<{
-  form: any
+  form: any,
+  mode: 'sub-form' | 'form'
 }>()
 const { t } = useI18n()
 
@@ -36,7 +37,8 @@ const optionsRules = [
     required: true,
     validator: (rule: any, value: any, callback: any) => {
       if (!value || value.length === 0) {
-        return callback(new Error(t('render.hint.fieldRequired', { name: t('metadata.validation.select.options') })))
+        console.log(value, 'value')
+        return callback(new Error(t('render.hint.fieldRequired', { name: t('metadata.validation.select.options' + 111) })))
       }
       if (value.some((option: string) => !option.trim())) {
         return callback(new Error(t('render.hint.fieldRequired', { name: t('metadata.validation.select.options') })))

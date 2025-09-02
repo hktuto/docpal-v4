@@ -96,6 +96,7 @@ onMounted(async () => {
     masterTableLoading.value = false
   }
 })
+defineExpose({ masterTableChange })
 </script>
 
 <style lang="scss" scoped>
