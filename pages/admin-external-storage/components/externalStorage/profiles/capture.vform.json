@@ -56,7 +56,956 @@
         "automaticDropdown": false,
         "multiple": true,
         "multipleLimit": 0,
-        "optionItems": [],
+        "optionItems": [
+          {
+            "value": "TestJoshuaFile",
+            "label": "TestJoshuaFile"
+          },
+          {
+            "value": "jack-test-54",
+            "label": "jack-test-54"
+          },
+          {
+            "value": "jack-test-53",
+            "label": "jack-test-53"
+          },
+          {
+            "value": "jack-test-52",
+            "label": "jack-test-52"
+          },
+          {
+            "value": "jack-test-111",
+            "label": "jack-test-111"
+          },
+          {
+            "value": "test22222222233",
+            "label": "test22222222233"
+          },
+          {
+            "value": "test222222222",
+            "label": "test222222222"
+          },
+          {
+            "value": "Ad Copy duplicate jack test",
+            "label": "Ad Copy duplicate jack test"
+          },
+          {
+            "value": "testOy",
+            "label": "testOy"
+          },
+          {
+            "value": "jack-test-04",
+            "label": "jack-test-04"
+          },
+          {
+            "value": "PDF",
+            "label": "PDF"
+          },
+          {
+            "value": "test111",
+            "label": "test111"
+          },
+          {
+            "value": "asdgsad",
+            "label": "asdgsad"
+          },
+          {
+            "value": "saffff",
+            "label": "saffff"
+          },
+          {
+            "value": "asfsafssafs",
+            "label": "asfsafssafs"
+          },
+          {
+            "value": "asfsafs",
+            "label": "asfsafs"
+          },
+          {
+            "value": "ad copy 123",
+            "label": "ad copy 123"
+          },
+          {
+            "value": "jack-test-03",
+            "label": "jack-test-03"
+          },
+          {
+            "value": "docpaltype-jack-test-duplicate-02",
+            "label": "docpaltype-jack-test-duplicate-02"
+          },
+          {
+            "value": "sean_test",
+            "label": "sean_test"
+          },
+          {
+            "value": "test",
+            "label": "test"
+          },
+          {
+            "value": "ababa1-change",
+            "label": "ababa1-change"
+          },
+          {
+            "value": "jack-test-02",
+            "label": "jack-test-02"
+          },
+          {
+            "value": "jack-test-01",
+            "label": "jack-test-01"
+          },
+          {
+            "value": "jack_test01",
+            "label": "jack_test01"
+          },
+          {
+            "value": "test01",
+            "label": "test01"
+          },
+          {
+            "value": "CPA-BRFile2",
+            "label": "CPA-BRFile2"
+          },
+          {
+            "value": "CPA-ContractFile",
+            "label": "CPA-ContractFile"
+          },
+          {
+            "value": "Maintenance Log",
+            "label": "Maintenance Log"
+          },
+          {
+            "value": "BANTFileCR",
+            "label": "BANTFileCR"
+          },
+          {
+            "value": "Sales Presentation",
+            "label": "Sales Presentation"
+          },
+          {
+            "value": "Inventory Record",
+            "label": "Inventory Record"
+          },
+          {
+            "value": "Magazine",
+            "label": "Magazine"
+          },
+          {
+            "value": "Trademark document",
+            "label": "Trademark document"
+          },
+          {
+            "value": "Vendor Documents",
+            "label": "Vendor Documents"
+          },
+          {
+            "value": "Picture",
+            "label": "图片"
+          },
+          {
+            "value": "Safety Procedure",
+            "label": "Safety Procedure"
+          },
+          {
+            "value": "Tender Document",
+            "label": "Tender Document"
+          },
+          {
+            "value": "Customer Detail Amendment Form",
+            "label": "Customer Detail Amendment Form"
+          },
+          {
+            "value": "Stocktake Form - Cash",
+            "label": "Stocktake Form - Cash"
+          },
+          {
+            "value": "Termination Notice",
+            "label": "Termination Notice"
+          },
+          {
+            "value": "Equipment Calibration Record",
+            "label": "Equipment Calibration Record"
+          },
+          {
+            "value": "Sales Plan",
+            "label": "Sales Plan"
+          },
+          {
+            "value": "Cheque Copies",
+            "label": "Cheque Copies"
+          },
+          {
+            "value": "Marketing Brief",
+            "label": "Marketing Brief"
+          },
+          {
+            "value": "Offer Letter",
+            "label": "Offer Letter"
+          },
+          {
+            "value": "Risk Register",
+            "label": "Risk Register"
+          },
+          {
+            "value": "Performance Improvement Plan",
+            "label": "Performance Improvement Plan"
+          },
+          {
+            "value": "Import license",
+            "label": "Import license"
+          },
+          {
+            "value": "Network Diagram",
+            "label": "Network Diagram"
+          },
+          {
+            "value": "Production Schedule",
+            "label": "Production Schedule"
+          },
+          {
+            "value": "Test Plans",
+            "label": "Test Plans"
+          },
+          {
+            "value": "Invoice",
+            "label": "发票"
+          },
+          {
+            "value": "Lead Generation Report",
+            "label": "Lead Generation Report"
+          },
+          {
+            "value": "Travel and Expense Form",
+            "label": "Travel and Expense Form"
+          },
+          {
+            "value": "ProposalFileRenewal",
+            "label": "ProposalFileRenewal"
+          },
+          {
+            "value": "Training Record",
+            "label": "Training Record"
+          },
+          {
+            "value": "Warehouse Receipt",
+            "label": "Warehouse Receipt"
+          },
+          {
+            "value": "Training and Development Plan",
+            "label": "Training and Development Plan"
+          },
+          {
+            "value": "Legal Brief",
+            "label": "Legal Brief"
+          },
+          {
+            "value": "BANTSupplementaryFile",
+            "label": "BANTSupplementaryFile"
+          },
+          {
+            "value": "Organization Structure",
+            "label": "Organization Structure"
+          },
+          {
+            "value": "Knowledge Base Article",
+            "label": "Knowledge Base Article"
+          },
+          {
+            "value": "Drawings",
+            "label": "Drawings"
+          },
+          {
+            "value": "Facilities Maintenance Request",
+            "label": "Facilities Maintenance Request"
+          },
+          {
+            "value": "Bill of Lading",
+            "label": "Bill of Lading"
+          },
+          {
+            "value": "Project Documents",
+            "label": "Project Documents"
+          },
+          {
+            "value": "Quotation",
+            "label": "Quotation"
+          },
+          {
+            "value": "Employee Document",
+            "label": "Employee Document"
+          },
+          {
+            "value": "Legal Memoranda",
+            "label": "Legal Memoranda"
+          },
+          {
+            "value": "Intellectual Property Document",
+            "label": "Intellectual Property Document"
+          },
+          {
+            "value": "Production Control Plan",
+            "label": "Production Control Plan"
+          },
+          {
+            "value": "Commercial Invoice",
+            "label": "Commercial Invoice"
+          },
+          {
+            "value": "Office Supply Request",
+            "label": "Office Supply Request"
+          },
+          {
+            "value": "Events",
+            "label": "Events"
+          },
+          {
+            "value": "Annual General Meeting Resolutions",
+            "label": "Annual General Meeting Resolutions"
+          },
+          {
+            "value": "Change Reuqest Form",
+            "label": "Change Reuqest Form"
+          },
+          {
+            "value": "Project Plan",
+            "label": "Project Plan"
+          },
+          {
+            "value": "Media Plan",
+            "label": "Media Plan"
+          },
+          {
+            "value": "Loan Receipt",
+            "label": "Loan Receipt"
+          },
+          {
+            "value": "ContractSupplementaryFile",
+            "label": "ContractSupplementaryFile"
+          },
+          {
+            "value": "New Customer Form",
+            "label": "New Customer Form"
+          },
+          {
+            "value": "SupplementaryFile",
+            "label": "SupplementaryFile"
+          },
+          {
+            "value": "Opportunity Plan",
+            "label": "Opportunity Plan"
+          },
+          {
+            "value": "Customs Document",
+            "label": "Customs Document"
+          },
+          {
+            "value": "Airway or Railway Billg",
+            "label": "Airway or Railway Billg"
+          },
+          {
+            "value": "ProposalFile",
+            "label": "ProposalFile"
+          },
+          {
+            "value": "Sales Pipeline",
+            "label": "Sales Pipeline"
+          },
+          {
+            "value": "Employee Tax form",
+            "label": "Employee Tax form"
+          },
+          {
+            "value": "Sales and Purchase Agreement (Property)",
+            "label": "Sales and Purchase Agreement (Property)"
+          },
+          {
+            "value": "Content Calendar",
+            "label": "Content Calendar"
+          },
+          {
+            "value": "Cover Letter",
+            "label": "Cover Letter"
+          },
+          {
+            "value": "Insurance Document",
+            "label": "Insurance Document"
+          },
+          {
+            "value": "Tax Return",
+            "label": "Tax Return"
+          },
+          {
+            "value": "Medical Record",
+            "label": "Medical Record"
+          },
+          {
+            "value": "ConfigurationFile",
+            "label": "ConfigurationFile"
+          },
+          {
+            "value": "Customer Account Profile",
+            "label": "Customer Account Profile"
+          },
+          {
+            "value": "Customer Orientation",
+            "label": "Customer Orientation"
+          },
+          {
+            "value": "ContractFile",
+            "label": "合同文件"
+          },
+          {
+            "value": "CostModelNewCase",
+            "label": "CostModelNewCase"
+          },
+          {
+            "value": "ProposalSupplementaryFile",
+            "label": "ProposalSupplementaryFile"
+          },
+          {
+            "value": "Timesheet",
+            "label": "Timesheet"
+          },
+          {
+            "value": "CostModelRenewalCR",
+            "label": "CostModelRenewalCR"
+          },
+          {
+            "value": "Policy and Procedure",
+            "label": "Policy and Procedure"
+          },
+          {
+            "value": "Sales Training Material",
+            "label": "Sales Training Material"
+          },
+          {
+            "value": "Claim Form",
+            "label": "Claim Form"
+          },
+          {
+            "value": "Roster",
+            "label": "Roster"
+          },
+          {
+            "value": "Legal Policy and Procedure",
+            "label": "Legal Policy and Procedure"
+          },
+          {
+            "value": "Annual Report",
+            "label": "Annual Report"
+          },
+          {
+            "value": "Memo",
+            "label": "Memo"
+          },
+          {
+            "value": "Legal Notice",
+            "label": "Legal Notice"
+          },
+          {
+            "value": "Asset management record",
+            "label": "Asset management record"
+          },
+          {
+            "value": "Requisition Document",
+            "label": "Requisition Document"
+          },
+          {
+            "value": "test-Create",
+            "label": "test-Create"
+          },
+          {
+            "value": "Price book",
+            "label": "Price book"
+          },
+          {
+            "value": "Customer Inquiry",
+            "label": "Customer Inquiry"
+          },
+          {
+            "value": "Sales Forecast",
+            "label": "Sales Forecast"
+          },
+          {
+            "value": "Standard Operating Procedure",
+            "label": "Standard Operating Procedure"
+          },
+          {
+            "value": "Creative Brief",
+            "label": "Creative Brief"
+          },
+          {
+            "value": "Audio",
+            "label": "Audio"
+          },
+          {
+            "value": "Solution Diagram",
+            "label": "Solution Diagram"
+          },
+          {
+            "value": "CV or Resume",
+            "label": "CV or Resume"
+          },
+          {
+            "value": "PreSalesProposalCR",
+            "label": "PreSalesProposalCR"
+          },
+          {
+            "value": "Agenda or Meeting Notice",
+            "label": "议程或会议通知"
+          },
+          {
+            "value": "Floor Plan",
+            "label": "Floor Plan"
+          },
+          {
+            "value": "Termination Letter",
+            "label": "Termination Letter"
+          },
+          {
+            "value": "Service Proposal",
+            "label": "Service Proposal"
+          },
+          {
+            "value": "Lessons Learned Report",
+            "label": "Lessons Learned Report"
+          },
+          {
+            "value": "PreSalesSupplementaryFileCR",
+            "label": "PreSalesSupplementaryFileCR"
+          },
+          {
+            "value": "Supplier Assessment Form - General Expenses",
+            "label": "Supplier Assessment Form - General Expenses"
+          },
+          {
+            "value": "ProposalSupplementaryFileRenewal",
+            "label": "ProposalSupplementaryFileRenewal"
+          },
+          {
+            "value": "Quality Report",
+            "label": "Quality Report"
+          },
+          {
+            "value": "Sitting Plan",
+            "label": "Sitting Plan"
+          },
+          {
+            "value": "Ad Copy",
+            "label": "Ad Copy"
+          },
+          {
+            "value": "Stocktake Form - Fixed Assets",
+            "label": "Stocktake Form - Fixed Assets"
+          },
+          {
+            "value": "Loan Application",
+            "label": "Loan Application"
+          },
+          {
+            "value": "Renewal Record",
+            "label": "Renewal Record"
+          },
+          {
+            "value": "Packing List",
+            "label": "Packing List"
+          },
+          {
+            "value": "Work Instruction",
+            "label": "Work Instruction"
+          },
+          {
+            "value": "BRDCR",
+            "label": "BRDCR"
+          },
+          {
+            "value": "System Requirement Specification",
+            "label": "System Requirement Specification"
+          },
+          {
+            "value": "Risk Assessment",
+            "label": "Risk Assessment"
+          },
+          {
+            "value": "Income Statement",
+            "label": "损益表"
+          },
+          {
+            "value": "Escalation Procedure",
+            "label": "Escalation Procedure"
+          },
+          {
+            "value": "Incident Report",
+            "label": "Incident Report"
+          },
+          {
+            "value": "RFI",
+            "label": "RFI"
+          },
+          {
+            "value": "Gantt Chart",
+            "label": "Gantt Chart"
+          },
+          {
+            "value": "Job Ad",
+            "label": "Job Ad"
+          },
+          {
+            "value": "Letter of Credit",
+            "label": "Letter of Credit"
+          },
+          {
+            "value": "Appraisal Form",
+            "label": "Appraisal Form"
+          },
+          {
+            "value": "Budget Plan",
+            "label": "Budget Plan"
+          },
+          {
+            "value": "Support Services ",
+            "label": "Support Services "
+          },
+          {
+            "value": "Configuration Management Record",
+            "label": "Configuration Management Record"
+          },
+          {
+            "value": "Attendance report",
+            "label": "Attendance report"
+          },
+          {
+            "value": "Sales Report",
+            "label": "Sales Report"
+          },
+          {
+            "value": "System Design Specification",
+            "label": "System Design Specification"
+          },
+          {
+            "value": "Work Breakdown Structure",
+            "label": "Work Breakdown Structure"
+          },
+          {
+            "value": "Interview Test Report",
+            "label": "Interview Test Report"
+          },
+          {
+            "value": "Marketing Performance Report",
+            "label": "Marketing Performance Report"
+          },
+          {
+            "value": "Resignation Form",
+            "label": "Resignation Form"
+          },
+          {
+            "value": "Service Change or Termination Form",
+            "label": "Service Change or Termination Form"
+          },
+          {
+            "value": "Return or Refund Form",
+            "label": "Return or Refund Form"
+          },
+          {
+            "value": "Payroll Receipt",
+            "label": "Payroll Receipt"
+          },
+          {
+            "value": "MPF Enrolment Form",
+            "label": "MPF Enrolment Form"
+          },
+          {
+            "value": "Employee Handbook",
+            "label": "Employee Handbook"
+          },
+          {
+            "value": "Expense Report",
+            "label": "Expense Report"
+          },
+          {
+            "value": "Purchase Order",
+            "label": "Purchase Order"
+          },
+          {
+            "value": "Visitor Log or Register",
+            "label": "Visitor Log or Register"
+          },
+          {
+            "value": "System Operation Guide",
+            "label": "System Operation Guide"
+          },
+          {
+            "value": "Bank Statement",
+            "label": "Bank Statement"
+          },
+          {
+            "value": "Proposal",
+            "label": "Proposal"
+          },
+          {
+            "value": "Disaster Recovery Plan",
+            "label": "Disaster Recovery Plan"
+          },
+          {
+            "value": "Driver License",
+            "label": "Driver License"
+          },
+          {
+            "value": "Leave Request Form",
+            "label": "Leave Request Form"
+          },
+          {
+            "value": "Payment Receipt",
+            "label": "Payment Receipt"
+          },
+          {
+            "value": "File",
+            "label": "文件"
+          },
+          {
+            "value": "Reconciliation report",
+            "label": "Reconciliation report"
+          },
+          {
+            "value": "Brand Management",
+            "label": "Brand Management"
+          },
+          {
+            "value": "SupplementaryFileRenewalCR",
+            "label": "SupplementaryFileRenewalCR"
+          },
+          {
+            "value": "Confidentility and Non-Disclosure Agreement",
+            "label": "Confidentility and Non-Disclosure Agreement"
+          },
+          {
+            "value": "Customer Service Policy",
+            "label": "Customer Service Policy"
+          },
+          {
+            "value": "Test Reports",
+            "label": "Test Reports"
+          },
+          {
+            "value": "Reimbursement File",
+            "label": "Reimbursement File"
+          },
+          {
+            "value": "Legal Hold and Preservation Notice",
+            "label": "Legal Hold and Preservation Notice"
+          },
+          {
+            "value": "Job Application",
+            "label": "Job Application"
+          },
+          {
+            "value": "Employee Personal Detail Amendment Form",
+            "label": "Employee Personal Detail Amendment Form"
+          },
+          {
+            "value": "Customer Complaint Form",
+            "label": "Customer Complaint Form"
+          },
+          {
+            "value": "Stocktake Form - Inventory",
+            "label": "Stocktake Form - Inventory"
+          },
+          {
+            "value": "ConfigurationFileCR",
+            "label": "ConfigurationFileCR"
+          },
+          {
+            "value": "Change Management Request",
+            "label": "Change Management Request"
+          },
+          {
+            "value": "Sales Territory Plan",
+            "label": "Sales Territory Plan"
+          },
+          {
+            "value": "Board and Directors Resolutions",
+            "label": "Board and Directors Resolutions"
+          },
+          {
+            "value": "Audit Review Report",
+            "label": "Audit Review Report"
+          },
+          {
+            "value": "Credit Assessment Form",
+            "label": "Credit Assessment Form"
+          },
+          {
+            "value": "Marketing Presentation",
+            "label": "Marketing Presentation"
+          },
+          {
+            "value": "Power of Attorney",
+            "label": "Power of Attorney"
+          },
+          {
+            "value": "Cost Model",
+            "label": "Cost Model"
+          },
+          {
+            "value": "Shareholders Resolutions",
+            "label": "Shareholders Resolutions"
+          },
+          {
+            "value": "PreSalesProposal",
+            "label": "PreSalesProposal"
+          },
+          {
+            "value": "BRD",
+            "label": "BRD"
+          },
+          {
+            "value": "BANTFile",
+            "label": "BANTFile"
+          },
+          {
+            "value": "Salary Review Form",
+            "label": "Salary Review Form"
+          },
+          {
+            "value": "Report",
+            "label": "Report"
+          },
+          {
+            "value": "Tender Response",
+            "label": "Tender Response"
+          },
+          {
+            "value": "Regulatory Compliance Document",
+            "label": "Regulatory Compliance Document"
+          },
+          {
+            "value": "RFQ",
+            "label": "RFQ"
+          },
+          {
+            "value": "Project Charter",
+            "label": "Project Charter"
+          },
+          {
+            "value": "Solution Design File",
+            "label": "Solution Design File"
+          },
+          {
+            "value": "Service Level Agreement",
+            "label": "Service Level Agreement"
+          },
+          {
+            "value": "Education and Professional Certificate",
+            "label": "Education and Professional Certificate"
+          },
+          {
+            "value": "User Operation Guide",
+            "label": "User Operation Guide"
+          },
+          {
+            "value": "Corporate Governance Document",
+            "label": "Corporate Governance Document"
+          },
+          {
+            "value": "Delivery Note",
+            "label": "Delivery Note"
+          },
+          {
+            "value": "Project Closure Report",
+            "label": "Project Closure Report"
+          },
+          {
+            "value": "Litigation Document",
+            "label": "Litigation Document"
+          },
+          {
+            "value": "Occupational Safety Document",
+            "label": "Occupational Safety Document"
+          },
+          {
+            "value": "Sales Order",
+            "label": "Sales Order"
+          },
+          {
+            "value": "Market Research Report",
+            "label": "Market Research Report"
+          },
+          {
+            "value": "E-mail",
+            "label": "E-mail"
+          },
+          {
+            "value": "Quality Control Checklist",
+            "label": "Quality Control Checklist"
+          },
+          {
+            "value": "Security Incident Response Plan",
+            "label": "Security Incident Response Plan"
+          },
+          {
+            "value": "Conveyancing Document",
+            "label": "Conveyancing Document"
+          },
+          {
+            "value": "PreSalesSupplementaryFile",
+            "label": "PreSalesSupplementaryFile"
+          },
+          {
+            "value": "Meeting Minutes",
+            "label": "Meeting Minutes"
+          },
+          {
+            "value": "Brochure",
+            "label": "Brochure"
+          },
+          {
+            "value": "Presales Proposal",
+            "label": "Presales Proposal"
+          },
+          {
+            "value": "Marketing Plan",
+            "label": "Marketing Plan"
+          },
+          {
+            "value": "Facilities Management",
+            "label": "Facilities Management"
+          },
+          {
+            "value": "Certificate of Origin",
+            "label": "Certificate of Origin"
+          },
+          {
+            "value": "Customer Feedback Survey",
+            "label": "Customer Feedback Survey"
+          },
+          {
+            "value": "Contract Attachment",
+            "label": "合同附件"
+          },
+          {
+            "value": "Suppliers",
+            "label": "Suppliers"
+          },
+          {
+            "value": "Project Status Report",
+            "label": "Project Status Report"
+          },
+          {
+            "value": "Legal Demand Letter",
+            "label": "Legal Demand Letter"
+          },
+          {
+            "value": "Identity Document",
+            "label": "Identity Document"
+          },
+          {
+            "value": "BANTSupplementaryFileCR",
+            "label": "BANTSupplementaryFileCR"
+          },
+          {
+            "value": "Video",
+            "label": "视频"
+          }
+        ],
         "required": false,
         "requiredHint": "",
         "validation": "",
@@ -99,7 +1048,152 @@
         "automaticDropdown": false,
         "multiple": true,
         "multipleLimit": 0,
-        "optionItems": [],
+        "optionItems": [
+          {
+            "value": "user_groups",
+            "label": "分配的用户群组",
+            "options": [
+              {
+                "label": "Adhoc Group",
+                "value": "group&&&&Adhoc_Group"
+              },
+              {
+                "label": "Administrators Group",
+                "value": "group&&&&administrators"
+              },
+              {
+                "label": "Bedfordshire Dept",
+                "value": "group&&&&BedfordshireDept"
+              },
+              {
+                "label": "BOOK",
+                "value": "group&&&&BOOK"
+              },
+              {
+                "label": "CPA-Members",
+                "value": "group&&&&CPA-Members"
+              },
+              {
+                "label": "HR deptartment",
+                "value": "group&&&&HR_dept"
+              },
+              {
+                "label": "IT Group",
+                "value": "group&&&&IT_Group"
+              },
+              {
+                "label": "IT Dept",
+                "value": "group&&&&ITDept"
+              },
+              {
+                "label": "Market Group",
+                "value": "group&&&&Market_Group"
+              },
+              {
+                "label": "Sales Group",
+                "value": "group&&&&Sales_Group"
+              },
+              {
+                "label": "Show Group",
+                "value": "group&&&&Show_Group"
+              },
+              {
+                "label": "USB Dept",
+                "value": "group&&&&USBDept"
+              }
+            ]
+          },
+          {
+            "value": "user_users",
+            "label": "用户",
+            "options": [
+              {
+                "label": "jack5",
+                "value": "jack5"
+              },
+              {
+                "label": "jack_li",
+                "value": "jack_li"
+              },
+              {
+                "label": "jack_li1",
+                "value": "jack_li1"
+              },
+              {
+                "label": "jack_li2",
+                "value": "jack_li2"
+              },
+              {
+                "label": "jack_li3",
+                "value": "jack_li3"
+              },
+              {
+                "label": "jack_li5",
+                "value": "jack_li5"
+              },
+              {
+                "label": "johnson",
+                "value": "johnson"
+              },
+              {
+                "label": "joshua",
+                "value": "joshua"
+              },
+              {
+                "label": "lyle",
+                "value": "lyle"
+              },
+              {
+                "label": "lyletest",
+                "value": "lyletest"
+              },
+              {
+                "label": "moonlit",
+                "value": "moonlit"
+              },
+              {
+                "label": "nine",
+                "value": "nine"
+              },
+              {
+                "label": "nineadmin",
+                "value": "nineadmin"
+              },
+              {
+                "label": "ninerabbit",
+                "value": "ninerabbit"
+              },
+              {
+                "label": "ooyy",
+                "value": "ooyy"
+              },
+              {
+                "label": "ooyycdbd",
+                "value": "ooyycdbd"
+              },
+              {
+                "label": "roy",
+                "value": "roy"
+              },
+              {
+                "label": "teststatu",
+                "value": "teststatu"
+              },
+              {
+                "label": "testuser",
+                "value": "testuser"
+              },
+              {
+                "label": "test_one",
+                "value": "test_one"
+              },
+              {
+                "label": "will_du",
+                "value": "will_du"
+              }
+            ]
+          }
+        ],
         "selectSetting": {
           "userApi": "/nuxeo/identity/users",
           "userMethod": "post",
@@ -186,7 +1280,7 @@
           {
             "fieldName": "use_document_type",
             "condition": "===",
-            "value": true
+            "value": false
           }
         ],
         "hiddenList": [
