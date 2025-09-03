@@ -4,18 +4,17 @@ export const usePermissionOption = () => useState('permission', () => ([]))
 
 export const getFromServer = async function() {
   const options = usePermissionOption()
-  const [user, role, group] = await Promise.all(
-    await adminApi.api.postNuxeoIdentityUsers().then((res) => res.data),
-    await adminApi.api.postAclRoleList([{
+  const [user, role, group] = await Promise.all([
+    adminApi.api.postNuxeoIdentityUsers().then((res) => res.data),
+    adminApi.api.postAclRoleList([{
       column: 'status',
       type: 'EQ',
       values: '1'
     }]).then((res) => res.data),
-    await adminApi.api.postNuxeoIdentityGroups().then((res) => res.data)
-  )
+    adminApi.api.postNuxeoIdentityGroups().then((res) => res.data)
+  ])
   if (user.length > 0) {
-    userOptions.value = user
-    usePermissionOption.value.push(
+    options.value.push(
       {
         label: 'User',
         value: 1,
@@ -25,9 +24,8 @@ export const getFromServer = async function() {
     )
   }
 
-  if (roleData.length > 0) {
-    roleOptions.value = roleData
-    usePermissionOption.value.push(
+  if (role.length > 0) {
+    options.value.push(
       {
         label: 'Role',
         value: 2,
@@ -38,8 +36,7 @@ export const getFromServer = async function() {
   }
 
   if (group.length > 0) {
-    groupOptions.value = group
-    usePermissionOption.value.push(
+    options.value.push(
       {
         label: 'Group',
         value: 3,
@@ -53,15 +50,21 @@ export const getFromServer = async function() {
 
 export const getPermissionSelectOption = async () => {
   const options = usePermissionOption()
-  if (options.length === 0) await getFromServer()
-  return options.value.map((item: any) => {
-  })
+  if (options.value.length === 0) {
+    await getFromServer()
+  }
+  return options.value.map((item: any) => ({
+    ...item,
+    options: item.options.map((option: any) => {
+      const name = option.name || option.userName || option.username || ''
+      return { id: option.id, name: name }
+    })
+  }))
 }
 
 export const getCachePermissionOptions = async () => {
   const options = usePermissionOption()
-  if (options.length > 0) {
-    getFromServer()
+  if (options.value.length > 0) {
     return options.value
   } else {
     await getFromServer()
