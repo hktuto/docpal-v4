@@ -4,95 +4,60 @@ import { adminApi } from 'api'
 
 const { t } = useI18n()
 const { locationsOption } = useCalendarStore()
-
-
 const emits = defineEmits(['submit'])
 const currentData = ref()
 const opened = ref(false)
 const isEdit = ref(false)
 const formRef = ref()
 const rules = reactive({
-  nane: [
+  name: [
     { required: true, message: t('render.hint.fieldRequired', { name: t('Name') }), trigger: 'blur' }
   ],
   availableSeat: [
     { required: true, message: t('render.hint.fieldRequired', { name: t('AvailableSeat') }), trigger: 'blur' }
   ]
 })
-
 const permissionOptions = ref([])
 const userOptions = ref([])
 const roleOptions = ref([])
 const groupOptions = ref([])
+const locationsOptions = ref([])
+const limitSeat = ref(false)
+// TODO 在創建時會默認加載以下的workflow
+const defWorkflow = ref([
+  {
+    'key': `new_folder_cabinet_1755583567273_${Date.now()}`,
+    'name': 'Test New Folder Cabinet',
+    'type': 'new_folder_cabinet_1755583567273'
+  },
+  {
+    'key': `test-pdf-writer_1754295048597_${Date.now()}`,
+    'name': 'test-PDF-writer',
+    'type': 'test-pdf-writer_1754295048597'
+  },
+  {
+    'key': `test-http-script_1754991301482_${Date.now()}`,
+    'name': 'test-http-script',
+    'type': 'test-http-script_1754991301482'
+  },
+  {
+    'key': `test-pdf-reader_1754029457595_${Date.now()}`,
+    'name': 'Test-PDF-reader',
+    'type': 'test-pdf-reader_1754029457595'
+  }
+])
 
-const remoteOption = usePermissionOption()
-const options = computed(() => {
-  // remoteOption
-})
+async function init() {
+  permissionOptions.value = await getPermissionSelectOption()
 
-async function getPermissionOption() {
-  const options = await getCachePermissionOptions()
-
-  console.log(22, options)
-
-
-  permissionOptions.value = []
-  // const userData: any = await adminApi.api.postNuxeoIdentityUsers().then((res) => res.data)
-  // if (userData.length > 0) {
-  //   userOptions.value = userData
-  //   permissionOptions.value.push(
-  //     {
-  //       label: 'User',
-  //       value: 1,
-  //       type: 'select',
-  //       options: userData.map((item: any) => ({
-  //         label: item.username,
-  //         value: `user_${item.id}`
-  //       }))
-  //     }
-  //   )
-  // }
-
-  // const roleData: any = await adminApi.api.postAclRoleList([{
-  //   column: 'status',
-  //   type: 'EQ',
-  //   values: '1'
-  // }]).then((res) => res.data)
-  // if (roleData.length > 0) {
-  //   roleOptions.value = roleData
-  //   permissionOptions.value.push(
-  //     {
-  //       label: 'Role',
-  //       value: 2,
-  //       type: 'select',
-  //       options: roleData.map((item: any) => ({
-  //         label: item.name,
-  //         value: `role_${item.id}`
-  //       }))
-  //     }
-  //   )
-  // }
-
-  // const groupData = await adminApi.api.postNuxeoIdentityGroups().then((res) => res.data)
-  // if (roleData.length > 0) {
-  //   groupOptions.value = groupData
-  //   permissionOptions.value.push(
-  //     {
-  //       label: 'Group',
-  //       value: 3,
-  //       type: 'select',
-  //       options: groupData.map((item: any) => ({
-  //         label: item.name,
-  //         value: `group_${item.id}`
-  //       }))
-  //     }
-  //   )
-  // }
+  userOptions.value = permissionOptions.value[0].options
+  roleOptions.value = permissionOptions.value[1].options
+  groupOptions.value = permissionOptions.value[2].options
+  locationsOptions.value = locationsOption.value.map((item: any) => ({
+    id: item.id,
+    name: item.Location
+  }))
 }
-
-const limitSeat = computed(() => {
-  return currentData.value.availableSeat > 0
-})
 
 const state = reactive({
   viewList: [],
@@ -100,11 +65,8 @@ const state = reactive({
   createList: [],
   cancelList: [],
   removeList: [],
-  exportList: []
-})
-
-const locationList = computed(() => {
-
+  exportList: [],
+  locationList: []
 })
 
 function initPermission() {
@@ -114,21 +76,17 @@ function initPermission() {
   state.cancelList = mergeAllArrays(currentData.value.permission.cancel)
   state.removeList = mergeAllArrays(currentData.value.permission.remove)
   state.exportList = mergeAllArrays(currentData.value.permission.export)
-}
 
-function fillList(list: any) {
-  const newList = []
-  list.forEach((item: string) => {
-    if (userOptions.value.includes(item)) {
-      newList.push(`user_${item}`)
-    } else if (roleOptions.value.includes(item)) {
-      newList.push(`role_${item}`)
-    } else if (groupOptions.value.includes(item)) {
-      newList.push(`group_${item}`)
-    }
-  })
-  console.log(2, newList)
-  return newList
+  const list = []
+  if (currentData.value.location?.value?.length > 0) {
+    currentData.value.location.value.forEach((values: any) => {
+      const find = locationsOptions.value.find((lOp: any) => lOp.id === values.id)
+      if (find) {
+        list.push(values.id)
+      }
+    })
+  }
+  state.locationList = list
 }
 
 function mergeAllArrays(item: any) {
@@ -136,7 +94,6 @@ function mergeAllArrays(item: any) {
   for (const key in item) {
     if (Object.prototype.hasOwnProperty.call(item, key)) {
       const value = item[key]
-      console.log(1, value)
       if (Array.isArray(value)) {
         list.push(...fillList(value))
       }
@@ -145,31 +102,41 @@ function mergeAllArrays(item: any) {
   return list
 }
 
+function fillList(list: any) {
+  const newList = []
+  list.forEach((itemKey: string) => {
+    if (userOptions.value.find((ui: any) => ui.value.includes(itemKey))) {
+      newList.push(`user_${itemKey}`
+      )
+    } else if (roleOptions.value.find((ui: any) => ui.value.includes(itemKey))) {
+      newList.push(
+        `role_${itemKey}`
+      )
+    } else if (groupOptions.value.find((ui: any) => ui.value.includes(itemKey))) {
+      newList.push(
+        `group_${itemKey}`
+      )
+    }
+  })
+  return newList
+}
+
 async function open(item?: any) {
-  // console.log(2, locationsOption)
-  console.log(item)
-  // await getCachePermissionOptions()
-  // await getPermissionOption()
+  await init()
   if (item) {
     isEdit.value = true
-    currentData.value = item
+    currentData.value = deepCopy(item)
+    if (typeof currentData.status === 'string') {
+      currentData.status = currentData.status === 'true'
+    }
+    limitSeat.value = currentData.value.availableSeat > 0
     initPermission()
   } else {
     isEdit.value = false
     currentData.value = {
-      name: '',
-      register: true,
       permission: {},
-      location: {
-        newLocation: true,
-        empty: true,
-        value: []
-      },
-      availableSeat: 0,
-      backgroundColor: '#FF9900',
-      textColor: '#FF9900',
-      highlightColor: '#FF9900',
-      status: true
+      location: {},
+      availableSeat: 0
     }
   }
   opened.value = true
@@ -215,28 +182,53 @@ function fillItem(list: any) {
     }
   })
 
+  Object.keys(item).forEach(prop => {
+    if (item[prop].length === 0) {
+      delete item[prop]
+    }
+  })
+
   return item
 }
 
 async function submit() {
-  console.log(isEdit, currentData)
+  if (!limitSeat) currentData.value.availableSeat = 0
 
-  if (isEdit.value) {
+  try {
+    await formRef.value.validate()
+  } catch (e) {
     return
   }
 
-  const result = await adminApi.api.postEventCalendarsSetting(currentData.value)
-  console.log(2, result)
+  if (isEdit.value) {
+    const result = await adminApi.api.putEventCalendarsSettingId(currentData.id, currentData.value)
+  } else {
+    // TODO use def value
+    currentData.value.flows = defWorkflow.value
+    const result = await adminApi.api.postEventCalendarsSetting(currentData.value)
+  }
 
-  // emits('submit')
-  // opened.value = false
+  emits('submit')
+  opened.value = false
 }
 
+watch(() => state.locationList, () => {
+  const location = []
+  if (state.locationList?.length > 0) {
+    state.locationList.forEach((item: string) => {
+      const find = locationsOptions.value.find((o: any) => o.id === item)
+      if (find) {
+        location.push(find)
+      }
+    })
+  }
+  currentData.value.location.value = location
+})
 defineExpose({ open })
 </script>
 
 <template>
-  <ElDialog v-model="opened" :title="t('Create Calendar')" width="800px">
+  <ElDialog v-model="opened" :title="$t('Create Calendar')" top="5vh" width="800px">
     <el-form ref="formRef" :model="currentData" label-position="top" :rules="rules">
       <h4>Information</h4>
       <el-form-item :label="t('Name') " prop="name">
@@ -306,7 +298,7 @@ defineExpose({ open })
             <el-select v-model="state.exportList" multiple filterable clearable collapse-tags placeholder="Select"
                        @blur="fillPermissionObject('export')">
               <el-option-group v-for="group in permissionOptions" :key="group.label" :label="group.label">
-                <el-option v-for="item in group.options" :key="item.value" :label="item.label" :value="item.value" />
+                <el-option v-for="item in group.options" :key="item.value" :label="item.location" :value="item.value" />
               </el-option-group>
             </el-select>
           </el-form-item>
@@ -316,8 +308,8 @@ defineExpose({ open })
       <el-divider />
 
       <el-form-item :label="t('Location Options')">
-        <el-select v-model="locationList" multiple collapse-tags placeholder="Select" style="width: 50%">
-          <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
+        <el-select v-model="state.locationList" multiple collapse-tags placeholder="Select" style="width: 50%">
+          <el-option v-for="item in locationsOptions" :key="item.id" :label="item.name" :value="item.id" />
         </el-select>
       </el-form-item>
       <el-row :gutter="10">
@@ -341,7 +333,7 @@ defineExpose({ open })
           </el-form-item>
         </el-col>
         <el-col :span="18">
-          <el-form-item :label="t('Available Seat')" prop="availableSeat">
+          <el-form-item v-if="limitSeat" :label="t('Available Seat')" prop="availableSeat">
             <el-input-number v-model="currentData.availableSeat" controls-position="right" min="0" max="99999999"
                              :step="1" step-strictly style="width: 100%" />
           </el-form-item>
@@ -370,17 +362,18 @@ defineExpose({ open })
       <el-divider />
 
       <div v-if="isEdit">
-        <el-divider />
         <el-form-item :label="t('Flows')">
-
+          <template v-for="item in currentData.flows">
+            {{ item.name }}
+          </template>
         </el-form-item>
+        <el-divider />
       </div>
 
       <el-form-item :label="t('Status')">
         <el-switch v-model="currentData.status" active-text="Active" inactive-text="No" />
       </el-form-item>
     </el-form>
-
     <template #footer>
       <el-button id="CalendarSetting__EventLocations__EventCategories__Add__Cancel" @click="opened = false">
         {{ t('Cancel') }}

@@ -119,34 +119,41 @@ const { tableConfig, tableEvent, tableRef, reload } = useVxeTable({
 })
 
 function setPermissionString(cellValue: any) {
+  const list = []
   for (const key in cellValue) {
     if (Array.isArray(cellValue[key]) && cellValue[key].length > 0 && remoteOption.length > 0) {
       switch (key) {
         case 'USERS':
-          return cellValue[key].map(id => {
-            const foundOption = remoteOption[0].options.find((opt: any) => opt.id === id)
-            return foundOption ? foundOption.name : id
+          const userMap = cellValue[key].map(id => {
+            const foundOption = remoteOption[0].options.find((opt: any) => opt.value.includes(id))
+            return foundOption ? foundOption.label : id
           })
+          list.push(...userMap)
+          break
         case 'ROLE':
-          return cellValue[key].map(id => {
-            const foundOption = remoteOption[1].options.find((opt: any) => opt.id === id)
-            return foundOption ? foundOption.name : id
+          const roleMap = cellValue[key].map(id => {
+            const foundOption = remoteOption[1].options.find((opt: any) => opt.value.includes(id))
+            return foundOption ? foundOption.label : id
           })
+          list.push(...roleMap)
+          break
         case 'GROUPS':
-          return cellValue[key].map(id => {
-            const foundOption = remoteOption[2].options.find((opt: any) => opt.id === id)
-            return foundOption ? foundOption.name : id
+          const groupsMap = cellValue[key].map(id => {
+            const foundOption = remoteOption[2].options.find((opt: any) => opt.value.includes(id))
+            return foundOption ? foundOption.label : id
           })
+          list.push(...groupsMap)
+          break
         default :
       }
     }
   }
+  return list.toString()
 }
 
 function addRecord() {
   detailDialogRef.value.open()
 }
-
 </script>
 
 <template>

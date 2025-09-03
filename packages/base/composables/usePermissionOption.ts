@@ -57,7 +57,19 @@ export const getPermissionSelectOption = async () => {
     ...item,
     options: item.options.map((option: any) => {
       const name = option.name || option.userName || option.username || ''
-      return { id: option.id, name: name }
+      let id = option.id
+      switch (item.label) {
+        case 'User':
+          id = 'user_' + id
+          break
+        case 'Role':
+          id = 'role_' + id
+          break
+        case 'Group':
+          id = 'group_' + id
+          break
+      }
+      return { value: id, label: name }
     })
   }))
 }
