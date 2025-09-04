@@ -2,6 +2,9 @@
 import { ElColorPicker, ElDialog } from 'element-plus'
 import { adminApi } from 'api'
 
+const routerProvider = inject(MenuRouterKey)
+const tabProvider = inject(TabManagerKey)
+
 const { t } = useI18n()
 const { locationsOption } = useCalendarStore()
 const emits = defineEmits(['submit'])
@@ -200,16 +203,30 @@ async function submit() {
     return
   }
 
-  if (isEdit.value) {
-    const result = await adminApi.api.putEventCalendarsSettingId(currentData.id, currentData.value)
-  } else {
-    // TODO use def value
-    currentData.value.flows = defWorkflow.value
-    const result = await adminApi.api.postEventCalendarsSetting(currentData.value)
+  try {
+    if (isEdit.value) {
+      const result = await adminApi.api.putEventCalendarsSettingId(currentData.id, currentData.value)
+      routerProvider?.message.success(t('tip_updateSuccessMsg', { modelName: null, name: currentData.value.name }))
+    } else {
+      // TODO use def value
+      currentData.value.flows = defWorkflow.value
+      const result = await adminApi.api.postEventCalendarsSetting(currentData.value)
+      routerProvider?.message.success(t('tip_createdSuccessMsg', { modelName: null, name: currentData.value.name }))
+    }
+  } catch (e) {
+    throw new Error(e)
   }
-
+  routerProvider?.message.success(`${t('msg_successfulOperation')}`)
   emits('submit')
   opened.value = false
+}
+
+// TODO: 目前無法進行跳轉
+async function handleJumpWorkflow(workflowId: string) {
+  if (!workflowId) return
+
+  // const newItem = await getWorkflowRoute(workflowId)
+  // if (!!newItem) tabProvider?.openTab(newItem, true)
 }
 
 watch(() => state.locationList, () => {
@@ -364,7 +381,7 @@ defineExpose({ open })
       <div v-if="isEdit">
         <el-form-item :label="t('Flows')">
           <template v-for="item in currentData.flows">
-            {{ item.name }}
+            <el-button type="info" @click="handleJumpWorkflow(item.key)">{{ item.name }}</el-button>
           </template>
         </el-form-item>
         <el-divider />
