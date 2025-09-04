@@ -158,7 +158,7 @@ defineExpose({ getList })
       font-family: Roboto;
       font-style: normal;
       font-weight: normal;
-      font-size: 1.125rem;
+      font-size: var(--app-font-size-m);
       line-height: 1.375rem;
       color: var(--app-grey-300);
       padding: var(--app-space-xs) 0;
