@@ -42,6 +42,7 @@ defaultTabStore.value =  defaultTab
 <style>
 .appFullPage{
   --app-bg: radial-gradient(72% 72% at 2% -5%, #dbe7ec 0%, #e8efef 51%, #f3f0f0 100%);
+  /* --app-bg: #fff; */
   --app-accent-color: #0077ff;
 }
 </style>
