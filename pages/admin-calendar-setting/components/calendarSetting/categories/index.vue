@@ -2,7 +2,7 @@
 import { adminApi } from 'api'
 
 const { setting } = useCalendarStore()
-const remoteOption = await getPermissionSelectOption()
+const remoteOption = await getPermissionPairOption()
 const calendarProvider = inject(CalendarSettingKey)
 const detailDialogRef = ref()
 const { tableConfig, tableEvent, tableRef, reload } = useVxeTable({
@@ -68,7 +68,7 @@ const { tableConfig, tableEvent, tableRef, reload } = useVxeTable({
       formatter: ({ cellValue }: string) => {
         return `<div style="display: flex;">
                 <div style="width: 22px;height:22px;background-color:${cellValue};border: 1px solid #dcdfe6;flex-shrink: 0;"></div>
-                <span>${cellValue}</span>
+                <span style="color: white">${cellValue}</span>
                 </div>`
       }
     },
@@ -108,6 +108,10 @@ const { tableConfig, tableEvent, tableRef, reload } = useVxeTable({
         name: 'delete',
         action: async ({ row }: any) => {
           await adminApi.api.deleteMasterTablesIdRecord(setting.value.category.master_table, { recordId: row.id }, {})
+          routerProvider?.message.success(t('tip_deleteSuccessMsg', {
+            modelName: null,
+            name: row.name
+          }))
           reload()
         }
       }
@@ -125,21 +129,21 @@ function setPermissionString(cellValue: any) {
       switch (key) {
         case 'USERS':
           const userMap = cellValue[key].map(id => {
-            const foundOption = remoteOption[0].options.find((opt: any) => opt.value.includes(id))
+            const foundOption = remoteOption[0].options.find((opt: any) => opt.value === id)
             return foundOption ? foundOption.label : id
           })
           list.push(...userMap)
           break
         case 'ROLE':
           const roleMap = cellValue[key].map(id => {
-            const foundOption = remoteOption[1].options.find((opt: any) => opt.value.includes(id))
+            const foundOption = remoteOption[1].options.find((opt: any) => opt.value === id)
             return foundOption ? foundOption.label : id
           })
           list.push(...roleMap)
           break
         case 'GROUPS':
           const groupsMap = cellValue[key].map(id => {
-            const foundOption = remoteOption[2].options.find((opt: any) => opt.value.includes(id))
+            const foundOption = remoteOption[2].options.find((opt: any) => opt.value === id)
             return foundOption ? foundOption.label : id
           })
           list.push(...groupsMap)

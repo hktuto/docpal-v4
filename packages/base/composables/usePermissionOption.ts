@@ -74,6 +74,20 @@ export const getPermissionSelectOption = async () => {
   }))
 }
 
+export const getPermissionPairOption = async () => {
+  const options = usePermissionOption()
+  if (options.value.length === 0) {
+    await getFromServer()
+  }
+  return options.value.map((item: any) => ({
+    ...item,
+    options: item.options.map((option: any) => {
+      const name = option.name || option.userName || option.username || ''
+      return { value: option.id, label: name }
+    })
+  }))
+}
+
 export const getCachePermissionOptions = async () => {
   const options = usePermissionOption()
   if (options.value.length > 0) {
