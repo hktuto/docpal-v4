@@ -3,7 +3,10 @@ import { ElColorPicker, ElDialog } from 'element-plus'
 import { adminApi } from 'api'
 
 const routerProvider = inject(MenuRouterKey)
-const tabProvider = inject(TabManagerKey)
+const listProvider = inject(WorkflowEditorListProviderKey)
+if (!listProvider) {
+  throw new Error('WorkflowEditorListProviderKey not found')
+}
 
 const { t } = useI18n()
 const { locationsOption } = useCalendarStore()
@@ -224,9 +227,9 @@ async function submit() {
 // TODO: 目前無法進行跳轉
 async function handleJumpWorkflow(workflowId: string) {
   if (!workflowId) return
-
-  // const newItem = await getWorkflowRoute(workflowId)
-  // if (!!newItem) tabProvider?.openTab(newItem, true)
+  const row = {
+  }
+  listProvider.openLastestVersion(row)
 }
 
 watch(() => state.locationList, () => {
