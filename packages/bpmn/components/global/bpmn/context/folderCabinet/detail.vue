@@ -16,6 +16,7 @@ if (!editorProvider) {
 function filterOption(item: any) {
   // Search the option for the corresponding data type
   const type = item.attr_metaDataType
+  // TODO filteredList 的數據格式有問題，第一次創建非string類型的數據，該filte格式是正確的，但是刷新后數據格式就會變成string
   const filteredList = Object.fromEntries(
     Object.entries(props.allField).filter(([key, value]) => value.attr_type === type)
   )
