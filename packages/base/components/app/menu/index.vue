@@ -215,7 +215,7 @@ onMounted(() => {
     flex-flow: column nowrap;
     justify-content: flex-start;
     align-items: flex-start;
-    gap: var(--app-space-xs);
+    gap: var(--app-space-s);
     font-size: var(--icon-font-size);
     position: relative;
     overflow: auto;

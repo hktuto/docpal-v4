@@ -110,7 +110,7 @@ provide('handleOpenUploadDrawer', handleOpenUpload)
     height: 100svh;
     overflow: hidden;
     background: var(--app-bg);
-    background-color: var(--app-grey-900);
+    // background-color: var(--app-grey-900);
     -webkit-app-region: drag;
     --panel-border-radius: 0;
 }
