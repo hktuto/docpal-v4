@@ -68,7 +68,7 @@ const { tableConfig, tableEvent, tableRef, reload } = useVxeTable({
       formatter: ({ cellValue }: string) => {
         return `<div style="display: flex;">
                 <div style="width: 22px;height:22px;background-color:${cellValue};border: 1px solid #dcdfe6;flex-shrink: 0;"></div>
-                <span style="color: white">${cellValue}</span>
+                <span>${cellValue}</span>
                 </div>`
       }
     },
