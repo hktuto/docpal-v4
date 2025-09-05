@@ -35,7 +35,7 @@ async function getUserList() {
   try {
     const newVar: any = await adminApi.api.postNuxeoIdentityUsers().then((res) => res.data)
     userList.value = newVar.map((item: any) => ({
-      id: '${variables:get(' + item.id + ')}',
+      id: item.id,
       name: item.userName
     }))
   } catch (e) {
