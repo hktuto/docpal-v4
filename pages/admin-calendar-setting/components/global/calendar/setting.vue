@@ -113,6 +113,8 @@ onMounted(() => {
         </ElForm>
       </div>
       <CalendarSettingCategories />
+
+      <el-divider />
     </template>
   </div>
 </template>
