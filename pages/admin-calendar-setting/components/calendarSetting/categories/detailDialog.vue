@@ -142,7 +142,10 @@ async function open(item?: any) {
     currentData.value = {
       permission: {},
       location: {},
-      availableSeat: 0
+      availableSeat: 0,
+      backgroundColor: '#FFFFFF',
+      textColor: '#FFFFFF',
+      highlightColor: '#FFFFFF'
     }
   }
   opened.value = true
@@ -208,7 +211,7 @@ async function submit() {
 
   try {
     if (isEdit.value) {
-      const result = await adminApi.api.putEventCalendarsSettingId(currentData.id, currentData.value)
+      const result = await adminApi.api.putEventCalendarsSettingId(currentData.value.id, currentData.value)
       routerProvider?.message.success(t('tip_updateSuccessMsg', { modelName: null, name: currentData.value.name }))
     } else {
       // TODO use def value
