@@ -1008,7 +1008,7 @@
   "dfc": {
     "summary_report": " ",
     "uncomplete": {
-      "notification": " "
+      "notification": "The current status of the \"Folder Cabinet\" is not yet complete, please check the configuration again"
     }
   },
   "dhList": {
@@ -2273,8 +2273,8 @@
     },
     "document": {
       "acl": {
-        "add": " ",
-        "remove": " "
+        "add": "The access permissions for {documentName} have been changed. Please contact the administrator to re-apply for permissions if necessary.",
+        "remove": " Access to {documentName} has been revoked"
       },
       "comment": {
         "add": "{documentName} has a new comment",
@@ -2282,15 +2282,20 @@
       },
       "create": "{path} new file upload",
       "delete": "{documentName} is delete by {userId}",
-      "download": " ",
+      "download": "{documentName} is download by {userId}",
       "format_convert": "{userId} converted {fileName}",
       "modify": "{documentName} is modified by {userId}",
-      "print": " ",
+      "print": "notification.document.print",
       "replace": "{documentName} is replace by {userId}",
       "trash": "{documentName} is delete by {userId}",
       "upload": " "
     },
     "filterByDescription": "Filter by description",
+    "mastertable": {
+      "create": {
+        "record": "Master Table has successfully imported new data through Excel"
+      }
+    },
     "operator": "Operator",
     "read": "Read",
     "read/unread": "Read/Unread",
@@ -2307,10 +2312,11 @@
       }
     },
     "workflow": {
-      "apply": " ",
+      "apply": "A new application has been submitted during the review process. Please check and process it in time.",
+      "canceld": "The review process has been rejected. Please check and handle it promptly and adjust the relevant content as needed.",
       "comment": "Workflow : {businessName} has a new comment",
       "rejected": " ",
-      "success": " "
+      "success": " The approval process has been successfully passed, please check the relevant results in time."
     }
   },
   "notificationReminder": "Notification Reminder",
