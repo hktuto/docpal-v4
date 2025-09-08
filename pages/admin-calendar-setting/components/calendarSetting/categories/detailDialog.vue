@@ -3,10 +3,6 @@ import { ElColorPicker, ElDialog } from 'element-plus'
 import { adminApi } from 'api'
 
 const routerProvider = inject(MenuRouterKey)
-// const listProvider = inject(WorkflowEditorListProviderKey)
-// if (!listProvider) {
-//   throw new Error('WorkflowEditorListProviderKey not found')
-// }
 
 const { t } = useI18n()
 const { locationsOption } = useCalendarStore()
@@ -227,12 +223,21 @@ async function submit() {
   opened.value = false
 }
 
-// TODO: 目前無法進行跳轉
-async function handleJumpWorkflow(workflowId: string) {
-  if (!workflowId) return
-  const row = {
+async function handleJumpWorkflow(workflowKey: string) {
+  if (!workflowKey) return
+
+  const data = await adminApi.api.getWorkflowVersionKeyProcessdefinitionkey(workflowKey).then(r => r.data)
+  if (!data) return
+
+  const params: NewWorkflowVersionDetailParams = {
+    id: data.draftId,
+    name: data.name,
+    draftId: data.draftId,
+    versionNumber: data.versionNumber,
+    versionId: data.processDefinitionId
   }
-  // listProvider.openLastestVersion(row)
+  let newItem = newWorkflowEditorDetail(params) as any
+  routerProvider?.navigateTo(newItem, false)
 }
 
 watch(() => state.locationList, () => {
