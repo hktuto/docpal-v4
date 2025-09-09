@@ -141,6 +141,18 @@ const { tableConfig, tableEvent, tableRef, query, reload, cleanSelectedRows } = 
       }
     ]
   ],
+  permissionMethod: ({ options, column, row, rowIndex }: any) => {
+    if(!row) {
+      return {
+        visible: false,
+        disabled: false
+      }
+    }
+    return {
+      visible: true,
+      disabled: false
+    }
+  },
   virtualScroll: true,
   dblClickAction: ({ row }) => {
     let newItem

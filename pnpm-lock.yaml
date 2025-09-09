@@ -749,8 +749,8 @@ importers:
         specifier: ^1.13.1
         version: 1.13.1(vue@3.5.6)
       v-form:
-        specifier: file:..\dp-form\dist\v-form-designer-3.3.9.tar.gz
-        version: file:packages/dp-form/dist/v-form-designer-3.3.9.tar.gz(ace-builds@1.43.2)(typescript@5.8.3)
+        specifier: file:..\dp-form\dist\v-form-designer-3.3.13.tar.gz
+        version: file:packages/dp-form/dist/v-form-designer-3.3.13.tar.gz(ace-builds@1.43.2)(typescript@5.8.3)
       v-viewer:
         specifier: ^3.0.21
         version: 3.0.21(viewerjs@1.11.7)(vue@3.5.6)
@@ -30582,11 +30582,11 @@ packages:
       tslib: 2.3.0
     dev: false
 
-  file:packages/dp-form/dist/v-form-designer-3.3.9.tar.gz(ace-builds@1.43.2)(typescript@5.8.3):
-    resolution: {integrity: sha512-cEA2BET+1qCiiQoyP2Gdx4Wdts6sdXg1KPdsqJsm7AZ3YkYCzTTtmWd6tB1ePBsHGv0Cmo//hBB/pdwCfepZjQ==, tarball: file:packages/dp-form/dist/v-form-designer-3.3.9.tar.gz}
-    id: file:packages/dp-form/dist/v-form-designer-3.3.9.tar.gz
+  file:packages/dp-form/dist/v-form-designer-3.3.13.tar.gz(ace-builds@1.43.2)(typescript@5.8.3):
+    resolution: {integrity: sha512-d0TWds62IYuXEdSRZhah8+lyuOQb6CDRr4gZythacVV4wPCHzBc31geTQe2zC53ZQwIrHNocyBUZ3Aqz1PhihQ==, tarball: file:packages/dp-form/dist/v-form-designer-3.3.13.tar.gz}
+    id: file:packages/dp-form/dist/v-form-designer-3.3.13.tar.gz
     name: v-form
-    version: 3.3.9
+    version: 3.3.13
     dependencies:
       '@element-plus/icons-vue': 0.2.7(vue@3.5.20)
       '@wangeditor/editor': 5.1.23
