@@ -1,4 +1,3 @@
-
 import { adminApi, clientApi } from 'api';
 import { onMounted } from "vue";
 import { viewName } from '../utils/calendarHelper';
@@ -18,7 +17,6 @@ type CalendarVieweCalendar = {
 }
 type CalendarVieweCalendarSetting = {
     [key: string]: CalendarVieweCalendar
-    
 }
 
 export const useCalendarSetting = () => useState<any>('calendarSetting');
@@ -29,15 +27,14 @@ export const useCalendarViewerCategories = () => useState<CalendarVieweCalendarS
 
 export const useCalendarStore = () => {
     const setting = useCalendarSetting();
-    
+
     const calendarViewOptions = viewName
-    
+
     const weekDayOptions = [
         "MONDAY",
         "SUNDAY",
     ]
 
-    
     const timeSelecteStep = computed(() => {
         return '00:' + setting.value.basic.default_slot
     })
@@ -48,8 +45,6 @@ export const useCalendarStore = () => {
             end: setting.value.basic.office_end_time || '24:00',
         }
     })
-
-
 
     async function getCalendarMasterTable(){
         const appPlatform = useAppPlatform()
@@ -62,27 +57,13 @@ export const useCalendarStore = () => {
     const categoriesOption = useCalenarCategories()
     const calendarViewerCategories = useCalendarViewerCategories()
     async function getCategories(){
-        const { data } = await clientApi.api.getEventCalendarsSettings({eventCalendarSetting:{}})
+        const appPlatform = useAppPlatform()
+        const api = appPlatform.value === 'admin' ? adminApi : clientApi
+        const data = await api.api.postMasterTablesRecords({
+          id: setting.value.category.master_table
+        }).then(res => res.data) as any;
 
-        categoriesOption.value = data || []
-        // // create calendar viewer calendar
-        calendarViewerCategories.value = data.reduce((result:CalendarVieweCalendarSetting, item:any) => {
-            const calendar: CalendarVieweCalendar = {
-                colorName: item.name,
-                lightColors: {
-                    main: item.color || '#409EFF',
-                    container: item.Container_Color || '#409EFF',
-                    onContainer: item.onContainer || '#fff',
-                },
-                darkColors: {
-                    main: item.color || '#409EFF',
-                    container: item.Container_Color || '#409EFF',
-                    onContainer: item.onContainer || '#fff',
-                },
-            }
-            result[item.id] = calendar
-            return result
-        },{})
+        categoriesOption.value = (data || []).filter(i => i.status).sort((a,b) => a.name.localeCompare(b.name))
     }
 
     const locationsOption = useCalenarLocation()
@@ -122,15 +103,12 @@ export const useCalendarStore = () => {
         };
         // get master table detail of event location and event categories
         if(setting.value.category.master_table){
-            
             await getCategories()
-
         }
 
         if(setting.value.location.master_table) {
             await getLocations()
         }
-        
     }
 
     onMounted(async () => {

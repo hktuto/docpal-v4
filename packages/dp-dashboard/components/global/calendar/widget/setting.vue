@@ -1,11 +1,11 @@
 <script lang="ts" setup>
-import type {CalendarOptions} from '#imports'
-import {clientApi} from 'api';
+import type { CalendarOptions } from '#imports'
+import { clientApi } from 'api'
 
-const opened = ref(false);
-
+const opened = ref(false)
+const { t } = useI18n()
 const emits = defineEmits(['submit', 'delete'])
-const {setting} = defineProps<{
+const { setting } = defineProps<{
   setting?: any,
 }>()
 const {
@@ -14,7 +14,7 @@ const {
   locationsOption,
   calendarViewOptions,
   weekDayOptions
-} = useCalendarStore();
+} = useCalendarStore()
 const userFiterOptions = ref([])
 
 async function getOptions() {
@@ -26,28 +26,30 @@ async function getOptions() {
     }
   })
   userFiterOptions.value.unshift({
-    label: "Current User",
-    value: "currentUser"
+    label: 'Current User',
+    value: 'currentUser'
   })
 }
 
 const form = ref<CalendarOptions>({
-  editable: false,
-  showLocationFilter: false,
+  title: '',
+  defaultNewEventCalendar: '',
   showUserFilter: false,
   showCategoryFilter: false,
-  defaultUser: "",
-  defaultLocation: "",
-  defaultCategory: "",
-  locationLabel: "",
-  categoryLabel: "",
-  userFilterGroup: "",
-  view: "",
-  firstDayOfWeek: "",
+  showLocationFilter: false,
+  defaultUser: '',
+  defaultCategory: '',
+  defaultLocation: '',
+  userLabel: '',
+  categoryLabel: '',
+  locationLabel: '',
+  view: '',
+  firstDayOfWeek: '',
+  allowCreate: false
 })
 
 function handleOpen() {
-  opened.value = true;
+  opened.value = true
   getOptions()
   Object.keys(setting).forEach(key => {
     if (setting[key]) {
@@ -60,14 +62,11 @@ function handleOpen() {
   if (!form.value.firstDayOfWeek) {
     form.value.firstDayOfWeek = calendarSetting.value?.basic.default_first_week
   }
-
-  // form.value = setting
 }
 
 function submit() {
   // editable is for workflow , so we need to force it to false
   // force editable to false
-  form.value.editable = false
   emits('submit', form.value)
   opened.value = false
 }
@@ -79,84 +78,86 @@ defineExpose({
 </script>
 
 <template>
-  <ElDialog v-model="opened" append-to-body>
-    <ElForm :model="form" label-position="top" @submit.stop="" show-close>
-      <ElRow :gutter="12">
-        <!-- <ElCol :span="12">
-          <ElFormItem label="Editable">
-            <ElSwitch v-model="form.editable"></ElSwitch>
-          </ElFormItem>
-        </ElCol> -->
-        <ElCol :span="12">
-          <ElFormItem label="Allow Create New Event">
-            <ElSwitch v-model="form.allowCreate"></ElSwitch>
-          </ElFormItem>
-        </ElCol>
-        <ElCol :span="12">
-          <ElFormItem label="Show Location Filter">
-            <ElSwitch v-model="form.showLocationFilter"></ElSwitch>
-          </ElFormItem>
-        </ElCol>
-        <ElCol :span="12">
-          <ElFormItem label="Show User Filter">
-            <ElSwitch v-model="form.showUserFilter"></ElSwitch>
-          </ElFormItem>
-        </ElCol>
-        <ElCol :span="12">
-          <ElFormItem label="Show Category Filter">
-            <ElSwitch v-model="form.showCategoryFilter"></ElSwitch>
-          </ElFormItem>
-        </ElCol>
-        <ElDivider/>
-        <ElCol :span="12">
-          <ElFormItem label="view">
-            <ElSelect v-model="form.view" placeholder="Default View" clearable>
-              <ElOption v-for="item in calendarViewOptions" :key="item" :label="item" :value="item"></ElOption>
-            </ElSelect>
-          </ElFormItem>
-        </ElCol>
-        <ElCol :span="12">
-          <ElFormItem label="view">
-            <ElSelect v-model="form.firstDayOfWeek" placeholder="First Day of Week" clearable>
-              <ElOption v-for="item in weekDayOptions" :key="item" :label="item" :value="item"></ElOption>
-            </ElSelect>
-          </ElFormItem>
-        </ElCol>
-        <ElDivider/>
-        <ElCol :span="12">
-          <ElFormItem label="Default User">
-            <ElSelect v-model="form.defaultUser" clearable placeholder="Default User">
-              <ElOption v-for="item in userFiterOptions" :key="item.value" :label="item.label" :value="item.value">
-              </ElOption>
-            </ElSelect>
-          </ElFormItem>
-        </ElCol>
-        <ElCol :span="12">
-          <ElFormItem label="Default Location">
-            <ElSelect v-model="form.defaultLocation" clearable placeholder="Default Location">
-              <ElOption v-for="item in locationsOption" :key="item.id" :label="item.name" :value="item.id"></ElOption>
-            </ElSelect>
-          </ElFormItem>
-        </ElCol>
-        <ElCol :span="12">
-          <ElFormItem label="Default Category">
-            <ElSelect v-model="form.defaultCategory" clearable placeholder="Default Category">
-              <ElOption v-for="item in categoriesOption" :key="item.id" :label="item.name" :value="item.id"></ElOption>
-            </ElSelect>
-          </ElFormItem>
-        </ElCol>
-      </ElRow>
-    </ElForm>
+  <el-dialog v-model="opened" append-to-body :title="t('Calendar Widget Setting')">
+    <el-form :model="form" label-position="top" @submit.stop="" show-close>
+      <el-form-item :label="t('Title')">
+        <el-input v-model="form.title" :placeholder="$t('vxe.base.pleaseInput')" />
+      </el-form-item>
+      <el-divider />
+      <el-form-item :label="t('Default New Event Calendar')">
+        <el-select v-model="form.defaultNewEventCalendar" clearable :placeholder="$t('common_selectOccupancyContent')"
+                   filterable>
+          <el-option v-for="item in categoriesOption" :key="item.id" :label="item.name" :value="item.id" />
+        </el-select>
+      </el-form-item>
+      <el-divider />
+
+      <ElFormItem label="Calendar View">
+        <ElSelect v-model="form.view" placeholder="Default View" clearable>
+          <ElOption v-for="item in calendarViewOptions" :key="item" :label="item" :value="item"></ElOption>
+        </ElSelect>
+      </ElFormItem>
+      <ElFormItem label="Week Day">
+        <ElSelect v-model="form.firstDayOfWeek" placeholder="First Day of Week" clearable>
+          <ElOption v-for="item in weekDayOptions" :key="item" :label="item" :value="item"></ElOption>
+        </ElSelect>
+      </ElFormItem>
+      <el-divider />
+
+      <el-form-item :label="t('Show User Filter')">
+        <el-switch v-model="form.showUserFilter" active-text="Yes" inactive-text="No" />
+      </el-form-item>
+      <el-form-item v-if="form.showUserFilter" :label="t('Default User')">
+        <el-select v-model="form.defaultUser" clearable placeholder="Default User" filterable>
+          <el-option v-for="item in userFiterOptions" :key="item.value" :label="item.label" :value="item.value" />
+        </el-select>
+      </el-form-item>
+      <el-form-item v-if="form.showUserFilter" :label="t('Title')">
+        <el-input v-model="form.userLabel" :placeholder="$t('vxe.base.pleaseInput')" />
+      </el-form-item>
+      <el-divider />
+      <el-form-item :label="t('Show Calendar Filter')">
+        <el-switch v-model="form.showCategoryFilter" active-text="Yes" inactive-text="No" />
+      </el-form-item>
+      <el-form-item v-if="form.showCategoryFilter" :label="t('Default Calendar Filter')">
+        <el-select v-model="form.defaultCategory" clearable :placeholder="$t('common_selectOccupancyContent')"
+                   filterable>
+          <el-option v-for="item in categoriesOption" :key="item.id" :label="item.name" :value="item.id" />
+        </el-select>
+      </el-form-item>
+      <el-form-item v-if="form.showCategoryFilter" :label="t('Title')">
+        <el-input v-model="form.categoryLabel" :placeholder="$t('vxe.base.pleaseInput')" />
+      </el-form-item>
+      <el-divider />
+      <el-form-item :label="t('Show Location Filter')">
+        <el-switch v-model="form.showLocationFilter" active-text="Yes" inactive-text="No" />
+      </el-form-item>
+      <el-form-item v-if="form.showLocationFilter" :label="t('Default Location Filter')">
+        <el-select v-model="form.defaultLocation" clearable :placeholder="$t('common_selectOccupancyContent')"
+                   filterable>
+          <el-option v-for="item in locationsOption" :key="item.id" :label="item.name" :value="item.id" />
+        </el-select>
+      </el-form-item>
+      <el-form-item v-if="form.showLocationFilter" :label="t('Title')">
+        <el-input v-model="form.locationLabel" :placeholder="$t('vxe.base.pleaseInput')" />
+      </el-form-item>
+      <el-divider />
+
+      <el-form-item :label="t('Allow Create')">
+        <el-switch v-model="form.allowCreate" active-text="Yes" inactive-text="No" />
+      </el-form-item>
+    </el-form>
+
     <template #footer>
-      <ElButton id="WorkPanel__Detail__Calendar__Settings__Cancel" @click="opened = false">
-        {{ $t("cancelText") }}
-      </ElButton>
-      <ElButton id="WorkPanel__Detail__Calendar__Settings__Delete" type="danger" @click="$emit('delete')">
+      <el-button id="Home__Dashboard__Calendar__Settings__Cancel" @click="opened = false">
+        {{ $t('cancelText') }}
+      </el-button>
+      <el-button id="WorkPanel__Detail__Calendar__Settings__Delete" type="danger" @click="$emit('delete')">
         {{ $t('common_delete') }}
-      </ElButton>
-      <ElButton id="WorkPanel__Detail__Calendar__Settings__Submit" type="primary" @click="submit">
-        {{ $t("common_submit") }}
-      </ElButton>
+      </el-button>
+      <el-button id="Home__Dashboard__Calendar__Settings__Confirm" type="primary" @click="submit">
+        {{ $t('vxe.button.confirm') }}
+      </el-button>
     </template>
-  </ElDialog>
+  </el-dialog>
 </template>
