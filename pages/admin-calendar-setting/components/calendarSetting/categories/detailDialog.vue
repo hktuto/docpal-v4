@@ -422,7 +422,7 @@ defineExpose({ open })
       </el-form-item>
     </el-form>
     <template #footer>
-      <el-button id="CalendarSetting__EventLocations__EventCategories__Add__Cancel" @click="opened = false">
+      <el-button id="CalendarSetting__EventLocations__EventCategories__Add__Dialog__Cancel" @click="opened = false">
         {{ t('Cancel') }}
       </el-button>
       <el-button type="primary" @click="submit"
