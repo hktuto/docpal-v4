@@ -1,7 +1,11 @@
 {
   "Add": "Add",
   "All": "All",
-  "Apply to Selected": "Apply to Selected",
+  "Apply": {
+    "to": {
+      "Selected": "Apply to Selected"
+    }
+  },
   "COMPLETED": "COMPLETED",
   "CREATE": "CREATE",
   "CSV File": "CSV File",
@@ -1291,7 +1295,6 @@
   "doc_typeSmartFolderName": "Smart Folder Name",
   "doc_typeSmartFolderSearchName": "File / Folder Name",
   "docpal_sharedocument_user": "Internal Sharing",
-  "documentId": "Document Id",
   "documentTemplate_Create": "Create New Document Template",
   "documentTemplate_Creator": "Document Template Creator",
   "documentTemplate_Delete": "Delete Document",
@@ -1843,11 +1846,11 @@
   "fc:docTitle": "Title",
   "fc:label": "Cabinet Name",
   "file": {
+    "NoExist": "File no exist",
     "fileFormat": "File Format",
     "onlyAccept": "Only accept"
   },
   "fileModifiedDate_label": "File Modified Date",
-  "fileNoExist": "File no exist",
   "filePolicies_CreationDate": "Policy Creation Date",
   "filePolicies_PolicyStatus": "Policy Status",
   "filePolicies_RetentionPolicy": "Retention Policy",
@@ -2180,6 +2183,7 @@
     "dataType": "Data Type",
     "duplicate_error": "Duplicate error",
     "duplicate_success": "Duplicate success",
+    "edit": "Edit Metadata",
     "export": "Exprot XLS",
     "export_loading": "Exporting XLS",
     "new": "New Metadata",
@@ -3538,7 +3542,7 @@
       "nextJumpTitle": "Jump next page",
       "nextPage": "next page",
       "nextPageTitle": "next page",
-      "pageClassifier": "",
+      "pageClassifier": "page",
       "pagesize": "{0}/page",
       "prevJump": "Jump previous page",
       "prevJumpTitle": "Jump previous page",

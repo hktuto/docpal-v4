@@ -46,7 +46,6 @@ function handleSwitch() {
       }
     }
   }
-  console.log(22, newData.data)
   node.setData(newData, { overwrite: true, deep: true, silent: false })
 }
 
@@ -58,15 +57,26 @@ watch(() => node, () => {
   immediate: true,
   deep: true
 })
+// TODO: 開啓下方的role設定，也需要將該代碼打開
+// watch(() => node, () => {
+//   if (node) {
+//     switchRef.value = ['attr_flowable:candidateGroups'] in node.data.data
+//   }
+// }, {
+//   immediate: true,
+//   deep: true
+// })
 </script>
 
 <template>
   <div class="fromContainer">
     <BpmnSidebarEditLabel :node="node" />
-    <el-switch :disabled="editorProvider.readonly.value" v-model="switchRef" size="small" active-text="Group"
-               inactive-text="Roles" @change="handleSwitch" />
-    <BpmnSidebarEditStartCandidate v-if="switchRef" :node="node" />
-    <BpmnSidebarEditCandidateRoles v-else :node="node" />
+    <!-- TODO: 後端暫時未支援role的設定   -->
+    <!--        <el-switch :disabled="editorProvider.readonly.value" v-model="switchRef" size="small" active-text="Group"
+               inactive-text="Roles" @change="handleSwitch" />-->
+    <!--    <BpmnSidebarEditStartCandidate v-if="switchRef" :node="node" />-->
+    <!--    <BpmnSidebarEditCandidateRoles v-else :node="node" />-->
+    <BpmnSidebarEditStartCandidate :node="node" />
     <BpmnSidebarStarterAdditionLogic :node="node" />
     <BpmnSidebarEditForm :node="node" />
     <BpmnSidebarPreviewDocument :node="node" />
