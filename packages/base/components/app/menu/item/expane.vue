@@ -150,7 +150,7 @@ onUnmounted(() => {
     width:100%;
     transition: all 0.2s ease-in-out;
     --menu-bg: transparent;
-    --text-color: var(--app-grey-400);
+    --text-color: var(--app-grey-550);
     background: var(--menu-bg);
     &.opened {
         // background: linear-gradient(180deg, hsl(200, 0%,97%) 0%, hsl(200, 0%,99%) 20%);;
@@ -163,19 +163,21 @@ onUnmounted(() => {
             > .menuItem{
                 .menuLabel, .menuIcon{
                     --text-color: var(--app-grey-400);
+                    
                 }
             }
         }
-        --menu-bg: var(--app-grey-950);
+        --menu-bg: var(--app-grey-1000);
         border-radius: var(--app-border-radius-s);
         > .menuItem{
             .menuLabel, .menuIcon{
                 --text-color: var(--app-accent-color);
+                font-weight: 700;
             }
         }
         .menuItem {
             &:hover{
-                background: var(--menu-bg);
+                background: var(--app-grey-950);
             }
         }
     }

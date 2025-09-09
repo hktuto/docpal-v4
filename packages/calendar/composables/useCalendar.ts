@@ -49,13 +49,7 @@ export const useCalendarStore = () => {
         }
     })
 
-    const categoriesColumn = useCategoriesColumn()
-    async function getCatergoriesColumn(){
-        const appPlatform = useAppPlatform()
-        const api = appPlatform.value === 'admin' ? adminApi : clientApi
-        const {data} = await api.api.getMasterTablesId(setting.value.category.master_table) as any
-        categoriesColumn.value = data.fields;
-    }
+
 
     async function getCalendarMasterTable(){
         const appPlatform = useAppPlatform()
@@ -68,13 +62,10 @@ export const useCalendarStore = () => {
     const categoriesOption = useCalenarCategories()
     const calendarViewerCategories = useCalendarViewerCategories()
     async function getCategories(){
-        const appPlatform = useAppPlatform()
-        const api = appPlatform.value === 'admin' ? adminApi : clientApi
-        const { data } = await api.api.postMasterTablesRecords({
-            id: setting.value.category.master_table
-        }) as any
+        const { data } = await clientApi.api.getEventCalendarsSettings({eventCalendarSetting:{}})
+
         categoriesOption.value = data || []
-        // create calendar viewer calendar
+        // // create calendar viewer calendar
         calendarViewerCategories.value = data.reduce((result:CalendarVieweCalendarSetting, item:any) => {
             const calendar: CalendarVieweCalendar = {
                 colorName: item.name,
@@ -133,9 +124,7 @@ export const useCalendarStore = () => {
         if(setting.value.category.master_table){
             
             await getCategories()
-            if(platform === 'admin') {
-                await getCatergoriesColumn()
-            }
+
         }
 
         if(setting.value.location.master_table) {

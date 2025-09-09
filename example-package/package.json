@@ -16,21 +16,18 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "dayjs": "^1.11.13",
     "nuxt": "^3.17.3",
     "vue": "3.5.6",
     "vue-router": "latest"
   },
   "devDependencies": {
-    
     "@nuxt/test-utils": "3.18.0",
     "@vue/test-utils": "^2.4.6",
     "api": "workspace:*",
     "happy-dom": "^15.7.3",
     "playwright-core": "^1.47.0",
     "sass": "^1.78.0",
-    "typescript": "^5.6.2",
-    "vue-tsc": "^2.1.6"
+    "typescript": "^5.6.2"
   },
   "engines": {
     "pnpm": ">=8.5.0",

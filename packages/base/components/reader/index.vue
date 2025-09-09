@@ -1,6 +1,6 @@
 <template>
     <template v-if="!state.url" >
-        <div v-if="id">{{$t('fileNoExist')}}</div>
+        <div v-if="id">{{$t('file.NoExist')}}</div>
     </template>
     <template v-else-if="state.fileType === 'application/pdf' && state.url" >
         <ReaderPdf v-bind="props" :no-annotation="!!annotations" ></ReaderPdf>

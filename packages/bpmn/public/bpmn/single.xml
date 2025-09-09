@@ -14,7 +14,7 @@
         delegateExpression="${startProcessInstanceAfterExecutionListener}"></flowable:executionListener>
     </extensionElements>
     <startEvent id="Start" flowable:formFieldValidation="true" name="Start"
-      flowable:candidateStarterGroups="administrators">
+      flowable:candidateGroups="administrators">
       <extensionElements>
         <flowable:formProperty id="businessKey" name="businessKey" type="string"></flowable:formProperty>
         <flowable:formProperty id="request" name="request" type="string"></flowable:formProperty>

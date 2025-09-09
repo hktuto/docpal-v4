@@ -361,10 +361,6 @@ export interface ExternalStorageDTO {
     id?: string;
     /** Name of the external storage */
     name?: string;
-    /** Type of connection (e.g., S3, FTP, SFTP, etc.) */
-    connectionType?: string;
-    /** Connection settings configuration */
-    connectionSettings?: Record<string, object>;
     /** Platform [WINDOW|LINUX] */
     platform?: string;
     /** Storage path or directory */
@@ -1225,6 +1221,85 @@ export interface DAMConversionSettingRequestDTO {
     label?: string;
     /** operation */
     operation?: string;
+}
+
+export interface ContactAttribute {
+    value?: string;
+    name?: string;
+    dataType?: string;
+    required?: boolean;
+    validationRule?: string;
+}
+
+export interface ContactGroupRequestDTO {
+    /** Fuzzy Search Parameter */
+    q?: string;
+    /**
+     * Page Number
+     * @format int32
+     */
+    pageNum?: number;
+    /**
+     * Page Size
+     * @format int32
+     */
+    pageSize?: number;
+    /** The sortBy fields */
+    orderBy?: string;
+    /** The sort ASC or DESC */
+    isDesc?: boolean;
+    id?: string;
+    name?: string;
+    status?: string;
+    description?: string;
+    permissions?: Record<string, Permission>;
+    attributes?: ContactAttribute[];
+    sort?: SortObject;
+    descSort?: SortObject;
+    desc?: boolean;
+    orderByValue?: string;
+}
+
+export interface BasicField {
+    dataType?: string;
+    value?: string;
+    name?: string;
+}
+
+export interface ContactGroupResponseDTO {
+    id?: string;
+    name?: string;
+    status?: string;
+    createdBy?: string;
+    modifiedBy?: string;
+    createdByName?: string;
+    modifiedByName?: string;
+    /** @format date-time */
+    createdDate?: string;
+    /** @format date-time */
+    modifiedDate?: string;
+    permissions?: Record<string, BasicField[]>;
+    attributes?: ContactAttribute[];
+}
+
+export interface ResultContactGroupResponseDTO {
+    result?: boolean;
+    /** @format int32 */
+    code?: number;
+    message?: string;
+    data?: ContactGroupResponseDTO;
+    messageKey?: string;
+    locale?: string;
+}
+
+export interface ResultMapStringObject {
+    result?: boolean;
+    /** @format int32 */
+    code?: number;
+    message?: string;
+    data?: Record<string, object>;
+    messageKey?: string;
+    locale?: string;
 }
 
 export interface Company {
@@ -2291,16 +2366,6 @@ export interface SearchRequestDTO {
     isExport?: boolean;
     filter?: ElasticSearchFilterDTO;
     query?: QueryConditionDTO[];
-}
-
-export interface ResultMapStringObject {
-    result?: boolean;
-    /** @format int32 */
-    code?: number;
-    message?: string;
-    data?: Record<string, object>;
-    messageKey?: string;
-    locale?: string;
 }
 
 /** NestedSearch (Request) */
@@ -5847,6 +5912,125 @@ export interface ExecuteSqlDTO {
     initEndDate?: number;
 }
 
+export interface ResultListBasicField {
+    result?: boolean;
+    /** @format int32 */
+    code?: number;
+    message?: string;
+    data?: BasicField[];
+    messageKey?: string;
+    locale?: string;
+}
+
+export interface ResultListContactAttribute {
+    result?: boolean;
+    /** @format int32 */
+    code?: number;
+    message?: string;
+    data?: ContactAttribute[];
+    messageKey?: string;
+    locale?: string;
+}
+
+export interface ContactRequestDTO {
+    /** Fuzzy Search Parameter */
+    q?: string;
+    /**
+     * Page Number
+     * @format int32
+     */
+    pageNum?: number;
+    /**
+     * Page Size
+     * @format int32
+     */
+    pageSize?: number;
+    /** The sortBy fields */
+    orderBy?: string;
+    /** The sort ASC or DESC */
+    isDesc?: boolean;
+    id?: string;
+    groupId?: string;
+    email?: string;
+    name?: string;
+    mobilePhone?: string;
+    company?: string;
+    position?: string;
+    avatar?: string;
+    notes?: string;
+    status?: string;
+    customData?: Record<string, object>;
+    sort?: SortObject;
+    descSort?: SortObject;
+    desc?: boolean;
+    orderByValue?: string;
+}
+
+export interface ContactImportRequestDTO {
+    groupId?: string;
+    /** @format binary */
+    file?: File;
+    columns?: string;
+    dataMapping?: Record<string, string>;
+    replace?: boolean;
+    operator?: string;
+}
+
+/** Import ResponseDTO */
+export interface ImportResponseDTO {
+    /** @format int32 */
+    totalRecords?: number;
+    /** @format int32 */
+    successCount?: number;
+    /** @format int32 */
+    failureCount?: number;
+    status?: string;
+}
+
+export interface ResultImportResponseDTO {
+    result?: boolean;
+    /** @format int32 */
+    code?: number;
+    message?: string;
+    /** Import ResponseDTO */
+    data?: ImportResponseDTO;
+    messageKey?: string;
+    locale?: string;
+}
+
+export interface ResultMapStringInteger {
+    result?: boolean;
+    /** @format int32 */
+    code?: number;
+    message?: string;
+    data?: Record<string, number>;
+    messageKey?: string;
+    locale?: string;
+}
+
+export interface PaginationDTOContactGroupResponseDTO {
+    entryList?: ContactGroupResponseDTO[];
+    /** @format int32 */
+    totalSize?: number;
+    /** @format int32 */
+    currentPageSize?: number;
+    /** @format int32 */
+    pageNum?: number;
+    /** @format int32 */
+    pageCount?: number;
+    isNextPageAvailable?: boolean;
+}
+
+export interface ResultPaginationDTOContactGroupResponseDTO {
+    result?: boolean;
+    /** @format int32 */
+    code?: number;
+    message?: string;
+    data?: PaginationDTOContactGroupResponseDTO;
+    messageKey?: string;
+    locale?: string;
+}
+
 export interface PaginationDTOCompanyChop {
     entryList?: CompanyChop[];
     /** @format int32 */
@@ -7600,16 +7784,6 @@ export interface ResultInteger {
     locale?: string;
 }
 
-export interface ResultMapStringInteger {
-    result?: boolean;
-    /** @format int32 */
-    code?: number;
-    message?: string;
-    data?: Record<string, number>;
-    messageKey?: string;
-    locale?: string;
-}
-
 export interface ResultListBusinessResultRecord {
     result?: boolean;
     /** @format int32 */
@@ -8356,6 +8530,16 @@ export interface ResultHashMapStringListConversionSupportDestType {
     code?: number;
     message?: string;
     data?: Record<string, ConversionSupportDestType[]>;
+    messageKey?: string;
+    locale?: string;
+}
+
+export interface ResultListContactGroupResponseDTO {
+    result?: boolean;
+    /** @format int32 */
+    code?: number;
+    message?: string;
+    data?: ContactGroupResponseDTO[];
     messageKey?: string;
     locale?: string;
 }
@@ -10373,6 +10557,116 @@ export class Admin<SecurityDataType extends unknown> extends HttpClient<Security
             this.request<Result, Result | (ResultObject | Result | ResultString)>({
                 path: `/docpal/dam/setting`,
                 method: "PUT",
+                body: data,
+                type: ContentType.Json,
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags ContactController
+         * @name GetContactgroupId
+         * @summary Get contact group by id
+         * @request GET:/api/docpal/contactGroup/{id}
+         */
+        getContactgroupId: (id: string, params: RequestParams = {}) =>
+            this.request<ResultContactGroupResponseDTO, Result | (ResultObject | Result | ResultString)>({
+                path: `/docpal/contactGroup/${id}`,
+                method: "GET",
+                ...params,
+            }),
+
+        /**
+         * @description Update contact group with the specified information
+         *
+         * @tags ContactController
+         * @name PutContactgroupId
+         * @summary Update contact group
+         * @request PUT:/api/docpal/contactGroup/{id}
+         */
+        putContactgroupId: (id: string, data: ContactGroupRequestDTO, params: RequestParams = {}) =>
+            this.request<ResultContactGroupResponseDTO, Result | (ResultObject | Result | ResultString)>({
+                path: `/docpal/contactGroup/${id}`,
+                method: "PUT",
+                body: data,
+                type: ContentType.Json,
+                ...params,
+            }),
+
+        /**
+         * @description Delete a contact group by ContactGroupId
+         *
+         * @tags ContactController
+         * @name DeleteContactgroupId
+         * @summary Delete contact group by id
+         * @request DELETE:/api/docpal/contactGroup/{id}
+         */
+        deleteContactgroupId: (id: string, params: RequestParams = {}) =>
+            this.request<ResultBoolean, Result | (ResultObject | Result | ResultString)>({
+                path: `/docpal/contactGroup/${id}`,
+                method: "DELETE",
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags ContactController
+         * @name GetContactgroupIdContactdetailContactdetailid
+         * @summary Get contact detail by id
+         * @request GET:/api/docpal/contactGroup/{id}/contactDetail/{contactDetailId}
+         */
+        getContactgroupIdContactdetailContactdetailid: (
+            id: string,
+            contactDetailId: string,
+            params: RequestParams = {},
+        ) =>
+            this.request<ResultMapStringObject, Result | (ResultObject | Result | ResultString)>({
+                path: `/docpal/contactGroup/${id}/contactDetail/${contactDetailId}`,
+                method: "GET",
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags ContactController
+         * @name PutContactgroupIdContactdetailContactdetailid
+         * @summary Edit contact record with the specified information
+         * @request PUT:/api/docpal/contactGroup/{id}/contactDetail/{contactDetailId}
+         */
+        putContactgroupIdContactdetailContactdetailid: (
+            id: string,
+            contactDetailId: string,
+            data: Record<string, object>,
+            params: RequestParams = {},
+        ) =>
+            this.request<ResultMapStringObject, Result | (ResultObject | Result | ResultString)>({
+                path: `/docpal/contactGroup/${id}/contactDetail/${contactDetailId}`,
+                method: "PUT",
+                body: data,
+                type: ContentType.Json,
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags ContactController
+         * @name DeleteContactgroupIdContactdetailContactdetailid
+         * @summary Delete contact record
+         * @request DELETE:/api/docpal/contactGroup/{id}/contactDetail/{contactDetailId}
+         */
+        deleteContactgroupIdContactdetailContactdetailid: (
+            id: string,
+            contactDetailId: string,
+            data: any,
+            params: RequestParams = {},
+        ) =>
+            this.request<ResultBoolean, Result | (ResultObject | Result | ResultString)>({
+                path: `/docpal/contactGroup/${id}/contactDetail/${contactDetailId}`,
+                method: "DELETE",
                 body: data,
                 type: ContentType.Json,
                 ...params,
@@ -15425,7 +15719,7 @@ export class Admin<SecurityDataType extends unknown> extends HttpClient<Security
         /**
          * No description
          *
-         * @tags api-key-controller
+         * @tags alert-controller
          * @name PostGenerateXApiKey
          * @request POST:/api/docpal/generate_x_api_key
          */
@@ -15914,6 +16208,208 @@ export class Admin<SecurityDataType extends unknown> extends HttpClient<Security
         postDamDeletesettings: (data: number[], params: RequestParams = {}) =>
             this.request<Result, Result | (ResultObject | Result | ResultString)>({
                 path: `/docpal/dam/deleteSettings`,
+                method: "POST",
+                body: data,
+                type: ContentType.Json,
+                ...params,
+            }),
+
+        /**
+         * @description Create a new contact group with the specified information
+         *
+         * @tags ContactController
+         * @name PostContactgroup
+         * @summary Create a new contact group
+         * @request POST:/api/docpal/contactGroup
+         */
+        postContactgroup: (data: ContactGroupRequestDTO, params: RequestParams = {}) =>
+            this.request<ResultContactGroupResponseDTO, Result | (ResultObject | Result | ResultString)>({
+                path: `/docpal/contactGroup`,
+                method: "POST",
+                body: data,
+                type: ContentType.Json,
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags ContactController
+         * @name PostContactgroupIdPermission
+         * @summary Add the contact permission
+         * @request POST:/api/docpal/contactGroup/{id}/permission
+         */
+        postContactgroupIdPermission: (id: string, data: BasicField, params: RequestParams = {}) =>
+            this.request<ResultListBasicField, Result | (ResultObject | Result | ResultString)>({
+                path: `/docpal/contactGroup/${id}/permission`,
+                method: "POST",
+                body: data,
+                type: ContentType.Json,
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags ContactController
+         * @name PatchContactgroupIdPermission
+         * @summary Remove the contact permission
+         * @request PATCH:/api/docpal/contactGroup/{id}/permission
+         */
+        patchContactgroupIdPermission: (id: string, data: BasicField, params: RequestParams = {}) =>
+            this.request<ResultListBasicField, Result | (ResultObject | Result | ResultString)>({
+                path: `/docpal/contactGroup/${id}/permission`,
+                method: "PATCH",
+                body: data,
+                type: ContentType.Json,
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags ContactController
+         * @name PostContactgroupIdNewfields
+         * @summary Add new field to contact Group
+         * @request POST:/api/docpal/contactGroup/{id}/newFields
+         */
+        postContactgroupIdNewfields: (id: string, data: ContactAttribute, params: RequestParams = {}) =>
+            this.request<ResultListContactAttribute, Result | (ResultObject | Result | ResultString)>({
+                path: `/docpal/contactGroup/${id}/newFields`,
+                method: "POST",
+                body: data,
+                type: ContentType.Json,
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags ContactController
+         * @name PostContactgroupIdContactdetail
+         * @summary Adding a new contact record
+         * @request POST:/api/docpal/contactGroup/{id}/contactDetail
+         */
+        postContactgroupIdContactdetail: (id: string, data: Record<string, object>, params: RequestParams = {}) =>
+            this.request<ResultMapStringObject, Result | (ResultObject | Result | ResultString)>({
+                path: `/docpal/contactGroup/${id}/contactDetail`,
+                method: "POST",
+                body: data,
+                type: ContentType.Json,
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags ContactController
+         * @name PostContactgroupIdContactdetailPage
+         * @summary Page query contact detail list
+         * @request POST:/api/docpal/contactGroup/{id}/contactDetail/page
+         */
+        postContactgroupIdContactdetailPage: (id: string, data: ContactRequestDTO, params: RequestParams = {}) =>
+            this.request<ResultPaginationDTOMapStringObject, Result | (ResultObject | Result | ResultString)>({
+                path: `/docpal/contactGroup/${id}/contactDetail/page`,
+                method: "POST",
+                body: data,
+                type: ContentType.Json,
+                ...params,
+            }),
+
+        /**
+         * @description Import contacts from Excel or CSV file into the specified contact group
+         *
+         * @tags ContactController
+         * @name PostContactgroupIdContactdetailImport
+         * @summary Import contacts from file
+         * @request POST:/api/docpal/contactGroup/{id}/contactDetail/import
+         */
+        postContactgroupIdContactdetailImport: (
+            id: string,
+            query: {
+                requestDTO: ContactImportRequestDTO;
+            },
+            data: {
+                /** @format binary */
+                file?: File;
+                /** @format Boolean */
+                replace?: replace;
+                /**
+                 * @format object string
+                 * @example {"name":"username","email":"email","description":"notes"}
+                 */
+                columns?: map;
+            },
+            params: RequestParams = {},
+        ) =>
+            this.request<ResultImportResponseDTO, Result | (ResultObject | Result | ResultString)>({
+                path: `/docpal/contactGroup/${id}/contactDetail/import`,
+                method: "POST",
+                query: query,
+                body: data,
+                type: ContentType.FormData,
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags ContactController
+         * @name PostContactgroupIdContactdetailExport
+         * @summary Export contact record for file type include excel, csv, vcf
+         * @request POST:/api/docpal/contactGroup/{id}/contactDetail/export
+         */
+        postContactgroupIdContactdetailExport: (
+            id: string,
+            query: {
+                fileType: string;
+            },
+            data: any,
+            params: RequestParams = {},
+        ) =>
+            this.request<string[], Result | (ResultObject | Result | ResultString)>({
+                path: `/docpal/contactGroup/${id}/contactDetail/export`,
+                method: "POST",
+                query: query,
+                body: data,
+                type: ContentType.Json,
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags ContactController
+         * @name PostContactgroupReadTitle
+         * @summary Get header list through read the file
+         * @request POST:/api/docpal/contactGroup/read/title
+         */
+        postContactgroupReadTitle: (
+            data: {
+                /** @format binary */
+                file?: File;
+            },
+            params: RequestParams = {},
+        ) =>
+            this.request<ResultMapStringInteger, Result | (ResultObject | Result | ResultString)>({
+                path: `/docpal/contactGroup/read/title`,
+                method: "POST",
+                body: data,
+                type: ContentType.FormData,
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags ContactController
+         * @name PostContactgroupPage
+         * @summary Page query contact group
+         * @request POST:/api/docpal/contactGroup/page
+         */
+        postContactgroupPage: (data: ContactGroupRequestDTO, params: RequestParams = {}) =>
+            this.request<ResultPaginationDTOContactGroupResponseDTO, Result | (ResultObject | Result | ResultString)>({
+                path: `/docpal/contactGroup/page`,
                 method: "POST",
                 body: data,
                 type: ContentType.Json,
@@ -19016,6 +19512,20 @@ export class Admin<SecurityDataType extends unknown> extends HttpClient<Security
          * No description
          *
          * @tags Workflow Version Controller
+         * @name GetWorkflowVersionKeyProcessdefinitionkey
+         * @request GET:/api/docpal/workflow/version/key/{processDefinitionKey}
+         */
+        getWorkflowVersionKeyProcessdefinitionkey: (processDefinitionKey: string, params: RequestParams = {}) =>
+            this.request<ResultProcessDefinitionVersion, Result | (ResultObject | Result | ResultString)>({
+                path: `/docpal/workflow/version/key/${processDefinitionKey}`,
+                method: "GET",
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags Workflow Version Controller
          * @name GetWorkflowVersionJson
          * @summary Download Json through version number and draft id
          * @request GET:/api/docpal/workflow/version/json
@@ -19736,6 +20246,20 @@ export class Admin<SecurityDataType extends unknown> extends HttpClient<Security
          * No description
          *
          * @tags User Management APIs
+         * @name GetUsers
+         * @request GET:/api/docpal/users
+         */
+        getUsers: (params: RequestParams = {}) =>
+            this.request<ResultObject, Result | (ResultObject | Result | ResultString)>({
+                path: `/docpal/users`,
+                method: "GET",
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags User Management APIs
          * @name GetNuxeoUserUserid
          * @summary Get User information through user-id
          * @request GET:/api/nuxeo/user/{userId}
@@ -20152,6 +20676,20 @@ export class Admin<SecurityDataType extends unknown> extends HttpClient<Security
         getSettingFeaturerolemapping: (params: RequestParams = {}) =>
             this.request<ResultListMapStringObject, Result | (ResultObject | Result | ResultString)>({
                 path: `/docpal/setting/featureRoleMapping`,
+                method: "GET",
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags User Management APIs
+         * @name GetRoles
+         * @request GET:/api/docpal/roles
+         */
+        getRoles: (params: RequestParams = {}) =>
+            this.request<ResultObject, Result | (ResultObject | Result | ResultString)>({
+                path: `/docpal/roles`,
                 method: "GET",
                 ...params,
             }),
@@ -20880,6 +21418,20 @@ export class Admin<SecurityDataType extends unknown> extends HttpClient<Security
         /**
          * No description
          *
+         * @tags User Management APIs
+         * @name GetGroups
+         * @request GET:/api/docpal/groups
+         */
+        getGroups: (params: RequestParams = {}) =>
+            this.request<ResultObject, Result | (ResultObject | Result | ResultString)>({
+                path: `/docpal/groups`,
+                method: "GET",
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
          * @tags FormDesignController
          * @name GetFormDesignIdDetail
          * @summary Retrieve form design detail of published
@@ -21065,6 +21617,38 @@ export class Admin<SecurityDataType extends unknown> extends HttpClient<Security
                 Result | (ResultObject | Result | ResultString)
             >({
                 path: `/docpal/dam/getSupportedFormat`,
+                method: "GET",
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags ContactController
+         * @name GetContactgroupIdContactdetaillist
+         * @summary Get contact detail list include filter and sort by
+         * @request GET:/api/docpal/contactGroup/{id}/contactDetailList
+         */
+        getContactgroupIdContactdetaillist: (id: string, data: any, params: RequestParams = {}) =>
+            this.request<ResultListMapStringObject, Result | (ResultObject | Result | ResultString)>({
+                path: `/docpal/contactGroup/${id}/contactDetailList`,
+                method: "GET",
+                body: data,
+                type: ContentType.Json,
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags ContactController
+         * @name GetContactgroupList
+         * @summary Query all contact group without filter condition
+         * @request GET:/api/docpal/contactGroup/list
+         */
+        getContactgroupList: (params: RequestParams = {}) =>
+            this.request<ResultListContactGroupResponseDTO, Result | (ResultObject | Result | ResultString)>({
+                path: `/docpal/contactGroup/list`,
                 method: "GET",
                 ...params,
             }),
@@ -22638,6 +23222,38 @@ export class Admin<SecurityDataType extends unknown> extends HttpClient<Security
         deleteDictCategorycodeEntryEntryid: (categoryCode: string, entryId: string, params: RequestParams = {}) =>
             this.request<ResultObject, Result | (ResultObject | Result | ResultString)>({
                 path: `/docpal/dict/${categoryCode}/entry/${entryId}`,
+                method: "DELETE",
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags ContactController
+         * @name DeleteContactgroupIdFieldsFieldname
+         * @summary Add new field to contact Group
+         * @request DELETE:/api/docpal/contactGroup/{id}/fields/{fieldName}
+         */
+        deleteContactgroupIdFieldsFieldname: (id: string, fieldName: string, data: any, params: RequestParams = {}) =>
+            this.request<ResultListContactAttribute, Result | (ResultObject | Result | ResultString)>({
+                path: `/docpal/contactGroup/${id}/fields/${fieldName}`,
+                method: "DELETE",
+                body: data,
+                type: ContentType.Json,
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags ContactController
+         * @name DeleteContactgroupIdContactContactdetailid
+         * @summary Physically delete contact records
+         * @request DELETE:/api/docpal/contactGroup/{id}/contact/{contactDetailId}
+         */
+        deleteContactgroupIdContactContactdetailid: (id: string, contactDetailId: string, params: RequestParams = {}) =>
+            this.request<ResultBoolean, Result | (ResultObject | Result | ResultString)>({
+                path: `/docpal/contactGroup/${id}/contact/${contactDetailId}`,
                 method: "DELETE",
                 ...params,
             }),

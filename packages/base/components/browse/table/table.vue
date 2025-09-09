@@ -130,11 +130,12 @@ function recursiveLoadChild(checkList: any[] = [], treeData: any[], result: any[
   return result
 }
 
+// DEPRECATED: now system use sqlite to store expanded items, so this function is not needed
 const reopenFolder = useDebounceFn(() => {
+  // console.log('reopenFolder', expandedItems)
   if (!tableRef.value || expandedItems.length === 0) return
   const tableData = tableRef.value.getData()
   let needExpandList: any[] = recursiveLoadChild(expandedItems, tableData, [])
-
   tableRef.value?.setTreeExpand(needExpandList, true)
   // get table opened row
 }, 300)
@@ -166,7 +167,8 @@ const { tableConfig, tableEvent, tableRef, reload, cleanSelectedRows } = useVxeT
   },
   childChangeHandler: () => {
     tableChildChangeHandler()
-    reopenFolder()
+    // DEPRECATED: now system use sqlite to store expanded items, so this function is not needed
+    // reopenFolder()
   },
   columns: [
     {
@@ -548,10 +550,8 @@ const { tableConfig, tableEvent, tableRef, reload, cleanSelectedRows } = useVxeT
       hasChildField: 'isFolder',
       loadMethod: async (params) => {
         try{
-
           const entry = await find({parentRef:params.row.id},{},{skipIfEmpty:true})
           if(entry.length === 0){
-            console.log('loadData', params.row.id)
             const apiData = await loadData([], params.row.id) as DocumentApiData[]
             const syncList = {
               create: apiData.map((item:DocumentApiData) => apiToColumn(item)),
@@ -561,7 +561,6 @@ const { tableConfig, tableEvent, tableRef, reload, cleanSelectedRows } = useVxeT
             await syncData(syncList)
             return apiData.sort(sortEntry)
           }else{
-            console.log('loadData', params.row.id)
             return entry.map((item:DocumentColumnData) => columnToApi(item)).sort(sortEntry)
           }
         }catch(e){

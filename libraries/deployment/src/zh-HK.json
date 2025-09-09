@@ -1,7 +1,11 @@
 {
   "Add": "添加",
   "All": "全部",
-  "Apply to Selected": "應用到選中項",
+  "Apply": {
+    "to": {
+      "Selected": "應用到選中項"
+    }
+  },
   "COMPLETED": "已完成",
   "CREATE": "創建",
   "CSV File": "CSV文件",
@@ -278,8 +282,10 @@
     "scanType": "掃描類型"
   },
   "bpmn": {
+    "addGlobalRule": "新增全域規則",
     "addRule": "新增字段並設定規則",
     "globalRuleTip": "修改或刪除規則會同步到所有任務節點，並清空操作歷史",
+    "globalRules": "全域規則",
     "updateRule": "編輯規則並同步到所有節點"
   },
   "browse": {
@@ -1006,7 +1012,7 @@
   "dfc": {
     "summary_report": "dfc.summary_report",
     "uncomplete": {
-      "notification": "dfc.uncomplete.notification"
+      "notification": "目前「資料夾櫃」狀態尚未完成，請重新檢查配置"
     }
   },
   "dhList": {
@@ -2270,8 +2276,8 @@
     },
     "document": {
       "acl": {
-        "add": "notification.document.acl.add",
-        "remove": "notification.document.acl.remove"
+        "add": "{documentName} 的存取權限已變更。如有必要，請聯絡管理員重新申請權限。",
+        "remove": "{documentName} 的存取權限已取消"
       },
       "comment": {
         "add": "{documentName} 有新評論",
@@ -2279,15 +2285,20 @@
       },
       "create": "{path} 有新上傳文件",
       "delete": "{userId} 刪除了 {documentName}",
-      "download": "notification.document.download",
+      "download": "{userId} 下载了 {documentName}",
       "format_convert": "{userId} 將{fileName} 轉檔",
       "modify": "{documentName} 已被 {userId} 修改",
-      "print": "notification.document.print",
+      "print": "{userId} 瀏覽了 {documentName}",
       "replace": "{userId} 更新了 {documentName}",
       "trash": "{userId} 刪除了 {documentName}",
       "upload": "notification.document.upload"
     },
     "filterByDescription": "按描述過濾",
+    "mastertable": {
+      "create": {
+        "record": "Master Table已成功透過Excel匯入新數據"
+      }
+    },
     "operator": "操作員",
     "read": "已讀",
     "read/unread": "已讀/未讀",
@@ -2304,10 +2315,11 @@
       }
     },
     "workflow": {
-      "apply": "notification.workflow.apply",
+      "apply": "審核過程中有新的申請提交，請及時查看並處理。",
+      "canceld": "審核流程已被拒絕。請及時查看處理，並根據需要調整相關內容.",
       "comment": "工作流程 : {businessName} 有一則新評論",
       "rejected": "notification.workflow.rejected",
-      "success": "notification.workflow.success"
+      "success": "審批流程已成功通過，請及時查看相關結果"
     }
   },
   "notificationReminder": "通知提醒",

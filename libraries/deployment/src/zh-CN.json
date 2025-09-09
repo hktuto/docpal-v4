@@ -1,7 +1,11 @@
 {
   "Add": "添加",
   "All": "全部",
-  "Apply to Selected": "应用到选中项",
+  "Apply": {
+    "to": {
+      "Selected": "应用到选中项"
+    }
+  },
   "COMPLETED": "已完成",
   "CREATE": "创建",
   "CSV File": "CSV文件",
@@ -1008,7 +1012,7 @@
   "dfc": {
     "summary_report": "dfc.summary_report",
     "uncomplete": {
-      "notification": "dfc.uncomplete.notification"
+      "notification": "目前“文件夹柜”状态尚未完成，请重新检查配置"
     }
   },
   "dhList": {
@@ -1842,6 +1846,7 @@
   "fc:docTitle": "标题",
   "fc:label": "文件柜名称",
   "file": {
+    "NoExist": "文件不存在",
     "fileFormat": "文件格式",
     "onlyAccept": "只接受"
   },
@@ -2272,8 +2277,8 @@
     },
     "document": {
       "acl": {
-        "add": "notification.document.acl.add",
-        "remove": "notification.document.acl.remove"
+        "add": "{documentName} 的访问权限已更改。如有必要，请联系管理员重新申请权限。",
+        "remove": "{documentName} 的访问权限已取消"
       },
       "comment": {
         "add": "{documentName} 有新评论",
@@ -2281,15 +2286,20 @@
       },
       "create": "{path} 有新文件上传",
       "delete": "{userId} 删除了 {documentName}",
-      "download": "notification.document.download",
+      "download": "{userId} 下载了 {documentName}",
       "format_convert": "{userId} 将{fileName} 转档",
       "modify": "{documentName} 已被 {userId} 修改",
-      "print": "notification.document.print",
+      "print": "{userId} 浏览了 {documentName}",
       "replace": "{userId} 更新了 {documentName}",
       "trash": "{userId} 删除了 {documentName}",
       "upload": "notification.document.upload"
     },
     "filterByDescription": "按描述过滤",
+    "mastertable": {
+      "create": {
+        "record": "Master Table已成功通过Excel导入新数据"
+      }
+    },
     "operator": "操作员",
     "read": "已读",
     "read/unread": "已读/未读",
@@ -2306,10 +2316,11 @@
       }
     },
     "workflow": {
-      "apply": "notification.workflow.apply",
+      "apply": "审核过程中有新的申请提交，请及时查看并处理。",
+      "canceld": "审核流程已被拒绝。请及时查看处理，并根据需要调整相关内容.",
       "comment": "工作流程 : {businessName} 有一则新评论",
       "rejected": "notification.workflow.rejected",
-      "success": "notification.workflow.success "
+      "success": "审批流程已成功通过，请及时查看相关结果"
     }
   },
   "notificationReminder": "通知提醒",
@@ -2399,6 +2410,7 @@
     "lowerUpperDesc": "必须包含大小写字母 [a-z][A-Z]",
     "newPassword": "新密码",
     "oldPassword": "旧密码",
+    "oldPasswordTip": "需要旧密码",
     "retryPeriod": "重试周期（分钟）",
     "reuseCount": "重用锁定次数",
     "reuseEnable": "启用密码重用限制",

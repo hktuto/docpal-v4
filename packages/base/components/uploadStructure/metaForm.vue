@@ -3,7 +3,7 @@
     <div class="flex-x-between">
         <h2>{{state.doc.name}}</h2>
         <el-button type="primary"
-            @click="handleApplyToSelected">{{$t('Apply to Selected')}}</el-button>
+            @click="handleApplyToSelected">{{$t('Apply.to.Selected')}}</el-button>
     </div>
     <main>
         <div class="row-item">
