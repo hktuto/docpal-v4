@@ -73,8 +73,24 @@ async function autoGenerate() {
     ElMessage.info(t('dpMsg_noDataUpdate'))
     return
   }
+  const testData = JSON.parse(JSON.stringify(props.fieldListApi.data))
+  // props.fieldListApi.data.push({
+  //   name: 'test_subForm',
+  //   id: 'test_subForm',
+  //   validationName: 'sub_form',
+  //   validationRule: {
+  //     type: 'sub_form',
+  //     widgetList: [{
+  //       validationName: 'text',
+  //       maxLength: 100,
+  //       label: 'test_subForm_item',
+  //       name: 'test_subForm_item',
+  //     }]
+  //   }
+  // })
   const backendMetadataList = turnWorkflowRuleToBackendMetadata(props.fieldListApi.data)
   const metadataVariableList = await initMetadataVformOptions(backendMetadataList, false)
+  
   const variableList = getVFormVariableListByMetadata(metadataVariableList)
   const widgetList = vFormWidgetListDecorator(variableList)
   const oldFieldList = vFormDesignerRef.value?.getFieldWidgets()

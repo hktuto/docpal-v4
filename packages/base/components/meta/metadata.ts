@@ -134,75 +134,83 @@ export const useMetadata = () => {
     return properties
   }
   const getVFormVariableListByMetadata = (metadataListMap: DocumentMetadata, initOptions: any = {}): VariableItem[] => {
-   if (!initOptions.hiddenFields) initOptions.hiddenFields = []
+    if (!initOptions.hiddenFields) initOptions.hiddenFields = []
     if (!initOptions.readonlyFields) initOptions.readonlyFields = []
     if (!initOptions.requiredFields) initOptions.requiredFields = []
     const widgetVariableList: VariableItem[] = []
     Object.keys(metadataListMap).forEach((key) => {
       if (ignoreList.indexOf(key) !== -1 || initOptions.hiddenFields.includes(key)) return
       const metadataItem = metadataListMap[key]
-      const _item: any = {
+      const _item = getVariableItem(metadataItem, key)
+      widgetVariableList.push(_item)
+    })
+    return widgetVariableList
+    function getVariableItem(row: any, key: string) {
+      const resultItem: any = {
         name: key,
-        label: metadataItem.label || key,
+        label: row.label || key,
         type: 'input',
         required: initOptions.readonlyFields.includes(key) ? false : initOptions.requiredFields.includes(key) ? true : false,
         disabled: initOptions.readonlyFields.includes(key) ? true : false,
         options: {}
       }
-
-      switch (metadataItem.validationName) {
+      switch (row.validationName) {
         case 'user':
         case 'user_role_user_group':
         case 'mastertable':
         case 'select':
-          const selectResult = selectDecorator(metadataItem)
-          _item.options = selectResult.options
-          if (metadataItem.validationName === 'user_role_user_group') {
-            _item.type = 'select-v2'
-            _item.options.optionItems = []
+          const selectResult = selectDecorator(row)
+          resultItem.options = selectResult.options
+          if (row.validationName === 'user_role_user_group') {
+            resultItem.type = 'select-v2'
+            resultItem.options.optionItems = []
           } else {
-            _item.type = selectResult.type
+            resultItem.type = selectResult.type
           }
           break
         case 'date':
-          const dateResult = dateDecorator(metadataItem)
-          _item.options = dateResult.options
-          _item.type = dateResult.type
+          const dateResult = dateDecorator(row)
+          resultItem.options = dateResult.options
+          resultItem.type = dateResult.type
           break
         case 'number':
-          const numberResult = numberDecorator(metadataItem)
-          _item.options = numberResult.options
-          _item.type = numberResult.type
+          const numberResult = numberDecorator(row)
+          resultItem.options = numberResult.options
+          resultItem.type = numberResult.type
           break
         case 'text':
-          _item.type = 'textarea'
-          _item.options.maxLength = metadataItem.maxLength || 0
-          const row60 = (_item.options.maxLength / 60).toFixed(0)
-          _item.options.rows = Number(row60) > 0 ? Number(row60) : 1
+          resultItem.type = 'textarea'
+          resultItem.options.maxLength = row.maxLength || 0
+          const row60 = (resultItem.options.maxLength / 60).toFixed(0)
+          resultItem.options.rows = Number(row60) > 0 ? Number(row60) : 1
           break
         case 'boolean':
-          _item.type = 'switch'
+          resultItem.type = 'switch'
+          break
+        case 'sub_form':
+          resultItem.type = 'sub-form'
+          resultItem.category = 'container'
+          resultItem.widgetList = row.widgetList.map((item: any) => getVariableItem(item, item.name))
           break
         default:
-          const item = metadataItem as any
+          const item = row as any
           if (item && item.maxLength && item.maxLength > 0) {
-            _item.options.maxLength = item.maxLength
+            resultItem.options.maxLength = item.maxLength
             if (item.maxLength > 60) {
-              _item.type = 'textarea'
+              resultItem.type = 'textarea'
             } else {
-              _item.type = 'input'
+              resultItem.type = 'input'
             }
           }
           break
       }
-      _item.options.validationName = metadataItem.validationName
-      _item.options.validationType = metadataItem.type
-      if (metadataItem.onMounted) {
-        _item.options.onMounted = metadataItem.onMounted
+      resultItem.options.validationName = row.validationName
+      resultItem.options.validationType = row.type
+      if (row.onMounted) {
+        resultItem.options.onMounted = row.onMounted
       }
-      widgetVariableList.push(_item)
-    })
-    return widgetVariableList
+      return resultItem
+    }
   }
   // get vform data
   function getStringfyData(data: Record<string, any>, variableList: VariableItem[]) {
@@ -268,66 +276,62 @@ export const useMetadata = () => {
   function vFormWidgetListDecorator(variableList: VariableItem[]) {
     const widgetList: WidgetItem[] = []
     variableList.forEach((item: VariableItem, index: number) => {
-      const id = generateId(item.type)
-      const _item: WidgetItem = {
-        key: id,
-        id: id,
-        type: item.type,
-        formItemFlag: true,
-        options: {
-          name: item.name,
-          label: item.label ? item.label : item.name,
-          required: item.required ? true : false,
-          defaultValue: '',
-          size: '',
-          columnWidth: '',
-          placeholder: '',
-          readonly: false,
-          disabled: item.disabled ? true : false,
-          hidden: false,
-          clearable: true,
-          requiredHint: '',
-          onValidate: '',
-          onCreated: '',
-          onMounted: '',
-          onInput: '',
-          onChange: '',
-          onFocus: '',
-          onBlur: '',
-          onEnter: ''
-        }
-      }
-      if (!['date', 'input', 'switch', 'textarea', 'number', 'select', 'json-editor', 'divider', 'select-group', 'date-range', 'select-v2'].includes(item.type))
-        _item.type = 'input'
-      if (item.type === 'date') {
-        _item.options.format = item.options.type === 'datetime' ? 'YYYY-MM-DD HH:mm' : 'YYYY-MM-DD' //日期显示格式
-        _item.options.valueFormat = 'YYYY-MM-DDTHH:mm:ss.000Z'
-        _item.options.onDisabledDate =
-          "const myDate = new Date();\nconst year = myDate.getFullYear() + 100;  \nconst minDate = new Date('1901-01-01 00:00:00').getTime()\nconst maxDate = new Date(year + '-12-31 23:59:59').getTime()\nreturn dateTime.getTime() < minDate || dateTime.getTime() > maxDate;"
-      } else if (item.type === 'input') {
-        _item.options.type = 'text'
-        _item.options.maxLength = 255
-        _item.options.showWordLimit = true
-      } else if (item.type === 'textarea') {
-        _item.options.rows = 5
-        _item.options.maxLength = 4000
-        _item.options.showWordLimit = true
-      } else if (item.type === 'number') {
-        _item.options.defaultValue = 0
-        _item.options.min = -999999999999998
-        _item.options.max = 999999999999998
-        _item.options.controlsPosition = 'right'
-      } else if (item.type === 'switch') {
-        // _item.activeText = ''
-        // _item.inactiveText = ''
-        _item.options.defaultValue = false
-        _item.options.labelIconPosition = 'rear'
-      } else if (item.type === 'select') {
-      }
-      if (item.options) _item.options = { ..._item.options, ...item.options }
+      const _item = getWidgetItem(item)
       widgetList.push(_item)
     })
     return widgetList
+    function getWidgetItem(row: VariableItem, isSubForm = false) {
+      const id = generateId(row.type)
+      const resultItem: any = {
+        key: id,
+        id: id,
+        type: row.type
+      }
+      if (row.type === 'sub-form') {
+        resultItem.options = getSubFormOptions(row)
+        resultItem.category = 'container'
+        resultItem.widgetList = row.widgetList?.map((item: any) => {
+          const _item = getWidgetItem(item, true)
+          return _item
+        })
+        return resultItem
+      }
+      resultItem.formItemFlag = true
+      resultItem.options = getFormItemOptions(row)
+      if (
+        !['date', 'input', 'switch', 'textarea', 'number', 'select', 'json-editor', 'divider', 'select-group', 'date-range', 'select-v2', 'sub-form'].includes(
+          row.type
+        )
+      )
+        resultItem.type = 'input'
+      if (row.type === 'date') {
+        resultItem.options.format = row.options.type === 'datetime' ? 'YYYY-MM-DD HH:mm' : 'YYYY-MM-DD' //日期显示格式
+        resultItem.options.valueFormat = 'YYYY-MM-DDTHH:mm:ss.000Z'
+        resultItem.options.onDisabledDate =
+          "const myDate = new Date();\nconst year = myDate.getFullYear() + 100;  \nconst minDate = new Date('1901-01-01 00:00:00').getTime()\nconst maxDate = new Date(year + '-12-31 23:59:59').getTime()\nreturn dateTime.getTime() < minDate || dateTime.getTime() > maxDate;"
+      } else if (row.type === 'input') {
+        resultItem.options.type = 'text'
+        resultItem.options.maxLength = 255
+        resultItem.options.showWordLimit = true
+      } else if (row.type === 'textarea') {
+        resultItem.options.rows = 5
+        resultItem.options.maxLength = 4000
+        resultItem.options.showWordLimit = true
+      } else if (row.type === 'number') {
+        resultItem.options.defaultValue = 0
+        resultItem.options.min = -999999999999998
+        resultItem.options.max = 999999999999998
+        resultItem.options.controlsPosition = 'right'
+      } else if (row.type === 'switch') {
+        // _item.activeText = ''
+        // _item.inactiveText = ''
+        resultItem.options.defaultValue = false
+        resultItem.options.labelIconPosition = 'rear'
+      } else if (row.type === 'select') {
+      }
+      if (row.options) resultItem.options = { ...resultItem.options, ...row.options }
+      return resultItem
+    }
   }
 
   function turnWorkflowRuleToBackendMetadata(ruleList: any[]) {
@@ -589,5 +593,46 @@ function dateDefaultDecorator(defaultValue: any, valueFormat: string) {
     return formatDate(dayjs().format('YYYY-MM-DD HH:mm:ss'), valueFormat)
   } else {
     return ''
+  }
+}
+function getSubFormOptions(row: any) {
+  return {
+    name: row.name,
+    label: row.label ? row.label : row.name,
+    showBlankRow: true,
+    showRowNumber: true,
+    labelAlign: 'label-center-align',
+    hidden: false,
+    disabled: false,
+    maxLength: null,
+    customClass: '',
+    onSubFormRowAdd: '',
+    onSubFormRowInsert: '',
+    onSubFormRowDelete: '',
+    onSubFormRowChange: ''
+  }
+}
+function getFormItemOptions(row: any) {
+  return {
+    name: row.name,
+    label: row.label ? row.label : row.name,
+    required: row.required ? true : false,
+    defaultValue: '',
+    size: '',
+    columnWidth: '',
+    placeholder: '',
+    readonly: false,
+    disabled: row.disabled ? true : false,
+    hidden: false,
+    clearable: true,
+    requiredHint: '',
+    onValidate: '',
+    onCreated: '',
+    onMounted: '',
+    onInput: '',
+    onChange: '',
+    onFocus: '',
+    onBlur: '',
+    onEnter: ''
   }
 }
