@@ -2,12 +2,16 @@
 import { adminApi } from 'api'
 
 const { setting } = useCalendarStore()
+// let extraParams: any = {}
 const remoteOption = await getPermissionPairOption()
 const calendarProvider = inject(CalendarSettingKey)
 const detailDialogRef = ref()
 const { tableConfig, tableEvent, tableRef, reload } = useVxeTable({
   id: 'calendarSetting_categories',
-  api: async (params: any) => await adminApi.api.getEventCalendarsSettings({ eventCalendarSetting: {} }).then(r => r.data),
+  api: (pageParams: any) => {
+    // return adminApi.api.getEventCalendarsSettings({ ...pageParams, ...extraParams }).then(r => r.data)
+    return adminApi.api.getEventCalendarsSettings({ eventCalendarSetting: { ...extraParams } }).then(r => r.data)
+  },
   virtualScroll: true,
   pageSize: 5,
   columns: [
@@ -155,6 +159,13 @@ function setPermissionString(cellValue: any) {
   return list.toString()
 }
 
+// function handleFilterFormChange(formModel: any) {
+//   // if (!formModel.isDesc) formModel.isDesc = true
+//   // if (!!formModel.isDesc) formModel.isDesc = formModel.isDesc !== 'false'
+//   extraParams = formModel
+//   reload()
+// }
+
 function addRecord() {
   detailDialogRef.value.open()
 }
@@ -166,9 +177,12 @@ function addRecord() {
     <div class="categoriesContainer" style="height: 450px">
       <VxeGrid ref="tableRef" v-bind="tableConfig" v-on="tableEvent">
         <template #toolbar_buttons>
-          <ElButton id="CalendarSetting__EventLocations__EventCategories__Add" type="primary" @click="addRecord">
-            {{ $t('Add') }}
-          </ElButton>
+          <div class="actions">
+<!--            <ResponsiveFilter ref="ResponsiveFilterRef" inputKey="name" @form-change="handleFilterFormChange" />-->
+            <ElButton id="CalendarSetting__EventLocations__EventCategories__Add" type="primary" @click="addRecord">
+              {{ $t('Add') }}
+            </ElButton>
+          </div>
         </template>
       </VxeGrid>
     </div>
@@ -184,6 +198,16 @@ function addRecord() {
 .categoriesContainer {
   width: 100%;
   height: 300px;
+}
+
+.actions {
+  width: 20%;
+  display: flex;
+  flex-flow: row nowrap;
+  gap: var(--app-space-xs);
+  align-items: center;
+  justify-content: flex-start;
+  --icon-size: var(--app-font-size-m);
 }
 </style>
 

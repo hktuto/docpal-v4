@@ -1,7 +1,11 @@
 {
   "Add": "添加",
   "All": "全部",
-  "Apply to Selected": "应用到选中项",
+  "Apply": {
+    "to": {
+      "Selected": "应用到选中项"
+    }
+  },
   "COMPLETED": "已完成",
   "CREATE": "创建",
   "CSV File": "CSV文件",
@@ -1842,6 +1846,7 @@
   "fc:docTitle": "标题",
   "fc:label": "文件柜名称",
   "file": {
+    "NoExist": "文件不存在",
     "fileFormat": "文件格式",
     "onlyAccept": "只接受"
   },
@@ -2405,6 +2410,7 @@
     "lowerUpperDesc": "必须包含大小写字母 [a-z][A-Z]",
     "newPassword": "新密码",
     "oldPassword": "旧密码",
+    "oldPasswordTip": "需要旧密码",
     "retryPeriod": "重试周期（分钟）",
     "reuseCount": "重用锁定次数",
     "reuseEnable": "启用密码重用限制",
