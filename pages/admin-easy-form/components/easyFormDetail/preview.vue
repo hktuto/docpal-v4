@@ -77,7 +77,7 @@ const copy = (data: any, msg = "common_copySuccess") => {
 };
 
 function handleCopyUrl() {
-  const origin = endPoint?.clientUrl;
+  const origin = location.origin;
   const url = `${origin}/public/public-form?id=${props.detail.id}`;
   copy(url, t("dpTip.urlCopied"));
 }

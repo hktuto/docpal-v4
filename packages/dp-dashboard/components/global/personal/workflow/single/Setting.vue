@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import {adminApi, clientApi} from 'api'
+import {adminApi, clientApi, globalApi} from 'api'
 
 const platform = useAppPlatform()
 const {t} = useI18n()
@@ -26,7 +26,7 @@ async function handleWorkflowhange(newSelectedWorkflow: string) {
   // get workflow bpmn 
   let xml;
   if(platform.value === 'admin') {
-    const blob = await adminApi.api.getWorkflowVersionBpmnxml({
+    const blob = await globalApi.api.getWorkflowVersionBpmnxml({
       draftId: selectedWorkflowData.draftId,
       versionNumber: selectedWorkflowData.versionNumber
     },  {
@@ -70,7 +70,7 @@ async function handleWorkflowhange(newSelectedWorkflow: string) {
 }
 
 async function getWorkflow(){
-  const {data} = await adminApi.api.postWorkflowProcessList() as any
+  const {data} = await globalApi.api.postWorkflowProcessList() as any
   allWorkflow.value = data
 }
 
