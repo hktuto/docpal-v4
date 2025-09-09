@@ -38,6 +38,9 @@ async function setFormData(data) {
       }
     }) || []
   }
+   formData.value.resourceRules.forEach((item: any) => {
+    SelectorRoleRef.value.onResourceAttributeChange(item, item.attribute, true)
+  })
 }
 function getFormData() {
   return formData.value.resourceRules.map((item: any) => {
