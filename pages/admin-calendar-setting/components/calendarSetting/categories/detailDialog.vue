@@ -426,7 +426,7 @@ defineExpose({ open })
         {{ t('Cancel') }}
       </el-button>
       <el-button type="primary" @click="submit"
-                 :id="`CalendarSetting__EventLocations__EventCategories__Add__${isEdit ? 'Save' : 'Create'}`">
+                 :id="`CalendarSetting__EventLocations__EventCategories__Add__Dialog__${isEdit ? 'Save' : 'Create'}`">
         {{ isEdit ? t('Save') : t('Create') }}
       </el-button>
     </template>
