@@ -128,8 +128,8 @@ async function open(item?: any) {
   if (item) {
     isEdit.value = true
     currentData.value = deepCopy(item)
-    if (typeof currentData.status === 'string') {
-      currentData.status = currentData.status === 'true'
+    if (typeof item.status === 'string') {
+      currentData.value.status = item.status === 'true'
     }
     limitSeat.value = currentData.value.availableSeat > 0
     initPermission()
@@ -141,7 +141,8 @@ async function open(item?: any) {
       availableSeat: 0,
       backgroundColor: '#FFFFFF',
       textColor: '#FFFFFF',
-      highlightColor: '#FFFFFF'
+      highlightColor: '#FFFFFF',
+      status: false
     }
   }
   opened.value = true
