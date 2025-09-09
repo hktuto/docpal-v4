@@ -46,7 +46,6 @@ function handleSwitch() {
       }
     }
   }
-  console.log(22, newData.data)
   node.setData(newData, { overwrite: true, deep: true, silent: false })
 }
 
