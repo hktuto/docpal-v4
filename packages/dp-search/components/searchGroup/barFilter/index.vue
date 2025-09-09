@@ -148,8 +148,9 @@ async function getOptions() {
   searchOptions.value.tags = sortListWithI18n(tagData)
   const docTypeData = docType.data?.map((item: any) => ({ label: item.name, value: item.name }))
   searchOptions.value.docType = sortListWithI18n(docTypeData)
+  const appPlatform = useAppPlatform()
   const collectionData = collections?.data?.entryList?.map((item: any) => ({
-    label: item.createdBy ? item.createdBy + ' - ' + item.name : item.name,
+    label: appPlatform.value === 'admin' && item.createdBy ? item.createdBy + ' - ' + item.name : item.name,
     value: item.id
   }))
   searchOptions.value.collections = sortListWithI18n(collectionData)
