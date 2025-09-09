@@ -260,7 +260,7 @@ defineExpose({ open })
     <el-form ref="formRef" :model="currentData" label-position="top" :rules="rules">
       <h4>Information</h4>
       <el-form-item :label="t('Name') " prop="name">
-        <el-input id="CalendarSetting__EventLocations__EventCategories__Add__AllowExternalUserToRegister"
+        <el-input id="CalendarSetting__EventLocations__EventCategories__Add__Name"
                   v-model="currentData.name" />
       </el-form-item>
 
