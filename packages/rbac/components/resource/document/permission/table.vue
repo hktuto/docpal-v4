@@ -254,28 +254,34 @@ async function getTargetOptions() {
       label: 'user_role',
       value: 2, // 1=User, 3=Group, 2=Role
       type: 'select',
-      options: flatRole.value.map((item) => ({
-        label: item.name,
-        value: item.id
-      }))
+      selectConfig: {
+        options: flatRole.value.map((item) => ({
+          label: item.name,
+          value: item.id
+        }))
+      }
     },
     {
       label: 'user_groups',
       value: 3,
       type: 'select',
-      options: groupList.map((item: any) => ({
-        label: item.name,
-        value: item.id
-      }))
+      selectConfig: {
+        options: groupList.map((item: any) => ({
+          label: item.name,
+          value: item.id
+        }))
+      }
     },
     {
       label: 'user_users',
       value: 1,
       type: 'select',
-      options: userList.map((item: any) => ({
-        label: item.username,
-        value: item.userId
-      }))
+      selectConfig: {
+        options: userList.map((item: any) => ({
+          label: item.username,
+          value: item.userId
+        }))
+      }
     }
   )
 }
@@ -286,7 +292,7 @@ async function updateTargetOptions() {
   if (tableData.length > 0) {
     const targetIds = tableData.map((item: any) => item.targetId)
     targetOptions.value.forEach((item: any) => {
-      item.options.forEach((option: any) => {
+      item.selectConfig.options.forEach((option: any) => {
         if (targetIds.includes(option.value)) option.disabled = true
         else option.disabled = false
       })
@@ -322,7 +328,7 @@ watch(
           </el-button>
           <template #dropdown>
             <el-dropdown-menu>
-              <el-dropdown-item  v-if="isInherit" @click="handleRemoveInherent">{{ $t('accessControl_removeInherent') }}</el-dropdown-item>
+              <el-dropdown-item v-if="isInherit" @click="handleRemoveInherent">{{ $t('accessControl_removeInherent') }}</el-dropdown-item>
               <el-dropdown-item v-else @click="handleInherent">{{ $t('accessControl_inherent') }}</el-dropdown-item>
             </el-dropdown-menu>
           </template>

@@ -1,14 +1,29 @@
 <script setup lang="ts">
 import { adminApi } from 'api'
+// 枚举
+const ConditionEnum = {
+  eq: '=',
+  neq: '!='
+}
 const formData = ref({
   condition: 'or',
   resourceRules: []
 })
-
+const documentSetting = {
+  label: 'document type',
+  value: 'document_type',
+  type: 'select-dynamic',
+  selectConfig: {
+    type: 'document'
+  }
+}
+let metadataOpts: any = []
 const resourceAttributes = ref([])
-async function getResourceAttributes() {
+async function getMetadata() {
   try {
-    const metadataOpts: any = await adminApi.api.getDocpaltypeSettingsMetadataV2QueryCache().then((res: any) => res.data)
+    if (metadataOpts.length === 0) {
+      metadataOpts = await adminApi.api.getDocpaltypeSettingsMetadataV2QueryCache().then((res: any) => res.data)
+    }
     const optionList = metadataOpts.map((item: any) => {
       const extraProps = {
         type: 'string'
@@ -16,10 +31,12 @@ async function getResourceAttributes() {
       switch (item.dataType) {
         case 'select':
           extraProps.type = 'select'
-          extraProps.options = item.validationRule.options.map((item: any) => ({
-            label: item,
-            value: item
-          }))
+          extraProps.selectConfig = {
+            options: item.validationRule.options.map((item: any) => ({
+              label: item,
+              value: item
+            }))
+          }
           break
         case 'user':
         case 'user_role_user_group':
@@ -42,16 +59,18 @@ async function getResourceAttributes() {
       }
       return {
         ...extraProps,
-        label: item.name,
+        label: '【' + item.dataType + '】' + item.name,
         value: item.name
       }
     })
-    resourceAttributes.value = optionList
-  } catch (error) {
-    resourceAttributes.value = []
-  }
+    resourceAttributes.value.push(...optionList)
+  } catch (error) {}
 }
-function setFormData(data) {
+function getKeyByValue(obj: any, value: any) {
+  return Object.entries(obj).find(([key, val]) => val === value)?.[0]
+}
+const SelectorDocTypeRef = ref()
+async function setFormData(data) {
   if (!data) {
     formData.value = {
       condition: 'or',
@@ -66,28 +85,33 @@ function setFormData(data) {
     }
     return
   }
-  console.log('=========')
-  console.log(data)
-  formData.value = {
+  while (metadataOpts.length === 0) {
+    await new Promise((resolve) => setTimeout(resolve, 100))
+  }
+  const newFormData = {
     condition: 'or',
     resourceRules: data.rules.map((item: any) => {
       return {
         attribute: item.attributeName,
         value: Array.isArray(item.attributeValue) ? item.attributeValue : [item.attributeValue],
-        condition: item.operator,
-        type: resourceAttributes.find((attr) => attr.value === item.attributeName)?.type
+        condition: getKeyByValue(ConditionEnum, item.operator),
+        type: resourceAttributes.value.find((attr) => attr.value === item.attributeName)?.type
       }
     })
   }
+  formData.value = newFormData
+  formData.value.resourceRules.forEach((item: any) => {
+    SelectorDocTypeRef.value.onResourceAttributeChange(item, item.attribute, true)
+  })
 }
 function getFormData() {
   const params = {
     operator: formData.value.condition === 'or' ? 'OR' : 'AND',
     rules: formData.value.resourceRules.map((item: any) => {
       return {
-        attributeType: item.selectConfig?.type  || item.type,
+        attributeType: item.attribute === 'document_type' ? 2 : 1,
         attributeName: item.attribute,
-        operator: item.condition,
+        operator: ConditionEnum[item.condition],
         attributeValue: item.type === 'boolean' ? item.value : item.value.length > 1 ? item.value : item.value[0]
       }
     })
@@ -95,7 +119,8 @@ function getFormData() {
   return params
 }
 onMounted(() => {
-  getResourceAttributes()
+  resourceAttributes.value.push({ ...documentSetting })
+  getMetadata()
 })
 defineExpose({
   setFormData,

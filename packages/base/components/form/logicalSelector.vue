@@ -22,27 +22,26 @@
           <ElInput v-model.number="rule.value[0]" :placeholder="$t('dataField.apiFieldValue')" />
         </template>
       </div>
-      <div v-else-if="rule.type === 'string' || rule.type === 'boolean'" class="filter-row">
-        <ElSelect v-model="rule.condition" :placeholder="$t('dhList.condition')">
-          <ElOption v-for="cond in stringConditions" :key="cond.value" :label="cond.label" :value="cond.value" />
-        </ElSelect>
-        <ElInput v-if="rule.type === 'string'" v-model="rule.value[0]" :placeholder="$t('dataField.apiFieldValue')" />
-        <ElSwitch v-else v-model="rule.value[0]" />
-      </div>
+
       <div v-else-if="rule.type === 'select' || rule.type === 'select-dynamic'" class="filter-row">
         <ElSelect v-model="rule.condition" :placeholder="$t('dhList.condition')">
           <ElOption v-for="cond in stringConditions" :key="cond.value" :label="cond.label" :value="cond.value" />
         </ElSelect>
-        <ElSelect v-if="rule.type === 'select'" v-model="rule.value[0]" :placeholder="$t('dataField.apiFieldValue')" clearable filterable>
-          <ElOption
-            v-for="opt in rule.options"
-            :key="opt.value"
-            :label="opt.label"
-            :value="opt.value"
-            :disabled="opt.disabled"
-          />
+        <el-select-v2
+          v-if="rule.selectOptions"
+          v-model="rule.value[0]"
+          :options="rule.selectOptions"
+          filterable
+          clearable
+          :placeholder="$t('dataField.apiFieldValue')"
+        />
+      </div>
+      <div v-else class="filter-row">
+        <ElSelect v-model="rule.condition" :placeholder="$t('dhList.condition')">
+          <ElOption v-for="cond in stringConditions" :key="cond.value" :label="cond.label" :value="cond.value" />
         </ElSelect>
-        <el-select-v2 v-else v-model="rule.value[0]" :options="rule.selectOptions" filterable clearable :placeholder="$t('dataField.apiFieldValue')" />
+        <ElSwitch v-if="rule.type === 'boolean'" v-model="rule.value[0]" />
+        <ElInput v-else v-model="rule.value[0]" :placeholder="$t('dataField.apiFieldValue')" />
       </div>
       <el-divider v-if="index !== formData.resourceRules.length - 1 || formData.resourceRules.length > 1" content-position="left">
         <template v-if="index !== formData.resourceRules.length - 1">
@@ -70,6 +69,7 @@
 <script lang="ts" setup>
 import { getMasterTableOptions, getUserList, getUserGroupList, getRoleList } from '../meta/metadata'
 import { ArrowUp } from '@element-plus/icons-vue'
+import { adminApi } from 'api'
 const props = defineProps({
   isOr: {
     type: Boolean,
@@ -102,22 +102,32 @@ const stringConditions = [
 ]
 const selectConditions = stringConditions
 // 监听 attribute 变化，自动设置 type
-async function onResourceAttributeChange(rule: any, attrValue: string) {
+async function onResourceAttributeChange(rule: any, attrValue: string, isInit: boolean = false) {
   const attr = props.resourceAttributes.find((a) => a.value === attrValue)
   if (attr?.selectConfig) {
-    rule.selectOptions = await getSelectOptions(attr?.selectConfig)
+    rule.selectOptions = attr.selectConfig.options ? attr.selectConfig.options : await getSelectOptions(attr?.selectConfig)
     rule.selectConfig = attr?.selectConfig
   }
-  rule.type = attr?.type || ''
-  rule.condition = 'eq'
-  rule.value = attr?.type === 'boolean' ? false : []
-  emits('update:formData', props.formData)
+  if (!isInit) {
+    rule.type = attr?.type || ''
+    rule.condition = 'eq'
+    rule.value = attr?.type === 'boolean' ? false : []
+    emits('update:formData', props.formData)
+  }
+}
+function getDocumentTypes() {
+  return adminApi.api.getNuxeoTypes().then((res) => {
+    return res.data.map((item: any) => ({
+      label: item.name,
+      value: item.name
+    }))
+  })
 }
 async function getSelectOptions(selectConfig: any) {
   if (selectConfig.type === 'user') {
     return await getUserList()
   } else if (selectConfig.type === 'user_role_user_group') {
-     const options = []
+    const options = []
     if (selectConfig.allow !== 'USER_GROUP') {
       options.push({
         label: $t('user_role'),
@@ -139,6 +149,8 @@ async function getSelectOptions(selectConfig: any) {
       displayColumn: selectConfig.displayColumn,
       valueColumn: selectConfig.valueColumn
     })
+  } else if (selectConfig.type === 'document') {
+    return await getDocumentTypes()
   }
 }
 // 添加/删除规则
@@ -154,7 +166,8 @@ function removeResourceRule(index: number) {
   emits('update:formData', newFormData)
 }
 defineExpose({
-  addResourceRule
+  addResourceRule,
+  onResourceAttributeChange
 })
 </script>
 <style lang="scss" scoped>
