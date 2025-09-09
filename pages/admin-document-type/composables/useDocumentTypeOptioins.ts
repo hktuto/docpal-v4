@@ -5,7 +5,6 @@ export const metadataOpts = useState('metadataOpts', () => [])
 export const userRulesOpts = useState<any>('userRulesOpts', () => [])
 export const categoryOpts = useState('categoryOpts', () => [])
 export async function initMasterTableOpts() {
-  console.log('initMasterTableOpts', masterTableOpts.value)
   if (masterTableOpts.value.length > 0) return masterTableOpts.value
   const data = await adminApi.api
     .postMasterTablesPage({
@@ -17,9 +16,7 @@ export async function initMasterTableOpts() {
 }
 export async function initMetadataOpts() {
   // if (metadataOpts.value.length > 0) return metadataOpts.value
-  const data = await adminApi.api
-    .getDocpaltypeSettingsMetadataV2QueryCache()
-    .then((res: any) => res.data)
+  const data = await adminApi.api.getDocpaltypeSettingsMetadataV2QueryCache().then((res: any) => res.data)
   metadataOpts.value = data.map((item: any) => ({ label: item.name, value: item.id }))
 }
 export async function initCategoryOpts() {
@@ -28,7 +25,6 @@ export async function initCategoryOpts() {
   categoryOpts.value = data.map((item: any) => ({ label: item, value: item }))
 }
 export async function getMasterTableDisplayOpts(masterTableId: string) {
-  console.log('getMasterTableDisplayOpts', masterTableId)
   // if(masterTableOpts.value.length > 0) return masterTableOpts.value
   const data = await adminApi.api.getMasterTablesId(masterTableId).then((res: any) => res.data)
   return data.fields.map((item: any) => ({ label: item.columnName, value: item.columnName }))
@@ -58,10 +54,12 @@ export async function initUserRulesOpts() {
       label: 'user_role',
       value: 'userRole', // 1=User, 3=Group, 2=Role
       type: 'select',
-      options: flatRole.value.map((item: any) => ({
-        label: item.name,
-        value: item.id
-      }))
+      selectConfig: {
+        options: flatRole.value.map((item: any) => ({
+          label: item.name,
+          value: item.id
+        }))
+      }
     }
     // {
     //   label: 'user_groups',

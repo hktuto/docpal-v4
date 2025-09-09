@@ -9,7 +9,6 @@ const formData = ref({
 })
 
 async function setFormData(data) {
-  console.log(JSON.stringify(data))
   if (!data) {
     formData.value = {
       condition: 'or',
@@ -39,7 +38,6 @@ async function setFormData(data) {
       }
     }) || []
   }
-  console.log(formData.value)
 }
 function getFormData() {
   return formData.value.resourceRules.map((item: any) => {
