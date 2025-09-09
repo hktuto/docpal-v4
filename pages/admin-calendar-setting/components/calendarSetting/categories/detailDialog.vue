@@ -286,7 +286,7 @@ defineExpose({ open })
         </el-col>
         <el-col :span="12">
           <el-form-item :label="t('Update')">
-            <el-select id="CalendarSetting__EventLocations__EventCategories__Add__View" v-model="state.updateList"
+            <el-select id="CalendarSetting__EventLocations__EventCategories__Add__Update" v-model="state.updateList"
                        multiple filterable clearable collapse-tags placeholder="Select"
                        @blur="fillPermissionObject('update')">
               <el-option-group v-for="group in permissionOptions" :key="group.label" :label="group.label">
@@ -308,7 +308,7 @@ defineExpose({ open })
         </el-col>
         <el-col :span="12">
           <el-form-item :label="t('Cancel')">
-            <el-select id="CalendarSetting__EventLocations__EventCategories__Add__Remove" v-model="state.cancelList"
+            <el-select id="CalendarSetting__EventLocations__EventCategories__Add__Cancel" v-model="state.cancelList"
                        multiple filterable clearable collapse-tags placeholder="Select"
                        @blur="fillPermissionObject('cancel')">
               <el-option-group v-for="group in permissionOptions" :key="group.label" :label="group.label">
