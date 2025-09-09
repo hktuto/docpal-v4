@@ -10,7 +10,7 @@ export type VariableItem = {
   // maxLength?: number,
   // onValidate?: string
 }
-export type MetadataType = MetadataMasterTable | MetadataNumber | MetadataBoolean | MetadataSelect | MetadataDate | MetadataText | MetadataUserRoleUserGroup | MetadataUser
+export type MetadataType = MetadataMasterTable | MetadataNumber | MetadataBoolean | MetadataSelect | MetadataDate | MetadataText | MetadataUserRoleUserGroup | MetadataUser | MetadataSubForm
 export type DocumentMetadata = Record<string, MetadataType>
 export type MetadataConfig = {
   onMounted?: string
@@ -34,6 +34,10 @@ export type MetadataSelect = MetadataConfig & {
   validationName: 'select'
   options?: string[]
   isMultiple?: boolean
+}
+export type MetadataSubForm = MetadataConfig & {
+  validationName: 'sub_form'
+  widgetList?: MetadataType[]
 }
 export type MetadataDate = MetadataConfig & {
   validationName: 'date'
