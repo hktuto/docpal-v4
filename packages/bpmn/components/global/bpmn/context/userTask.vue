@@ -6,6 +6,10 @@ const { node } = defineProps<{
 }>()
 
 const switchRef = ref(true)
+const editorProvider = inject(EDITOR_PROVIDER)
+if (!editorProvider) {
+  throw createError('graph provider not found')
+}
 
 function handleSwitch() {
   const nodeData = node.getData()
@@ -47,7 +51,7 @@ function handleSwitch() {
 
 watch(() => node, () => {
   if (node) {
-    switchRef.value = ['attr_flowable:candidateGroups'] in node.data.data
+    switchRef.value = 'attr_flowable:candidateGroups' in node.data.data
   }
 }, {
   immediate: true,
@@ -59,7 +63,8 @@ watch(() => node, () => {
   <div class="fromContainer">
     <BpmnSidebarEditLabel :node="node" />
     <BpmnSidebarEditAssignee :node="node" />
-    <el-switch v-model="switchRef" size="small" active-text="Group" inactive-text="Roles" @change="handleSwitch" />
+    <el-switch :disabled="editorProvider.readonly.value" v-model="switchRef" size="small" active-text="Group"
+               inactive-text="Roles" @change="handleSwitch" />
     <BpmnSidebarEditCandidateGroup v-if="switchRef" :node="node" />
     <BpmnSidebarEditCandidateRoles v-else :node="node" />
     <BpmnSidebarEditForm :node="node" />

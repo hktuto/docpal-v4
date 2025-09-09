@@ -75,7 +75,8 @@ defineExpose({
   grid-template-rows: min-content 1fr;
   overflow: hidden;
   container-type: inline-size;
-  border-radius: 12px;
+  border-radius: 6px;
+  border: 1px solid var(--app-grey-750);
 }
 :deep(.el-card__header) {
   margin: 0;

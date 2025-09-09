@@ -28,7 +28,7 @@ if(platform === 'admin') {
 <template>
   <AuthState>
     <template #default="{ loggedIn, logout }">
-      <AppEntry @ready="localeReady = true" mode="admin" :defaultTab="defaultTab">
+      <AppEntry @ready="localeReady = true"  mode="admin" :defaultTab="defaultTab">
         <template v-if="localeReady" #sidebar>
           <AppMenu class="sideMenu" admin>
             <template #header>
@@ -54,6 +54,13 @@ if(platform === 'admin') {
 .logoContainer {
   // padding: var(--menu-item-padding);
   --icon-size: calc(var(--icon-font-size) + (var(--menu-item-padding) * 2));
+}
+
+</style>
+<style>
+.appFullPage{
+  --app-bg: radial-gradient(72% 72% at 2% -5%, #f3d4b9 0%, #efebe8 51%, #f3f0f0 100%);
+  --app-accent-color: #512e0e;
 }
 </style>
 

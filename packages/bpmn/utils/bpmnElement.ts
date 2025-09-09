@@ -236,7 +236,7 @@ export const bpmnElement: BpmnElement = {
             }
           })
         })
-      },
+      }
       // {
       //   icon: 'bpmn:signature',
       //   label: 'Signature',
@@ -402,7 +402,7 @@ export const bpmnElement: BpmnElement = {
       let textColor = '#000'
       if (item['attr_flowable:type'] === 'http') {
         icon = '/bpmn/icons/http-task.svg'
-        type = 'http'
+        type = 'Http Task'
         color = '#7B61FF'
       } else {
         if (!item['attr_flowable:delegateExpression']) {
@@ -465,6 +465,11 @@ export const bpmnElement: BpmnElement = {
           case '${documentFolderCabinetDelegate}':
             icon = '/bpmn/icons/browse.svg'
             type = 'Folder Cabinet'
+            color = '#7B61FF'
+            break
+          case '${docpalNotificationDelegate}':
+            icon = '/bpmn/icons/browse.svg'
+            type = 'Send Notification'
             color = '#7B61FF'
             break
         }
@@ -874,13 +879,54 @@ export const bpmnElement: BpmnElement = {
             }
           })
         })
+      },
+      {
+        icon: 'bpmn:browse',
+        label: 'Send Notification',
+        group: '',
+        order: 0,
+        dropData: (id: string) => ({
+          id,
+          ...bpmnElement.serviceTask.nodeStyle({
+            ['attr_flowable:delegateExpression']: '${docpalNotificationDelegate}',
+            extensionElements: {
+              ['flowable:field']: [
+                {
+                  attr_name: 'message',
+                  'flowable:string': { __cdata: '' }
+                },
+                {
+                  attr_name: 'notificationUserFromVariables',
+                  'flowable:expression': { __cdata: '' }
+                }
+              ]
+            }
+          }),
+          label: 'Send Message to user',
+          data: bpmnElement.serviceTask.newNodeData(id, 'Send Notification', {
+            attr_id: id,
+            attr_name: 'Send Notification',
+            ['attr_flowable:delegateExpression']: '${docpalNotificationDelegate}',
+            extensionElements: {
+              ['flowable:field']: [
+                {
+                  attr_name: 'message',
+                  'flowable:string': { __cdata: '' }
+                },
+                {
+                  attr_name: 'notificationUserFromVariables',
+                  'flowable:expression': { __cdata: '' }
+                }
+              ]
+            }
+          })
+        })
       }
     ],
     newNodeData: (id, label, data) => ({
       id,
       name: label,
       type: BpmnElementType['serviceTask'],
-
       data
     }),
     clickHandler: () => {
@@ -917,6 +963,8 @@ export const bpmnElement: BpmnElement = {
           return 'LazyBpmnContextPDFWriter'
         case '${documentFolderCabinetDelegate}':
           return 'LazyBpmnContextFolderCabinet'
+        case '${docpalNotificationDelegate}':
+          return 'LazyBpmnContextMessage'
         default:
           return 'LazyBpmnContextCustomeService'
       }

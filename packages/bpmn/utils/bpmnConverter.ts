@@ -271,8 +271,8 @@ export const graphToBpmnJson = (graph:Graph, bpmnJson:any) => {
             }
         }
     }
-    if(bpmnJson.definitions.process['attr_flowable:candidateStarterGroups']) {
-        json.definitions.process['attr_flowable:candidateStarterGroups'] = bpmnJson.definitions.process['attr_flowable:candidateStarterGroups']
+    if(bpmnJson.definitions.process['attr_flowable:candidateGroups']) {
+        json.definitions.process['attr_flowable:candidateGroups'] = bpmnJson.definitions.process['attr_flowable:candidateGroups']
     }
     const nodes = graph.getNodes()
     const edges = graph.getEdges()

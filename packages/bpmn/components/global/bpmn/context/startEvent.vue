@@ -1,10 +1,14 @@
 <script lang="ts" setup>
 import type { Node } from '@antv/x6'
+
 const { node } = defineProps<{
-    node:Node
+  node: Node
 }>()
 const emits = defineEmits(['openForm'])
-
+const editorProvider = inject(EDITOR_PROVIDER)
+if (!editorProvider) {
+  throw createError('graph provider not found')
+}
 const switchRef = ref(true)
 
 function handleSwitch() {
@@ -47,30 +51,41 @@ function handleSwitch() {
 
 watch(() => node, () => {
   if (node) {
-    switchRef.value = ['attr_flowable:candidateGroups'] in node.data.data
+    switchRef.value = 'attr_flowable:candidateGroups' in node.data.data
   }
 }, {
   immediate: true,
   deep: true
 })
+// TODO: 開啓下方的role設定，也需要將該代碼打開
+// watch(() => node, () => {
+//   if (node) {
+//     switchRef.value = ['attr_flowable:candidateGroups'] in node.data.data
+//   }
+// }, {
+//   immediate: true,
+//   deep: true
+// })
 </script>
 
 <template>
-<div class="fromContainer">
+  <div class="fromContainer">
     <BpmnSidebarEditLabel :node="node" />
-  <el-switch v-model="switchRef" size="small" active-text="Group" inactive-text="Roles" @change="handleSwitch" />
-    <BpmnSidebarEditStartCandidate v-if="switchRef" :node="node"  />
-    <BpmnSidebarEditCandidateRoles v-else :node="node" />
+    <!-- TODO: 後端暫時未支援role的設定   -->
+    <!--        <el-switch :disabled="editorProvider.readonly.value" v-model="switchRef" size="small" active-text="Group"
+               inactive-text="Roles" @change="handleSwitch" />-->
+    <!--    <BpmnSidebarEditStartCandidate v-if="switchRef" :node="node" />-->
+    <!--    <BpmnSidebarEditCandidateRoles v-else :node="node" />-->
+    <BpmnSidebarEditStartCandidate :node="node" />
     <BpmnSidebarStarterAdditionLogic :node="node" />
     <BpmnSidebarEditForm :node="node" />
     <BpmnSidebarPreviewDocument :node="node" />
     <BpmnSidebarBooleanButton :node="node" />
-</div>
+  </div>
 </template>
 
-
 <style lang="scss" scoped>
-.fromContainer{
-    overflow: auto;
+.fromContainer {
+  overflow: auto;
 }
 </style>

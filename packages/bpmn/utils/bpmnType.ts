@@ -60,7 +60,7 @@ export type BPMNJSON = {
         [key : string]: any
     },
     process:{
-        'attr_flowable:candidateStarterGroups': string
+        'attr_flowable:candidateGroups': string
         attr_id: string
         attr_isExecutable: boolean
         attr_name: string

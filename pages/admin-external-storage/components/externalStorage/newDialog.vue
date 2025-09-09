@@ -47,7 +47,8 @@ async function handleSubmit() {
         port: data.port,
         password: data.password,
         secret: data.secret,
-        username: data.username
+        username: data.username,
+        host: data.host,
       }
     }
     if (state.isEdit) {

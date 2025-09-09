@@ -31,6 +31,7 @@ const drag = ref(false)
 const formItems = ref<any[]>([])
 const RuleManageDialogRef = ref()
 const openedItems = ref<string[]>([])
+
 function ruleAdd(newField: any, callback: () => void) {
   console.log('ruleAdd', newField)
   const taskField = {
@@ -73,10 +74,12 @@ function formChange() {
   node.setData(newData, { overwrite: true, deep: true, silent: false })
   graphProvider?.graph.value?.stopBatch('update-from-data')
 }
+
 function deleteRule(id: string) {
   formItems.value = formItems.value.filter((item) => item.attr_id !== id)
   graphProvider?.graph.value?.cleanHistory()
 }
+
 function updateRule(newField: any) {
   const index = formItems.value.findIndex((item) => item.attr_id === newField.id)
   if (index !== -1) {
@@ -89,6 +92,7 @@ function updateRule(newField: any) {
   graphProvider?.graph.value?.cleanHistory()
   console.log('updateRule', graphProvider)
 }
+
 function removeFormItem(index: number) {
   graphProvider?.graph.value?.startBatch('update-from-data')
   node.setData(
@@ -114,6 +118,7 @@ function removeFormItem(index: number) {
   node.setData(newData, { overwrite: true, deep: true, silent: false })
   graphProvider?.graph.value?.stopBatch('update-from-data')
 }
+
 function editItem(id: string) {
   if (editorProvider?.readonly.value) return
   // if openedItems include id, remove it
@@ -123,6 +128,7 @@ function editItem(id: string) {
     openedItems.value.push(id)
   }
 }
+
 function refreshData() {
   if (!node.data || !node.data.data || !node.data.data.extensionElements) {
     node.setData(
@@ -231,13 +237,17 @@ watch(
       </div>
     </div>
     <div class="actionsContainer">
-      <ElButton type="primary" @click="editField" :disabled="editorProvider.readonly.value"> Edit Field </ElButton>
-      <ElButton type="primary" @click="editorProvider.openForm(node)"> Edit Form </ElButton>
-      <ElButton type="primary" @click="editorProvider.previewForm(node)"> Preview Form </ElButton>
+      <ElButton type="primary" @click="editField" :disabled="editorProvider.readonly.value"> Edit Field</ElButton>
+      <ElButton type="primary" :disabled="editorProvider.readonly.value" @click="editorProvider.openForm(node)">
+        Edit Form
+      </ElButton>
+      <ElButton type="primary" @click="editorProvider.previewForm(node)"> Preview Form</ElButton>
     </div>
-    <Eldivider />
+    <El-divider />
     <div class="actionsContainer">
-      <ElButton type="link" size="small" @click="copyFormAndFieldSetting" :disabled="editorProvider.readonly.value">Copy Form and Field setting</ElButton>
+      <ElButton type="link" size="small" @click="copyFormAndFieldSetting" :disabled="editorProvider.readonly.value">Copy
+        Form and Field setting
+      </ElButton>
 
       <ElButton
         v-if="editorProvider.copyKey.value && editorProvider.copyKey.value !== node.data.id"
@@ -249,7 +259,8 @@ watch(
         Paste Form
       </ElButton>
     </div>
-    <BpmnRuleManageDialog ref="RuleManageDialogRef" :fields="formItems" :rules="bpmnGlobalRules" @change="fieldUpdate" @rule-add="ruleAdd" @update-rule="updateRule" @delete-rule="deleteRule" />
+    <BpmnRuleManageDialog ref="RuleManageDialogRef" :fields="formItems" :rules="bpmnGlobalRules" @change="fieldUpdate"
+                          @rule-add="ruleAdd" @update-rule="updateRule" @delete-rule="deleteRule" />
   </div>
 </template>
 
@@ -258,6 +269,7 @@ watch(
   padding: 0;
   margin: var(--app-space-s) 0;
 }
+
 .formFieldItem {
   display: flex;
   flex-flow: column nowrap;
@@ -267,35 +279,43 @@ watch(
   gap: calc(var(--app-space-s) / 2);
   font-size: var(--app-font-size-s);
   transition: all 0.2s ease-in-out;
+
   &.opened {
     background: var(--app-grey-975);
   }
+
   .header {
     width: 100%;
     display: flex;
     flex-flow: row nowrap;
     justify-content: flex-start;
     align-items: center;
+
     .label {
       cursor: pointer;
       flex: 1 0 auto;
     }
   }
+
   .body {
     width: 100%;
     padding: var(--app-space-xs);
     border-top: 1px solid var(--app-grey-950);
   }
 }
+
 .formFieldItem + .formFieldItem {
   border-top: 1px solid var(--app-grey-950);
 }
+
 .actions {
   cursor: pointer;
 }
+
 .mover {
   cursor: move;
 }
+
 .actionsContainer {
   display: flex;
   flex-flow: column nowrap;
@@ -305,13 +325,16 @@ watch(
   gap: var(--app-space-xs);
   padding-block: var(--app-space-xs);
   border-top: 1px solid var(--app-grey-850);
+
   > * {
     width: 100%;
   }
+
   :deep(.el-button + .el-button) {
     margin-left: 0;
   }
 }
+
 .flip-list-move {
   transition: transform 0.5s;
 }
