@@ -89,19 +89,45 @@ function handleClose() {
  */
 async function save() {
   const {html, json, variable} = await editorEl.value.getData();
+  try{
 
-  // if id is new , create new
-  // check form valid
-  // if (id === "new") {
+
+    // if id is new , create new
+    // check form valid
+    // if (id === "new") {
     if (infoFormEl.value) {
-      try {
-        await infoFormEl.value.validate()
-      } catch (e) {
-        console.error(e)
-        return
+        try {
+          await infoFormEl.value.validate()
+        } catch (e) {
+          console.error(e)
+          return
+        }
+      // }
+      const result = await adminApi.api.postTemplateEmailTemplate({
+        ...data.value,
+        // TODO : send html to body
+        // url encode html
+        body: html,
+        emailLayoutId: selectedLayout.value,
+        emailTemplateJson: JSON.stringify(json),
+        emailTemplateVariable: JSON.stringify(variable),
+      }).then(res => res.data)
+      if (result?.id) {
+        routerProvider?.updateProps({
+          label: result.id,
+          id: result.id
+        })
       }
-    // }
-    const result = await adminApi.api.postTemplateEmailTemplate({
+      routerProvider?.message.success(t('tip_createdSuccessMsg', {modelName: t('Email.fields'), name: data.value.label}));
+      editInfoOpened.value = false;
+      showClose.value = true;
+      // TODO : add notification
+      return;
+    }
+    // update new variable
+    // test save json to backend
+    await adminApi.api.putTemplateEmailTemplate({
+      id: id,
       ...data.value,
       // TODO : send html to body
       // url encode html
@@ -109,36 +135,15 @@ async function save() {
       emailLayoutId: selectedLayout.value,
       emailTemplateJson: JSON.stringify(json),
       emailTemplateVariable: JSON.stringify(variable),
-    }).then(res => res.data)
-    if (result?.id) {
-      routerProvider?.updateProps({
-        label: result.id,
-        id: result.id
-      })
-    }
-    routerProvider?.message.success(t('tip_createdSuccessMsg', {modelName: t('Email.fields'), name: data.value.label}));
+    });
+    routerProvider?.message.success(t('tip_updateSuccessMsg', {
+      modelName: t('Email.fields'),
+      name: data.value.label
+    }));
     editInfoOpened.value = false;
-    showClose.value = true;
-    // TODO : add notification
-    return;
+  } catch (error) {
+    console.error(error)
   }
-  // update new variable
-  // test save json to backend
-  await adminApi.api.putTemplateEmailTemplate({
-    id: id,
-    ...data.value,
-    // TODO : send html to body
-    // url encode html
-    body: html,
-    emailLayoutId: selectedLayout.value,
-    emailTemplateJson: JSON.stringify(json),
-    emailTemplateVariable: JSON.stringify(variable),
-  });
-  routerProvider?.message.success(t('tip_updateSuccessMsg', {
-    modelName: t('Email.fields'),
-    name: data.value.label
-  }));
-  editInfoOpened.value = false;
   // TODO : add notification
 }
 
