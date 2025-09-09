@@ -334,7 +334,7 @@ defineExpose({ open })
                        multiple filterable clearable collapse-tags placeholder="Select"
                        @blur="fillPermissionObject('export')">
               <el-option-group v-for="group in permissionOptions" :key="group.label" :label="group.label">
-                <el-option v-for="item in group.options" :key="item.value" :label="item.location" :value="item.value" />
+                <el-option v-for="item in group.options" :key="item.value" :label="item.label" :value="item.value" />
               </el-option-group>
             </el-select>
           </el-form-item>
