@@ -260,7 +260,7 @@ defineExpose({ open })
     <el-form ref="formRef" :model="currentData" label-position="top" :rules="rules">
       <h4>Information</h4>
       <el-form-item :label="t('Name') " prop="name">
-        <el-input id="CalendarSetting__EventLocations__EventCategories__Add__AllowExternalUserToRegister"
+        <el-input id="CalendarSetting__EventLocations__EventCategories__Add__Name"
                   v-model="currentData.name" />
       </el-form-item>
 
@@ -286,7 +286,7 @@ defineExpose({ open })
         </el-col>
         <el-col :span="12">
           <el-form-item :label="t('Update')">
-            <el-select id="CalendarSetting__EventLocations__EventCategories__Add__View" v-model="state.updateList"
+            <el-select id="CalendarSetting__EventLocations__EventCategories__Add__Update" v-model="state.updateList"
                        multiple filterable clearable collapse-tags placeholder="Select"
                        @blur="fillPermissionObject('update')">
               <el-option-group v-for="group in permissionOptions" :key="group.label" :label="group.label">
@@ -308,7 +308,7 @@ defineExpose({ open })
         </el-col>
         <el-col :span="12">
           <el-form-item :label="t('Cancel')">
-            <el-select id="CalendarSetting__EventLocations__EventCategories__Add__Remove" v-model="state.cancelList"
+            <el-select id="CalendarSetting__EventLocations__EventCategories__Add__Cancel" v-model="state.cancelList"
                        multiple filterable clearable collapse-tags placeholder="Select"
                        @blur="fillPermissionObject('cancel')">
               <el-option-group v-for="group in permissionOptions" :key="group.label" :label="group.label">
@@ -334,7 +334,7 @@ defineExpose({ open })
                        multiple filterable clearable collapse-tags placeholder="Select"
                        @blur="fillPermissionObject('export')">
               <el-option-group v-for="group in permissionOptions" :key="group.label" :label="group.label">
-                <el-option v-for="item in group.options" :key="item.value" :label="item.location" :value="item.value" />
+                <el-option v-for="item in group.options" :key="item.value" :label="item.label" :value="item.value" />
               </el-option-group>
             </el-select>
           </el-form-item>
@@ -422,11 +422,11 @@ defineExpose({ open })
       </el-form-item>
     </el-form>
     <template #footer>
-      <el-button id="CalendarSetting__EventLocations__EventCategories__Add__Cancel" @click="opened = false">
+      <el-button id="CalendarSetting__EventLocations__EventCategories__Add__Dialog__Cancel" @click="opened = false">
         {{ t('Cancel') }}
       </el-button>
       <el-button type="primary" @click="submit"
-                 :id="`CalendarSetting__EventLocations__EventCategories__Add__${isEdit ? 'Save' : 'Create'}`">
+                 :id="`CalendarSetting__EventLocations__EventCategories__Add__Dialog__${isEdit ? 'Save' : 'Create'}`">
         {{ isEdit ? t('Save') : t('Create') }}
       </el-button>
     </template>
