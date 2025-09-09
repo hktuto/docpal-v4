@@ -33,6 +33,7 @@ export const useMetadata = () => {
     if (!initOptions.requiredFields) initOptions.requiredFields = []
     if (!initOptions.readonlyFields) initOptions.readonlyFields = []
     const metadataList = await getDocumentMetadata(type)
+    console.log('metadataList', metadataList)
     const variableList: VariableItem[] = getVFormVariableListByMetadata(metadataList, initOptions)
     return variableList
   }
@@ -44,6 +45,7 @@ export const useMetadata = () => {
       const { data }: any = await clientApi.api.getTypesMetadataGenerateJsonSchemaDocpaltypename(type, {
         headers: { noThrowError: 'true' }
       })
+      console.log('data', data)
       const metadataSchema: any = data.properties || {}
       metadataMap.value[type] = await initMetadataVformOptions(metadataSchema, isInitOption)
       return metadataMap.value[type]
@@ -179,10 +181,10 @@ export const useMetadata = () => {
           resultItem.type = numberResult.type
           break
         case 'text':
-          resultItem.type = 'textarea'
-          resultItem.options.maxLength = row.maxLength || 0
-          const row60 = (resultItem.options.maxLength / 60).toFixed(0)
-          resultItem.options.rows = Number(row60) > 0 ? Number(row60) : 1
+          _item.type = 'textarea'
+          _item.options.maxLength = metadataItem.maxLength || 0
+          const row60 = ((_item.options.maxLength / 60).toFixed(0)) || 1
+          _item.options.rows = Math.max(1, Math.min(Number(row60), 10))
           break
         case 'boolean':
           resultItem.type = 'switch'
