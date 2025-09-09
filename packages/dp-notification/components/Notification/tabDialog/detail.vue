@@ -24,15 +24,19 @@
           }}
         </div>
         <div v-if="item.content.message"> {{ item.content.message }}</div>
+<!--        <el-alert v-if="item.content.message" :title="item.content.message"-->
+<!--                  :type="JSON.parse(item.content.message).level" :closable="false" />-->
         {{ item.content.comment }}
         <div>{{ item.creator }}</div>
         <div>
-          <el-button :loading="item.loading" :test-id="`notification-dismiss-button-${item.id}`" type="info" @click="handleDismiss(item)">{{
-            $t('button.dismiss')
-          }}</el-button>
-          <el-button v-if="notiShowView(item)" :test-id="`notification-view-button-${item.id}`" type="primary" @click="handleView(item)">{{
-            $t('button.view')
-          }}</el-button>
+          <el-button :loading="item.loading" :test-id="`notification-dismiss-button-${item.id}`" type="info"
+                     @click="handleDismiss(item)">
+            {{ $t('button.dismiss') }}
+          </el-button>
+          <el-button v-if="notiShowView(item)" :test-id="`notification-view-button-${item.id}`" type="primary"
+                     @click="handleView(item)">
+            {{ $t('button.view') }}
+          </el-button>
         </div>
         <el-divider />
       </div>
@@ -44,6 +48,7 @@
 <script lang="ts" setup>
 import { clientApi } from 'api'
 import { TabManagerKey } from '#imports'
+
 const tabProvider = inject(TabManagerKey)
 const props = defineProps(['type'])
 const emits = defineEmits(['close', 'unreadCountChange'])
@@ -65,6 +70,7 @@ const state = reactive<any>({
   loading: false,
   scrollNoMore: true
 })
+
 async function getList() {
   const param: any = {
     readStatus: 'CREATE'
@@ -73,6 +79,7 @@ async function getList() {
   try {
     state.loading = true
     const { data: res }: any = await clientApi.api.postNotificationQueryNotificationList({ ...param, ...pageParams.value })
+    console.log(2, res)
     res.entryList.map((item: any) => {
       try {
         if (typeof item.content === 'string') {
@@ -95,6 +102,7 @@ async function getList() {
     state.scrollNoMore = state.list.length >= state.totalSize
   }
 }
+
 async function handleDismiss(item: any) {
   try {
     item.loading = true
@@ -113,11 +121,13 @@ async function handleView(item: any) {
   handleDismiss(item)
   emits('close')
 }
+
 function initData(noGetData: boolean = false) {
   state.list = []
   pageParams.value.pageNum = 0
   if (!noGetData) getList()
 }
+
 onMounted(() => {
   initData()
 })
@@ -127,11 +137,13 @@ defineExpose({ initData })
 .el-divider--horizontal {
   margin: var(--app-space-xs) 0;
 }
+
 .notificationContent {
   display: flex;
   flex-direction: column;
   gap: var(--app-space-xs);
 }
+
 .center {
   text-align: center;
 }
