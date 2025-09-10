@@ -120,7 +120,7 @@ async function getData(isValidate: boolean = false) {
   function getErrorMessage(doc: any) {
     const message = []
     const labelRules = getLabelList(doc.labelRule)
-    const requiredFields = labelRules.map((item: any) => item.metadata)
+    const requiredFields = labelRules.map((item: any) => (item.metadata || item.metaData))
     const _requiredFields = requiredFields.filter((key) => !['fc:docTitle','fc:label', 'fc:createDate', 'fc:creator'].includes(key))
     _requiredFields.forEach((key) => {
       if (!doc.properties[key]) {
@@ -150,7 +150,7 @@ async function handleNodeClick(row: any) {
   // 用了 v-if，如果不用 nextTick 会报错
   nextTick(async () => {
     const labelRules = getLabelList(state.selectedRow.labelRule)
-    const requiredFields = labelRules.map((item: any) => item.metadata)
+    const requiredFields = labelRules.map((item: any) => (item.metadata || item.metaData))
     await MetaFormRef.value.init(state.selectedRow.documentType, {
       requiredFields
     })
