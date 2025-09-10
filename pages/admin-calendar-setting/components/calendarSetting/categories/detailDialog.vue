@@ -260,13 +260,13 @@ defineExpose({ open })
   <ElDialog v-model="opened" :title="isEdit ? $t('Edit Calendar') : $t('Create Calendar')" top="5vh" width="800px">
     <el-form ref="formRef" :model="currentData" label-position="top" :rules="rules">
       <h4>Information</h4>
-      <el-form-item :label="t('Name') " prop="name" id="CalendarSetting__EventLocations__EventCategories__Add__Name">
-        <el-input v-model="currentData.name" />
+      <el-form-item :label="t('Name') " prop="name">
+        <el-input v-model="currentData.name" id="CalendarSetting__EventLocations__EventCategories__Add__Name" />
       </el-form-item>
 
-      <el-form-item :label="t('Allow External User To Register')"
-                    id="CalendarSetting__EventLocations__EventCategories__Add__AllowExternalUserToRegister">
-        <el-switch v-model="currentData.register" active-text="Yes" inactive-text="No" />
+      <el-form-item :label="t('Allow External User To Register')">
+        <el-switch v-model="currentData.register" active-text="Yes" inactive-text="No"
+                   id="CalendarSetting__EventLocations__EventCategories__Add__AllowExternalUserToRegister" />
       </el-form-item>
 
       <el-divider />
@@ -274,9 +274,10 @@ defineExpose({ open })
       <h4>Permission</h4>
       <el-row :gutter="10">
         <el-col :span="12">
-          <el-form-item :label="t('View')" id="CalendarSetting__EventLocations__EventCategories__Add__View">
+          <el-form-item :label="t('View')">
             <el-select v-model="state.viewList" multiple filterable clearable collapse-tags placeholder="Select"
-                       @blur="fillPermissionObject('view')">
+                       @blur="fillPermissionObject('view')"
+                       id="CalendarSetting__EventLocations__EventCategories__Add__View">
               <el-option-group v-for="group in permissionOptions" :key="group.label" :label="group.label">
                 <el-option v-for="item in group.options" :key="item.value" :label="item.label" :value="item.value" />
               </el-option-group>
@@ -285,8 +286,8 @@ defineExpose({ open })
         </el-col>
         <el-col :span="12">
           <el-form-item :label="t('Update')">
-            <el-select id="CalendarSetting__EventLocations__EventCategories__Add__Update" v-model="state.updateList"
-                       multiple filterable clearable collapse-tags placeholder="Select"
+            <el-select v-model="state.updateList" multiple filterable clearable collapse-tags placeholder="Select"
+                       id="CalendarSetting__EventLocations__EventCategories__Add__Update"
                        @blur="fillPermissionObject('update')">
               <el-option-group v-for="group in permissionOptions" :key="group.label" :label="group.label">
                 <el-option v-for="item in group.options" :key="item.value" :label="item.label" :value="item.value" />
