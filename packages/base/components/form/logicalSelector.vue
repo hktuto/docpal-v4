@@ -11,7 +11,7 @@
       >
         <template #default="{ item }">
           <span>{{ item.label }}</span>
-          <el-tag v-if="item.tag" class="el-icon--right" :type="item.tagType || 'info'" size="small" >{{ item.tag }}</el-tag>
+          <el-tag v-if="item.tag" class="el-icon--right" :type="item.tagType || 'info'" size="small">{{ item.tag }}</el-tag>
         </template>
       </el-select-v2>
       <div v-if="rule.type === 'number'" class="filter-row">
@@ -109,15 +109,15 @@ const selectConditions = stringConditions
 // 监听 attribute 变化，自动设置 type
 async function onResourceAttributeChange(rule: any, attrValue: string, isInit: boolean = false) {
   const attr = props.resourceAttributes.find((a) => a.value === attrValue)
-  if (attr?.selectConfig) {
-    rule.selectOptions = attr.selectConfig.options ? attr.selectConfig.options : await getSelectOptions(attr?.selectConfig)
-    rule.selectConfig = attr?.selectConfig
-  }
   if (!isInit) {
     rule.type = attr?.type || ''
     rule.condition = 'eq'
     rule.value = attr?.type === 'boolean' ? false : []
     emits('update:formData', props.formData)
+  }
+  if (attr?.selectConfig) {
+    rule.selectOptions = attr.selectConfig.options ? attr.selectConfig.options : await getSelectOptions(attr?.selectConfig)
+    rule.selectConfig = attr?.selectConfig
   }
 }
 function getDocumentTypes() {
