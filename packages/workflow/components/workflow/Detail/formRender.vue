@@ -138,7 +138,7 @@ async function revertUploadFile(ids: any, mode: 'workflow' | 'nuxeo' = 'workflow
   }
   const response = await Promise.all(pList)
   response.forEach((item) => {
-    if (item && item.name) result.push({ id: item.contentId || item.id, name: item.name })
+    if (item && item.name) result.push({ id: item.contentId || item.id, name: item.properties?.['dc:title'] || item.name })
   })
   return result
 }

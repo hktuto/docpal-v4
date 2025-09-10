@@ -19,22 +19,22 @@ export interface Result {
     locale?: string;
 }
 
-export interface ResultObject {
-    result?: boolean;
-    /** @format int32 */
-    code?: number;
-    message?: string;
-    data?: object;
-    messageKey?: string;
-    locale?: string;
-}
-
 export interface ResultString {
     result?: boolean;
     /** @format int32 */
     code?: number;
     message?: string;
     data?: string;
+    messageKey?: string;
+    locale?: string;
+}
+
+export interface ResultObject {
+    result?: boolean;
+    /** @format int32 */
+    code?: number;
+    message?: string;
+    data?: object;
     messageKey?: string;
     locale?: string;
 }
@@ -272,6 +272,10 @@ export interface UserDTO {
     phone?: string;
     /** Department */
     company?: string;
+    /** User Level */
+    userLevel?: string;
+    /** Registered */
+    registered?: string;
     userName?: string;
     kcUserId?: string;
     groupDTOList?: GroupDTO[];
@@ -321,6 +325,99 @@ export interface ResultExternalStorageImportJobDTO {
     message?: string;
     /** Updated import job information */
     data?: ExternalStorageImportJobDTO;
+    messageKey?: string;
+    locale?: string;
+}
+
+export interface ContactAttribute {
+    value?: string;
+    name?: string;
+    dataType?: string;
+    required?: boolean;
+    validationRule?: string;
+}
+
+export interface ContactGroupRequestDTO {
+    /** Fuzzy Search Parameter */
+    q?: string;
+    /**
+     * Page Number
+     * @format int32
+     */
+    pageNum?: number;
+    /**
+     * Page Size
+     * @format int32
+     */
+    pageSize?: number;
+    /** The sortBy fields */
+    orderBy?: string;
+    /** The sort ASC or DESC */
+    isDesc?: boolean;
+    id?: string;
+    name?: string;
+    status?: string;
+    description?: string;
+    permissions?: Record<string, Permission>;
+    attributes?: ContactAttribute[];
+    operator?: string;
+    verifyReadPermission?: boolean;
+    sort?: SortObject;
+    descSort?: SortObject;
+    desc?: boolean;
+    orderByValue?: string;
+}
+
+export interface Permission {
+    users?: string[];
+    roles?: string[];
+    groups?: string[];
+}
+
+export interface SortObject {
+    sorted?: boolean;
+    empty?: boolean;
+    unsorted?: boolean;
+}
+
+export interface BasicField {
+    dataType?: string;
+    value?: string;
+    name?: string;
+}
+
+export interface ContactGroupResponseDTO {
+    id?: string;
+    name?: string;
+    status?: string;
+    createdBy?: string;
+    modifiedBy?: string;
+    createdByName?: string;
+    modifiedByName?: string;
+    /** @format date-time */
+    createdDate?: string;
+    /** @format date-time */
+    modifiedDate?: string;
+    permissions?: Record<string, BasicField[]>;
+    attributes?: ContactAttribute[];
+}
+
+export interface ResultContactGroupResponseDTO {
+    result?: boolean;
+    /** @format int32 */
+    code?: number;
+    message?: string;
+    data?: ContactGroupResponseDTO;
+    messageKey?: string;
+    locale?: string;
+}
+
+export interface ResultMapStringObject {
+    result?: boolean;
+    /** @format int32 */
+    code?: number;
+    message?: string;
+    data?: Record<string, object>;
     messageKey?: string;
     locale?: string;
 }
@@ -397,6 +494,17 @@ export interface ExternalStorageDTO {
     last_modify_by?: string;
 }
 
+export interface ResultExternalStorageDTO {
+    result?: boolean;
+    /** @format int32 */
+    code?: number;
+    message?: string;
+    /** External Storage Configuration */
+    data?: ExternalStorageDTO;
+    messageKey?: string;
+    locale?: string;
+}
+
 /** External Storage Profile Configuration */
 export interface ExternalProfileDTO {
     /** Unique identifier for the external storage profile */
@@ -437,6 +545,17 @@ export interface ExternalProfileDTO {
     output_settings?: Record<string, object>[];
 }
 
+export interface ResultExternalProfileDTO {
+    result?: boolean;
+    /** @format int32 */
+    code?: number;
+    message?: string;
+    /** External Storage Profile Configuration */
+    data?: ExternalProfileDTO;
+    messageKey?: string;
+    locale?: string;
+}
+
 /** Event Calendar Setting */
 export interface EventCalendarSetting {
     /** Event calendar setting ID */
@@ -451,7 +570,6 @@ export interface EventCalendarSetting {
     registered?: boolean;
     /** Location configuration settings */
     location?: Record<string, object>;
-    /** EventCalendarSetting Permission */
     permission?: Permission;
     /** Workflow Configuration Settings */
     flows?: Workflows[];
@@ -466,22 +584,6 @@ export interface EventCalendarSetting {
      * @format int32
      */
     availableSeat?: number;
-}
-
-/** EventCalendarSetting Permission */
-export interface Permission {
-    /** View configuration settings */
-    view?: Record<string, string[]>;
-    /** Create event configuration settings */
-    create?: Record<string, string[]>;
-    /** Update event configuration settings */
-    update?: Record<string, string[]>;
-    /** Cancel event configuration settings */
-    cancel?: Record<string, string[]>;
-    /** Remove event configuration settings */
-    remove?: Record<string, string[]>;
-    /** Remove event configuration settings */
-    export?: Record<string, string[]>;
 }
 
 /** Workflow Configuration Settings */
@@ -785,12 +887,6 @@ export interface DocumentTemplateRequestDTO {
     orderByValue?: string;
 }
 
-export interface SortObject {
-    sorted?: boolean;
-    empty?: boolean;
-    unsorted?: boolean;
-}
-
 /** Document Template ResponseDTO */
 export interface DocumentTemplateResponseDTO {
     /** id */
@@ -865,6 +961,10 @@ export interface IdentityRequestDTO {
     /** @format int32 */
     pageSize?: number;
     userNameOrEmail?: string;
+    userLevel?: string;
+    registered?: string;
+    orderBy?: string;
+    isDesc?: boolean;
     groupList?: string[];
 }
 
@@ -1221,85 +1321,6 @@ export interface DAMConversionSettingRequestDTO {
     label?: string;
     /** operation */
     operation?: string;
-}
-
-export interface ContactAttribute {
-    value?: string;
-    name?: string;
-    dataType?: string;
-    required?: boolean;
-    validationRule?: string;
-}
-
-export interface ContactGroupRequestDTO {
-    /** Fuzzy Search Parameter */
-    q?: string;
-    /**
-     * Page Number
-     * @format int32
-     */
-    pageNum?: number;
-    /**
-     * Page Size
-     * @format int32
-     */
-    pageSize?: number;
-    /** The sortBy fields */
-    orderBy?: string;
-    /** The sort ASC or DESC */
-    isDesc?: boolean;
-    id?: string;
-    name?: string;
-    status?: string;
-    description?: string;
-    permissions?: Record<string, Permission>;
-    attributes?: ContactAttribute[];
-    sort?: SortObject;
-    descSort?: SortObject;
-    desc?: boolean;
-    orderByValue?: string;
-}
-
-export interface BasicField {
-    dataType?: string;
-    value?: string;
-    name?: string;
-}
-
-export interface ContactGroupResponseDTO {
-    id?: string;
-    name?: string;
-    status?: string;
-    createdBy?: string;
-    modifiedBy?: string;
-    createdByName?: string;
-    modifiedByName?: string;
-    /** @format date-time */
-    createdDate?: string;
-    /** @format date-time */
-    modifiedDate?: string;
-    permissions?: Record<string, BasicField[]>;
-    attributes?: ContactAttribute[];
-}
-
-export interface ResultContactGroupResponseDTO {
-    result?: boolean;
-    /** @format int32 */
-    code?: number;
-    message?: string;
-    data?: ContactGroupResponseDTO;
-    messageKey?: string;
-    locale?: string;
-}
-
-export interface ResultMapStringObject {
-    result?: boolean;
-    /** @format int32 */
-    code?: number;
-    message?: string;
-    data?: Record<string, object>;
-    messageKey?: string;
-    locale?: string;
 }
 
 export interface Company {
@@ -1782,6 +1803,81 @@ export interface ResourcePermissionRequest {
     rules?: RuleDTO[];
 }
 
+/** Resource permission view object */
+export interface ResourcePermissionVO {
+    /** Permission ID */
+    id?: string;
+    /** Resource ID (e.g., document ID) */
+    resourceId?: string;
+    /**
+     * Resource type (1=Document, 2=Folder)
+     * @format int32
+     */
+    resourceType?: number;
+    /**
+     * Target type (1=User, 2=Role, 3=Group, 4=User Set)
+     * @format int32
+     */
+    targetType?: number;
+    /** Target ID (user/role/group/user set ID) */
+    targetId?: string;
+    /**
+     * Permission level (1=Read, 2=ReadWrite, 3=Manage, 4=Custom, 5=Config)
+     * @format int32
+     */
+    permissionLevel?: number;
+    /** List of permission IDs (used when permissionLevel=4/5) */
+    permissionIds?: number[];
+    /** Configuration rule name */
+    configurationRuleName?: string;
+    /** List of members */
+    members?: MemberDTO[];
+    /** List of rules */
+    rules?: RuleDTO[];
+    /**
+     * Create time
+     * @format date-time
+     */
+    createTime?: string;
+    /**
+     * Update time
+     * @format date-time
+     */
+    updateTime?: string;
+    /** Whether the permission is inherited */
+    isInherit?: boolean;
+    /** Inherited from which resource */
+    inheritFrom?: string;
+    /** Target name (user/role/group name) */
+    targetName?: string;
+    /** Inheritance path */
+    inheritFromPath?: string;
+    /** Whether copy inherit is enabled */
+    isEnableCopyInherit?: boolean;
+}
+
+export interface ResultResourcePermissionVO {
+    result?: boolean;
+    /** @format int32 */
+    code?: number;
+    message?: string;
+    /** Resource permission view object */
+    data?: ResourcePermissionVO;
+    messageKey?: string;
+    locale?: string;
+}
+
+export interface ResultResourcePermissionDTO {
+    result?: boolean;
+    /** @format int32 */
+    code?: number;
+    message?: string;
+    /** Resource permission data transfer object */
+    data?: ResourcePermissionDTO;
+    messageKey?: string;
+    locale?: string;
+}
+
 export interface WorkflowInstanceDTO {
     processDefinitionKey?: string;
     creator?: string;
@@ -1879,6 +1975,134 @@ export interface ResultAclUserPermission {
     message?: string;
     /** Define information of user related permission that access control permission */
     data?: AclUserPermission;
+}
+
+export interface ResultListBasicField {
+    result?: boolean;
+    /** @format int32 */
+    code?: number;
+    message?: string;
+    data?: BasicField[];
+    messageKey?: string;
+    locale?: string;
+}
+
+export interface ResultListContactAttribute {
+    result?: boolean;
+    /** @format int32 */
+    code?: number;
+    message?: string;
+    data?: ContactAttribute[];
+    messageKey?: string;
+    locale?: string;
+}
+
+export interface ContactRequestDTO {
+    /** Fuzzy Search Parameter */
+    q?: string;
+    /**
+     * Page Number
+     * @format int32
+     */
+    pageNum?: number;
+    /**
+     * Page Size
+     * @format int32
+     */
+    pageSize?: number;
+    /** The sortBy fields */
+    orderBy?: string;
+    /** The sort ASC or DESC */
+    isDesc?: boolean;
+    id?: string;
+    groupId?: string;
+    email?: string;
+    name?: string;
+    status?: string;
+    customData?: Record<string, object>;
+    operator?: string;
+    sort?: SortObject;
+    descSort?: SortObject;
+    desc?: boolean;
+    orderByValue?: string;
+}
+
+export interface PaginationDTOMapStringObject {
+    entryList?: Record<string, object>[];
+    /** @format int32 */
+    totalSize?: number;
+    /** @format int32 */
+    currentPageSize?: number;
+    /** @format int32 */
+    pageNum?: number;
+    /** @format int32 */
+    pageCount?: number;
+    isNextPageAvailable?: boolean;
+}
+
+export interface ResultPaginationDTOMapStringObject {
+    result?: boolean;
+    /** @format int32 */
+    code?: number;
+    message?: string;
+    data?: PaginationDTOMapStringObject;
+    messageKey?: string;
+    locale?: string;
+}
+
+/** Import ResponseDTO */
+export interface ImportResponseDTO {
+    /** @format int32 */
+    totalRecords?: number;
+    /** @format int32 */
+    successCount?: number;
+    /** @format int32 */
+    failureCount?: number;
+    status?: string;
+}
+
+export interface ResultImportResponseDTO {
+    result?: boolean;
+    /** @format int32 */
+    code?: number;
+    message?: string;
+    /** Import ResponseDTO */
+    data?: ImportResponseDTO;
+    messageKey?: string;
+    locale?: string;
+}
+
+export interface ResultMapStringInteger {
+    result?: boolean;
+    /** @format int32 */
+    code?: number;
+    message?: string;
+    data?: Record<string, number>;
+    messageKey?: string;
+    locale?: string;
+}
+
+export interface PaginationDTOContactGroupResponseDTO {
+    entryList?: ContactGroupResponseDTO[];
+    /** @format int32 */
+    totalSize?: number;
+    /** @format int32 */
+    currentPageSize?: number;
+    /** @format int32 */
+    pageNum?: number;
+    /** @format int32 */
+    pageCount?: number;
+    isNextPageAvailable?: boolean;
+}
+
+export interface ResultPaginationDTOContactGroupResponseDTO {
+    result?: boolean;
+    /** @format int32 */
+    code?: number;
+    message?: string;
+    data?: PaginationDTOContactGroupResponseDTO;
+    messageKey?: string;
+    locale?: string;
 }
 
 /** Define access control permission */
@@ -2046,6 +2270,10 @@ export interface AclUserInformation {
     source?: string;
     /** status */
     status?: string;
+    /** user level */
+    userLevel?: string;
+    /** registered status */
+    registered?: string;
     properties?: Record<string, object>;
     /**
      * Delete flag
@@ -2992,24 +3220,6 @@ export interface ResultPaginationDTOExternalStorageImportJobDTO {
     locale?: string;
 }
 
-export interface ExternalStorageImportJob {
-    id?: string;
-    type?: string;
-    profileId?: string;
-    fileName?: string;
-    profileName?: string;
-    source?: string;
-    batchId?: string;
-    status?: string;
-    /** @format int64 */
-    queueOrder?: number;
-    activityLog?: string;
-    /** @format date-time */
-    createdDate?: string;
-    /** @format date-time */
-    modifiedDate?: string;
-}
-
 /** External Storage Profile Configuration */
 export interface ExternalProfileRequestDTO {
     /** Fuzzy Search Parameter */
@@ -3070,6 +3280,29 @@ export interface ExternalProfileRequestDTO {
     output_setting?: Record<string, object>;
 }
 
+export interface PaginationDTOExternalProfileDTO {
+    entryList?: ExternalProfileDTO[];
+    /** @format int32 */
+    totalSize?: number;
+    /** @format int32 */
+    currentPageSize?: number;
+    /** @format int32 */
+    pageNum?: number;
+    /** @format int32 */
+    pageCount?: number;
+    isNextPageAvailable?: boolean;
+}
+
+export interface ResultPaginationDTOExternalProfileDTO {
+    result?: boolean;
+    /** @format int32 */
+    code?: number;
+    message?: string;
+    data?: PaginationDTOExternalProfileDTO;
+    messageKey?: string;
+    locale?: string;
+}
+
 /** External Storage Request DTO */
 export interface ExternalStorageRequestDTO {
     /** Fuzzy Search Parameter */
@@ -3112,6 +3345,29 @@ export interface ExternalStorageRequestDTO {
     work_group?: string;
     /** Extended data and metadata */
     extend_data?: Record<string, object>;
+}
+
+export interface PaginationDTOExternalStorageDTO {
+    entryList?: ExternalStorageDTO[];
+    /** @format int32 */
+    totalSize?: number;
+    /** @format int32 */
+    currentPageSize?: number;
+    /** @format int32 */
+    pageNum?: number;
+    /** @format int32 */
+    pageCount?: number;
+    isNextPageAvailable?: boolean;
+}
+
+export interface ResultPaginationDTOExternalStorageDTO {
+    result?: boolean;
+    /** @format int32 */
+    code?: number;
+    message?: string;
+    data?: PaginationDTOExternalStorageDTO;
+    messageKey?: string;
+    locale?: string;
 }
 
 export interface BasePageRequest {
@@ -5210,29 +5466,6 @@ export interface ResultMasterTableResponseDTO {
     locale?: string;
 }
 
-export interface PaginationDTOMapStringObject {
-    entryList?: Record<string, object>[];
-    /** @format int32 */
-    totalSize?: number;
-    /** @format int32 */
-    currentPageSize?: number;
-    /** @format int32 */
-    pageNum?: number;
-    /** @format int32 */
-    pageCount?: number;
-    isNextPageAvailable?: boolean;
-}
-
-export interface ResultPaginationDTOMapStringObject {
-    result?: boolean;
-    /** @format int32 */
-    code?: number;
-    message?: string;
-    data?: PaginationDTOMapStringObject;
-    messageKey?: string;
-    locale?: string;
-}
-
 export interface ResultListMapStringObject {
     result?: boolean;
     /** @format int32 */
@@ -5912,60 +6145,6 @@ export interface ExecuteSqlDTO {
     initEndDate?: number;
 }
 
-export interface ResultListBasicField {
-    result?: boolean;
-    /** @format int32 */
-    code?: number;
-    message?: string;
-    data?: BasicField[];
-    messageKey?: string;
-    locale?: string;
-}
-
-export interface ResultListContactAttribute {
-    result?: boolean;
-    /** @format int32 */
-    code?: number;
-    message?: string;
-    data?: ContactAttribute[];
-    messageKey?: string;
-    locale?: string;
-}
-
-export interface ContactRequestDTO {
-    /** Fuzzy Search Parameter */
-    q?: string;
-    /**
-     * Page Number
-     * @format int32
-     */
-    pageNum?: number;
-    /**
-     * Page Size
-     * @format int32
-     */
-    pageSize?: number;
-    /** The sortBy fields */
-    orderBy?: string;
-    /** The sort ASC or DESC */
-    isDesc?: boolean;
-    id?: string;
-    groupId?: string;
-    email?: string;
-    name?: string;
-    mobilePhone?: string;
-    company?: string;
-    position?: string;
-    avatar?: string;
-    notes?: string;
-    status?: string;
-    customData?: Record<string, object>;
-    sort?: SortObject;
-    descSort?: SortObject;
-    desc?: boolean;
-    orderByValue?: string;
-}
-
 export interface ContactImportRequestDTO {
     groupId?: string;
     /** @format binary */
@@ -5974,61 +6153,6 @@ export interface ContactImportRequestDTO {
     dataMapping?: Record<string, string>;
     replace?: boolean;
     operator?: string;
-}
-
-/** Import ResponseDTO */
-export interface ImportResponseDTO {
-    /** @format int32 */
-    totalRecords?: number;
-    /** @format int32 */
-    successCount?: number;
-    /** @format int32 */
-    failureCount?: number;
-    status?: string;
-}
-
-export interface ResultImportResponseDTO {
-    result?: boolean;
-    /** @format int32 */
-    code?: number;
-    message?: string;
-    /** Import ResponseDTO */
-    data?: ImportResponseDTO;
-    messageKey?: string;
-    locale?: string;
-}
-
-export interface ResultMapStringInteger {
-    result?: boolean;
-    /** @format int32 */
-    code?: number;
-    message?: string;
-    data?: Record<string, number>;
-    messageKey?: string;
-    locale?: string;
-}
-
-export interface PaginationDTOContactGroupResponseDTO {
-    entryList?: ContactGroupResponseDTO[];
-    /** @format int32 */
-    totalSize?: number;
-    /** @format int32 */
-    currentPageSize?: number;
-    /** @format int32 */
-    pageNum?: number;
-    /** @format int32 */
-    pageCount?: number;
-    isNextPageAvailable?: boolean;
-}
-
-export interface ResultPaginationDTOContactGroupResponseDTO {
-    result?: boolean;
-    /** @format int32 */
-    code?: number;
-    message?: string;
-    data?: PaginationDTOContactGroupResponseDTO;
-    messageKey?: string;
-    locale?: string;
 }
 
 export interface PaginationDTOCompanyChop {
@@ -7164,39 +7288,19 @@ export interface UserRoleGroupDTO {
     groups?: GroupDTO[];
 }
 
+export interface ResultMapStringUserRoleGroupDTO {
+    result?: boolean;
+    /** @format int32 */
+    code?: number;
+    message?: string;
+    data?: Record<string, UserRoleGroupDTO>;
+    messageKey?: string;
+    locale?: string;
+}
+
 export interface RoleUsersRequest {
     roleId?: string;
     userIds?: string[];
-}
-
-/** Role-User relationship data transfer object */
-export interface RoleUserDTO {
-    /**
-     * Relationship ID
-     * @format int32
-     */
-    id?: number;
-    /** User ID */
-    userId?: string;
-    /**
-     * Role ID
-     * @format int32
-     */
-    acRoleId?: number;
-    /**
-     * Create time
-     * @format date-time
-     */
-    createTime?: string;
-    /**
-     * Update time
-     * @format date-time
-     */
-    updateTime?: string;
-    /** Username */
-    username?: string;
-    /** User email */
-    email?: string;
 }
 
 export interface BasePageDTO {
@@ -7238,6 +7342,89 @@ export interface BaseQueryConditionDTO {
         | "NOT_IN_SQL"
         | "EQ,NE,GT,GE,LT,LE,LIKE,LIKE_LEFT,LIKE_RIGHT,NOT_LIKE,NOT_LIKE_LEFT,NOT_LIKE_RIGHT,IS_NULL,IS_NOT_NULL,ORDER_BY_ASC,ORDER_BY_DESC,IN,NOT_IN,BETWEEN,NOT_BETWEEN";
     values: string;
+}
+
+export interface PaginationDTORoleUsersVO {
+    entryList?: RoleUsersVO[];
+    /** @format int32 */
+    totalSize?: number;
+    /** @format int32 */
+    currentPageSize?: number;
+    /** @format int32 */
+    pageNum?: number;
+    /** @format int32 */
+    pageCount?: number;
+    isNextPageAvailable?: boolean;
+}
+
+export interface ResultPaginationDTORoleUsersVO {
+    result?: boolean;
+    /** @format int32 */
+    code?: number;
+    message?: string;
+    data?: PaginationDTORoleUsersVO;
+    messageKey?: string;
+    locale?: string;
+}
+
+export interface RoleUsersVO {
+    userId?: string;
+    userName?: string;
+    email?: string;
+    acRoleId?: string;
+    /** @format int32 */
+    id?: number;
+}
+
+export interface ResultMapStringListUserDTO {
+    result?: boolean;
+    /** @format int32 */
+    code?: number;
+    message?: string;
+    data?: Record<string, UserDTO[]>;
+    messageKey?: string;
+    locale?: string;
+}
+
+export interface PaginationDTORoleVO {
+    entryList?: RoleVO[];
+    /** @format int32 */
+    totalSize?: number;
+    /** @format int32 */
+    currentPageSize?: number;
+    /** @format int32 */
+    pageNum?: number;
+    /** @format int32 */
+    pageCount?: number;
+    isNextPageAvailable?: boolean;
+}
+
+export interface ResultPaginationDTORoleVO {
+    result?: boolean;
+    /** @format int32 */
+    code?: number;
+    message?: string;
+    data?: PaginationDTORoleVO;
+    messageKey?: string;
+    locale?: string;
+}
+
+export interface RoleVO {
+    name?: string;
+    parentId?: string;
+    /** @format int32 */
+    grade?: number;
+    /** @format int32 */
+    status?: number;
+    /** @format int32 */
+    type?: number;
+    /** @format date-time */
+    createTime?: string;
+    /** @format date-time */
+    updateTime?: string;
+    userIds?: string[];
+    parentRoleName?: string;
+    id?: string;
 }
 
 export interface ResultListRoleDTO {
@@ -7292,59 +7479,6 @@ export interface RoleDTO {
     children?: RoleDTO[];
     /** Additional user IDs */
     additionUsers?: string[];
-}
-
-/** Resource permission view object */
-export interface ResourcePermissionVO {
-    /** Permission ID */
-    id?: string;
-    /** Resource ID (e.g., document ID) */
-    resourceId?: string;
-    /**
-     * Resource type (1=Document, 2=Folder)
-     * @format int32
-     */
-    resourceType?: number;
-    /**
-     * Target type (1=User, 2=Role, 3=Group, 4=User Set)
-     * @format int32
-     */
-    targetType?: number;
-    /** Target ID (user/role/group/user set ID) */
-    targetId?: string;
-    /**
-     * Permission level (1=Read, 2=ReadWrite, 3=Manage, 4=Custom, 5=Config)
-     * @format int32
-     */
-    permissionLevel?: number;
-    /** List of permission IDs (used when permissionLevel=4/5) */
-    permissionIds?: number[];
-    /** Configuration rule name */
-    configurationRuleName?: string;
-    /** List of members */
-    members?: MemberDTO[];
-    /** List of rules */
-    rules?: RuleDTO[];
-    /**
-     * Create time
-     * @format date-time
-     */
-    createTime?: string;
-    /**
-     * Update time
-     * @format date-time
-     */
-    updateTime?: string;
-    /** Whether the permission is inherited */
-    isInherit?: boolean;
-    /** Inherited from which resource */
-    inheritFrom?: string;
-    /** Target name (user/role/group name) */
-    targetName?: string;
-    /** Inheritance path */
-    inheritFromPath?: string;
-    /** Whether copy inherit is enabled */
-    isEnableCopyInherit?: boolean;
 }
 
 export interface ResultListResourcePermissionVO {
@@ -7510,17 +7644,6 @@ export interface ViewSettingResponseDTO {
     json_value?: string;
 }
 
-export interface ResultExternalProfileDTO {
-    result?: boolean;
-    /** @format int32 */
-    code?: number;
-    message?: string;
-    /** External Storage Profile Configuration */
-    data?: ExternalProfileDTO;
-    messageKey?: string;
-    locale?: string;
-}
-
 /** External Storage Profile Output setting */
 export interface ExternalProfileOutputDTO {
     id?: string;
@@ -7575,6 +7698,16 @@ export interface ResultListAclPermissionDTO {
     code?: number;
     message?: string;
     data?: AclPermissionDTO[];
+}
+
+export interface ResultListContactGroupResponseDTO {
+    result?: boolean;
+    /** @format int32 */
+    code?: number;
+    message?: string;
+    data?: ContactGroupResponseDTO[];
+    messageKey?: string;
+    locale?: string;
 }
 
 export interface ResultListAclUserRelationshipWithUserGroup {
@@ -7784,6 +7917,31 @@ export interface ResultInteger {
     locale?: string;
 }
 
+/** AccountPropertyDTO */
+export interface AccountPropertyDTO {
+    /** @format int32 */
+    total?: number;
+    /** @format int32 */
+    active?: number;
+    /** @format int32 */
+    premium?: number;
+    /** @format int32 */
+    standard?: number;
+    /** @format int32 */
+    essential?: number;
+}
+
+export interface ResultAccountPropertyDTO {
+    result?: boolean;
+    /** @format int32 */
+    code?: number;
+    message?: string;
+    /** AccountPropertyDTO */
+    data?: AccountPropertyDTO;
+    messageKey?: string;
+    locale?: string;
+}
+
 export interface ResultListBusinessResultRecord {
     result?: boolean;
     /** @format int32 */
@@ -7844,6 +8002,25 @@ export interface ResultListMQDayTotalDTO {
     locale?: string;
 }
 
+export interface MQConfigurationInfo {
+    mqName?: string;
+    /** @format int64 */
+    length?: number;
+    /** @format int64 */
+    groupCount?: number;
+    consumeGroups?: Record<string, object>[];
+}
+
+export interface ResultListMQConfigurationInfo {
+    result?: boolean;
+    /** @format int32 */
+    code?: number;
+    message?: string;
+    data?: MQConfigurationInfo[];
+    messageKey?: string;
+    locale?: string;
+}
+
 export interface ResultListExternalStorageImportJobDTO {
     result?: boolean;
     /** @format int32 */
@@ -7864,13 +8041,12 @@ export interface ResultListExternalStorageDTO {
     locale?: string;
 }
 
-export interface ResultExternalStorageDTO {
+export interface ResultListExternalProfileDTO {
     result?: boolean;
     /** @format int32 */
     code?: number;
     message?: string;
-    /** External Storage Configuration */
-    data?: ExternalStorageDTO;
+    data?: ExternalProfileDTO[];
     messageKey?: string;
     locale?: string;
 }
@@ -8274,6 +8450,8 @@ export interface KeyCloakPropertyVO {
     isLdap?: boolean;
     /** KeyCloakPropertyDTO */
     keyCloakProperty?: KeyCloakPropertyDTO;
+    /** AccountPropertyDTO */
+    accountProperty?: AccountPropertyDTO;
 }
 
 export interface ResultKeyCloakPropertyVO {
@@ -8530,16 +8708,6 @@ export interface ResultHashMapStringListConversionSupportDestType {
     code?: number;
     message?: string;
     data?: Record<string, ConversionSupportDestType[]>;
-    messageKey?: string;
-    locale?: string;
-}
-
-export interface ResultListContactGroupResponseDTO {
-    result?: boolean;
-    /** @format int32 */
-    code?: number;
-    message?: string;
-    data?: ContactGroupResponseDTO[];
     messageKey?: string;
     locale?: string;
 }
@@ -8936,6 +9104,38 @@ export interface UserDetailDTO {
     configurationRules?: ConfigurationRuleDTO[];
     /** List of additional roles */
     additionRoleList?: AdditionRoleDTO[];
+}
+
+export interface ResultUserDetailDTO {
+    result?: boolean;
+    /** @format int32 */
+    code?: number;
+    message?: string;
+    /** User detail data transfer object */
+    data?: UserDetailDTO;
+    messageKey?: string;
+    locale?: string;
+}
+
+export interface ResultListAclUserInformation {
+    result?: boolean;
+    /** @format int32 */
+    code?: number;
+    message?: string;
+    data?: AclUserInformation[];
+    messageKey?: string;
+    locale?: string;
+}
+
+export interface ResultRoleDTO {
+    result?: boolean;
+    /** @format int32 */
+    code?: number;
+    message?: string;
+    /** Role data transfer object */
+    data?: RoleDTO;
+    messageKey?: string;
+    locale?: string;
 }
 
 export interface AclEntryDTO {
@@ -9477,6 +9677,141 @@ export class Admin<SecurityDataType extends unknown> extends HttpClient<Security
         /**
          * No description
          *
+         * @tags Document
+         * @name GetRegisteredServerContactgroupId
+         * @summary Get contact group by id
+         * @request GET:/api/registered-server/contactGroup/{id}
+         */
+        getRegisteredServerContactgroupId: (
+            id: string,
+            query: {
+                operator: string;
+            },
+            params: RequestParams = {},
+        ) =>
+            this.request<ResultContactGroupResponseDTO, Result | (ResultObject | Result | ResultString)>({
+                path: `/registered-server/contactGroup/${id}`,
+                method: "GET",
+                query: query,
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags Document
+         * @name PutRegisteredServerContactgroupId
+         * @request PUT:/api/registered-server/contactGroup/{id}
+         */
+        putRegisteredServerContactgroupId: (id: string, data: ContactGroupRequestDTO, params: RequestParams = {}) =>
+            this.request<ResultContactGroupResponseDTO, Result | (ResultObject | Result | ResultString)>({
+                path: `/registered-server/contactGroup/${id}`,
+                method: "PUT",
+                body: data,
+                type: ContentType.Json,
+                ...params,
+            }),
+
+        /**
+         * @description Delete a contact group by ContactGroupId
+         *
+         * @tags Document
+         * @name DeleteRegisteredServerContactgroupId
+         * @summary Delete contact group by id
+         * @request DELETE:/api/registered-server/contactGroup/{id}
+         */
+        deleteRegisteredServerContactgroupId: (
+            id: string,
+            query: {
+                operator: string;
+            },
+            params: RequestParams = {},
+        ) =>
+            this.request<ResultBoolean, Result | (ResultObject | Result | ResultString)>({
+                path: `/registered-server/contactGroup/${id}`,
+                method: "DELETE",
+                query: query,
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags Document
+         * @name GetRegisteredServerContactgroupIdContactdetailContactdetailid
+         * @summary Get contact detail by id
+         * @request GET:/api/registered-server/contactGroup/{id}/contactDetail/{contactDetailId}
+         */
+        getRegisteredServerContactgroupIdContactdetailContactdetailid: (
+            id: string,
+            contactDetailId: string,
+            query: {
+                operator: string;
+            },
+            params: RequestParams = {},
+        ) =>
+            this.request<ResultMapStringObject, Result | (ResultObject | Result | ResultString)>({
+                path: `/registered-server/contactGroup/${id}/contactDetail/${contactDetailId}`,
+                method: "GET",
+                query: query,
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags Document
+         * @name PutRegisteredServerContactgroupIdContactdetailContactdetailid
+         * @summary Edit contact record with the specified information
+         * @request PUT:/api/registered-server/contactGroup/{id}/contactDetail/{contactDetailId}
+         */
+        putRegisteredServerContactgroupIdContactdetailContactdetailid: (
+            id: string,
+            contactDetailId: string,
+            query: {
+                operator: string;
+            },
+            data: Record<string, object>,
+            params: RequestParams = {},
+        ) =>
+            this.request<ResultMapStringObject, Result | (ResultObject | Result | ResultString)>({
+                path: `/registered-server/contactGroup/${id}/contactDetail/${contactDetailId}`,
+                method: "PUT",
+                query: query,
+                body: data,
+                type: ContentType.Json,
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags Document
+         * @name DeleteRegisteredServerContactgroupIdContactdetailContactdetailid
+         * @summary Delete contact record
+         * @request DELETE:/api/registered-server/contactGroup/{id}/contactDetail/{contactDetailId}
+         */
+        deleteRegisteredServerContactgroupIdContactdetailContactdetailid: (
+            id: string,
+            contactDetailId: string,
+            query: {
+                operator: string;
+            },
+            data: any,
+            params: RequestParams = {},
+        ) =>
+            this.request<ResultBoolean, Result | (ResultObject | Result | ResultString)>({
+                path: `/registered-server/contactGroup/${id}/contactDetail/${contactDetailId}`,
+                method: "DELETE",
+                query: query,
+                body: data,
+                type: ContentType.Json,
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
          * @tags NuxeoAdminController
          * @name GetNuxeoAdminVirtualfolderSetting
          * @request GET:/api/nuxeo/admin/virtualfolder/setting
@@ -9677,7 +10012,7 @@ export class Admin<SecurityDataType extends unknown> extends HttpClient<Security
          * @request PUT:/api/importJobs/{id}
          */
         putImportjobsId: (id: string, data: ExternalStorageImportJobDTO, params: RequestParams = {}) =>
-            this.request<ExternalStorageImportJobDTO, Result | (ResultObject | Result | ResultString)>({
+            this.request<ResultExternalStorageImportJobDTO, Result | (ResultObject | Result | ResultString)>({
                 path: `/importJobs/${id}`,
                 method: "PUT",
                 body: data,
@@ -9694,7 +10029,7 @@ export class Admin<SecurityDataType extends unknown> extends HttpClient<Security
          * @request DELETE:/api/importJobs/{id}
          */
         deleteImportjobsId: (id: string, params: RequestParams = {}) =>
-            this.request<boolean, Result | (ResultObject | Result | ResultString)>({
+            this.request<ResultBoolean, Result | (ResultObject | Result | ResultString)>({
                 path: `/importJobs/${id}`,
                 method: "DELETE",
                 ...params,
@@ -9724,7 +10059,7 @@ export class Admin<SecurityDataType extends unknown> extends HttpClient<Security
          * @request PUT:/api/externalStorage/{id}
          */
         putExternalstorageId: (id: string, data: ExternalStorageDTO, params: RequestParams = {}) =>
-            this.request<ExternalStorageDTO, Result | (ResultObject | Result | ResultString)>({
+            this.request<ResultExternalStorageDTO, Result | (ResultObject | Result | ResultString)>({
                 path: `/externalStorage/${id}`,
                 method: "PUT",
                 body: data,
@@ -9741,7 +10076,7 @@ export class Admin<SecurityDataType extends unknown> extends HttpClient<Security
          * @request DELETE:/api/externalStorage/{id}
          */
         deleteExternalstorageId: (id: string, params: RequestParams = {}) =>
-            this.request<boolean, Result | (ResultObject | Result | ResultString)>({
+            this.request<ResultBoolean, Result | (ResultObject | Result | ResultString)>({
                 path: `/externalStorage/${id}`,
                 method: "DELETE",
                 ...params,
@@ -9756,7 +10091,7 @@ export class Admin<SecurityDataType extends unknown> extends HttpClient<Security
          * @request GET:/api/externalStorage/{id}/profiles/{profileId}
          */
         getExternalstorageIdProfilesProfileid: (id: string, profileId: string, params: RequestParams = {}) =>
-            this.request<ExternalProfileDTO, Result | (ResultObject | Result | ResultString)>({
+            this.request<ResultExternalProfileDTO, Result | (ResultObject | Result | ResultString)>({
                 path: `/externalStorage/${id}/profiles/${profileId}`,
                 method: "GET",
                 ...params,
@@ -9776,7 +10111,7 @@ export class Admin<SecurityDataType extends unknown> extends HttpClient<Security
             data: ExternalProfileDTO,
             params: RequestParams = {},
         ) =>
-            this.request<ExternalProfileDTO, Result | (ResultObject | Result | ResultString)>({
+            this.request<ResultExternalProfileDTO, Result | (ResultObject | Result | ResultString)>({
                 path: `/externalStorage/${id}/profiles/${profileId}`,
                 method: "PUT",
                 body: data,
@@ -9793,7 +10128,7 @@ export class Admin<SecurityDataType extends unknown> extends HttpClient<Security
          * @request DELETE:/api/externalStorage/{id}/profiles/{profileId}
          */
         deleteExternalstorageIdProfilesProfileid: (id: string, profileId: string, params: RequestParams = {}) =>
-            this.request<boolean, Result | (ResultObject | Result | ResultString)>({
+            this.request<ResultBoolean, Result | (ResultObject | Result | ResultString)>({
                 path: `/externalStorage/${id}/profiles/${profileId}`,
                 method: "DELETE",
                 ...params,
@@ -11122,7 +11457,7 @@ export class Admin<SecurityDataType extends unknown> extends HttpClient<Security
          * @request GET:/api/docpal/acl/resource-permissions/{id}
          */
         getAclResourcePermissionsId: (id: string, params: RequestParams = {}) =>
-            this.request<ResourcePermissionVO, Result | (ResultObject | Result | ResultString)>({
+            this.request<ResultResourcePermissionVO, Result | (ResultObject | Result | ResultString)>({
                 path: `/docpal/acl/resource-permissions/${id}`,
                 method: "GET",
                 ...params,
@@ -11137,7 +11472,7 @@ export class Admin<SecurityDataType extends unknown> extends HttpClient<Security
          * @request PUT:/api/docpal/acl/resource-permissions/{id}
          */
         putAclResourcePermissionsId: (id: string, data: ResourcePermissionRequest, params: RequestParams = {}) =>
-            this.request<ResourcePermissionDTO, Result | (ResultObject | Result | ResultString)>({
+            this.request<ResultResourcePermissionVO, Result | (ResultObject | Result | ResultString)>({
                 path: `/docpal/acl/resource-permissions/${id}`,
                 method: "PUT",
                 body: data,
@@ -11181,7 +11516,7 @@ export class Admin<SecurityDataType extends unknown> extends HttpClient<Security
             },
             params: RequestParams = {},
         ) =>
-            this.request<ResourcePermissionDTO, Result | (ResultObject | Result | ResultString)>({
+            this.request<ResultResourcePermissionDTO, Result | (ResultObject | Result | ResultString)>({
                 path: `/docpal/acl/resource-permissions/level/${id}`,
                 method: "PUT",
                 query: query,
@@ -11455,6 +11790,233 @@ export class Admin<SecurityDataType extends unknown> extends HttpClient<Security
         postRegisteredServerImportjobsAdd: (data: ExternalStorageImportJobDTO, params: RequestParams = {}) =>
             this.request<ResultExternalStorageImportJobDTO, Result | (ResultObject | Result | ResultString)>({
                 path: `/registered-server/importJobs/add`,
+                method: "POST",
+                body: data,
+                type: ContentType.Json,
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags Document
+         * @name PostRegisteredServerContactgroup
+         * @request POST:/api/registered-server/contactGroup
+         */
+        postRegisteredServerContactgroup: (data: ContactGroupRequestDTO, params: RequestParams = {}) =>
+            this.request<ResultContactGroupResponseDTO, Result | (ResultObject | Result | ResultString)>({
+                path: `/registered-server/contactGroup`,
+                method: "POST",
+                body: data,
+                type: ContentType.Json,
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags Document
+         * @name PostRegisteredServerContactgroupIdPermission
+         * @request POST:/api/registered-server/contactGroup/{id}/permission
+         */
+        postRegisteredServerContactgroupIdPermission: (
+            id: string,
+            query: {
+                operator: string;
+            },
+            data: BasicField,
+            params: RequestParams = {},
+        ) =>
+            this.request<ResultListBasicField, Result | (ResultObject | Result | ResultString)>({
+                path: `/registered-server/contactGroup/${id}/permission`,
+                method: "POST",
+                query: query,
+                body: data,
+                type: ContentType.Json,
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags Document
+         * @name PatchRegisteredServerContactgroupIdPermission
+         * @request PATCH:/api/registered-server/contactGroup/{id}/permission
+         */
+        patchRegisteredServerContactgroupIdPermission: (
+            id: string,
+            query: {
+                operator: string;
+            },
+            data: BasicField,
+            params: RequestParams = {},
+        ) =>
+            this.request<ResultListBasicField, Result | (ResultObject | Result | ResultString)>({
+                path: `/registered-server/contactGroup/${id}/permission`,
+                method: "PATCH",
+                query: query,
+                body: data,
+                type: ContentType.Json,
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags Document
+         * @name PostRegisteredServerContactgroupIdNewfields
+         * @request POST:/api/registered-server/contactGroup/{id}/newFields
+         */
+        postRegisteredServerContactgroupIdNewfields: (
+            id: string,
+            query: {
+                operator: string;
+            },
+            data: ContactAttribute,
+            params: RequestParams = {},
+        ) =>
+            this.request<ResultListContactAttribute, Result | (ResultObject | Result | ResultString)>({
+                path: `/registered-server/contactGroup/${id}/newFields`,
+                method: "POST",
+                query: query,
+                body: data,
+                type: ContentType.Json,
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags Document
+         * @name PostRegisteredServerContactgroupIdContactdetail
+         * @summary Adding a new contact record
+         * @request POST:/api/registered-server/contactGroup/{id}/contactDetail
+         */
+        postRegisteredServerContactgroupIdContactdetail: (
+            id: string,
+            query: {
+                operator: string;
+            },
+            data: Record<string, object>,
+            params: RequestParams = {},
+        ) =>
+            this.request<ResultMapStringObject, Result | (ResultObject | Result | ResultString)>({
+                path: `/registered-server/contactGroup/${id}/contactDetail`,
+                method: "POST",
+                query: query,
+                body: data,
+                type: ContentType.Json,
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags Document
+         * @name PostRegisteredServerContactgroupIdContactdetailPage
+         * @summary Page query contact detail list
+         * @request POST:/api/registered-server/contactGroup/{id}/contactDetail/page
+         */
+        postRegisteredServerContactgroupIdContactdetailPage: (
+            id: string,
+            query: {
+                operator: string;
+            },
+            data: ContactRequestDTO,
+            params: RequestParams = {},
+        ) =>
+            this.request<ResultPaginationDTOMapStringObject, Result | (ResultObject | Result | ResultString)>({
+                path: `/registered-server/contactGroup/${id}/contactDetail/page`,
+                method: "POST",
+                query: query,
+                body: data,
+                type: ContentType.Json,
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags Document
+         * @name PostRegisteredServerContactgroupIdContactdetailImport
+         * @request POST:/api/registered-server/contactGroup/{id}/contactDetail/import
+         */
+        postRegisteredServerContactgroupIdContactdetailImport: (
+            id: string,
+            query: {
+                operator: string;
+                columns: string;
+                replace: boolean;
+                /** @format binary */
+                file: File;
+            },
+            params: RequestParams = {},
+        ) =>
+            this.request<ResultImportResponseDTO, Result | (ResultObject | Result | ResultString)>({
+                path: `/registered-server/contactGroup/${id}/contactDetail/import`,
+                method: "POST",
+                query: query,
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags Document
+         * @name PostRegisteredServerContactgroupIdContactdetailExport
+         * @summary Export contact record for file type include excel, csv, vcf
+         * @request POST:/api/registered-server/contactGroup/{id}/contactDetail/export
+         */
+        postRegisteredServerContactgroupIdContactdetailExport: (
+            id: string,
+            query: {
+                operator: string;
+                fileType: string;
+            },
+            data: object,
+            params: RequestParams = {},
+        ) =>
+            this.request<string[], Result | (ResultObject | Result | ResultString)>({
+                path: `/registered-server/contactGroup/${id}/contactDetail/export`,
+                method: "POST",
+                query: query,
+                body: data,
+                type: ContentType.FormData,
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags Document
+         * @name PostRegisteredServerContactgroupReadTitle
+         * @request POST:/api/registered-server/contactGroup/read/title
+         */
+        postRegisteredServerContactgroupReadTitle: (
+            data: {
+                /** @format binary */
+                file: File;
+            },
+            params: RequestParams = {},
+        ) =>
+            this.request<ResultMapStringInteger, Result | (ResultObject | Result | ResultString)>({
+                path: `/registered-server/contactGroup/read/title`,
+                method: "POST",
+                body: data,
+                type: ContentType.FormData,
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags Document
+         * @name PostRegisteredServerContactgroupPage
+         * @request POST:/api/registered-server/contactGroup/page
+         */
+        postRegisteredServerContactgroupPage: (data: ContactGroupRequestDTO, params: RequestParams = {}) =>
+            this.request<ResultPaginationDTOContactGroupResponseDTO, Result | (ResultObject | Result | ResultString)>({
+                path: `/registered-server/contactGroup/page`,
                 method: "POST",
                 body: data,
                 type: ContentType.Json,
@@ -12728,7 +13290,7 @@ export class Admin<SecurityDataType extends unknown> extends HttpClient<Security
             },
             params: RequestParams = {},
         ) =>
-            this.request<ResultMapStringInteger, Result | (ResultObject | Result | ResultString)>({
+            this.request<ResultAccountPropertyDTO, Result | (ResultObject | Result | ResultString)>({
                 path: `/nuxeo/admin/active-users/configuration`,
                 method: "GET",
                 query: query,
@@ -12849,7 +13411,7 @@ export class Admin<SecurityDataType extends unknown> extends HttpClient<Security
          * @request POST:/api/importJobs/add
          */
         postImportjobsAdd: (data: ExternalStorageImportJobDTO, params: RequestParams = {}) =>
-            this.request<ExternalStorageImportJob, Result | (ResultObject | Result | ResultString)>({
+            this.request<ResultExternalStorageImportJobDTO, Result | (ResultObject | Result | ResultString)>({
                 path: `/importJobs/add`,
                 method: "POST",
                 body: data,
@@ -12888,7 +13450,7 @@ export class Admin<SecurityDataType extends unknown> extends HttpClient<Security
          * @request POST:/api/importJobs
          */
         postImportjobs: (data: ExternalStorageImportJobDTO, params: RequestParams = {}) =>
-            this.request<ExternalStorageImportJob, Result | (ResultObject | Result | ResultString)>({
+            this.request<ResultExternalStorageImportJobDTO, Result | (ResultObject | Result | ResultString)>({
                 path: `/importJobs`,
                 method: "POST",
                 body: data,
@@ -12927,7 +13489,7 @@ export class Admin<SecurityDataType extends unknown> extends HttpClient<Security
          * @request POST:/api/externalStorage
          */
         postExternalstorage: (data: ExternalStorageDTO, params: RequestParams = {}) =>
-            this.request<ExternalStorageDTO, Result | (ResultObject | Result | ResultString)>({
+            this.request<ResultExternalStorageDTO, Result | (ResultObject | Result | ResultString)>({
                 path: `/externalStorage`,
                 method: "POST",
                 body: data,
@@ -12944,7 +13506,7 @@ export class Admin<SecurityDataType extends unknown> extends HttpClient<Security
          * @request POST:/api/externalStorage/{id}/profiles
          */
         postExternalstorageIdProfiles: (id: string, data: ExternalProfileDTO, params: RequestParams = {}) =>
-            this.request<ExternalProfileDTO, Result | (ResultObject | Result | ResultString)>({
+            this.request<ResultExternalProfileDTO, Result | (ResultObject | Result | ResultString)>({
                 path: `/externalStorage/${id}/profiles`,
                 method: "POST",
                 body: data,
@@ -12961,7 +13523,7 @@ export class Admin<SecurityDataType extends unknown> extends HttpClient<Security
          * @request POST:/api/externalStorage/{id}/profiles/page
          */
         postExternalstorageIdProfilesPage: (id: string, data: ExternalProfileRequestDTO, params: RequestParams = {}) =>
-            this.request<ExternalProfileDTO, Result | (ResultObject | Result | ResultString)>({
+            this.request<ResultPaginationDTOExternalProfileDTO, Result | (ResultObject | Result | ResultString)>({
                 path: `/externalStorage/${id}/profiles/page`,
                 method: "POST",
                 body: data,
@@ -13076,7 +13638,7 @@ export class Admin<SecurityDataType extends unknown> extends HttpClient<Security
          * @request POST:/api/externalStorage/page
          */
         postExternalstoragePage: (data: ExternalStorageRequestDTO, params: RequestParams = {}) =>
-            this.request<ExternalStorageDTO, Result | (ResultObject | Result | ResultString)>({
+            this.request<ResultPaginationDTOExternalStorageDTO, Result | (ResultObject | Result | ResultString)>({
                 path: `/externalStorage/page`,
                 method: "POST",
                 body: data,
@@ -14506,21 +15068,12 @@ export class Admin<SecurityDataType extends unknown> extends HttpClient<Security
             },
             params: RequestParams = {},
         ) =>
-            this.request<
-                {
-                    /** @format string */
-                    id?: string;
-                    /** @format array string */
-                    fields?: arrayString;
-                },
-                Result | (ResultObject | Result | ResultString)
-            >({
+            this.request<ResultMapStringObject, Result | (ResultObject | Result | ResultString)>({
                 path: `/docpal/template/document/parse`,
                 method: "POST",
                 query: query,
                 body: data,
                 type: ContentType.FormData,
-                format: "json",
                 ...params,
             }),
 
@@ -16336,7 +16889,7 @@ export class Admin<SecurityDataType extends unknown> extends HttpClient<Security
                 replace?: replace;
                 /**
                  * @format object string
-                 * @example {"name":"username","email":"email","description":"notes"}
+                 * @example {"name":"{{file-customer}}","email":"{{file-email}}","description":"{{file-column}}"}
                  */
                 columns?: map;
             },
@@ -16362,9 +16915,10 @@ export class Admin<SecurityDataType extends unknown> extends HttpClient<Security
         postContactgroupIdContactdetailExport: (
             id: string,
             query: {
+                /** File Type */
                 fileType: string;
             },
-            data: any,
+            data: object,
             params: RequestParams = {},
         ) =>
             this.request<string[], Result | (ResultObject | Result | ResultString)>({
@@ -16372,7 +16926,7 @@ export class Admin<SecurityDataType extends unknown> extends HttpClient<Security
                 method: "POST",
                 query: query,
                 body: data,
-                type: ContentType.Json,
+                type: ContentType.FormData,
                 ...params,
             }),
 
@@ -17426,7 +17980,7 @@ export class Admin<SecurityDataType extends unknown> extends HttpClient<Security
          * @request POST:/api/docpal/acl/user/roles-and-groups
          */
         postAclUserRolesAndGroups: (data: string[], params: RequestParams = {}) =>
-            this.request<UserRoleGroupDTO, Result | (ResultObject | Result | ResultString)>({
+            this.request<ResultMapStringUserRoleGroupDTO, Result | (ResultObject | Result | ResultString)>({
                 path: `/docpal/acl/user/roles-and-groups`,
                 method: "POST",
                 body: data,
@@ -17477,7 +18031,7 @@ export class Admin<SecurityDataType extends unknown> extends HttpClient<Security
          * @request POST:/api/docpal/acl/role/users/page
          */
         postAclRoleUsersPage: (data: BasePageDTO, params: RequestParams = {}) =>
-            this.request<RoleUserDTO, Result | (ResultObject | Result | ResultString)>({
+            this.request<ResultPaginationDTORoleUsersVO, Result | (ResultObject | Result | ResultString)>({
                 path: `/docpal/acl/role/users/page`,
                 method: "POST",
                 body: data,
@@ -17494,7 +18048,7 @@ export class Admin<SecurityDataType extends unknown> extends HttpClient<Security
          * @request POST:/api/docpal/acl/role/users/by-roles
          */
         postAclRoleUsersByRoles: (data: string[], params: RequestParams = {}) =>
-            this.request<string, Result | (ResultObject | Result | ResultString)>({
+            this.request<ResultMapStringListUserDTO, Result | (ResultObject | Result | ResultString)>({
                 path: `/docpal/acl/role/users/by-roles`,
                 method: "POST",
                 body: data,
@@ -17511,7 +18065,7 @@ export class Admin<SecurityDataType extends unknown> extends HttpClient<Security
          * @request POST:/api/docpal/acl/role/page
          */
         postAclRolePage: (data: BasePageDTO, params: RequestParams = {}) =>
-            this.request<RoleUserDTO, Result | (ResultObject | Result | ResultString)>({
+            this.request<ResultPaginationDTORoleVO, Result | (ResultObject | Result | ResultString)>({
                 path: `/docpal/acl/role/page`,
                 method: "POST",
                 body: data,
@@ -17528,7 +18082,7 @@ export class Admin<SecurityDataType extends unknown> extends HttpClient<Security
          * @request POST:/api/docpal/acl/role/list
          */
         postAclRoleList: (data: BaseQueryConditionDTO[], params: RequestParams = {}) =>
-            this.request<RoleUserDTO, Result | (ResultObject | Result | ResultString)>({
+            this.request<ResultListRoleDTO, Result | (ResultObject | Result | ResultString)>({
                 path: `/docpal/acl/role/list`,
                 method: "POST",
                 body: data,
@@ -17562,7 +18116,7 @@ export class Admin<SecurityDataType extends unknown> extends HttpClient<Security
          * @request POST:/api/docpal/acl/resource-permissions
          */
         postAclResourcePermissions: (data: ResourcePermissionRequest, params: RequestParams = {}) =>
-            this.request<ResourcePermissionDTO, Result | (ResultObject | Result | ResultString)>({
+            this.request<ResultResourcePermissionDTO, Result | (ResultObject | Result | ResultString)>({
                 path: `/docpal/acl/resource-permissions`,
                 method: "POST",
                 body: data,
@@ -17609,10 +18163,7 @@ export class Admin<SecurityDataType extends unknown> extends HttpClient<Security
          * @request POST:/api/docpal/acl/document/list
          */
         postAclDocumentList: (data: AclDocumentListRequest, params: RequestParams = {}) =>
-            this.request<
-                ResultListAclDocumentVO,
-                ResultListAclDocumentVO | Result | (ResultObject | Result | ResultString)
-            >({
+            this.request<ResultString, ResultListAclDocumentVO | Result | (ResultObject | Result | ResultString)>({
                 path: `/docpal/acl/document/list`,
                 method: "POST",
                 body: data,
@@ -17891,7 +18442,7 @@ export class Admin<SecurityDataType extends unknown> extends HttpClient<Security
          * @request PATCH:/api/importJobs/{id}/status
          */
         patchImportjobsIdStatus: (id: string, data: ExternalStorageImportJobRequestDTO, params: RequestParams = {}) =>
-            this.request<boolean, Result | (ResultObject | Result | ResultString)>({
+            this.request<ResultBoolean, Result | (ResultObject | Result | ResultString)>({
                 path: `/importJobs/${id}/status`,
                 method: "PATCH",
                 body: data,
@@ -17908,7 +18459,7 @@ export class Admin<SecurityDataType extends unknown> extends HttpClient<Security
          * @request PATCH:/api/externalStorage/{id}/status
          */
         patchExternalstorageIdStatus: (id: string, data: ExternalStorageRequestDTO, params: RequestParams = {}) =>
-            this.request<boolean, Result | (ResultObject | Result | ResultString)>({
+            this.request<ResultBoolean, Result | (ResultObject | Result | ResultString)>({
                 path: `/externalStorage/${id}/status`,
                 method: "PATCH",
                 body: data,
@@ -17930,7 +18481,7 @@ export class Admin<SecurityDataType extends unknown> extends HttpClient<Security
             data: ExternalProfileDTO,
             params: RequestParams = {},
         ) =>
-            this.request<boolean, Result | (ResultObject | Result | ResultString)>({
+            this.request<ResultBoolean, Result | (ResultObject | Result | ResultString)>({
                 path: `/externalStorage/${id}/profiles/${profileId}/status`,
                 method: "PATCH",
                 body: data,
@@ -18493,6 +19044,52 @@ export class Admin<SecurityDataType extends unknown> extends HttpClient<Security
         /**
          * No description
          *
+         * @tags Document
+         * @name GetRegisteredServerContactgroupIdContactdetaillist
+         * @summary Get contact detail list include filter and sort by
+         * @request GET:/api/registered-server/contactGroup/{id}/contactDetailList
+         */
+        getRegisteredServerContactgroupIdContactdetaillist: (
+            id: string,
+            query: {
+                operator: string;
+            },
+            data: any,
+            params: RequestParams = {},
+        ) =>
+            this.request<ResultListMapStringObject, Result | (ResultObject | Result | ResultString)>({
+                path: `/registered-server/contactGroup/${id}/contactDetailList`,
+                method: "GET",
+                query: query,
+                body: data,
+                type: ContentType.Json,
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags Document
+         * @name GetRegisteredServerContactgroupList
+         * @summary Query all contact group without filter condition
+         * @request GET:/api/registered-server/contactGroup/list
+         */
+        getRegisteredServerContactgroupList: (
+            query: {
+                operator: string;
+            },
+            params: RequestParams = {},
+        ) =>
+            this.request<ResultListContactGroupResponseDTO, Result | (ResultObject | Result | ResultString)>({
+                path: `/registered-server/contactGroup/list`,
+                method: "GET",
+                query: query,
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
          * @tags AclPermissionController
          * @name GetPermissionsId
          * @summary query access control permission by id
@@ -18960,6 +19557,20 @@ export class Admin<SecurityDataType extends unknown> extends HttpClient<Security
         /**
          * No description
          *
+         * @tags Identity
+         * @name GetNuxeoIdentitySendInitPasswordEmailUserid
+         * @request GET:/api/nuxeo/identity/send-init-password-email/{userId}
+         */
+        getNuxeoIdentitySendInitPasswordEmailUserid: (userId: string, params: RequestParams = {}) =>
+            this.request<ResultBoolean, Result | (ResultObject | Result | ResultString)>({
+                path: `/nuxeo/identity/send-init-password-email/${userId}`,
+                method: "GET",
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
          * @tags wopi-host-controller
          * @name GetNuxeoGetofficetokenId
          * @request GET:/api/nuxeo/getOfficeToken/{id}
@@ -19248,10 +19859,9 @@ export class Admin<SecurityDataType extends unknown> extends HttpClient<Security
          * @request GET:/api/message/queue/consumes
          */
         getMessageQueueConsumes: (params: RequestParams = {}) =>
-            this.request<void, Result | (ResultObject | Result | ResultString)>({
+            this.request<ResultListMQConfigurationInfo, Result | (ResultObject | Result | ResultString)>({
                 path: `/message/queue/consumes`,
                 method: "GET",
-                format: "json",
                 ...params,
             }),
 
@@ -19278,7 +19888,7 @@ export class Admin<SecurityDataType extends unknown> extends HttpClient<Security
          * @request GET:/api/externalStorage/{id}/profiles/list
          */
         getExternalstorageIdProfilesList: (id: string, params: RequestParams = {}) =>
-            this.request<ExternalProfileDTO, Result | (ResultObject | Result | ResultString)>({
+            this.request<ResultListExternalProfileDTO, Result | (ResultObject | Result | ResultString)>({
                 path: `/externalStorage/${id}/profiles/list`,
                 method: "GET",
                 ...params,
@@ -19513,6 +20123,7 @@ export class Admin<SecurityDataType extends unknown> extends HttpClient<Security
          *
          * @tags Workflow Version Controller
          * @name GetWorkflowVersionKeyProcessdefinitionkey
+         * @summary Get Latest Version Data by process definition key
          * @request GET:/api/docpal/workflow/version/key/{processDefinitionKey}
          */
         getWorkflowVersionKeyProcessdefinitionkey: (processDefinitionKey: string, params: RequestParams = {}) =>
@@ -21646,10 +22257,16 @@ export class Admin<SecurityDataType extends unknown> extends HttpClient<Security
          * @summary Query all contact group without filter condition
          * @request GET:/api/docpal/contactGroup/list
          */
-        getContactgroupList: (params: RequestParams = {}) =>
+        getContactgroupList: (
+            query: {
+                requestDTO: ContactGroupRequestDTO;
+            },
+            params: RequestParams = {},
+        ) =>
             this.request<ResultListContactGroupResponseDTO, Result | (ResultObject | Result | ResultString)>({
                 path: `/docpal/contactGroup/list`,
                 method: "GET",
+                query: query,
                 ...params,
             }),
 
@@ -22739,7 +23356,7 @@ export class Admin<SecurityDataType extends unknown> extends HttpClient<Security
          * @request GET:/api/docpal/acl/user/{userId}
          */
         getAclUserUserid: (userId: string, params: RequestParams = {}) =>
-            this.request<UserDetailDTO, Result | (ResultObject | Result | ResultString)>({
+            this.request<ResultUserDetailDTO, Result | (ResultObject | Result | ResultString)>({
                 path: `/docpal/acl/user/${userId}`,
                 method: "GET",
                 ...params,
@@ -22754,7 +23371,7 @@ export class Admin<SecurityDataType extends unknown> extends HttpClient<Security
          * @request GET:/api/docpal/acl/role/users/dropdown
          */
         getAclRoleUsersDropdown: (params: RequestParams = {}) =>
-            this.request<RoleUserDTO, Result | (ResultObject | Result | ResultString)>({
+            this.request<ResultListAclUserInformation, Result | (ResultObject | Result | ResultString)>({
                 path: `/docpal/acl/role/users/dropdown`,
                 method: "GET",
                 ...params,
@@ -22769,7 +23386,7 @@ export class Admin<SecurityDataType extends unknown> extends HttpClient<Security
          * @request GET:/api/docpal/acl/role/root
          */
         getAclRoleRoot: (params: RequestParams = {}) =>
-            this.request<RoleDTO, Result | (ResultObject | Result | ResultString)>({
+            this.request<ResultRoleDTO, Result | (ResultObject | Result | ResultString)>({
                 path: `/docpal/acl/role/root`,
                 method: "GET",
                 ...params,
@@ -22784,7 +23401,7 @@ export class Admin<SecurityDataType extends unknown> extends HttpClient<Security
          * @request GET:/api/docpal/acl/role/hierarchy/{roleId}
          */
         getAclRoleHierarchyRoleid: (roleId: string, params: RequestParams = {}) =>
-            this.request<RoleDTO, Result | (ResultObject | Result | ResultString)>({
+            this.request<ResultRoleDTO, Result | (ResultObject | Result | ResultString)>({
                 path: `/docpal/acl/role/hierarchy/${roleId}`,
                 method: "GET",
                 ...params,
@@ -22799,7 +23416,7 @@ export class Admin<SecurityDataType extends unknown> extends HttpClient<Security
          * @request GET:/api/docpal/acl/resource-permissions/resource/{resourceId}
          */
         getAclResourcePermissionsResourceResourceid: (resourceId: string, params: RequestParams = {}) =>
-            this.request<ResourcePermissionDTO, Result | (ResultObject | Result | ResultString)>({
+            this.request<ResultListResourcePermissionVO, Result | (ResultObject | Result | ResultString)>({
                 path: `/docpal/acl/resource-permissions/resource/${resourceId}`,
                 method: "GET",
                 ...params,
@@ -22866,6 +23483,51 @@ export class Admin<SecurityDataType extends unknown> extends HttpClient<Security
             this.request<ResultBoolean, Result | (ResultObject | Result | ResultString)>({
                 path: `/system_admin/clean`,
                 method: "DELETE",
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags Document
+         * @name DeleteRegisteredServerContactgroupIdFieldsFieldname
+         * @request DELETE:/api/registered-server/contactGroup/{id}/fields/{fieldName}
+         */
+        deleteRegisteredServerContactgroupIdFieldsFieldname: (
+            id: string,
+            fieldName: string,
+            query: {
+                operator: string;
+            },
+            params: RequestParams = {},
+        ) =>
+            this.request<ResultListContactAttribute, Result | (ResultObject | Result | ResultString)>({
+                path: `/registered-server/contactGroup/${id}/fields/${fieldName}`,
+                method: "DELETE",
+                query: query,
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags Document
+         * @name DeleteRegisteredServerContactgroupIdContactContactdetailid
+         * @summary Physically delete contact records
+         * @request DELETE:/api/registered-server/contactGroup/{id}/contact/{contactDetailId}
+         */
+        deleteRegisteredServerContactgroupIdContactContactdetailid: (
+            id: string,
+            contactDetailId: string,
+            query: {
+                operator: string;
+            },
+            params: RequestParams = {},
+        ) =>
+            this.request<ResultBoolean, Result | (ResultObject | Result | ResultString)>({
+                path: `/registered-server/contactGroup/${id}/contact/${contactDetailId}`,
+                method: "DELETE",
+                query: query,
                 ...params,
             }),
 
