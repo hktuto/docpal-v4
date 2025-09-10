@@ -71,10 +71,33 @@ function submit() {
   opened.value = false
 }
 
+function handleShowFilter(filter: string) {
+  switch (filter) {
+    case 'User':
+      if (!form.value.showUserFilter) {
+        form.value.defaultUser = ''
+        form.value.userLabel = ''
+      }
+      break
+    case 'Category':
+      if (!form.value.showCategoryFilter) {
+        form.value.defaultCategory = ''
+        form.value.categoryLabel = ''
+      }
+      break
+    case 'Location':
+      if (!form.value.showLocationFilter) {
+        form.value.defaultLocation = ''
+        form.value.locationLabel = ''
+      }
+      break
+    default:
+  }
+}
+
 defineExpose({
   handleOpen
 })
-
 </script>
 
 <template>
@@ -105,19 +128,21 @@ defineExpose({
       <el-divider />
 
       <el-form-item :label="t('Show User Filter')">
-        <el-switch v-model="form.showUserFilter" active-text="Yes" inactive-text="No" />
+        <el-switch v-model="form.showUserFilter" active-text="Yes" inactive-text="No"
+                   @change="handleShowFilter('User')" />
       </el-form-item>
       <el-form-item v-if="form.showUserFilter" :label="t('Default User')">
         <el-select v-model="form.defaultUser" clearable placeholder="Default User" filterable>
           <el-option v-for="item in userFiterOptions" :key="item.value" :label="item.label" :value="item.value" />
         </el-select>
       </el-form-item>
-      <el-form-item v-if="form.showUserFilter" :label="t('Title')">
+      <el-form-item v-if="form.showUserFilter" :label="t('User Filter Title')">
         <el-input v-model="form.userLabel" :placeholder="$t('vxe.base.pleaseInput')" />
       </el-form-item>
       <el-divider />
-      <el-form-item :label="t('Show Calendar Filter')">
-        <el-switch v-model="form.showCategoryFilter" active-text="Yes" inactive-text="No" />
+      <el-form-item :label="t('Show Category Filter')">
+        <el-switch v-model="form.showCategoryFilter" active-text="Yes" inactive-text="No"
+                   @change="handleShowFilter('Category')" />
       </el-form-item>
       <el-form-item v-if="form.showCategoryFilter" :label="t('Default Calendar Filter')">
         <el-select v-model="form.defaultCategory" clearable :placeholder="$t('common_selectOccupancyContent')"
@@ -125,12 +150,13 @@ defineExpose({
           <el-option v-for="item in categoriesOption" :key="item.id" :label="item.name" :value="item.id" />
         </el-select>
       </el-form-item>
-      <el-form-item v-if="form.showCategoryFilter" :label="t('Title')">
+      <el-form-item v-if="form.showCategoryFilter" :label="t('Category Filter Title')">
         <el-input v-model="form.categoryLabel" :placeholder="$t('vxe.base.pleaseInput')" />
       </el-form-item>
       <el-divider />
       <el-form-item :label="t('Show Location Filter')">
-        <el-switch v-model="form.showLocationFilter" active-text="Yes" inactive-text="No" />
+        <el-switch v-model="form.showLocationFilter" active-text="Yes" inactive-text="No"
+                   @change="handleShowFilter('Location')" />
       </el-form-item>
       <el-form-item v-if="form.showLocationFilter" :label="t('Default Location Filter')">
         <el-select v-model="form.defaultLocation" clearable :placeholder="$t('common_selectOccupancyContent')"
@@ -138,7 +164,7 @@ defineExpose({
           <el-option v-for="item in locationsOption" :key="item.id" :label="item.name" :value="item.id" />
         </el-select>
       </el-form-item>
-      <el-form-item v-if="form.showLocationFilter" :label="t('Title')">
+      <el-form-item v-if="form.showLocationFilter" :label="t('Location Filter Title')">
         <el-input v-model="form.locationLabel" :placeholder="$t('vxe.base.pleaseInput')" />
       </el-form-item>
       <el-divider />
@@ -150,7 +176,7 @@ defineExpose({
 
     <template #footer>
       <el-button id="Home__Dashboard__Calendar__Settings__Cancel" @click="opened = false">
-        {{ $t('cancelText') }}
+        {{ $t('vxe.button.cancel') }}
       </el-button>
       <el-button id="WorkPanel__Detail__Calendar__Settings__Delete" type="danger" @click="$emit('delete')">
         {{ $t('common_delete') }}
