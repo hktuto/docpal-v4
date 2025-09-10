@@ -8,7 +8,12 @@
         filterable
         :placeholder="$t('render.hint.selectPlaceholder')"
         @change="(val: string) => onResourceAttributeChange(rule, val)"
-      />
+      >
+        <template #default="{ item }">
+          <span>{{ item.label }}</span>
+          <el-tag v-if="item.tag" class="el-icon--right" :type="item.tagType || 'info'" size="small" >{{ item.tag }}</el-tag>
+        </template>
+      </el-select-v2>
       <div v-if="rule.type === 'number'" class="filter-row">
         <ElSelect v-model="rule.condition" :placeholder="$t('dhList.condition')">
           <ElOption v-for="cond in numberConditions" :key="cond.value" :label="cond.label" :value="cond.value" />
