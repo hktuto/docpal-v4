@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { adminApi } from 'api'
-// 枚举
+const { t } = useI18n()
 const ConditionEnum = {
   eq: '=',
   neq: '!='
@@ -10,7 +10,7 @@ const formData = ref({
   resourceRules: []
 })
 const documentSetting = {
-  label: 'document type',
+  label: t('dpTable_documentType'),
   value: 'document_type',
   type: 'select-dynamic',
   selectConfig: {
@@ -59,8 +59,9 @@ async function getMetadata() {
       }
       return {
         ...extraProps,
-        label: '【' + item.dataType + '】' + item.name,
-        value: item.name
+        label: t(item.name),
+        value: item.name,
+        tag: item.dataType
       }
     })
     resourceAttributes.value.push(...optionList)
