@@ -30,17 +30,8 @@ const props = withDefaults(
     data?: FormData
     formJson?: FormJson
     options?: Object
-    attachmentDownloadApi?: Function
   }>(),
-  {
-    attachmentDownloadApi: (id: string) =>
-      clientApi.api.getWorkflowTaskAttachmentInfo(
-        { attachmentId: id },
-        {
-          format: 'blob'
-        }
-      )
-  }
+  {}
 )
 const vFormRenderRef = ref<FormRenderer>()
 const fromJsonNormalizer = computed((): FormJson => {
@@ -144,13 +135,14 @@ const previewFile = reactive<any>({
     readOnly: true
   }
 })
-async function handleFilePreview({ file, options }: { file: any; options: any }) {
-  previewFile.loading = true
+async function handleFilePreview(file: any, fieldOptions: any) {
+  if (!fieldOptions) return
   try {
+    previewFile.loading = true
     let fileId = ''
-    if (options.uploadName === 'file') {
+    if (fieldOptions?.uploadName === 'file') {
       fileId = file.response?.data ? file.response.data.id : file.id
-      previewFile.blob = (await clientApi.api.getNuxeoDocumentDownload(
+      previewFile.blob = (await clientApi.api.postNuxeoDocumentDownloadNonpermission(
         { idOrPath: fileId },
         {
           format: 'blob'
@@ -169,8 +161,10 @@ async function handleFilePreview({ file, options }: { file: any; options: any })
     ReaderRef.value.handleOpen()
     previewFile.id = fileId
     previewFile.name = file.name
-  } catch (error) {}
-  previewFile.loading = false
+  } catch (error) {
+  } finally {
+    previewFile.loading = false
+  }
 }
 async function getFormData(needValidation: boolean = true) {
   let data = null
