@@ -9,11 +9,11 @@
         <el-timeline-item
           v-for="(activity, index) in activities"
           :key="index"
-          :timestamp="displayTime(activity.envetDateStr)"
+          :timestamp="formatDate(activity.envetDateStr)"
         >
           <div class="timeline">
             <div class="userOrAction user">{{ activity.principalName }}</div>
-            <div class="userOrAction action">{{ $t(activity.label) }}</div>
+            <div class="userOrAction action" v-if="activity.label">{{ $t(activity.label) }}</div>
           </div>
         </el-timeline-item>
         <template v-if="activities.length < totalSize">
@@ -31,7 +31,6 @@ import dayjs from 'dayjs'
 const props = defineProps<{doc: any}>();
 const { doc } = toRefs(props);
 const activities = ref<any[]>([])
-const { displayTime } = useTime()
 const params = reactive<any>({
     pageNum: 0,
     pageSize: 20,
