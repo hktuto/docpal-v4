@@ -155,7 +155,7 @@ async function formJsonGet(userTaskId: string, processKey: string, versionId: st
 }
 
 function handleDisabledForm() {
-  if (!isAssigneeUser.value) {
+  if (!isAssigneeUser.value || workflowType === 'completeTask') {
     vFormRef.value.disableForm()
   }
 }
@@ -324,10 +324,10 @@ onMounted(() => {
                 <component :is="item.component" ref="additionalButtonRef" v-bind="item.props"
                            @submit="addtionalSubmit" />
               </template>
-              <el-button id="Workflow__AvailableTask__Detail__Form__SaveDraft" @click="handleSave">
+              <el-button id="Workflow__AvailableTask__Detail__Form__SaveDraft" :disabled="workflowType === 'completeTask'" @click="handleSave">
                 {{ $t('workflow_save') }}
               </el-button>
-              <el-button id="Workflow__AvailableTask__Detail__Form__Submit" type="primary" @click="handleSubmit">
+              <el-button id="Workflow__AvailableTask__Detail__Form__Submit" type="primary" :disabled="workflowType === 'completeTask'" @click="handleSubmit">
                 {{ $t('common_submit') }}
               </el-button>
             </div>
