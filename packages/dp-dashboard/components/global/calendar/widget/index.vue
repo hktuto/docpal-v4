@@ -46,16 +46,6 @@ function openNewEventDialog() {
   createDialogRef.value.open()
 }
 
-function addEvent(newEvent) {
-  console.log(22, CalendarRef)
-  console.log(33, newEvent)
-  try {
-    CalendarRef.value.addEvent(newEvent)
-  } catch (e) {
-    console.log(e)
-  }
-}
-
 onDeactivated(() => {
   if (!props.hideSetting) {
     showPreview.value = false
@@ -85,11 +75,11 @@ onDeactivated(() => {
     </template>
     <el-button @click="openNewEventDialog">{{ $t('New Event') }}</el-button>
     <el-skeleton v-if="!hideSetting && !showPreview" :rows="5"></el-skeleton>
-<!--    <Calendar v-else ref="CalendarRef" :options="setting" :editItem="newEvent" @openDetail="editEvent"-->
-<!--              @createEvent="popNewEvent" @updateEvent="updateEvent" />-->
-    <Calendar v-else ref="CalendarRef" :options="setting" @openDetail="editEvent"
-              @createEvent="popNewEvent" @updateEvent="updateEvent" />
-    <CalendarWidgetCreateDialog ref="createDialogRef" @addEvent="addEvent" />
+    <!--    <Calendar v-else ref="CalendarRef" :options="setting" :editItem="newEvent" @openDetail="editEvent"-->
+    <!--              @createEvent="popNewEvent" @updateEvent="updateEvent" />-->
+    <Calendar v-else ref="CalendarRef" :options="setting" @openDetail="editEvent" @createEvent="popNewEvent"
+              @updateEvent="updateEvent" />
+    <CalendarWidgetCreateDialog ref="createDialogRef" />
     <CalendarWidgetSetting ref="settingRef" :setting="setting" @submit="(setting) => $emit('refreshSetting', setting)"
                            @delete="handleDelete" />
   </DashboardCard>
