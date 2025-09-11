@@ -33,7 +33,6 @@ export const useMetadata = () => {
     if (!initOptions.requiredFields) initOptions.requiredFields = []
     if (!initOptions.readonlyFields) initOptions.readonlyFields = []
     const metadataList = await getDocumentMetadata(type)
-    console.log('metadataList', metadataList)
     const variableList: VariableItem[] = getVFormVariableListByMetadata(metadataList, initOptions)
     return variableList
   }
@@ -48,6 +47,7 @@ export const useMetadata = () => {
       console.log('data', data)
       const metadataSchema: any = data.properties || {}
       metadataMap.value[type] = await initMetadataVformOptions(metadataSchema, isInitOption)
+      console.log('metadataMap.value[type]', metadataMap.value[type])
       return metadataMap.value[type]
     } catch (error) {
       return null
@@ -181,10 +181,10 @@ export const useMetadata = () => {
           resultItem.type = numberResult.type
           break
         case 'text':
-          _item.type = 'textarea'
-          _item.options.maxLength = metadataItem.maxLength || 0
-          const row60 = ((_item.options.maxLength / 60).toFixed(0)) || 1
-          _item.options.rows = Math.max(1, Math.min(Number(row60), 10))
+          resultItem.type = 'textarea'
+          resultItem.options.maxLength = row.maxLength || 0
+          const row60 = ((resultItem.options.maxLength / 60).toFixed(0)) || 1
+          resultItem.options.rows = Math.max(1, Math.min(Number(row60), 10))
           break
         case 'boolean':
           resultItem.type = 'switch'
