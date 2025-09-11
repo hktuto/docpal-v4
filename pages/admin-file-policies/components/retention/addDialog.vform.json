@@ -394,204 +394,120 @@
                 "multipleLimit": 0,
                 "optionItems": [
                   {
-                    "label": "Chris10000",
-                    "value": "Chris10000"
+                    "label": "administrator",
+                    "value": "administrator"
                   },
                   {
-                    "label": "ChrisLuAdmin",
-                    "value": "ChrisLuAdmin"
+                    "label": "ashlee_sauer",
+                    "value": "ashlee_sauer"
                   },
                   {
-                    "label": "CPAAcct1",
-                    "value": "CPAAcct1"
-                  },
-                  {
-                    "label": "CPAAdm1",
-                    "value": "CPAAdm1"
-                  },
-                  {
-                    "label": "CPAAud1",
-                    "value": "CPAAud1"
-                  },
-                  {
-                    "label": "CPACos1",
-                    "value": "CPACos1"
-                  },
-                  {
-                    "label": "CPAMgr1",
-                    "value": "CPAMgr1"
-                  },
-                  {
-                    "label": "CrystalChiu",
-                    "value": "CrystalChiu"
-                  },
-                  {
-                    "label": "CrystalChiuAdmin",
-                    "value": "CrystalChiuAdmin"
-                  },
-                  {
-                    "label": "Doctor",
-                    "value": "Doctor"
-                  },
-                  {
-                    "label": "EdwardKong",
-                    "value": "EdwardKong"
-                  },
-                  {
-                    "label": "EdwardKongAdmin",
-                    "value": "EdwardKongAdmin"
-                  },
-                  {
-                    "label": "hankhongadmin",
-                    "value": "hankhongadmin"
-                  },
-                  {
-                    "label": "henrypoon",
-                    "value": "henrypoon"
-                  },
-                  {
-                    "label": "henrypoonadmin",
-                    "value": "henrypoonadmin"
+                    "label": "huang",
+                    "value": "huang"
                   },
                   {
                     "label": "jack_li",
                     "value": "jack_li"
                   },
                   {
-                    "label": "jack_li2",
-                    "value": "jack_li2"
+                    "label": "jack_li1",
+                    "value": "jack_li1"
                   },
                   {
-                    "label": "JackalLeung",
-                    "value": "JackalLeung"
+                    "label": "jack_li3",
+                    "value": "jack_li3"
                   },
                   {
-                    "label": "JackalLeungAdmin",
-                    "value": "JackalLeungAdmin"
+                    "label": "jack_li5",
+                    "value": "jack_li5"
                   },
                   {
-                    "label": "jay",
-                    "value": "jay"
+                    "label": "jack10",
+                    "value": "jack10"
                   },
                   {
-                    "label": "Joshua",
-                    "value": "Joshua"
+                    "label": "jack6",
+                    "value": "jack6"
                   },
                   {
-                    "label": "KarenKwong",
-                    "value": "KarenKwong"
+                    "label": "jack7",
+                    "value": "jack7"
                   },
                   {
-                    "label": "leo",
-                    "value": "leo"
+                    "label": "jack8",
+                    "value": "jack8"
                   },
                   {
-                    "label": "leo2",
-                    "value": "leo2"
+                    "label": "jack9",
+                    "value": "jack9"
                   },
                   {
-                    "label": "leo3",
-                    "value": "leo3"
+                    "label": "johnson",
+                    "value": "johnson"
                   },
                   {
-                    "label": "LeoA",
-                    "value": "LeoA"
+                    "label": "joshua",
+                    "value": "joshua"
                   },
                   {
-                    "label": "Lyle",
-                    "value": "Lyle"
+                    "label": "lyle",
+                    "value": "lyle"
                   },
                   {
-                    "label": "NGOAdmin1",
-                    "value": "NGOAdmin1"
+                    "label": "lyletest",
+                    "value": "lyletest"
                   },
                   {
-                    "label": "NGOFinance1",
-                    "value": "NGOFinance1"
+                    "label": "moonlit",
+                    "value": "moonlit"
                   },
                   {
-                    "label": "NGOManagement1",
-                    "value": "NGOManagement1"
+                    "label": "nine",
+                    "value": "nine"
                   },
                   {
-                    "label": "NGOMarketing1",
-                    "value": "NGOMarketing1"
+                    "label": "nineadmin",
+                    "value": "nineadmin"
                   },
                   {
-                    "label": "NGOMarketing2",
-                    "value": "NGOMarketing2"
-                  },
-                  {
-                    "label": "NGOProject1",
-                    "value": "NGOProject1"
-                  },
-                  {
-                    "label": "NGOProject2",
-                    "value": "NGOProject2"
-                  },
-                  {
-                    "label": "NGOService1",
-                    "value": "NGOService1"
-                  },
-                  {
-                    "label": "NGOService2",
-                    "value": "NGOService2"
-                  },
-                  {
-                    "label": "nurse1",
-                    "value": "nurse1"
-                  },
-                  {
-                    "label": "nurse2",
-                    "value": "nurse2"
-                  },
-                  {
-                    "label": "nurse3",
-                    "value": "nurse3"
+                    "label": "ninerabbit",
+                    "value": "ninerabbit"
                   },
                   {
                     "label": "ooyy",
                     "value": "ooyy"
                   },
                   {
-                    "label": "Royhoo",
-                    "value": "Royhoo"
+                    "label": "ooyy111",
+                    "value": "ooyy111"
                   },
                   {
-                    "label": "sampson",
-                    "value": "sampson"
+                    "label": "ooyycdbd",
+                    "value": "ooyycdbd"
                   },
                   {
-                    "label": "seantsang",
-                    "value": "seantsang"
+                    "label": "sean-admin",
+                    "value": "sean-admin"
                   },
                   {
-                    "label": "ValerieWongAdmin",
-                    "value": "ValerieWongAdmin"
+                    "label": "shixuan",
+                    "value": "shixuan"
                   },
                   {
-                    "label": "WCL_LeoLee",
-                    "value": "WCL_LeoLee"
+                    "label": "test_one",
+                    "value": "test_one"
                   },
                   {
-                    "label": "WilfredChung",
-                    "value": "WilfredChung"
+                    "label": "teststatu",
+                    "value": "teststatu"
                   },
                   {
-                    "label": "WilfredChungAdmin",
-                    "value": "WilfredChungAdmin"
+                    "label": "testuser",
+                    "value": "testuser"
                   },
                   {
                     "label": "will_du",
                     "value": "will_du"
-                  },
-                  {
-                    "label": "will1",
-                    "value": "will1"
-                  },
-                  {
-                    "label": "will2",
-                    "value": "will2"
                   }
                 ],
                 "required": false,
@@ -1096,12 +1012,12 @@
     "jsonVersion": 3,
     "isCreateDynamicCode": true,
     "onFormCreated": "",
-    "onFormMounted": "const _this = this\nif(!this.globalOptionData) this.globalOptionData = {}\nthis.globalOptionData.fileList = []\nthis.globalOptionData.ready = false\nconst defaultKeywords = [\n  {\n    \"name\": \"create_date\",\n    \"type\": \"date\",\n    \"value\": \"date\",\n    \"schema\": \"dublincore\",\n    \"isMultiValue\": null,\n    \"defaultValue\": null,\n    \"valueScope\": null\n  },\n  {\n    \"name\": \"modify_date\",\n    \"type\": \"date\",\n    \"value\": \"date\",\n    \"schema\": \"dublincore\",\n    \"isMultiValue\": null,\n    \"defaultValue\": null,\n    \"valueScope\": null\n}\n]\ngetDocTypeList()\nasync function getDocTypeList() {\n  const typeList = await $api.get('/docpal/types/active', {}).then(res => res.data.data)\n  typeList.forEach((item) => {\n    const _item = {\n      keywords: [...defaultKeywords, ...item.keywords],\n      value: item.name,\n      label: $t(item.name)\n    }\n    if(!item.isFolder) {\n      _this.globalOptionData.fileList.push(_item)\n    }\n  })\n  setTimeout(() => {\n    _this.globalOptionData.ready = true\n  }, 1000);\n}\n",
+    "onFormMounted": "const _this = this\nif(!this.globalOptionData) this.globalOptionData = {}\nthis.globalOptionData.fileList = []\nthis.globalOptionData.ready = false\nconst defaultKeywords = [\n  {\n    \"name\": \"create_date\",\n    \"type\": \"date\",\n    \"value\": \"date\",\n    \"schema\": \"dublincore\",\n    \"isMultiValue\": null,\n    \"defaultValue\": null,\n    \"valueScope\": null\n  },\n  {\n    \"name\": \"modify_date\",\n    \"type\": \"date\",\n    \"value\": \"date\",\n    \"schema\": \"dublincore\",\n    \"isMultiValue\": null,\n    \"defaultValue\": null,\n    \"valueScope\": null\n}\n]\ngetDocTypeList()\nasync function getDocTypeList() {\n  const typeList = await $api.get('/docpal/types/active', {}).then(res => res.data.data)\n  typeList.forEach((item) => {\n    const keywords = item.keywords ? item.keywords : []\n    const _item = {\n      keywords: [...defaultKeywords, ...keywords],\n      value: item.name,\n      label: $t(item.name)\n    }\n    if(!item.isFolder) {\n      _this.globalOptionData.fileList.push(_item)\n    }\n  })\n  setTimeout(() => {\n    _this.globalOptionData.ready = true\n  }, 1000);\n}\n",
     "onFormDataChange": "",
     "dhList": [],
+    "onFormValidate": "",
     "saveRemoteOptions": "never",
     "labelFormUniqueName": true,
-    "onFormValidate": "",
     "dataSources": []
   }
 }
