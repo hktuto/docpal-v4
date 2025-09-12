@@ -170,11 +170,13 @@ function initTreeData(children: any, parentId: string = '') {
   children.forEach(async (item: any) => {
     item.isLack = false
     if (parentId) item.parentId = parentId
-    if (item.folder === true) {
-      item.properties = {}
-    }
     let defaultValue = {}
     if (item.metadataValue) defaultValue = JSON.parse(item.metadataValue)
+    if (item.folder === true) {
+      item.properties = {
+        ...defaultValue
+      }
+    }
     item.previewName = getMetaName(
       {
         ...defaultValue,
@@ -183,6 +185,7 @@ function initTreeData(children: any, parentId: string = '') {
       },
       item
     )
+    item.docName = item.label
 
     if (item.children) initTreeData(item.children, item.id)
     else item.children = []

@@ -41,7 +41,9 @@
             <template v-if="index !== getLabelList(state.selectedRow.labelRule).length - 1"> -</template>
           </template>
         </div>
-        <el-text :type="hasPreviewName(state.selectedRow.previewName) ? '': 'danger'" style="margin-bottom: 15px">{{ $t('folderCabinet.previewName') }}：{{ state.selectedRow.previewName }}</el-text>
+        <el-text :type="hasPreviewName(state.selectedRow.previewName) ? '': 'danger'" style="margin-bottom: 15px">
+          {{ $t('folderCabinet.previewName') }}：{{ state.selectedRow.previewName }}
+        </el-text>
         <MetaRenderForm2 ref="MetaFormRef" mode="folderCabinet" @formChange="handleMetaChange"></MetaRenderForm2>
       </template>
       <template v-else>
@@ -121,7 +123,7 @@ async function getData(isValidate: boolean = false) {
     const message = []
     const labelRules = getLabelList(doc.labelRule)
     const requiredFields = labelRules.map((item: any) => (item.metadata || item.metaData))
-    const _requiredFields = requiredFields.filter((key) => !['fc:docTitle','fc:label', 'fc:createDate', 'fc:creator'].includes(key))
+    const _requiredFields = requiredFields.filter((key) => !['fc:docTitle', 'fc:label', 'fc:createDate', 'fc:creator'].includes(key))
     _requiredFields.forEach((key) => {
       if (!doc.properties[key]) {
         message.push(`【${doc.properties.docName || doc.docName}】: ${key} is required`)
@@ -158,7 +160,7 @@ async function handleNodeClick(row: any) {
     MetaFormRef.value.setData({
       docName: state.selectedRow.docName ? state.selectedRow.docName : row.label,
       ...defaultValue,
-      ...state.selectedRow.properties
+      ...properties
     })
   })
 }
