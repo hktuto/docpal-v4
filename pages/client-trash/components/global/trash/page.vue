@@ -69,9 +69,9 @@ const { tableConfig, tableEvent, tableRef, reload, query, cleanSelectedRows } = 
     },
     { field: 'path', title: 'document_path' },
     { field: 'type', title: 'tableHeader_type' },
-    { field: 'properties.principalName', title: 'modified_by' },
+    { field: 'modifiedBy', title: 'modified_by' },
     {
-      field: 'properties.trashed_date',
+      field: 'modifiedDate',
       title: 'table_modifiedDate',
       formatter({ cellValue }: any) {
         return formatDate(cellValue)
@@ -101,6 +101,12 @@ const { tableConfig, tableEvent, tableRef, reload, query, cleanSelectedRows } = 
     ]
   ],
   permissionMethod: ({ options, column, row, rowIndex }: any) => {
+    if(!row){
+      return{
+        disabled:true,
+        visible:false
+      }
+    }
     if (state.loading) {
       return {
         visible: false,
