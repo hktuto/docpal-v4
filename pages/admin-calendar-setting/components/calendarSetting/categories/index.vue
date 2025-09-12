@@ -9,7 +9,7 @@ const detailDialogRef = ref()
 const { tableConfig, tableEvent, tableRef, reload } = useVxeTable({
   id: 'calendarSetting_categories',
   api: (pageParams: any) => {
-    return adminApi.api.getEventCalendarsSettings({ ...pageParams, ...extraParams }).then(r => r.data)
+    return adminApi.api.getEventCalendarsSettings({ eventCalendarSetting: {} }).then(r => r.data)
     // return adminApi.api.getEventCalendarsSettings({ eventCalendarSetting: { ...extraParams } }).then(r => r.data)
   },
   virtualScroll: true,
