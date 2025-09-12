@@ -51,7 +51,7 @@ async function handleSubmit() {
           id: state.setting.id
         }
       })
-      msg = t('tip_updateSuccessMsg', { modelName: t('common_row'), name: null })
+      msg = t('tip_updateMsg', { modelName: t('common_row'), name: null })
     } else {
       await adminApi.api.postMasterTablesRecord({
         id: props.tableId,

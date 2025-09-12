@@ -26,7 +26,7 @@ async function deleteItem(doc: any, deleteType?: 'folder' | 'file') {
     documentId: doc.id
   })
   if (isShareInternal) msg += `<span class="color__danger">${doc.name} ${t('msg_isShareInternalFile')}</span>,`
-  msg += t('document_deleteMsg')
+  msg += t('common_deleteMsg')
   const action = await ElMessageBox.confirm(msg, {
     confirmButtonClass: 'el-button el-button--warning',
     dangerouslyUseHTMLString: true,
@@ -56,8 +56,7 @@ async function deleteItem(doc: any, deleteType?: 'folder' | 'file') {
     } else {
       emits('success', doc)
     }
-    ElMessage.success(t('tip_deleteSuccessMsg', { modelName: t('common_item'), name: null }))
-    
+    ElMessage.success(t('tip_deleteSuccessMessage'))
     ElNotification({
       title: 'Success',
       message: 'Item deleted',

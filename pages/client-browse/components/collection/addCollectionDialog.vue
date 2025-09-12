@@ -43,8 +43,7 @@ async function handleSubmit() {
       description: null
     }
     const cdata = await clientApi.api.postNuxeoCollectionCreate(params).then(res => res.data)
-    ElMessage.success(t('tip_createdSuccessMsg', {
-      modelName: t('collection_collection'),
+    ElMessage.success(t('tip_createdMsg', {
       name: params.name
     }))
     state.visible = false

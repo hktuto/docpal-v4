@@ -74,6 +74,7 @@ import { CopyDocument } from '@element-plus/icons-vue'
 import type { FormInstance } from 'element-plus'
 import { Base64 } from 'js-base64'
 
+const routerProvider = inject(MenuRouterKey)
 const { diffMinute } = useTime()
 const { public: { endPoint } } = useRuntimeConfig()
 const { t } = useI18n()
@@ -154,6 +155,8 @@ async function handleSubmit() {
     tokenLiveInMinutes: diffMinute(form.dueDate),
     shareId: state.shareId
   }
+
+  routerProvider?.message.success(t('share_updateExternalMsg'))
   emit('submit', param)
   dialogVisible.value = false
 }

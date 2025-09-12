@@ -925,6 +925,8 @@ export const bpmnElement: BpmnElement = {
       {
         icon: 'bpmn:calendar',
         label: 'Calendar',
+        group: '',
+        order: 0,
         dropData: (id: string) => ({
           id,
           ...bpmnElement.serviceTask.nodeStyle({

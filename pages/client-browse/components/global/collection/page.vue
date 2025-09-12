@@ -219,7 +219,7 @@ function handleDocDelete(row: any) {
     documents: docList,
     collection: { idOrPath: state.curCollection.id }
   }
-  ElMessageBox.confirm(t('collectionFile_deleteMsg', { name: row.name }), {
+  ElMessageBox.confirm(t('collectionFile_deleteMsg', { name: state.curCollection.name }), {
     confirmButtonClass: 'el-button el-button--warning',
     confirmButtonText: t('common_confirmDelete')
   }).then(async () => {
@@ -229,7 +229,7 @@ function handleDocDelete(row: any) {
       setTimeout(() => {
         query({})
       }, 1000)
-      routerProvider?.message.success(t('collectionFile_deleteSuccessMsg', { name: row.name }))
+      routerProvider?.message.success(t('collectionFile_deleteSuccessMsg', { name: state.curCollection.name }))
       reload()
     } catch (error) {}
     state.loading = false

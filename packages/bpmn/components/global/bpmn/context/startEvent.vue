@@ -49,14 +49,6 @@ function handleSwitch() {
   node.setData(newData, { overwrite: true, deep: true, silent: false })
 }
 
-watch(() => node, () => {
-  if (node) {
-    switchRef.value = 'attr_flowable:candidateGroups' in node.data.data
-  }
-}, {
-  immediate: true,
-  deep: true
-})
 // TODO: 開啓下方的role設定，也需要將該代碼打開
 // watch(() => node, () => {
 //   if (node) {
