@@ -92,16 +92,16 @@ async function getCDBasciInfo() {
     // if (state.data?.fields?.length > 0) return state.data
     const id = caseProvider.instanceId?.value || null
     const versionId = caseProvider.versionId?.value || null
-    console.log("getCDBasciInfo", id, versionId)
     const appPlatform = useAppPlatform()
     if (id) {
+      // in client platform
       state.mode = 'normal'
       const { data } = await globalApi.api.getCaseDashboardInstanceCaseidPrimaryformData(id) 
-      console.log("------------ case form data", data)
       state.data = data
     } else if (versionId) {
+      // in admin platform
       state.mode = 'develop'
-      const { data: form }: any = await clientApi.api.getCaseDashboardInstanceCaseidPrimaryformData(versionId)
+      const { data: form }: any = await adminApi.api.getCaseDashboardVersionVersionidPrimaryform(versionId)
       form.rows = form.fields.reduce((prev: any, item: any) => {
         let value = item.type
         if (item.type === 'date') value = '2024-01-01'
