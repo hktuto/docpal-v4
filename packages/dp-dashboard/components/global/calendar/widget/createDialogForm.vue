@@ -88,7 +88,7 @@ const { tableConfig, tableEvent, tableRef, reload, query } = useVxeTable({
   ]
 })
 
-const userList = []
+const userList = ref([])
 const selectUser = reactive({
   userList: [],
   userString: ''
@@ -99,9 +99,10 @@ function openSelectUser() {
   showSelectUserDialog.value = true
 }
 
-function confirm() {
+function handleUserListConfirm() {
+  selectUser.userString = selectUser.userList.join(',')
 
-
+  // TODO：回填回Table
   showSelectUserDialog.value = false
 }
 
@@ -138,6 +139,14 @@ function enableForm() {
   FormRendererRef.value.vFormRenderRef.enableForm()
 }
 
+async function getUserList() {
+  userList.value = await getUserSelectOption()
+}
+
+onMounted(() => {
+  getUserList()
+})
+
 defineExpose({ setForm, getFormData, disableForm, enableForm })
 </script>
 
@@ -161,7 +170,8 @@ defineExpose({ setForm, getFormData, disableForm, enableForm })
           <el-button id="Home__Dashboard__Calendar__NewEvent__SelectUser__Cancel" @click="showSelectUserDialog = false">
             {{ $t('vxe.button.cancel') }}
           </el-button>
-          <el-button id="Home__Dashboard__Calendar__NewEvent__SelectUser__Confirm" type="primary" @click="confirm">
+          <el-button id="Home__Dashboard__Calendar__NewEvent__SelectUser__Confirm" type="primary"
+                     @click="handleUserListConfirm">
             {{ $t('dpButtom_confirm') }}
           </el-button>
         </template>

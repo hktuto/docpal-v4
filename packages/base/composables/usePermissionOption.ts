@@ -97,3 +97,32 @@ export const getCachePermissionOptions = async () => {
     return options.value
   }
 }
+
+export const getUserSelectOption = async () => {
+  const list = await adminApi.api.postNuxeoIdentityUsers().then((res) => res.data)
+  if (list.length === 0) return []
+
+  return list.map((item: any) => ({
+    id: item.id,
+    name: item.username,
+    email: item.email
+  }))
+}
+
+export const getRoleSelectOption = async () => {
+  const list = await adminApi.api.postAclRoleList([{
+    column: 'status',
+    type: 'EQ',
+    values: '1'
+  }]).then((res) => res.data)
+  if (list.length === 0) return []
+
+  return list.map((item) => ({
+    id: item.id,
+    name: item.name
+  }))
+}
+
+export const getGroupsSelectOption = async () => {
+  return await adminApi.api.postNuxeoIdentityGroups().then((res) => res.data)
+}
