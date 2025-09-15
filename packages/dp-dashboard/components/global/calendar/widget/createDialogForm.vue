@@ -1,129 +1,111 @@
 <script setup lang="ts">
-import { clientApi } from 'api'
-
+const routerProvider = inject(MenuRouterKey)
 const { t } = useI18n()
 const FormRendererRef = ref()
 const showSelectUserDialog = ref(false)
-const formRenderSlotsRef = ref<any>({})
 const state = reactive({
-  formData: {},
   formJson: {},
-  writableIds: [],
-  readonly: false
+  readonly: false,
+  tableData: [],
+  userList: []
 })
-const { formData, formJson } = toRefs(state)
-// @ts-ignore
-const { formRenderSlots } = useWorkflow()
+const userList = ref([])
+const { formJson } = toRefs(state)
 
-async function setForm(json: string | object, data?: object, properties: any[] = []) {
-  if (JSON.stringify(json) === '{}') {
-    FormRendererRef.value.setFormJson(defaultFormJson)
+async function setForm(json: string | object) {
+  if (!json || JSON.stringify(json) === '{}') {
+    routerProvider?.message.error(t('No form was obtained'))
     return
   }
   state.formJson = json
   FormRendererRef.value.setFormJson(json)
-  // if (data && properties) {
-  // const _data = await handleData(data)
-  // // check if value in _data is undefine or null , if so remove it
-  // Object.keys(_data).forEach((key) => {
-  //   if (_data[key] === undefined || _data[key] === null) delete _data[key]
-  // })
-  // state.formData = { ..._data }
-  //
-  // FormRendererRef.value.setFormData(_data)
-  // handleTypeIds(properties)
-  // } else {
-  state.formData = { ...data }
-  // }
 }
-
-const saveForm = reactive({
-  name: '',
-  location: '',
-  allDayEvent: false,
-  startDate: '',
-  endDate: '',
-  limitSeat: false,
-  availableSeat: 0
-})
 
 const { tableConfig, tableEvent, tableRef, reload, query } = useVxeTable({
   id: 'newEventDialogParticipantsTable',
-  api: (pageParams: any) => {
-    return []
-  },
   columns: [
     {
-      field: 'username',
+      field: 'name',
       title: 'Username',
       fixed: 'left'
     },
     {
       field: 'email',
-      title: 'Email',
-      slots: {
-        default: 'currentPath'
-      }
+      title: 'Email'
     }
   ],
   bodyActions: [
     [
       {
-        code: 'edit',
-        name: 'Edit',
-        visible: true,
-        disabled: false,
-        action: ({ row }: any) => {
-        }
-      },
-      {
         code: 'delete',
-        name: 'Delete',
+        name: 'Remove',
         visible: true,
         disabled: false,
         action: ({ row }: any) => {
+          handleRemoveUser(row.id)
         }
       }
     ]
-  ]
-})
-
-const userList = ref([])
-const selectUser = reactive({
-  userList: [],
-  userString: ''
+  ],
+  virtualScroll: true,
+  refresh: false,
+  zoom: false,
+  saveColumnOrder: false
 })
 
 function openSelectUser() {
-  selectUser.userString = ''
+  state.userList = []
   showSelectUserDialog.value = true
 }
 
 function handleUserListConfirm() {
-  selectUser.userString = selectUser.userList.join(',')
-
-  // TODO：回填回Table
+  state.tableData = userList.value.filter((item: any) => state.userList.includes(item.id))
   showSelectUserDialog.value = false
 }
 
-async function getFormData(needValidation = true) {
+function handleRemoveUser(userId: string) {
+  state.tableData = state.tableData.filter((item: any) => item.id !== userId)
+  state.userList = state.userList.filter((item: any) => item !== userId)
+}
+
+watch(() => state.tableData, () => {
+  tableConfig.data = state.tableData
+  reload()
+})
+
+async function getFormData() {
   try {
-    let formData = {}
-    if (!needValidation) formData = await FormRendererRef.value.getFormData(false)
-    else {
-      formData = await FormRendererRef.value
-        .getFormData()
-        .then((res: any) => {
-          return res
-        })
-        .catch((error: any) => {
-          return false
-        })
-    }
+    let formData = await FormRendererRef.value.getFormData()
+      .then((res: any) => {
+        return res
+      })
+      .catch((error: any) => {
+        console.log(error)
+        return false
+      })
     if (!formData) return false
 
-    formData.user = selectUser.userString
-    return formData
+    if (state.userList.length === 0) {
+      routerProvider?.message.error(t('Please add a user'))
+      return
+    }
+
+    const data = {
+      eventName: formData.eventName,
+      eventDescription: formData.eventDescription,
+      category: formData.category,
+      location: formData.location,
+      startTime: formData.startTime + ' 00:00',
+      endTime: formData.endTime + ' 23:59',
+      isAllDay: formData.isAllDay,
+      user: state.userList.join(',')
+    }
+
+    if (!formData.isAllDay) {
+      data.startTime = formData.startTime + ' ' + formData.time[0]
+      data.endTime = formData.endTime + ' ' + formData.time[1]
+    }
+    return data
   } catch (error) {
     console.error(error)
   }
@@ -153,24 +135,31 @@ defineExpose({ setForm, getFormData, disableForm, enableForm })
 <template>
   <FormRenderer ref="FormRendererRef" :form-json="formJson">
     <template v-slot:user>
-      <VxeGrid ref="tableRef" v-bind="tableConfig" v-on="tableEvent">
+      <VxeGrid ref="tableRef" v-bind="tableConfig" v-on="tableEvent" style="height: 300px">
         <template #toolbar_buttons>
-          <el-button @click="openSelectUser" type="primary">{{ $t('Add Participants') }}</el-button>
+          <div class="actions">
+            <p>Participants</p>
+            <el-button id="Home__Dashboard__Calendar__NewEvent__AddParticipants" @click="openSelectUser"
+                       class="button-container" type="primary">
+              {{ $t('Add Participants') }}
+            </el-button>
+          </div>
           <slot name="toolbar_buttons" />
         </template>
       </VxeGrid>
 
       <el-dialog v-model="showSelectUserDialog" :title="t('Select User')" append-to-body align-center width="400px">
         <el-form-item :label="t('User')" label-position="top">
-          <el-select v-model="selectUser.userList" multiple clearable>
+          <el-select v-model="state.userList" multiple filterable clearable>
             <el-option v-for="user in userList" :key="user.id" :label="user.name" :value="user.id" />
           </el-select>
         </el-form-item>
         <template #footer>
-          <el-button id="Home__Dashboard__Calendar__NewEvent__SelectUser__Cancel" @click="showSelectUserDialog = false">
+          <el-button id="Home__Dashboard__Calendar__NewEvent__AddParticipants__Cancel"
+                     @click="showSelectUserDialog = false">
             {{ $t('vxe.button.cancel') }}
           </el-button>
-          <el-button id="Home__Dashboard__Calendar__NewEvent__SelectUser__Confirm" type="primary"
+          <el-button id="Home__Dashboard__Calendar__NewEvent__AddParticipants__Confirm" type="primary"
                      @click="handleUserListConfirm">
             {{ $t('dpButtom_confirm') }}
           </el-button>
@@ -181,5 +170,17 @@ defineExpose({ setForm, getFormData, disableForm, enableForm })
 </template>
 
 <style scoped lang="scss">
+.actions {
+  width: 100%;
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+  justify-content: space-between
+}
 
+.button-container {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
 </style>

@@ -21,21 +21,11 @@ async function initWorkflowForm() {
   if (!find) return
   state.selectedWorkflow = deepCopy(find)
 
-  const props = await clientApi.api.postWorkflowProperties({ processKey: find.key }).then(res => res.data)
-  const formData = formDataGet(props)
   const formJson = await formJsonGet('start', find.key, find.versionId)
   setTimeout(() => {
-    createDialogFormRef.value.setForm(formJson, formData, props)
+    createDialogFormRef.value.setForm(formJson)
   })
-
   state.loading = false
-}
-
-function formDataGet(propList = []) {
-  return propList.reduce((prev, item) => {
-    prev[item.id] = item.value
-    return prev
-  }, {})
 }
 
 async function formJsonGet(userTaskId: string, processKey: string, versionId: string) {
@@ -60,15 +50,17 @@ function open() {
 async function submit() {
   const data = await createDialogFormRef.value.getFormData()
   console.log(2, data)
-  /*if (data) {
+
+  if (data) {
     const form = {
       processKey: state.selectedWorkflow.key,
-      businessKey: data.businessKey || '',
+      businessKey: '',
       properties: Object.entries(data).reduce((newObj, [key, val]) => {
         if (val || val === false || val == '0') newObj[key] = val
         return newObj
       }, {})
     }
+
     state.loading = true
     try {
       await clientApi.api.postWorkflowProcessStart(form).then(res => res.data)
@@ -78,7 +70,7 @@ async function submit() {
     }
   }
   state.loading = false
-  opened.value = false*/
+  opened.value = false
 }
 
 onMounted(() => {
@@ -98,6 +90,7 @@ defineExpose({ open })
         </el-select>
       </el-form-item>
     </el-form>
+    <el-divider />
 
     <div v-loading="state.loading">
       <LazyCalendarWidgetCreateDialogForm ref="createDialogFormRef" />
