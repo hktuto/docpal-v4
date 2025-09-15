@@ -1,9 +1,11 @@
 import { adminApi } from 'api'
+import { clientApi } from 'api'
 
 export const usePermissionOption = () => useState('permission', () => ([]))
 
 export const getFromServer = async function() {
   const options = usePermissionOption()
+  // 需要根據不同的環境調用對應的接口前綴
   const [user, role, group] = await Promise.all([
     adminApi.api.postNuxeoIdentityUsers().then((res) => res.data),
     adminApi.api.postAclRoleList([{
