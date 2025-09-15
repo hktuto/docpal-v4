@@ -93,7 +93,7 @@
   </el-dialog>
 </template>
 <script lang="ts" setup>
-import { adminApi } from "api";
+import { globalApi } from "api";
 
 import type { FormInstance } from "element-plus";
 import { ElMessage } from "element-plus";
@@ -152,7 +152,7 @@ const emailValidate = (rule: any, value: any, callback: any) => {
 async function handleOpen(easyFormId: string = "", userEmail: string = "") {
   state.visible = true;
   state.easyFormId = easyFormId;
-  const email: any = await adminApi.api
+  const email: any = await globalApi.api
     .getFormDesignEmailId(easyFormId)
     .then((res) => res.data);
   if (!email.body) email.body = "";
@@ -196,7 +196,7 @@ async function handleSubmit() {
     userEmails: getEmail(),
     body: getBody(form.value.body),
   };
-  await adminApi.api.postFormDesignSendEmail(params);
+  await globalApi.api.postFormDesignSendEmail(params);
   emits("email-update");
   ElMessage.success(t("dpMsg_success"));
   state.visible = false;
@@ -250,7 +250,7 @@ function handleSelectChange() {
 // #endregion
 // #endregion
 onMounted(async () => {
-  const { data } = await adminApi.api.postNuxeoIdentityUsers({});
+  const { data } = await globalApi.api.postNuxeoIdentityUsers({});
 
   const uniqueEmails = Array.from(
     new Map(data.map((item) => [item.email, item])).values()
