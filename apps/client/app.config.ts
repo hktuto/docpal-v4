@@ -121,7 +121,9 @@ export default defineAppConfig({
         {
           name: 'admin-setting'
         },
-        
+        {
+          name: 'contact-book'
+        }
       ]
     },
     {
