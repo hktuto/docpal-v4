@@ -18,7 +18,7 @@
 
 <script lang="ts" setup>
 import { ArrowDown } from '@element-plus/icons-vue'
-import { adminApi } from 'api';
+import { globalApi } from 'api';
 const props = withDefaults( defineProps<{
     user: string,
     show: boolean
@@ -36,7 +36,7 @@ function handleCommand(command) {
     emits('refreshSetting', command)
 }
 onMounted(async() => {
-    state.userList = await adminApi.api.postNuxeoIdentityUsers({}).then(res => res.data)
+    state.userList = await globalApi.api.postNuxeoIdentityUsers({}).then(res => res.data)
 })
 </script>
 
