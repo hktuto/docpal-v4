@@ -6,8 +6,9 @@ const { node } = defineProps<{
   node: Node
 }>()
 const graphProvider = inject(BPMN_PROVIDER)
-if (!graphProvider) {
-  throw new Error('Missing provider')
+const editorProvider = inject(EDITOR_PROVIDER)
+if (!graphProvider || !editorProvider) {
+  throw createError('graph provider not found')
 }
 const { setting } = useCalendarStore()
 const actionTypeOptions = [
@@ -115,7 +116,7 @@ onMounted(async () => {
     <BpmnSidebarEditLabel :node="node" />
     <div class="eventForm">
       <h4>Event</h4>
-      <ElForm label-position="top">
+      <ElForm label-position="top" :disabled="editorProvider.readonly.value">
         <ElFormItem label="Action">
           <ElSelect v-model="form.attr_actionType">
             <ElOption v-for="item in actionTypeOptions" :key="item" :label="item" :value="item" />

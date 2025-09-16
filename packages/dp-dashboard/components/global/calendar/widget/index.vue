@@ -79,7 +79,7 @@ onDeactivated(() => {
     <!--              @createEvent="popNewEvent" @updateEvent="updateEvent" />-->
     <Calendar v-else ref="CalendarRef" :options="setting" @openDetail="editEvent" @createEvent="popNewEvent"
               @updateEvent="updateEvent" />
-    <CalendarWidgetCreateDialog ref="createDialogRef" />
+    <CalendarWidgetDialog ref="createDialogRef" @reload="refresh" />
     <CalendarWidgetSetting ref="settingRef" :setting="setting" @submit="(setting) => $emit('refreshSetting', setting)"
                            @delete="handleDelete" />
   </DashboardCard>

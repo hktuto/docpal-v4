@@ -79,7 +79,6 @@ async function getList() {
   try {
     state.loading = true
     const { data: res }: any = await clientApi.api.postNotificationQueryNotificationList({ ...param, ...pageParams.value })
-    console.log(2, res)
     res.entryList.map((item: any) => {
       try {
         if (typeof item.content === 'string') {

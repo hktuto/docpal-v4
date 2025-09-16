@@ -2,6 +2,7 @@
 import dayjs from 'dayjs'
 import { clientApi } from 'api'
 
+const emits = defineEmits(['reload'])
 const { t } = useI18n()
 const opened = ref(false)
 // const newEventId = defineModel<string>('newEventId')
@@ -49,7 +50,6 @@ function open() {
 
 async function submit() {
   const data = await createDialogFormRef.value.getFormData()
-  console.log(2, data)
 
   if (data) {
     const form = {
@@ -63,8 +63,9 @@ async function submit() {
 
     state.loading = true
     try {
-      await clientApi.api.postWorkflowProcessStart(form).then(res => res.data)
+      await clientApi.api.postWorkflowProcessStart(form, { async: false }).then(res => res.data)
       state.formDialogVisible = false
+      emits('reload')
     } catch (error) {
       console.log(error)
     }
@@ -93,7 +94,7 @@ defineExpose({ open })
     <el-divider />
 
     <div v-loading="state.loading">
-      <LazyCalendarWidgetCreateDialogForm ref="createDialogFormRef" />
+      <LazyCalendarWidgetDialogForm ref="createDialogFormRef" />
     </div>
 
     <template #footer>
