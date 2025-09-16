@@ -57,7 +57,7 @@ async function init() {
   groupOptions.value = permissionOptions.value[2].options
   locationsOptions.value = locationsOption.value.map((item: any) => ({
     id: item.id,
-    name: item.Location
+    name: item.name
   }))
 }
 
@@ -128,8 +128,8 @@ async function open(item?: any) {
   if (item) {
     isEdit.value = true
     currentData.value = deepCopy(item)
-    if (typeof currentData.status === 'string') {
-      currentData.status = currentData.status === 'true'
+    if (typeof item.status === 'string') {
+      currentData.value.status = item.status === 'true'
     }
     limitSeat.value = currentData.value.availableSeat > 0
     initPermission()
@@ -141,7 +141,8 @@ async function open(item?: any) {
       availableSeat: 0,
       backgroundColor: '#FFFFFF',
       textColor: '#FFFFFF',
-      highlightColor: '#FFFFFF'
+      highlightColor: '#FFFFFF',
+      status: false
     }
   }
   opened.value = true
@@ -256,15 +257,17 @@ defineExpose({ open })
 </script>
 
 <template>
-  <ElDialog v-model="opened" :title="$t('Create Calendar')" top="5vh" width="800px">
+  <ElDialog v-model="opened" :title="isEdit ? $t('Edit Calendar') : $t('Create Calendar')" top="5vh" width="800px">
     <el-form ref="formRef" :model="currentData" label-position="top" :rules="rules">
       <h4>Information</h4>
       <el-form-item :label="t('Name') " prop="name">
-        <el-input v-model="currentData.name" />
+        <el-input id="CalendarSetting__EventLocations__EventCategories__Add__Name"
+                  v-model="currentData.name" />
       </el-form-item>
 
       <el-form-item :label="t('Allow External User To Register')">
-        <el-switch v-model="currentData.register" active-text="Yes" inactive-text="No" />
+        <el-switch id="CalendarSetting__EventLocations__EventCategories__Add__AllowExternalUserToRegister"
+                   v-model="currentData.register" active-text="Yes" inactive-text="No" />
       </el-form-item>
 
       <el-divider />
@@ -273,7 +276,8 @@ defineExpose({ open })
       <el-row :gutter="10">
         <el-col :span="12">
           <el-form-item :label="t('View')">
-            <el-select v-model="state.viewList" multiple filterable clearable collapse-tags placeholder="Select"
+            <el-select id="CalendarSetting__EventLocations__EventCategories__Add__View" v-model="state.viewList"
+                       multiple filterable clearable collapse-tags placeholder="Select"
                        @blur="fillPermissionObject('view')">
               <el-option-group v-for="group in permissionOptions" :key="group.label" :label="group.label">
                 <el-option v-for="item in group.options" :key="item.value" :label="item.label" :value="item.value" />
@@ -283,7 +287,8 @@ defineExpose({ open })
         </el-col>
         <el-col :span="12">
           <el-form-item :label="t('Update')">
-            <el-select v-model="state.updateList" multiple filterable clearable collapse-tags placeholder="Select"
+            <el-select id="CalendarSetting__EventLocations__EventCategories__Add__Update" v-model="state.updateList"
+                       multiple filterable clearable collapse-tags placeholder="Select"
                        @blur="fillPermissionObject('update')">
               <el-option-group v-for="group in permissionOptions" :key="group.label" :label="group.label">
                 <el-option v-for="item in group.options" :key="item.value" :label="item.label" :value="item.value" />
@@ -293,7 +298,8 @@ defineExpose({ open })
         </el-col>
         <el-col :span="12">
           <el-form-item :label="t('Create')">
-            <el-select v-model="state.createList" multiple filterable clearable collapse-tags placeholder="Select"
+            <el-select id="CalendarSetting__EventLocations__EventCategories__Add__Create" v-model="state.createList"
+                       multiple filterable clearable collapse-tags placeholder="Select"
                        @blur="fillPermissionObject('create')">
               <el-option-group v-for="group in permissionOptions" :key="group.label" :label="group.label">
                 <el-option v-for="item in group.options" :key="item.value" :label="item.label" :value="item.value" />
@@ -303,7 +309,8 @@ defineExpose({ open })
         </el-col>
         <el-col :span="12">
           <el-form-item :label="t('Cancel')">
-            <el-select v-model="state.cancelList" multiple filterable clearable collapse-tags placeholder="Select"
+            <el-select id="CalendarSetting__EventLocations__EventCategories__Add__Cancel" v-model="state.cancelList"
+                       multiple filterable clearable collapse-tags placeholder="Select"
                        @blur="fillPermissionObject('cancel')">
               <el-option-group v-for="group in permissionOptions" :key="group.label" :label="group.label">
                 <el-option v-for="item in group.options" :key="item.value" :label="item.label" :value="item.value" />
@@ -313,7 +320,8 @@ defineExpose({ open })
         </el-col>
         <el-col :span="12">
           <el-form-item :label="t('Remove')">
-            <el-select v-model="state.removeList" multiple filterable clearable collapse-tags placeholder="Select"
+            <el-select id="CalendarSetting__EventLocations__EventCategories__Add__Remove" v-model="state.removeList"
+                       multiple filterable clearable collapse-tags placeholder="Select"
                        @blur="fillPermissionObject('remove')">
               <el-option-group v-for="group in permissionOptions" :key="group.label" :label="group.label">
                 <el-option v-for="item in group.options" :key="item.value" :label="item.label" :value="item.value" />
@@ -323,10 +331,11 @@ defineExpose({ open })
         </el-col>
         <el-col :span="12">
           <el-form-item :label="t('Export')">
-            <el-select v-model="state.exportList" multiple filterable clearable collapse-tags placeholder="Select"
+            <el-select id="CalendarSetting__EventLocations__EventCategories__Add__Export" v-model="state.exportList"
+                       multiple filterable clearable collapse-tags placeholder="Select"
                        @blur="fillPermissionObject('export')">
               <el-option-group v-for="group in permissionOptions" :key="group.label" :label="group.label">
-                <el-option v-for="item in group.options" :key="item.value" :label="item.location" :value="item.value" />
+                <el-option v-for="item in group.options" :key="item.value" :label="item.label" :value="item.value" />
               </el-option-group>
             </el-select>
           </el-form-item>
@@ -336,19 +345,22 @@ defineExpose({ open })
       <el-divider />
 
       <el-form-item :label="t('Location Options')">
-        <el-select v-model="state.locationList" multiple collapse-tags placeholder="Select" style="width: 50%">
+        <el-select id="CalendarSetting__EventLocations__EventCategories__Add__LocationOptions"
+                   v-model="state.locationList" multiple collapse-tags placeholder="Select" style="width: 50%">
           <el-option v-for="item in locationsOptions" :key="item.id" :label="item.name" :value="item.id" />
         </el-select>
       </el-form-item>
       <el-row :gutter="10">
         <el-col :span="6">
           <el-form-item :label="t('Allow New Location')">
-            <el-switch v-model="currentData.location.newLocation" active-text="Yes" inactive-text="No" />
+            <el-switch id="CalendarSetting__EventLocations__EventCategories__Add__AllowNewLocation"
+                       v-model="currentData.location.newLocation" active-text="Yes" inactive-text="No" />
           </el-form-item>
         </el-col>
         <el-col :span="18">
           <el-form-item :label="t('Allow Empty')">
-            <el-switch v-model="currentData.location.empty" active-text="Yes" inactive-text="No" />
+            <el-switch id="CalendarSetting__EventLocations__EventCategories__Add__AllowEmpty"
+                       v-model="currentData.location.empty" active-text="Yes" inactive-text="No" />
           </el-form-item>
         </el-col>
       </el-row>
@@ -357,12 +369,14 @@ defineExpose({ open })
       <el-row :gutter="10">
         <el-col :span="6">
           <el-form-item :label="t('Limit Seat')">
-            <el-switch v-model="limitSeat" active-text="Yes" inactive-text="No" />
+            <el-switch id="CalendarSetting__EventLocations__EventCategories__Add__LimitSeat" v-model="limitSeat"
+                       active-text="Yes" inactive-text="No" />
           </el-form-item>
         </el-col>
         <el-col :span="18">
           <el-form-item v-if="limitSeat" :label="t('Available Seat')" prop="availableSeat">
-            <el-input-number v-model="currentData.availableSeat" controls-position="right" min="0" max="99999999"
+            <el-input-number id="CalendarSetting__EventLocations__EventCategories__Add__AvailableSeat"
+                             v-model="currentData.availableSeat" controls-position="right" min="0" max="99999999"
                              :step="1" step-strictly style="width: 100%" />
           </el-form-item>
         </el-col>
@@ -373,17 +387,20 @@ defineExpose({ open })
       <el-row>
         <el-col :span="8">
           <el-form-item :label="t('Background Color')">
-            <el-color-picker v-model="currentData.backgroundColor" color-format="hex" />
+            <el-color-picker id="CalendarSetting__EventLocations__EventCategories__Add__BackgroundColor"
+                             v-model="currentData.backgroundColor" color-format="hex" />
           </el-form-item>
         </el-col>
         <el-col :span="8">
           <el-form-item :label="t('Text Color')">
-            <el-color-picker v-model="currentData.textColor" color-format="hex" />
+            <el-color-picker id="CalendarSetting__EventLocations__EventCategories__Add__TextColor"
+                             v-model="currentData.textColor" color-format="hex" />
           </el-form-item>
         </el-col>
         <el-col :span="8">
           <el-form-item :label="t('Highlight Color')">
-            <el-color-picker v-model="currentData.highlightColor" color-format="hex" />
+            <el-color-picker id="CalendarSetting__EventLocations__EventCategories__Add__HighlightColor"
+                             v-model="currentData.highlightColor" color-format="hex" />
           </el-form-item>
         </el-col>
       </el-row>
@@ -392,22 +409,25 @@ defineExpose({ open })
       <div v-if="isEdit">
         <el-form-item :label="t('Flows')">
           <template v-for="item in currentData.flows">
-            <el-button type="info" @click="handleJumpWorkflow(item.key)">{{ item.name }}</el-button>
+            <el-button :id="`CalendarSetting__EventLocations__EventCategories__Add__${item.name}}`" type="info"
+                       @click="handleJumpWorkflow(item.key)">{{ item.name }}
+            </el-button>
           </template>
         </el-form-item>
         <el-divider />
       </div>
 
       <el-form-item :label="t('Status')">
-        <el-switch v-model="currentData.status" active-text="Active" inactive-text="No" />
+        <el-switch id="CalendarSetting__EventLocations__EventCategories__Add__Status" v-model="currentData.status"
+                   active-text="Active" inactive-text="No" />
       </el-form-item>
     </el-form>
     <template #footer>
-      <el-button id="CalendarSetting__EventLocations__EventCategories__Add__Cancel" @click="opened = false">
+      <el-button id="CalendarSetting__EventLocations__EventCategories__Add__Dialog__Cancel" @click="opened = false">
         {{ t('Cancel') }}
       </el-button>
       <el-button type="primary" @click="submit"
-                 :id="`CalendarSetting__EventLocations__EventCategories__Add__${isEdit ? 'Save' : 'Create'}`">
+                 :id="`CalendarSetting__EventLocations__EventCategories__Add__Dialog__${isEdit ? 'Save' : 'Create'}`">
         {{ isEdit ? t('Save') : t('Create') }}
       </el-button>
     </template>

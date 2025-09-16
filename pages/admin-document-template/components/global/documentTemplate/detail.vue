@@ -221,7 +221,6 @@ async function handleSaveWord() {
     state.oldVariables = JSON.parse(JSON.stringify(variables.value))
     routerProvider?.message.success(t('tip_updateSuccessMsg', { modelName: null, name: state.info.name }))
   } catch (e) {
-    console.log(22, e)
     routerProvider?.message.error('Save Document template Error')
   } finally {
     state.saveLoading = false
