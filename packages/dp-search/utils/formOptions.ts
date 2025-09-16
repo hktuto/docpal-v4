@@ -36,14 +36,13 @@ export const sizes = [
 
 export const mimeTypes = [
   {
-    label: 'images',
+    label: 'Images',
     value: 'images',
     options: [
       { label: 'All Image', value: 'image/*' },
       { label: 'JPG', value: 'image/jpeg' },
       { label: 'PNG', value: 'image/png' },
       { label: 'GIF', value: 'image/gif' },
-      { label: 'PDF', value: 'application/pdf' },
       { label: 'SVG', value: 'image/svg+xml' },
       { label: 'TIFF', value: 'image/tiff' },
       { label: 'WEBP', value: 'image/webp' },
@@ -55,6 +54,7 @@ export const mimeTypes = [
     value: 'Documents',
     options: [
       { label: 'All Document', value: 'application/*' },
+      { label: 'PDF', value: 'application/pdf' },
       { label: 'DOC', value: 'application/msword' },
       { label: 'DOCX', value: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' },
       { label: 'XLS', value: 'application/vnd.ms-excel' },

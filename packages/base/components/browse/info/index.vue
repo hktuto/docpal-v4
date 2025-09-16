@@ -101,9 +101,9 @@ watch(() => props.commentId, async() => {
 <el-tabs   class="tabContainer dp-tabs--auto" v-model="currentTab" >
     <el-tab-pane :label="$t('rightDetail_info')" name="info">
         <div class="infoTagContainer">
-            <div v-if="!hidePreview" class="infoPreviewContainer">
+            <!-- <div v-if="!hidePreview" class="infoPreviewContainer">
                 <BrowseInfoPreview :doc="detail"  />
-            </div>
+            </div> -->
             <BrowseInfoDocInfo :doc="detail" @update="docUpdated" @refresh="$emit('refresh')"/>
         </div>
     </el-tab-pane>
