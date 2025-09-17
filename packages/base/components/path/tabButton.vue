@@ -7,13 +7,11 @@ const routerProvider = inject(MenuRouterKey)
 
 const props = withDefaults(defineProps<{
   path: string
-  displayPath: string
   canOpen: boolean
   fileName: string
   openParent: boolean
 }>(), {
   path: '',
-  displayPath: '',
   canOpen: false,
   openParent: false
 })
@@ -22,7 +20,7 @@ const splitPath = computed(() => {
 })
 const displayPathLabel = computed(() => {
   if (props.path?.length <= 32 || splitPath.value.length <= 3) {
-    return props.displayPath
+    return props.path
   }
   const last2Items = splitPath.value.slice(-2)
   return '...' + last2Items.join('/')
@@ -38,25 +36,17 @@ function openPath() {
 </script>
 
 <template>
-  <el-tooltip
-    effect="dark"
-    placement="top-start"
-  >
-    <template #content>
-      <div class="pathPoper">{{ displayPath }}</div>
-    </template>
-    <div :class="{logicalPathText:true, canOpen}">
-      <div class="label">
-        {{ displayPathLabel }}
-      </div>
-      <el-icon
-        v-if="canOpen && path"
-        @click="openPath"
-      >
-        <FolderOpened />
-      </el-icon>
+  <div :class="{logicalPathText:true, canOpen}">
+    <div class="label">
+      {{ displayPathLabel }}
     </div>
-  </el-tooltip>
+    <el-icon
+      v-if="canOpen && path"
+      @click="openPath"
+    >
+      <FolderOpened />
+    </el-icon>
+  </div>
 </template>
 
 <style scoped lang="scss">
