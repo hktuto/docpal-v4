@@ -7,10 +7,10 @@
                             inputPlaceHolder="documentType_filter" />
           <div class="btns">
 
-            <el-button id="DocumentType__CreateNewDocumentType" type="primary" @click="handleCreate">
+            <el-button id="DocumentType__CreateNewDocumentType__Create" type="primary" @click="handleCreate">
               {{ t('metadata.new') }}
             </el-button>
-            <el-button id="DocumentType__CreateNewDocumentType" type="primary" @click="handleExport">
+            <el-button id="DocumentType__CreateNewDocumentType__Export" type="primary" @click="handleExport">
               {{ t('metadata.export') }}
             </el-button>
           </div>
