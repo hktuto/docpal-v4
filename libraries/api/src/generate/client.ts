@@ -180,6 +180,8 @@ export interface DocumentDTO {
     statusName?: string;
     /** Document Creator */
     createdBy?: string;
+    /** Document Modifier */
+    modifiedBy?: string;
     /**
      * Document Created Date
      * @format date-time
@@ -2279,6 +2281,8 @@ export interface DocumentResponseDTO {
     statusName?: string;
     /** Document Creator */
     createdBy?: string;
+    /** Document Modifier */
+    modifiedBy?: string;
     /**
      * Document Created Date
      * @format date-time
@@ -21042,7 +21046,7 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
          * @request GET:/api/docpal/notification/unRead/number
          */
         getNotificationUnreadNumber: (params: RequestParams = {}) =>
-            this.request<ResultObject, ResultString | (ResultString | Result) | void>({
+            this.request<ResultObject | ResultString, ResultString | (ResultString | Result) | void>({
                 path: `/docpal/notification/unRead/number`,
                 method: "GET",
                 ...params,
