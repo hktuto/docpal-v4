@@ -7,8 +7,8 @@ export default defineAppConfig({
       id: 'contact-book',
       name: 'contact-book',
       label: 'adminMenu.contactBook',
-      icon: 'material-symbols-light:table-edit-rounded',
-      hoverIcon: 'material-symbols-light:table-edit-rounded',
+      icon: 'ph:address-book-light',
+      hoverIcon: 'ph:address-book-light',
       component: 'LazyContactBook',
       props: {}
     }
