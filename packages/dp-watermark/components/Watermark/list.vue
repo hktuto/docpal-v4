@@ -104,6 +104,7 @@ function switchDetail(id: string) {
 }
 
 .listItemsContainer {
+  height: 80vh;
   display: flex;
   flex-flow: column nowrap;
   overflow-y: auto;

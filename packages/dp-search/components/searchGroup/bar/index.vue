@@ -1,7 +1,16 @@
 <template>
   <div class="search-group-bar">
     <div v-if="!['recordDetailAgg', 'recordDetail'].includes(mode)" class="search-group-bar__title">
-      {{ $t('file_search') }}
+      <template v-if="mode === 'agg'">
+        {{ $t('searchGroup.filter') }}
+      </template>
+      <template v-else-if="mode === 'record'">
+        {{ $t('searchGroup.record') }}
+      </template>
+      <template v-else>
+        {{ $t('file_search') }}
+      </template>
+      
     </div>
     <div v-if="!['recordDetailAgg', 'recordDetail'].includes(mode)" class="flex-x-start search-group-bar__action">
       <SvgIcon id="Search__Filter" v-if="mode !== 'agg'" src="/icons/tools/filter.svg" class="mr-2" @click="handleMode('agg')" @search="handleSearch"></SvgIcon>

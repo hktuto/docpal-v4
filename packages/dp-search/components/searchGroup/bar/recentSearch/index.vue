@@ -6,6 +6,7 @@
   trigger="click"
   popper-class="search-bar2-meta-popper"
 >
+  <ElText size="large">{{ t('dashboard.PersonalSearchHistory') }}</ElText>
   <SearchGroupBarRecentSearchList ref="listRef" @search="handleSearch"></SearchGroupBarRecentSearchList>
   <template #reference>
     <SvgIcon id="Search__Recent" src="/icons/tools/recent.svg" class="mr-2" ></SvgIcon>
@@ -16,6 +17,7 @@
 const emits = defineEmits(['search'])
 const popoverRef = ref()
 const listRef = ref()
+const { t } = useI18n()
 function hidePopover () {
     popoverRef.value.hide()
 }
