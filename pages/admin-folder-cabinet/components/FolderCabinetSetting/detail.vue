@@ -104,6 +104,8 @@ const FormRef = ref()
 const MetaFormRef = ref()
 
 function formChange({ fieldName, newValue, oldValue, formModel }) {
+  console.log(fieldName, newValue, oldValue, formModel);
+  
   if (fieldName === 'documentType') handleDocTypeChange(newValue)
 }
 async function handleDocTypeChange(docType: string) {

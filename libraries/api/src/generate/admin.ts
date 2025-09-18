@@ -118,6 +118,8 @@ export interface DocumentDTO {
     statusName?: string;
     /** Document Creator */
     createdBy?: string;
+    /** Document Modifier */
+    modifiedBy?: string;
     /**
      * Document Created Date
      * @format date-time

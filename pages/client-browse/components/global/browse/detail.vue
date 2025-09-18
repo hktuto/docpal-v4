@@ -166,12 +166,13 @@ useEventListener(window, 'resize', calMinWidth)
                 <CollapseMenu @openedChange="mobileActionsOpenedChanged">
                   <template #default="{ collapse }">
                     <template v-for="(group, key) in detailActions" :key="key">
-                      <template v-for="item in group" :key="item.name">
+                      <template v-for="item in group" :key="item.name">aaaaa
                         <component
                           :is="item.component"
                           :doc="docDetail"
                           :ref="(el) => (itemRefs[item.name] = el)"
                           :isPdf="isPdf"
+                          test="ssssss"
                           @success="handleRefresh"
                           @delete="itemDeleted"
                           @openAiDrawer="handleOpenAiDrawer"

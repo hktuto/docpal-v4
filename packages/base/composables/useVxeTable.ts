@@ -48,6 +48,11 @@ export interface UseVxeTableParams<R = any> {
   optionalEvent?: VxeGridListeners<R>
   childChangeHandler?: (childRows: any[]) => void
   additionalPermission?: (params: any) => Promise<any>
+  editRender?: {
+    editClosed: (params: any) => any
+    editRules?: any
+    editConfig?: any
+  }
 }
 
 export type PermissionMethodParams = { row: any; code?: string; rowIndex?: number; additionalData?: any }
@@ -374,7 +379,25 @@ export const useVxeTable = (params: UseVxeTableParams) => {
       selectChangeHander(selectedRows)
     }
   }
-
+  // handle edit render
+  if (params.editRender) {
+    tableEvent.editClosed = async ({ row, rowIndex, $rowIndex, column, columnIndex, $columnIndex }: any) => {
+      await params.editRender?.editClosed({
+        row,
+        rowIndex,
+        $rowIndex,
+        column,
+        columnIndex,
+        $columnIndex
+      })
+    }
+    if (params.editRender.editRules) {
+      tableConfig.editRules = params.editRender.editRules
+    }
+    if (params.editRender.editConfig) {
+      tableConfig.editConfig = params.editRender.editConfig
+    }
+  }
   function cleanSelectedRows() {
     tableRef.value?.clearCheckboxRow()
     selectChangeHander([])
@@ -415,7 +438,7 @@ export const useVxeTable = (params: UseVxeTableParams) => {
     }
   }
   async function responsiveScrollHandler({ scrollTop, direction }: VxeGridDefines.ScrollEventParams) {
-    if (params.virtualScroll || !params.api ) {
+    if (params.virtualScroll || !params.api) {
       return
     }
     // 不是 virtualScroll 或者 api 或者 大于 mobile 的时候不处理 scroll
@@ -473,14 +496,13 @@ export const useVxeTable = (params: UseVxeTableParams) => {
     lazyLoad()
   }
 
-
   function reload() {
     // if virtualScroll is true, then reload the table
     if (!params.virtualScroll) {
       tableRef.value?.commitProxy('reload')
       return
     } else {
-      tableRef.value?.loadData([]);
+      tableRef.value?.loadData([])
       nextTick(() => {
         tableRef.value?.commitProxy('reload')
       })
