@@ -132,6 +132,8 @@ async function promoteToProduction() {
   }
 }
 
+const openEditor = ref(true)
+
 async function saveAsNewVersion() {
   const { xml, x6Json } = WorkflowEditorRef.value.getData()
   const blob = new Blob([xml], { type: 'text/xml;charset=utf-8' })
@@ -154,6 +156,12 @@ async function saveAsNewVersion() {
     productionVersion: data.productionVersion
   })
   await getWorkflow()
+
+  // Handle field version inconsistency issues
+  openEditor.value = false
+  nextTick(() => {
+    openEditor.value = true
+  })
 }
 
 watch(
@@ -174,6 +182,7 @@ watch(
 <template>
   <div class="pageContainer">
     <BpmnEditor
+      v-if="openEditor"
       v-loading="loading"
       ref="WorkflowEditorRef"
       :workflow-data="workflowData"
