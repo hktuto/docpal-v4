@@ -107,6 +107,7 @@
     "calendarSetting": "日历设置",
     "caseManagement": "案子管理",
     "companyProfile": "公司简介",
+    "contactBook": "通讯录",
     "dashboard": "仪表板",
     "dashboardManagement": "仪表板清单",
     "directus": "Directus",
@@ -309,7 +310,7 @@
   "bulkImport_edit": "Edit Bulk Import",
   "bulkImport_infoName": "档案类型名称",
   "button": {
-    "add": "添加",
+    "add": "添加{name}",
     "addMore": "添加更多",
     "autoGenerate": "自动生成",
     "batchEdit": "批量编辑",
@@ -529,7 +530,7 @@
   "common_moveSuccess": "移动成功",
   "common_mustSelected": "必须至少选择一个选项",
   "common_nameExists": "名称已存在",
-  "common_new": "新建",
+  "common_new": "新建{name}",
   "common_open": "打开",
   "common_or": "或",
   "common_preview": "预览",
@@ -578,6 +579,11 @@
   "confirmText": "确定",
   "conjunction": {
     "to": "到"
+  },
+  "contactBook": {
+    "create": "新通讯录",
+    "field": "字段",
+    "fields": "字段"
   },
   "contextMenu": {
     "case": "个案",
@@ -2436,6 +2442,7 @@
     "ReadWrite": "读写",
     "create": "创建",
     "custom": "自定义",
+    "delete": "删除",
     "edit": "编辑",
     "enable": "激活",
     "everything": "所有",

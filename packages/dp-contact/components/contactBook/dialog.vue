@@ -1,5 +1,5 @@
 <template>
-  <el-dialog v-model="state.visible" class="scroll-dialog" :title="$t('caseManagement_create')" :close-on-click-modal="false" destroy-on-close>
+  <el-dialog v-model="state.visible" class="scroll-dialog" :title="$t('contactBook.create')" :close-on-click-modal="false" destroy-on-close>
     <ContactBookPermissionForm ref="ContactBookPermissionRef" />
     <ContactBookFieldSetting ref="ContactBookFieldSettingRef" />
     <template #footer>

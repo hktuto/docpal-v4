@@ -1,7 +1,7 @@
 <template>
   <div class="field-setting">
     <div class="field-setting-header">
-      <h3 class="title">Fields</h3>
+      <h3 class="title">{{$t('contactBook.fields')}}</h3>
     </div>
 
     <div class="field-list">
@@ -11,7 +11,7 @@
         </el-tag>
       </div>
 
-      <el-button style="width: fit-content" type="default" :icon="Plus" :disabled="loading" @click="handleAddField"> Add Field </el-button>
+      <el-button style="width: fit-content" type="default" :icon="Plus" :disabled="loading" @click="handleAddField"> {{$t('button.add', {name: $t('contactBook.field')})}} </el-button>
     </div>
 
     <!-- Add Field Dialog -->

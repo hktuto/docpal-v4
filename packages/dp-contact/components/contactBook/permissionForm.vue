@@ -11,23 +11,17 @@ const emits = defineEmits(['refresh', 'vFormChange'])
 const FormRendererRef = ref()
 
 async function getFormData() {
-  try {
-    const data = await FormRendererRef.value.getFormData()
-    const permissionRef = FormRendererRef.value.vFormRenderRef.getWidgetRef('permissions')
-    const options = permissionRef.getOptionItems()
-    const permissions = {
-      Read: getPermissionData(data.read, options),
-      Create: getPermissionData(data.create, options),
-      Delete: getPermissionData(data.delete, options),
-      Manage: getPermissionData(data.manage, options),
-      Edit: getPermissionData(data.edit, options)
-    }
-    return { name: data.name, permissions }
-  } catch (error) {
-    console.log('error', error)
-  } finally {
-    // FormRendererRef.value.vFormRenderRef.resetForm()
+  const data = await FormRendererRef.value.getFormData()
+  const permissionRef = FormRendererRef.value.vFormRenderRef.getWidgetRef('permissions')
+  const options = permissionRef.getOptionItems()
+  const permissions = {
+    Read: getPermissionData(data.read, options),
+    Create: getPermissionData(data.create, options),
+    Delete: getPermissionData(data.delete, options),
+    Manage: getPermissionData(data.manage, options),
+    Edit: getPermissionData(data.edit, options)
   }
+  return { name: data.name, permissions }
 }
 function getPermissionData(values: any, options?: any) {
   if (!options) {
@@ -88,7 +82,6 @@ function setFieldValue(fieldName: string, data: any) {
   widgetRef.setValue(data)
 }
 function handleFormChange({ fieldName, newValue, oldValue, formModel }: any) {
-  console.log('===============',fieldName, newValue, oldValue, formModel)
   emits('vFormChange', { fieldName, newValue, oldValue, formModel })
 }
 defineExpose({ getFormData, setFormData, getPermissionType, setFieldValue })

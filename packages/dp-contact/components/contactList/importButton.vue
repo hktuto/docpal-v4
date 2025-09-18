@@ -16,7 +16,7 @@ const props = defineProps<{
   name: string
   detail: any
 }>()
-
+const { t } = useI18n()
 const importHelper = useImportHelper()
 const emits = defineEmits(['refresh'])
 const FormRef = ref()
