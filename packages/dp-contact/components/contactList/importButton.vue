@@ -1,6 +1,6 @@
 <template>
   <el-button type="primary" @click="handleOpen"> {{ $t('button.import', { name: $t('data') }) }} </el-button>
-  <el-dialog v-model="dialogVisible" :title="$t('button.import', { name: $t('data') })">
+  <el-dialog v-model="dialogVisible" :title="$t('button.import', { name: $t('data') })" destroy-on-close>
     <ContactListImportButtonForm ref="FormRef" />
     <template #footer>
       <el-button :loading="loading" type="primary" @click="handleSubmit"> {{ $t('button.import') }} </el-button>
@@ -23,7 +23,6 @@ const FormRef = ref()
 const dialogVisible = ref(false)
 const loading = ref(false)
 function handleExport(command: string) {
-  console.log(command)
   ElMessage.success(t('dpMsg_success'))
 }
 function handleOpen() {

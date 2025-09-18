@@ -583,6 +583,8 @@
   "contactBook": {
     "create": "新通訊錄",
     "field": "字段",
+    "fieldName": "字段名稱",
+    "fieldValue": "字段值",
     "fields": "字段"
   },
   "contextMenu": {

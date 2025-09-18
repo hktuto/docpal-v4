@@ -1,18 +1,17 @@
 <template>
   <div class="field-setting">
     <div class="field-setting-header">
-      <h3 class="title">{{$t('contactBook.fields')}}</h3>
+      <h3 class="title">{{ $t('contactBook.fields') }}</h3>
     </div>
 
     <div class="field-list">
-      <div class="existing-fields">
-        <el-tag v-for="field in existingFields" :key="field.value" :closable="!field.disabled && mode !== 'edit'" @close="handleClose(field)">
-          {{ field.name }}
-        </el-tag>
-      </div>
-
-      <el-button style="width: fit-content" type="default" :icon="Plus" :disabled="loading" @click="handleAddField"> {{$t('button.add', {name: $t('contactBook.field')})}} </el-button>
+      <el-tag v-for="field in existingFields" :key="field.value" :closable="!field.disabled && mode !== 'edit'" @close="handleClose(field)">
+        {{ field.name }}
+      </el-tag>
     </div>
+    <el-button style="width: fit-content" type="default" size="small" :icon="Plus" :disabled="loading" @click="handleAddField">
+      {{ $t('button.add', { name: $t('contactBook.field') }) }}
+    </el-button>
 
     <!-- Add Field Dialog -->
     <FieldSettingDialog v-model="showAddDialog" @confirm="handleAddFieldConfirm" />
@@ -62,7 +61,7 @@ async function handleAddFieldConfirm(field: Field) {
   }
   // Add the new field to existing fields
   existingFields.value.push(field)
-  console.log(props.mode,'New field added:', field)
+  console.log(props.mode, 'New field added:', field)
 }
 
 function handleClose(field: Field) {
@@ -82,46 +81,22 @@ defineExpose({ getFieldData, setFieldData })
 </script>
 
 <style lang="scss" scoped>
-.field-setting {
-  background: white;
-  border-radius: 8px;
-}
-
 .field-setting-header {
   margin-bottom: var(--app-space-s);
 
   .title {
     margin: 0;
     color: #333;
-    font-size: 16px;
+    font-size: var(--app-font-size-l);
     font-weight: 600;
   }
 }
 
 .field-list {
   display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.existing-fields {
-  display: flex;
   flex-wrap: wrap;
   gap: 8px;
+  margin-bottom: var(--app-space-s);
 }
 
-.field-button {
-  background-color: #e8f4ff;
-  border-color: #e8f4ff;
-  color: #409eff;
-  font-weight: 500;
-  border-radius: 6px;
-  padding: 8px 16px;
-  height: auto;
-
-  &:hover {
-    background-color: #d4edff;
-    border-color: #d4edff;
-  }
-}
 </style>
