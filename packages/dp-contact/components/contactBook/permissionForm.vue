@@ -81,9 +81,19 @@ function setFieldValue(fieldName: string, data: any) {
   if (!widgetRef) return
   widgetRef.setValue(data)
 }
+function getFieldValue(fieldName: string) {
+  const widgetRef = FormRendererRef.value.vFormRenderRef.getWidgetRef(fieldName)
+  if (!widgetRef) return
+  return widgetRef.getValue()
+}
+function setDisabled(fieldName: string, disabled: boolean) {
+  const widgetRef = FormRendererRef.value.vFormRenderRef.getWidgetRef(fieldName)
+  if (!widgetRef) return
+  widgetRef.setDisabled(disabled)
+}
 function handleFormChange({ fieldName, newValue, oldValue, formModel }: any) {
   emits('vFormChange', { fieldName, newValue, oldValue, formModel })
 }
-defineExpose({ getFormData, setFormData, getPermissionType, setFieldValue })
+defineExpose({ getFormData, setFormData, getPermissionType, setFieldValue, getFieldValue, setDisabled })
 </script>
 <style lang="scss" scoped></style>

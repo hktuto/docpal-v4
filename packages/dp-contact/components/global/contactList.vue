@@ -59,8 +59,8 @@ async function handleFormChange({ fieldName, newValue, oldValue, formModel }: an
   if (fieldName === 'name') {
     updateDetail({ fieldName, newValue, oldValue, formModel })
   } else {
-    let _newValue = newValue ? [...newValue] : []
-    let _oldValue = oldValue ? [...oldValue] : []
+    let _newValue = newValue ? JSON.parse(JSON.stringify(newValue)) : []
+    let _oldValue = oldValue ? JSON.parse(JSON.stringify(oldValue)) : []
     if (_newValue.length > _oldValue.length) {
       contactAddPermission({ fieldName, newValue: _newValue, oldValue: _oldValue, formModel })
     } else if (_newValue.length < _oldValue.length) {
@@ -81,7 +81,7 @@ async function updateDetail({ fieldName, newValue, oldValue, formModel }: any) {
     await globalApi.api.putContactgroupId(props.id, params)
   } catch (error) {
     console.log(error)
-    ContactBookPermissionRef.value.setFieldValue(fieldName, oldValue)
+    resetPermission(fieldName, oldValue)
     ElMessage.error(t('dpMsg_error'))
   } finally {
     resetInitLoading()
@@ -101,7 +101,7 @@ async function contactAddPermission({ fieldName, newValue, oldValue, formModel }
     ElMessage.success(t('dpMsg_success'))
   } catch (error) {
     console.log(error)
-    ContactBookPermissionRef.value.setFieldValue(fieldName, oldValue)
+    resetPermission(fieldName, oldValue)
     ElMessage.error(t('dpMsg_error'))
   } finally {
     resetInitLoading()
@@ -112,9 +112,7 @@ async function contactRemovePermission({ fieldName, newValue, oldValue, formMode
     initLoading.value = true
     const action = await ElMessageBox.confirm(`${t('msg_confirmWhetherToDelete')}`)
   } catch (error) {
-    console.log(error)
-    ContactBookPermissionRef.value.setFieldValue(fieldName, oldValue)
-    resetInitLoading()
+    resetPermission(fieldName, oldValue)
     return
   }
   try {
@@ -128,20 +126,28 @@ async function contactRemovePermission({ fieldName, newValue, oldValue, formMode
     await globalApi.api.patchContactgroupIdPermission(props.id, params)
     ElMessage.success(t('dpMsg_success'))
   } catch (error) {
-    console.log(error)
-    ContactBookPermissionRef.value.setFieldValue(fieldName, oldValue)
+    resetPermission(fieldName, oldValue)
     ElMessage.error(t('dpMsg_error'))
   } finally {
     resetInitLoading()
   }
 }
+async function resetPermission(fieldName: string, oldValue: any) {
+  ContactBookPermissionRef.value.setFieldValue(fieldName, oldValue)
+  ContactBookPermissionRef.value.setDisabled(fieldName, true)
+  await resetInitLoading(1000)
+  ContactBookPermissionRef.value.setDisabled(fieldName, false)
+}
 function capitalizeFirstLetter(string) {
   return string.charAt(0).toUpperCase() + string.slice(1)
 }
-function resetInitLoading() {
-  setTimeout(() => {
-    initLoading.value = false
-  }, 500)
+async function resetInitLoading(time = 100) {
+  await new Promise((resolve) => {
+    setTimeout(() => {
+      initLoading.value = false
+      resolve(true)
+    }, time)
+  })
 }
 provide('contactDetailHelper', contactDetailHelper)
 provide('contactBookPermissionHelper', permissionHelper)
@@ -169,6 +175,7 @@ onMounted(() => {
   .contactList--left {
     padding-right: var(--app-space-s);
     border-right: 1px solid var(--app-grey-850);
+    overflow-y: auto;
   }
 }
 </style>
