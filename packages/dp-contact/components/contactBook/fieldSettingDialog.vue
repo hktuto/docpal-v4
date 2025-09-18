@@ -1,37 +1,17 @@
 <template>
-  <el-dialog
-    v-model="visible"
-    title="Add Field"
-    :close-on-click-modal="false"
-    @close="handleClose"
-  >
-    <el-form
-      ref="formRef"
-      :model="formData"
-      :rules="formRules"
-      label-position="top"
-    >
-      <el-form-item label="Field Name" prop="name">
-        <el-input
-          v-model="formData.name"
-          placeholder="Enter field name"
-          @input="handleNameChange"
-        />
+  <el-dialog v-model="visible" :title="$t('button.add', { name: $t('contactBook.field') })" :close-on-click-modal="false" @close="handleClose">
+    <el-form ref="formRef" :model="formData" :rules="formRules" label-position="top">
+      <el-form-item :label="$t('contactBook.fieldName')" prop="name">
+        <el-input v-model="formData.name" :placeholder="$t('render.hint.fieldRequired', { name: $t('contactBook.fieldName') })" @input="handleNameChange" />
       </el-form-item>
-      
-      <el-form-item label="Field Value" prop="value">
-        <el-input
-          v-model="formData.value"
-          placeholder="Field value (auto-generated)"
-          readonly
-          disabled
-        />
+
+      <el-form-item :label="$t('contactBook.fieldValue')" prop="value">
+        <el-input v-model="formData.value" placeholder="Field value (auto-generated)" readonly disabled />
       </el-form-item>
     </el-form>
-    
+
     <template #footer>
-      <el-button @click="handleCancel">Cancel</el-button>
-      <el-button type="primary" @click="handleConfirm">Add Field</el-button>
+      <el-button type="primary" @click="handleConfirm">{{$t('button.add', { name: $t('contactBook.field') })}}</el-button>
     </template>
   </el-dialog>
 </template>
@@ -87,14 +67,17 @@ function convertNameToValue(name: string): string {
 }
 
 // Watch for modelValue changes
-watch(() => props.modelValue, (newValue) => {
-  visible.value = newValue
-  if (newValue) {
-    // Reset form when dialog opens
-    formData.name = ''
-    formData.value = ''
+watch(
+  () => props.modelValue,
+  (newValue) => {
+    visible.value = newValue
+    if (newValue) {
+      // Reset form when dialog opens
+      formData.name = ''
+      formData.value = ''
+    }
   }
-})
+)
 
 // Watch for visible changes
 watch(visible, (newValue) => {
@@ -125,7 +108,7 @@ function handleConfirm() {
         value: formData.value,
         dataType: formData.dataType
       })
-      
+
       // Reset form and close dialog
       formRef.value?.resetFields()
       visible.value = false

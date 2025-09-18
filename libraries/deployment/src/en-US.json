@@ -583,6 +583,8 @@
   "contactBook": {
     "create": "New Contact Book",
     "field": "Field",
+    "fieldName": "Field Name",
+    "fieldValue": "Field Value",
     "fields": "Fields"
   },
   "contextMenu": {
