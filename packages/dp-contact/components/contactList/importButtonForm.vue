@@ -89,13 +89,11 @@ function initMappings(options: any[] = [], initData?: any) {
 async function getFormData() {
   const valid = await formRef.value?.validate()
   if (valid) {
-    // TODO: Implement actual import logic
     const data = {
       file: form.file[0],
       dataMapping: await FormVariablesRendererRef.value.getData(),
       replace: form.replace
     }
-    console.log('data', data)
     return data
   }
 }

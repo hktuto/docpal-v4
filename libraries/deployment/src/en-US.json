@@ -107,6 +107,7 @@
     "calendarSetting": "Calendar Setting",
     "caseManagement": "Case management",
     "companyProfile": "Company Profile",
+    "contactBook": "Contact Book",
     "dashboard": "Dashboard",
     "dashboardManagement": "Dashboard List",
     "directus": "Directus",
@@ -309,7 +310,7 @@
   "bulkImport_edit": "Edit Bulk Import",
   "bulkImport_infoName": "Document Type Name",
   "button": {
-    "add": "Add",
+    "add": "Add {name}",
     "addMore": "Add More",
     "autoGenerate": "Auto generate",
     "batchEdit": "Batch Edit",
@@ -529,7 +530,7 @@
   "common_moveSuccess": "Move Success",
   "common_mustSelected": "At least one of the options must be selected.",
   "common_nameExists": "Name already exists",
-  "common_new": "New",
+  "common_new": "New {name}",
   "common_open": "Open",
   "common_or": "or ",
   "common_preview": "Preview",
@@ -578,6 +579,11 @@
   "confirmText": "OK",
   "conjunction": {
     "to": "to"
+  },
+  "contactBook": {
+    "create": "New Contact Book",
+    "field": "Field",
+    "fields": "Fields"
   },
   "contextMenu": {
     "case": "Case",
@@ -2436,6 +2442,7 @@
     "ReadWrite": "Write",
     "create": "Create",
     "custom": "Custom",
+    "delete": "Delete",
     "edit": "Edit",
     "enable": "Enable",
     "everything": "Everything",

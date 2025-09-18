@@ -107,6 +107,7 @@
     "calendarSetting": "日曆設定",
     "caseManagement": "案子管理",
     "companyProfile": "公司簡介",
+    "contactBook": "通訊錄",
     "dashboard": "儀表板",
     "dashboardManagement": "儀表板清單",
     "directus": "Directus",
@@ -309,7 +310,7 @@
   "bulkImport_edit": "Edit Bulk Import",
   "bulkImport_infoName": "檔案類型名稱",
   "button": {
-    "add": "添加",
+    "add": "添加{name}",
     "addMore": "添加更多",
     "autoGenerate": "自動生成",
     "batchEdit": "批次編輯",
@@ -529,7 +530,7 @@
   "common_moveSuccess": "移動成功",
   "common_mustSelected": "必須至少選取其中一個選項",
   "common_nameExists": "名稱已存在",
-  "common_new": "新建",
+  "common_new": "新建{name}",
   "common_open": "打開",
   "common_or": "或",
   "common_preview": "預覽",
@@ -578,6 +579,11 @@
   "confirmText": "確定",
   "conjunction": {
     "to": "到"
+  },
+  "contactBook": {
+    "create": "新通訊錄",
+    "field": "字段",
+    "fields": "字段"
   },
   "contextMenu": {
     "case": "個案",
@@ -2434,6 +2440,7 @@
     "ReadWrite": "讀寫",
     "create": "創建",
     "custom": "自定義",
+    "delete": "刪除",
     "edit": "編輯",
     "enable": "啟用設定",
     "everything": "所有",
