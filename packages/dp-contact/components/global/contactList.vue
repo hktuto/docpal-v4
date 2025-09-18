@@ -41,8 +41,8 @@ async function init(isInitTable = true) {
     if (isInitTable) {
       setTimeout(() => {
         ContactListTableRef.value.init()
-        ContactBookPermissionRef.value.setFormData(detail.value)
-        ContactBookFieldSettingRef.value.setFieldData(detail.value.attributes)
+        ContactBookPermissionRef.value?.setFormData(detail.value)
+        ContactBookFieldSettingRef.value?.setFieldData(detail.value.attributes)
       }, 10)
     }
   } catch (error) {
