@@ -1367,7 +1367,7 @@
     "content": "Content",
     "recipient": "Recipient Email Address"
   },
-  "dpForm_confrimPassword": "Confrim Password",
+  "dpForm_confrimPassword": "Confirm Password",
   "dpForm_datePicker": "Select Date",
   "dpLanuage": {
     "chi_sim": "中文(简体)",
@@ -2624,13 +2624,15 @@
     "createdDate": "Created Date",
     "creatorGroups": "Creator groups",
     "creators": "Created By",
-    "documentTypes": "Document types",
+    "documentTypes": "Document type",
+    "filter": "Search Filter",
     "keyword": "Keyword",
     "last_modify_by": "Last modified by",
     "metadata": "Metadata",
     "mimeTypes": "File Type",
     "modified": "Last Modified Date",
     "path": "Path",
+    "record": "Define Search Criteria",
     "size": "File Size",
     "tags": "Tags"
   },

@@ -85,8 +85,14 @@ async function getCabinetDetail(id: string) {
     return
   }
   detailLoading.value = true
-  const response = await adminApi.api.getCabinetTemplateId(id)
-  cabinetDetail.value = response.data
+  try {
+    cabinetDetail.value = await adminApi.api.getCabinetTemplateId(id).then((res) => res.data)
+  } catch (e) {
+    // When the selected “folder cabinet” is deleted, subsequent steps are not executed.
+    detailLoading.value = false
+    return
+  }
+
   let arr: any[] = []
   arr = await loopChildren(arr, cabinetDetail.value, 0)
   const graph = graphProvider?.graph.value
@@ -195,8 +201,11 @@ async function setData() {
 }
 
 async function getList() {
-  const response = await adminApi.api.getCabinetList()
-  cabinetOptions.value = response.data
+  try {
+    cabinetOptions.value = await adminApi.api.getCabinetList().then((res) => res.data)
+  } catch (e) {
+    console.log(e)
+  }
 }
 
 function handleUpdateField(list: any) {

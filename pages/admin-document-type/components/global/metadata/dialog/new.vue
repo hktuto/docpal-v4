@@ -29,7 +29,7 @@
       </el-form-item>
     </el-form>
     <template #footer>
-      <el-button :loading="loading" type="primary" @click="handleCreate">{{ t('metadata.new') }}</el-button>
+      <el-button id="DocumentType__CreateNewDocumentType__Create__NewMetadata" :loading="loading" type="primary" @click="handleCreate">{{ t('metadata.new') }}</el-button>
     </template>
   </el-dialog>
 </template>

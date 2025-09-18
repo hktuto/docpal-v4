@@ -8,13 +8,15 @@
         <div>
           {{ $t('tableHeader_labelRule') }}：
           <template v-for="(item, index) in getLabelList(state.cabinetTemplate.labelRule)" :key="index">
-            <el-tag>{{ $t(item.metadata || item.metaData) }} </el-tag>
+            <el-tag>{{ $t(item.metadata || item.metaData) }}</el-tag>
             <template v-if="index !== getLabelList(state.cabinetTemplate.labelRule).length - 1"> -</template>
           </template>
         </div>
       </template>
       <template v-slot:previewName>
-        <el-text :type="hasPreviewName(state.previewName) ? '' : 'danger'">{{ $t('folderCabinet.previewName') }}：{{ state.previewName }}</el-text>
+        <el-text :type="hasPreviewName(state.previewName) ? '' : 'danger'">
+          {{ $t('folderCabinet.previewName') }}：{{ state.previewName }}
+        </el-text>
       </template>
     </FormRenderer>
     <template #footer>
@@ -137,6 +139,7 @@ function getRequiredMetadata() {
   const labelRules = getLabelList(state.cabinetTemplate.labelRule)
   return labelRules.map((item: any) => item.metadata)
 }
+
 // #region module: init
 async function handleOpen(id: string) {
   state.initLoading = true
@@ -157,9 +160,8 @@ async function handleOpen(id: string) {
       FormRendererRef.value.vFormRenderRef.setFormData({ ...getReminder(state.cabinetTemplate, ['notificationReminder', 'emailReminder', 'emailReport']) })
       setTitleRequired()
       setTimeout(async () => {
-        state.previewName = await getMetaName()
         state.initLoading = false
-      }, 10)
+      }, 500)
     }, 10)
   } catch (error) {
     ElMessage.error(t('dpMsg_error'))
