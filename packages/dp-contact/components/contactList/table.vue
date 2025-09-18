@@ -5,7 +5,7 @@
         <ResponsiveFilter ref="ResponsiveFilterRef" inputKey="name" @form-change="handleFilterFormChange" inputPlaceHolder="tableHeader_name" />
         <div class="actions">
           <ContactListExportButton class="el-icon--left" :id="id" :name="name" />
-          <ContactListImportButton :id="id" :name="name" :detail="detail" @refresh="reload" />
+          <ContactListImportButton v-if="isCreate" :id="id" :name="name" :detail="detail" @refresh="reload" />
           <el-button v-if="isCreate" class="el-icon--right" id="Dashboard__CreateNewDashboard" type="primary" @click="handleCreate">
             {{ $t('button.add') }}
           </el-button>
