@@ -1,6 +1,7 @@
 <template>
   <div>
-    <vxe-grid v-bind="gridOptions"></vxe-grid>
+    <el-button @click="handleValidate">Validate</el-button>
+    <vxe-grid ref="tableRef" v-bind="gridOptions"></vxe-grid>
   </div>
 </template>
 
@@ -26,6 +27,9 @@ const gridOptions = reactive<VxeGridProps<RowVO>>({
     trigger: 'click',
     mode: 'row'
   },
+  editRules: {
+    name: [{ required: true, pattern: '^[a-zA-Z]\\w{4,9}$', message: '字母开头5~10位数' }]
+  },
   columns: [
     { type: 'seq', width: 70 },
     { field: 'name', title: 'Name', minWidth: 180, editRender: { name: 'VxeInput' } },
@@ -47,4 +51,10 @@ const gridOptions = reactive<VxeGridProps<RowVO>>({
     { id: 10003, name: 'Test3', role: 'PM', sex: 'Man', num: 32, integer: null, float: null, money: null }
   ]
 })
+const tableRef = ref()
+async function handleValidate() {
+
+  const result = await tableRef.value.validate(true).catch(errMap => errMap)
+  console.log(result)
+}
 </script>

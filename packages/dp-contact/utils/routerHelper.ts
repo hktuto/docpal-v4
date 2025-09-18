@@ -7,6 +7,7 @@ export const routeContactList = function(params: any){
     component: 'LazyContactList',
     props: {
       id: params.id,
+      name: params.name
     }
   } as TabItem
 }

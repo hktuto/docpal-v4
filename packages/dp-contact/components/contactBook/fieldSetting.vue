@@ -6,14 +6,12 @@
 
     <div class="field-list">
       <div class="existing-fields">
-        <el-tag v-for="field in existingFields" :key="field.value" :closable="!field.disabled" @close="handleClose(field)">
+        <el-tag v-for="field in existingFields" :key="field.value" :closable="!field.disabled && mode !== 'edit'" @close="handleClose(field)">
           {{ field.name }}
         </el-tag>
       </div>
 
-      <el-button style="width: fit-content" type="default" :icon="Plus" @click="handleAddField">
-        Add Field
-      </el-button>
+      <el-button style="width: fit-content" type="default" :icon="Plus" :disabled="loading" @click="handleAddField"> Add Field </el-button>
     </div>
 
     <!-- Add Field Dialog -->
@@ -25,14 +23,20 @@
 import { ref } from 'vue'
 import { Plus } from '@element-plus/icons-vue'
 import FieldSettingDialog from './fieldSettingDialog.vue'
+import { adminApi } from 'api'
+const props = defineProps<{
+  mode: 'edit' | 'create'
+  id: string
+}>()
 
 interface Field {
   name: string
   value: string
 }
-
+const emits = defineEmits(['refresh'])
 // Reactive data
 const showAddDialog = ref(false)
+const loading = ref(false)
 
 const existingFields = ref<Field[]>([
   { name: 'Name', value: 'name', disabled: true },
@@ -44,14 +48,24 @@ function handleAddField() {
   showAddDialog.value = true
 }
 
-function handleAddFieldConfirm(field: Field) {
+async function handleAddFieldConfirm(field: Field) {
+  if (props.mode === 'edit') {
+    try {
+      loading.value = true
+      await adminApi.api.postContactgroupIdNewfields(props.id, field)
+    } catch (error) {
+      return
+    } finally {
+      loading.value = false
+      emits('refresh')
+    }
+  }
   // Add the new field to existing fields
   existingFields.value.push(field)
-  console.log('New field added:', field)
+  console.log(props.mode,'New field added:', field)
 }
 
 function handleClose(field: Field) {
-  console.log('Field clicked:', field)
   const index = existingFields.value.findIndex((item: Field) => item.value === field.value)
   if (index !== -1) {
     existingFields.value.splice(index, 1)
@@ -61,18 +75,20 @@ function handleClose(field: Field) {
 function getFieldData() {
   return existingFields.value.filter((item: Field) => !item.disabled)
 }
-defineExpose({ getFieldData })
+function setFieldData(fields: Field[]) {
+  existingFields.value = fields
+}
+defineExpose({ getFieldData, setFieldData })
 </script>
 
 <style lang="scss" scoped>
 .field-setting {
   background: white;
-  padding: 20px;
   border-radius: 8px;
 }
 
 .field-setting-header {
-  margin-bottom: 16px;
+  margin-bottom: var(--app-space-s);
 
   .title {
     margin: 0;
@@ -108,5 +124,4 @@ defineExpose({ getFieldData })
     border-color: #d4edff;
   }
 }
-
 </style>

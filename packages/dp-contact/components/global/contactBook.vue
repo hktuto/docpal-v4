@@ -160,9 +160,10 @@ async function getFilter() {
       type: 'string',
       isMultiple: false,
       options: [
-        { label: 'dashboard_accessUserGroup', value: 'access' },
-        { label: 'dashboard_name', value: 'name' },
-        { label: 'workflow_createDate', value: 'createdDate' }
+        { label: 'tableHeader_name', value: 'name' },
+        { label: 'role.creator', value: 'createdBy' },
+        { label: 'tableHeader_creationDate', value: 'createdDate' },
+        { label: 'tableHeader_modifiedDate', value: 'modifiedDate' }
       ]
     },
     {
@@ -180,7 +181,7 @@ async function getFilter() {
 }
 
 onMounted(() => {
-  // getFilter()
+  getFilter()
 })
 </script>
 <style lang="scss" scoped>
