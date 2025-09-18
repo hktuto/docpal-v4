@@ -47,9 +47,9 @@ function createJson(variables: VariableItem[]): FormJson {
 function handleEmit(funName: any, newValue: any, oldValue: any) {
   emits(funName, newValue, oldValue)
 }
-async function getData(): Promise<any> {
+async function getData(validate: boolean = true): Promise<any> {
   try {
-    const data = await FormRendererRef.value?.getFormData()
+    const data = await FormRendererRef.value?.getFormData(validate)
     return data
   } catch (error) {
     return null

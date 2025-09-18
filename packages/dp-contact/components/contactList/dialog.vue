@@ -17,30 +17,45 @@ const { t } = useI18n()
 const props = defineProps<{
   id: string
 }>()
-const contactBookDetail = inject('contactBookDetail')
-const emits = defineEmits(['success'])
-const state = reactive<any>({})
+const contacDetail = inject('contactDetailHelper')
+const { contactBookDetail, attributesVForm } = toRefs(contacDetail)
+const emits = defineEmits(['refresh'])
+const state = reactive<any>({
+  setting: {},
+  loading: false
+})
 const FormVariablesRendererRef = ref()
 
 async function handleSubmit() {
-  const data = await FormVariablesRendererRef.value.getData()
-  await globalApi.api.postContactgroupIdContactdetail(contactBookDetail.value.id, JSON.stringify(data))
+  try {
+    state.loading = true
+    const data = await FormVariablesRendererRef.value.getData()
+    if (state.setting.id) {
+      await globalApi.api.putContactgroupIdContactdetailContactdetailid(contactBookDetail.value.id, state.setting.id, data)
+    } else {
+      await globalApi.api.postContactgroupIdContactdetail(contactBookDetail.value.id, JSON.stringify(data))
+      emits('refresh')
+    }
+    dialogOpened.value = false
+  } catch (error) {
+    console.log(error)
+  } finally {
+    state.loading = false
+  }
 }
-function handleOpen() {
+function handleOpen(initData: any) {
+  console.log(initData)
   dialogOpened.value = true
   setTimeout(() => {
-    init()
+    init(initData)
   })
 }
-function init() {
-  const attributes = contactBookDetail.value.attributes.map((item: any) => {
-    return {
-      name: item.name,
-      label: item.label,
-      type: item.dataType
-    }
-  })
-  FormVariablesRendererRef.value.createJson(attributes)
+function init(initData: any) {
+  FormVariablesRendererRef.value.createJson(attributesVForm.value)
+  if (initData) {
+    state.setting = initData
+    FormVariablesRendererRef.value.setData(initData)
+  }
 }
 defineExpose({ handleOpen })
 </script>
