@@ -115,6 +115,9 @@ const { tableConfig, tableEvent, tableRef, query, reload } = useVxeTable({
     ]
   ],
   permissionMethod: (args: PermissionMethodParams) => {
+    if (!args.row) {
+      return { visible: false, disabled: false }
+    }
     switch (args.code) {
       case 'active':
         console.log(args.row)

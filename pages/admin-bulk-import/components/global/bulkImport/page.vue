@@ -91,7 +91,10 @@ provide(BulkImportListProviderKey, {
       tableRef.value?.reload()
     })
   },
-  permissionMethod: (params: PermissionMethodParams) => {
+  permissionMethod: (args: PermissionMethodParams) => {
+    if (!args.row) {
+      return { visible: false, disabled: false }
+    }
     return { visible: true, disabled: false }
   }
 })

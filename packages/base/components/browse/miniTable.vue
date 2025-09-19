@@ -20,6 +20,7 @@ const {
 
 const tableContainer = ref<HTMLElement>()
 const emits = defineEmits(['selectedChange'])
+
 async function loadData(entry: any[], path?: string, pageNum: number = 0) {
   console.log('loadData', path)
   const { data } = await listProvider?.getchildApi({ idOrPath: path, pageSize: 1000, pageNum })
@@ -30,6 +31,7 @@ async function loadData(entry: any[], path?: string, pageNum: number = 0) {
     return entry
   }
 }
+
 const { tableConfig, tableEvent, tableRef, reload } = useVxeTable({
   id: 'browseTableSetting',
   api: (pageParams: any) => loadData([], listProvider.idOrPath.value || '/'),
@@ -146,12 +148,15 @@ const { tableConfig, tableEvent, tableRef, reload } = useVxeTable({
     ]
   ],
   permissionMethod: ({ options, column, row, rowIndex }: any) => {
+    if (!row) {
+      return { visible: false, disabled: false }
+    }
     return {
       visible: true,
       disabled: false
     }
   },
-  
+
   selectChangeHander: (selectedRows: any[]) => {
     emits('selectedChange', selectedRows)
   },
@@ -283,10 +288,12 @@ defineExpose({
       --vxe-ui-layout-background-color: var(--app-grey-900);
     }
   }
+
   :deep(.browseFileIcon) {
     width: calc(var(--app-space-m) * 1.5);
     height: calc(var(--app-space-m) * 1.5);
   }
+
   :deep(.browseNameCell) {
     display: flex;
     align-items: center;

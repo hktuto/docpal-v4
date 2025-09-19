@@ -138,19 +138,20 @@ const {
     handleDblclick(row)
   },
   permissionMethod: (args: PermissionMethodParams) => {
+    if (!args.row) {
+      return { visible: false, disabled: false }
+    }
     switch (args.code) {
       case 'hold_active':
         return {
           visible: args.row.status === 'D',
           disabled: false
         }
-        break
       case 'hold_inactive':
         return {
           visible: args.row.status === 'A',
           disabled: false
         }
-        break
       default:
         return {
           visible: true,
