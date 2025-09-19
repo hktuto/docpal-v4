@@ -28,24 +28,24 @@ const limitSeat = ref(false)
 // TODO 在創建時會默認加載以下的workflow
 const defWorkflow = ref([
   {
-    'key': `new_folder_cabinet_1755583567273_${Date.now()}`,
-    'name': 'Test New Folder Cabinet',
-    'type': 'new_folder_cabinet_1755583567273'
+    'key': `test_new_event_form_1757554075071_${Date.now()}`,
+    'name': 'Create Calendar Event',
+    'type': 'test_new_event_form_1757554075071'
   },
   {
-    'key': `test-pdf-writer_1754295048597_${Date.now()}`,
-    'name': 'test-PDF-writer',
-    'type': 'test-pdf-writer_1754295048597'
+    'key': `test_update_event_form_1757558021415_${Date.now()}`,
+    'name': 'Update Calendar Event',
+    'type': 'test_update_event_form_1757558021415'
   },
   {
-    'key': `test-http-script_1754991301482_${Date.now()}`,
-    'name': 'test-http-script',
-    'type': 'test-http-script_1754991301482'
+    'key': `test_remove_event_form_1757561803395_${Date.now()}`,
+    'name': 'Delete Calendar Event',
+    'type': 'test_remove_event_form_1757561803395'
   },
   {
-    'key': `test-pdf-reader_1754029457595_${Date.now()}`,
-    'name': 'Test-PDF-reader',
-    'type': 'test-pdf-reader_1754029457595'
+    'key': `test_cancel_event_form_1757561126341_${Date.now()}`,
+    'name': 'Cancel Calendar Event',
+    'type': 'test_cancel_event_form_1757561126341'
   }
 ])
 
@@ -140,7 +140,7 @@ async function open(item?: any) {
       location: {},
       availableSeat: 0,
       backgroundColor: '#FFFFFF',
-      textColor: '#FFFFFF',
+      textColor: '#000000',
       highlightColor: '#FFFFFF',
       status: false
     }
@@ -261,12 +261,13 @@ defineExpose({ open })
     <el-form ref="formRef" :model="currentData" label-position="top" :rules="rules">
       <h4>Information</h4>
       <el-form-item :label="t('Name') " prop="name">
-        <el-input v-model="currentData.name" id="CalendarSetting__EventLocations__EventCategories__Add__Name" />
+        <el-input id="CalendarSetting__EventLocations__EventCategories__Add__Name"
+                  v-model="currentData.name" />
       </el-form-item>
 
       <el-form-item :label="t('Allow External User To Register')">
-        <el-switch v-model="currentData.register" active-text="Yes" inactive-text="No"
-                   id="CalendarSetting__EventLocations__EventCategories__Add__AllowExternalUserToRegister" />
+        <el-switch id="CalendarSetting__EventLocations__EventCategories__Add__AllowExternalUserToRegister"
+                   v-model="currentData.register" active-text="Yes" inactive-text="No" />
       </el-form-item>
 
       <el-divider />
@@ -275,9 +276,9 @@ defineExpose({ open })
       <el-row :gutter="10">
         <el-col :span="12">
           <el-form-item :label="t('View')">
-            <el-select v-model="state.viewList" multiple filterable clearable collapse-tags placeholder="Select"
-                       @blur="fillPermissionObject('view')"
-                       id="CalendarSetting__EventLocations__EventCategories__Add__View">
+            <el-select id="CalendarSetting__EventLocations__EventCategories__Add__View" v-model="state.viewList"
+                       multiple filterable clearable collapse-tags placeholder="Select" :max-collapse-tags="2"
+                       collapse-tags-tooltip @blur="fillPermissionObject('view')">
               <el-option-group v-for="group in permissionOptions" :key="group.label" :label="group.label">
                 <el-option v-for="item in group.options" :key="item.value" :label="item.label" :value="item.value" />
               </el-option-group>
@@ -286,9 +287,9 @@ defineExpose({ open })
         </el-col>
         <el-col :span="12">
           <el-form-item :label="t('Update')">
-            <el-select v-model="state.updateList" multiple filterable clearable collapse-tags placeholder="Select"
-                       id="CalendarSetting__EventLocations__EventCategories__Add__Update"
-                       @blur="fillPermissionObject('update')">
+            <el-select id="CalendarSetting__EventLocations__EventCategories__Add__Update" v-model="state.updateList"
+                       multiple filterable clearable collapse-tags placeholder="Select" :max-collapse-tags="2"
+                       collapse-tags-tooltip @blur="fillPermissionObject('update')">
               <el-option-group v-for="group in permissionOptions" :key="group.label" :label="group.label">
                 <el-option v-for="item in group.options" :key="item.value" :label="item.label" :value="item.value" />
               </el-option-group>
@@ -298,8 +299,8 @@ defineExpose({ open })
         <el-col :span="12">
           <el-form-item :label="t('Create')">
             <el-select id="CalendarSetting__EventLocations__EventCategories__Add__Create" v-model="state.createList"
-                       multiple filterable clearable collapse-tags placeholder="Select"
-                       @blur="fillPermissionObject('create')">
+                       multiple filterable clearable collapse-tags placeholder="Select" :max-collapse-tags="2"
+                       collapse-tags-tooltip @blur="fillPermissionObject('create')">
               <el-option-group v-for="group in permissionOptions" :key="group.label" :label="group.label">
                 <el-option v-for="item in group.options" :key="item.value" :label="item.label" :value="item.value" />
               </el-option-group>
@@ -309,8 +310,8 @@ defineExpose({ open })
         <el-col :span="12">
           <el-form-item :label="t('Cancel')">
             <el-select id="CalendarSetting__EventLocations__EventCategories__Add__Cancel" v-model="state.cancelList"
-                       multiple filterable clearable collapse-tags placeholder="Select"
-                       @blur="fillPermissionObject('cancel')">
+                       multiple filterable clearable collapse-tags placeholder="Select" :max-collapse-tags="2"
+                       collapse-tags-tooltip @blur="fillPermissionObject('cancel')">
               <el-option-group v-for="group in permissionOptions" :key="group.label" :label="group.label">
                 <el-option v-for="item in group.options" :key="item.value" :label="item.label" :value="item.value" />
               </el-option-group>
@@ -320,8 +321,8 @@ defineExpose({ open })
         <el-col :span="12">
           <el-form-item :label="t('Remove')">
             <el-select id="CalendarSetting__EventLocations__EventCategories__Add__Remove" v-model="state.removeList"
-                       multiple filterable clearable collapse-tags placeholder="Select"
-                       @blur="fillPermissionObject('remove')">
+                       multiple filterable clearable collapse-tags placeholder="Select" :max-collapse-tags="2"
+                       collapse-tags-tooltip @blur="fillPermissionObject('remove')">
               <el-option-group v-for="group in permissionOptions" :key="group.label" :label="group.label">
                 <el-option v-for="item in group.options" :key="item.value" :label="item.label" :value="item.value" />
               </el-option-group>
@@ -331,8 +332,8 @@ defineExpose({ open })
         <el-col :span="12">
           <el-form-item :label="t('Export')">
             <el-select id="CalendarSetting__EventLocations__EventCategories__Add__Export" v-model="state.exportList"
-                       multiple filterable clearable collapse-tags placeholder="Select"
-                       @blur="fillPermissionObject('export')">
+                       multiple filterable clearable collapse-tags placeholder="Select" :max-collapse-tags="2"
+                       collapse-tags-tooltip @blur="fillPermissionObject('export')">
               <el-option-group v-for="group in permissionOptions" :key="group.label" :label="group.label">
                 <el-option v-for="item in group.options" :key="item.value" :label="item.label" :value="item.value" />
               </el-option-group>
