@@ -40,7 +40,6 @@ const props = defineProps<{
   caseTypeId: string
   name: string
   currentVersion: string,
-  cmmnVersionId: string,
   caseDetailId: string
 }>()
 const state = reactive<any>({
@@ -53,7 +52,6 @@ const state = reactive<any>({
 })
 
 async function handleSubmit() {
-  // TODO: data.caseTypeId: caseTypeId   /   props.caseTypeId: cmmnVersionId
   try {
     const form = {
       caseTypeId: props.caseDetailId,
@@ -63,15 +61,14 @@ async function handleSubmit() {
     }
 
     if (!state.isEdit) {
-      console.log(222, form)
-      // await adminApi.api.postCaseDashboard(form as any)
+      await adminApi.api.postCaseDashboard(form as any)
     } else {
-      console.log(222, form)
-      // await adminApi.api.putCaseDashboard({
-      //   ...form,
-      //   id: state.id
-      // } as any)
+      await adminApi.api.putCaseDashboard({
+        ...form,
+        id: state.id
+      } as any)
     }
+    state.visible = false
     emits('refresh')
   } catch (e) {
     console.log(e)
@@ -79,18 +76,33 @@ async function handleSubmit() {
 }
 
 function handleOpen(setting: any) {
-  console.log(props.caseDetailId)
   state.visible = true
   if (!!setting) {
     state.isEdit = true
     state.id = setting.id
     state.label = setting.label
-    // state.permission = setting.
+    state.permission = toPermissions(setting.permissions)
   } else {
     state.isEdit = false
     state.label = ''
     state.permission = []
   }
+}
+
+function toPermissions(permissions: any) {
+  const permission = []
+  permissions.forEach((item: any) => {
+    const type = item.dataType
+    switch (type) {
+      case 'role':
+        permission.push(`role_${item.value}`)
+        break
+      case 'group':
+        permission.push(`group_${item.value}`)
+        break
+    }
+  })
+  return permission
 }
 
 onMounted(async () => {
