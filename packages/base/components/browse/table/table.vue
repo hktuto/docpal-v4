@@ -1,15 +1,15 @@
 <script lang="tsx" setup>
 import { useDebounceFn, useMagicKeys } from '@vueuse/core'
 import { emitBus, EventType, useEventBus } from 'eventbus'
-import { 
-  createDropableFolder, 
-  createDropableFile, 
-  useSqliteTable, 
-  documentColumn, 
-  documentIndex, 
+import {
+  createDropableFolder,
+  createDropableFile,
+  useSqliteTable,
+  documentColumn,
+  documentIndex,
   apiToColumn,
-  columnToApi,
- } from '#imports'
+  columnToApi
+} from '#imports'
 import type { DocumentColumnData, DocumentApiData } from '#imports'
 
 
@@ -17,7 +17,6 @@ const cleanSelectedRowsBus = useEventBus(EventType.FILE_CLEAN_SELECTED_ROWS)
 const listProvider = inject(BrowseListProviderKey)
 const routerProvider = inject(MenuRouterKey)
 import { clientApi } from 'api'
-
 
 
 if (!listProvider || !routerProvider) {
@@ -35,18 +34,17 @@ const lastSelectedIndex = ref(-1)
 const lastSelectedRow = ref<any>(null)
 const { shift } = useMagicKeys()
 
-
 const {
   find,
-  syncData,
-} = useSqliteTable<DocumentColumnData >({
+  syncData
+} = useSqliteTable<DocumentColumnData>({
   schema: {
     name: 'docpal_documents',
     columns: documentColumn,
-    indexes: documentIndex,
+    indexes: documentIndex
   },
-  hooks:{
-    afterFind: async(result:DocumentColumnData[], where:any, options:any)=>{
+  hooks: {
+    afterFind: async (result: DocumentColumnData[], where: any, options: any) => {
       const list = await loadData([], where.parentRef) as DocumentApiData[]
 
       // step 2 calculate diff between apiList and result
@@ -60,18 +58,18 @@ const {
         delete: DocumentColumnData[]
       }
       // find updatd and delete items in result
-      result.forEach((item:DocumentColumnData) => {
-        if(!list.some((apiItem:DocumentApiData) => apiItem.id === item.id)){
+      result.forEach((item: DocumentColumnData) => {
+        if (!list.some((apiItem: DocumentApiData) => apiItem.id === item.id)) {
           batchData.delete.push(item)
         }
       })
       // find create items in list
-      list.forEach((item:DocumentApiData) => {
-        const existingItem = result.find((apiItem:DocumentColumnData) => apiItem.id === item.id)
-        if(!existingItem){
+      list.forEach((item: DocumentApiData) => {
+        const existingItem = result.find((apiItem: DocumentColumnData) => apiItem.id === item.id)
+        if (!existingItem) {
           batchData.create.push(apiToColumn(item))
-        }else{
-          if(item.modifiedDate !== existingItem.modifiedDate){
+        } else {
+          if (item.modifiedDate !== existingItem.modifiedDate) {
             batchData.update.push(apiToColumn(item))
           }
         }
@@ -85,7 +83,7 @@ const {
       tableRef.value?.sort([{
         field: 'isFolder',
         order: 'desc'
-      },{
+      }, {
         field: 'name',
         order: 'asc'
       }])
@@ -93,7 +91,6 @@ const {
     }
   }
 })
-
 
 
 async function loadData(entry: any[], path?: string, pageNum: number = 0) {
@@ -152,7 +149,7 @@ const { tableConfig, tableEvent, tableRef, reload, cleanSelectedRows } = useVxeT
       }).then(data => {
         return data.map(item => columnToApi(item))
       })
-      if(data){
+      if (data) {
         data.sort(sortEntry)
         emits('selectedChange', [])
         return data
@@ -304,10 +301,10 @@ const { tableConfig, tableEvent, tableRef, reload, cleanSelectedRows } = useVxeT
         }
       },
       {
-        code:'docPreview',
-        name:'common_preview',
-        action:({row}:any)=>{
-          if(row.isFolder) return;
+        code: 'docPreview',
+        name: 'common_preview',
+        action: ({ row }: any) => {
+          if (row.isFolder) return
           emitBus(EventType.FILE_PREVIEW_OPEN, row)
         }
       },
@@ -458,18 +455,18 @@ const { tableConfig, tableEvent, tableRef, reload, cleanSelectedRows } = useVxeT
     ]
   ],
   permissionMethod: ({
-    options,
-    code,
-    column,
-    row,
-    rowIndex,
-    additionalData
-  }: any): {
+                       options,
+                       code,
+                       column,
+                       row,
+                       rowIndex,
+                       additionalData
+                     }: any): {
     visible: boolean
     disabled: boolean
   } => {
     const clickItem = row || listProvider.docDetail?.value
-      // if click on empty row, return empty
+    // if click on empty row, return empty
     if (!!clickItem) {
       if (clickItem.path === '/') {
         return {
@@ -477,13 +474,16 @@ const { tableConfig, tableEvent, tableRef, reload, cleanSelectedRows } = useVxeT
           disabled: false
         }
       }
+      if(listProvider.docDetail.value.hold){
+        return { visible: false, disabled: false }
+      }
       // if parent is on hold, child is not editable
       // if(!!row) clickItem.hold = listProvider.docDetail?.value.hold
       // hide all action when click on temp file
       if (clickItem.source === 'tempFile') {
         return { visible: false, disabled: false }
       }
-      if(!clickItem.isFolder && code === 'docPreview') {
+      if (!clickItem.isFolder && code === 'docPreview') {
         return { visible: true, disabled: false }
       }
 
@@ -549,21 +549,21 @@ const { tableConfig, tableEvent, tableRef, reload, cleanSelectedRows } = useVxeT
       showLine: true,
       hasChildField: 'isFolder',
       loadMethod: async (params) => {
-        try{
-          const entry = await find({parentRef:params.row.id},{},{skipIfEmpty:true})
-          if(entry.length === 0){
+        try {
+          const entry = await find({ parentRef: params.row.id }, {}, { skipIfEmpty: true })
+          if (entry.length === 0) {
             const apiData = await loadData([], params.row.id) as DocumentApiData[]
             const syncList = {
-              create: apiData.map((item:DocumentApiData) => apiToColumn(item)),
+              create: apiData.map((item: DocumentApiData) => apiToColumn(item)),
               update: [],
               delete: []
             }
             await syncData(syncList)
             return apiData.sort(sortEntry)
-          }else{
-            return entry.map((item:DocumentColumnData) => columnToApi(item)).sort(sortEntry)
+          } else {
+            return entry.map((item: DocumentColumnData) => columnToApi(item)).sort(sortEntry)
           }
-        }catch(e){
+        } catch (e) {
           // if error, return empty array and remove item from expandedItems
           console.error(e)
           return []
@@ -608,7 +608,7 @@ const { tableConfig, tableEvent, tableRef, reload, cleanSelectedRows } = useVxeT
     },
     cellMouseleave: ({ row, column, rowIndex }) => {
       emitBus(EventType.FILE_PREVIEW_CLOSE, row)
-    },
+    }
   }
 })
 
@@ -752,8 +752,6 @@ watch(
     deep: true
   }
 )
-
-
 
 
 // watch mode in listProvider, if mode change then reload table
