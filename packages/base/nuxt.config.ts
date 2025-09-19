@@ -10,7 +10,6 @@ const config = {
     enabled: true,
   },
   modules: [
-    '@nuxt/test-utils/module',
     '@nuxtjs/i18n',
     '@nuxtjs/color-mode',
     '@vueuse/nuxt'

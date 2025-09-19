@@ -26,7 +26,7 @@
     "api": "workspace:*",
     "eslint": "^8.57.1",
     "happy-dom": "^17.4.7",
-    "nuxt": "^3.17.3",
+    "nuxt": "3.17.7",
     "playwright-core": "^1.50.1",
     "typescript": "^4.9.5"
   },
