@@ -2332,7 +2332,7 @@
       "apply": "審核過程中有新的申請提交，請及時查看並處理。",
       "canceld": "審核流程已被拒絕。請及時查看處理，並根據需要調整相關內容.",
       "comment": "工作流程 : {businessName} 有一則新評論",
-      "rejected": "notification.workflow.rejected",
+      "rejected": "審核流程已被拒絕。請及時查看處理，並根據需要調整相關內容.",
       "success": "審批流程已成功通過，請及時查看相關結果"
     }
   },
