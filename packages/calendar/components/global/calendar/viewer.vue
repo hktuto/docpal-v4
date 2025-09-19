@@ -165,29 +165,37 @@ function getCalendarStyle(event: any) {
   if (!catId) return ''
   const category = categories.value.find(item => item.id === catId)
   if (!category) return ''
-  return `background-color: ${lightenColor(category.background_color, 0.5)}; --bg-color: ${category.background_color}; --on-color: ${category.onContainer}; --container_color: ${category.Container_Color};`
+
+  checkColor(category)
+  return `--bg-color: ${category.highlight_color}; --on-color: ${category.text_color}; --container_color: ${category.background_color};`
 }
 
-function lightenColor(hex, amount) {
-  hex = hex.replace(/^#/, '')
+function checkColor(category: any) {
+  const highlightColor = '#FF7B00'
+  const textColor = '#000000'
+  const brColor = '#FBA235'
 
-  let r = parseInt(hex.substring(0, 2), 16)
-  let g = parseInt(hex.substring(2, 4), 16)
-  let b = parseInt(hex.substring(4, 6), 16)
+  if (!category.highlight_color && checkColorFormat) category.highlight_color = highlightColor
+  if (!category.text_color && checkColorFormat) category.text_color = textColor
+  if (!category.background_color && checkColorFormat) category.background_color = brColor
 
-  r = Math.min(255, Math.floor(r + (255 - r) * amount))
-  g = Math.min(255, Math.floor(g + (255 - g) * amount))
-  b = Math.min(255, Math.floor(b + (255 - b) * amount))
-
-  return `#${((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1).toUpperCase()}`
+  function checkColorFormat(color: String) {
+    const hexPattern = /^#(?:[0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/
+    return !hexPattern.test(color)
+  }
 }
 
 function makeDescription(event: CalendarEventExternal) {
   return event.location + ' - ' + event.people.join(', ') + ' - ' + dayjs(event.start).format('YYYY-MM-DD HH:mm') + ' - ' + dayjs(event.end).format('YYYY-MM-DD HH:mm')
 }
 
-function handleDvb(calendarEvent: any) {
+function handleDblclick(calendarEvent: any) {
   console.log(222, calendarEvent)
+}
+
+function getRowData(row: any) {
+
+
 }
 
 watch(() => [setting, props.options], async () => {
@@ -255,9 +263,9 @@ defineExpose({
              :style="getCalendarStyle(calendarEvent)"
         >
           <ElTooltip placement="top">
-            <div class="eventInfoGroup" @dblclick="handleDvb(calendarEvent)">
+            <div class="eventInfoGroup" @dblclick="handleDblclick(calendarEvent)">
               <div class="eventInfo">
-                <span>{{ calendarEvent.title }}</span>
+                <strong>{{ calendarEvent.title }}</strong>
               </div>
               <div class="eventInfo">
                 <Icon name="mdi:map-marker" />
