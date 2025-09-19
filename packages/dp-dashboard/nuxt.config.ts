@@ -7,6 +7,6 @@ export default defineNuxtConfig({
     "../workflow"
   ],
   modules: [
-    '@nuxt/test-utils/module'
+    
   ]
 })

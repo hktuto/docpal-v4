@@ -2,9 +2,7 @@
 const config = {
   compatibilityDate: '2024-04-03',
   devtools: { enabled: true },
-  modules: [
-    '@nuxt/test-utils/module',
-  ],
+  modules: [],
   extends:[
     "../base",
     "../../pages/client-user-setting",

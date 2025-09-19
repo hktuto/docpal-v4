@@ -8,7 +8,7 @@
     "dev": "nuxi prepare & nuxi dev .playground --dotenv ../../../.env.admin.dev --port 3000",
     "build": "nuxi build .playground",
     "generate": "nuxi generate .playground",
-    "postinstall": "nuxi prepare",
+    "prepare": "nuxi prepare",
     "preview": "nuxi preview .playground",
     "lint": "eslint ."
   },
@@ -29,7 +29,7 @@
     "@vueuse/core": "10.2.1",
     "api": "workspace:*",
     "eslint": "^8.57.1",
-    "nuxt": "^3.17.3",
+    "nuxt": "3.17.7",
     "typescript": "^4.9.5"
   }
 }

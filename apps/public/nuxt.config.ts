@@ -5,7 +5,7 @@ export default defineNuxtConfig({
     enabled: true
   },
   ssr:false,
-  modules: ['@nuxt/test-utils/module'],
+  modules: [],
   extends:[
     "../../packages/icon",
     '../../packages/publicApp',
