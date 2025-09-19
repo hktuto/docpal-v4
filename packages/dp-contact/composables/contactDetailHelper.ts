@@ -2,6 +2,7 @@
 import { ref, onMounted } from 'vue'
 
 export const useContactDetailHelper = () => {
+  const DEFAULT_FIELD = ['name', 'email']
   const attributes = ref<any>([])
   const attributesVForm = ref<any>([])
   const contactBookDetail = ref<any>({})
@@ -13,13 +14,17 @@ export const useContactDetailHelper = () => {
   }
   function init(data: any) {
     contactBookDetail.value = data
-    attributes.value = data.attributes
-    attributesVForm.value = data.attributes.map((item: any) => {
+    // 排序 DEFAULT_FIELD先排
+    attributes.value = data.attributes.sort((a, b) => {
+      if (DEFAULT_FIELD.includes(a.value)) return -1
+      return a.value.localeCompare(b.value)
+    })
+    attributesVForm.value = attributes.value.map((item: any) => {
       const _item: any = {
         name: item.value,
         label: item.name,
         type: item.dataType,
-        required: ['name', 'email'].includes(item.value)
+        required: DEFAULT_FIELD.includes(item.value)
       }
       if (reg[item.value]) {
         _item.options = {
@@ -37,7 +42,7 @@ export const useContactDetailHelper = () => {
         label: item.name,
         type: 'select',
         options: {},
-        required: ['name', 'email'].includes(item.value)
+        required: DEFAULT_FIELD.includes(item.value)
       }
       if (selectOpts && selectOpts.length > 0) {
         _item.options.optionItems = selectOpts

@@ -134,9 +134,9 @@ async function contactRemovePermission({ fieldName, newValue, oldValue, formMode
 }
 async function resetPermission(fieldName: string, oldValue: any) {
   ContactBookPermissionRef.value.setFieldValue(fieldName, oldValue)
-  ContactBookPermissionRef.value.setDisabled(fieldName, true)
+  ContactBookPermissionRef.value.setDisabledForm(true)
   await resetInitLoading(1000)
-  ContactBookPermissionRef.value.setDisabled(fieldName, false)
+  ContactBookPermissionRef.value.setDisabledForm(false)
 }
 function capitalizeFirstLetter(string) {
   return string.charAt(0).toUpperCase() + string.slice(1)
