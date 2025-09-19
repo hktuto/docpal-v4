@@ -166,7 +166,7 @@ useEventListener(window, 'resize', calMinWidth)
                 <CollapseMenu @openedChange="mobileActionsOpenedChanged">
                   <template #default="{ collapse }">
                     <template v-for="(group, key) in detailActions" :key="key">
-                      <template v-for="item in group" :key="item.name">aaaaa
+                      <template v-for="item in group" :key="item.name">
                         <component
                           :is="item.component"
                           :doc="docDetail"
