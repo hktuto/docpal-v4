@@ -73,7 +73,7 @@ onDeactivated(() => {
         @click="showPreview = !showPreview"
       />
     </template>
-    <el-button @click="openNewEventDialog">{{ $t('New Event') }}</el-button>
+    <el-button id="HomePage__Calendar__NewEvent" @click="openNewEventDialog">{{ $t('New Event') }}</el-button>
     <el-skeleton v-if="!hideSetting && !showPreview" :rows="5"></el-skeleton>
     <!--    <Calendar v-else ref="CalendarRef" :options="setting" :editItem="newEvent" @openDetail="editEvent"-->
     <!--              @createEvent="popNewEvent" @updateEvent="updateEvent" />-->
