@@ -21,7 +21,7 @@
     "dayjs": "^1.11.13",
     "echarts": "^5.6.0",
     "grid-layout-plus": "1.0.5",
-    "nuxt": "^3.17.3",
+    "nuxt": "3.17.7",
     "vue": "3.5.6",
     "vue-router": "latest",
     "vue3-grid-layout-next": "^1.0.7"

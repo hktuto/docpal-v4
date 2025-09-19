@@ -9,14 +9,14 @@
     "build": "nuxi build .playground",
     "generate": "nuxi generate .playground",
     "preview": "nuxi preview .playground",
-    "postinstall": "nuxi prepare",
+    "prepare": "nuxi prepare",
     "lint": "eslint .",
     "test": "vitest --ui --watch"
   },
   "devDependencies": {
     "@nuxtjs/eslint-config-typescript": "^12.0.0",
     "eslint": "^8.28.0",
-    "nuxt": "^3.17.3",
+    "nuxt": "3.17.7",
     "typescript": "^4.9.3",
     "api": "workspace:*",
     
