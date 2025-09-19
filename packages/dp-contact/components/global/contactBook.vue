@@ -12,7 +12,7 @@
         <el-tag v-else type="danger">{{ $t('actions.inactive') }}</el-tag>
       </template>
     </VxeGrid>
-    <ContactBookDialog ref="ContactBookDialogRef" @refresh="reload" @add="handleDblclick" />
+    <ContactBookDialog ref="ContactBookDialogRef" @refresh="handleDblclick" @add="handleDblclick" />
   </div>
 </template>
 <script lang="ts" setup>

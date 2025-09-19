@@ -1,6 +1,6 @@
 <template>
   <el-button type="primary" @click="handleOpen"> {{ $t('button.import', { name: $t('data') }) }} </el-button>
-  <el-dialog v-model="dialogVisible" :title="$t('button.import', { name: $t('data') })" destroy-on-close>
+  <el-dialog v-model="dialogVisible" class="scroll-dialog"  :title="$t('button.import', { name: $t('data') })" destroy-on-close>
     <ContactListImportButtonForm ref="FormRef" />
     <template #footer>
       <el-button :loading="loading" type="primary" @click="handleSubmit"> {{ $t('button.import') }} </el-button>
