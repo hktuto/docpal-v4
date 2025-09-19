@@ -5,6 +5,6 @@ export default defineNuxtConfig({
     "../base",
   ],
   modules: [
-    '@nuxt/test-utils/module'
+    
   ]
 })
