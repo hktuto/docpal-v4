@@ -61,7 +61,6 @@ export type NewCaseDashboardParams = {
     name: string,
 }
 export const newCaseDashboardLink = (data:any) => {
-    
     return {
         id: "case-dashboard-list-" + new Date().getTime(),
         name: "case-dashboard-" + data.id,
