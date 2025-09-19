@@ -103,6 +103,9 @@ const { tableConfig, tableEvent, tableRef, query, reload, cleanSelectedRows } = 
     ]
   ],
   permissionMethod: (args: PermissionMethodParams) => {
+    if (!args.row) {
+      return { visible: false, disabled: false }
+    }
     if (args.code === 'inactive') {
       return {
         visible: args.row.status === 'A',

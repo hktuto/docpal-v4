@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { ArrowDown } from '@element-plus/icons-vue'
 import { adminApi } from 'api'
+
 const props = defineProps<{
   document: any
 }>()
@@ -86,11 +87,12 @@ const { tableConfig, tableEvent, tableRef, reload } = useVxeTable({
     ]
   ],
   permissionMethod: ({ options, code, column, row, rowIndex }: any) => {
-    if (!row)
+    if (!row) {
       return {
         visible: false,
         disabled: false
       }
+    }
     if (code === 'common_delete' || code === 'edit') {
       return {
         visible: !row.isInherit,
@@ -104,11 +106,13 @@ const { tableConfig, tableEvent, tableRef, reload } = useVxeTable({
   }
 })
 const userSetDialogRef = ref()
+
 function handleAddSet() {
   userSetDialogRef.value?.open(null, document.value.id)
 }
 
 const detailDialogRef = ref()
+
 function handleDblClick(row: any) {
   // check if row is user set
   if (row.permissionLevel === 5) {
@@ -118,9 +122,11 @@ function handleDblClick(row: any) {
     detailDialogRef.value?.open(row, document.value.id)
   }
 }
+
 function handleAdd() {
   detailDialogRef.value?.open(null, document.value.id)
 }
+
 async function getList() {
   if (!isFilter.value) {
     tableData = await adminApi.api.getAclResourcePermissionsResourceResourceid(document.value.id).then((res) => res.data)
@@ -171,15 +177,18 @@ async function getList() {
   isFilter.value = false
   return filterData
 }
+
 async function handleRemove(row: any) {
   await adminApi.api.deleteAclResourcePermissionsId(row.id)
   reload()
 }
+
 function handleFilterFormChange(formData: any) {
   isFilter.value = true
   extraParams = formData
   reload()
 }
+
 const filterSetting = [
   {
     key: 'permissionLevel',
@@ -218,18 +227,23 @@ const filterSetting = [
     ]
   }
 ]
+
 function getFilter() {
   ResponsiveFilterRef.value.init(filterSetting)
 }
+
 async function handleRemoveInherent() {
   await adminApi.api.postAclResourcePermissionsCopyInheritResourceid(document.value.id)
   reload()
 }
+
 async function handleInherent() {
   await adminApi.api.postAclResourcePermissionsIncludeInheritResourceid(document.value.id)
   reload()
 }
+
 const { flatRole } = useRBAC()
+
 async function getTargetOptions() {
   async function getGroupList() {
     try {
@@ -239,6 +253,7 @@ async function getTargetOptions() {
       return []
     }
   }
+
   async function getUserList() {
     try {
       return await adminApi.api.postNuxeoIdentityGetkeycloakallusers({}).then((res) => res.data)
@@ -247,6 +262,7 @@ async function getTargetOptions() {
       return []
     }
   }
+
   const groupList: any = await getGroupList()
   const userList: any = await getUserList()
   targetOptions.value.push(
@@ -285,6 +301,7 @@ async function getTargetOptions() {
     }
   )
 }
+
 async function updateTargetOptions() {
   while (targetOptions.value.length === 0) {
     await new Promise((resolve) => setTimeout(resolve, 100))
@@ -299,6 +316,7 @@ async function updateTargetOptions() {
     })
   }
 }
+
 onMounted(() => {
   getFilter()
   getTargetOptions()
@@ -324,11 +342,15 @@ watch(
         <el-dropdown>
           <el-button type="primary">
             {{ $t('button.more') }}
-            <el-icon class="el-icon--right"><arrow-down /></el-icon>
+            <el-icon class="el-icon--right">
+              <arrow-down />
+            </el-icon>
           </el-button>
           <template #dropdown>
             <el-dropdown-menu>
-              <el-dropdown-item v-if="isInherit" @click="handleRemoveInherent">{{ $t('accessControl_removeInherent') }}</el-dropdown-item>
+              <el-dropdown-item v-if="isInherit" @click="handleRemoveInherent">
+                {{ $t('accessControl_removeInherent') }}
+              </el-dropdown-item>
               <el-dropdown-item v-else @click="handleInherent">{{ $t('accessControl_inherent') }}</el-dropdown-item>
             </el-dropdown-menu>
           </template>
@@ -347,19 +369,23 @@ watch(
   justify-content: flex-flex;
   gap: var(--app-space-s);
 }
+
 :deep(.browseNameCell) {
   display: flex;
   align-items: center;
   gap: var(--app-space-s);
   cursor: pointer;
 }
+
 :deep(.browseFileIcon) {
   width: calc(var(--app-space-m) * 1.5);
   height: calc(var(--app-space-m) * 1.5);
 }
+
 :deep(.vxe-buttons--wrapper) {
   display: grid;
   grid-template-columns: 1fr min-content;
+
   .el-input {
     width: 200px;
   }

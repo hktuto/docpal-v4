@@ -142,7 +142,12 @@ const { tableConfig, tableEvent, tableRef, reload } = useVxeTable({
 
     ]
   ],
-  permissionMethod: listProvider.actionPermission
+  permissionMethod: (args: PermissionMethodParams) => {
+    if (!args.row) {
+      return { visible: false, disabled: false }
+    }
+    return listProvider.actionPermission
+  }
 })
 
 defineExpose({
