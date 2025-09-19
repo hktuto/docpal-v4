@@ -1,6 +1,6 @@
 <template>
   <el-dropdown @command="handleExport">
-    <el-button type="primary"> {{ $t('button.export', { name: $t('data') }) }} </el-button>
+    <el-button :loading="loading" type="primary"> {{ $t('button.export', { name: $t('data') }) }} </el-button>
     <template #dropdown>
       <el-dropdown-menu>
         <el-dropdown-item command="excel">{{ $t('button.export', { name: 'Excel' }) }}</el-dropdown-item>
@@ -20,21 +20,27 @@ const props = defineProps<{
   detail: any
 }>()
 const { t } = useI18n()
+const loading = ref(false)
 async function handleExport(command: string) {
-  console.log(command)
-  const res = await globalApi.api.postContactgroupIdContactdetailExport(
-    props.id,
-    {
-      fileType: command
-    },
-    {},
-    {
-      format: 'blob'
-    }
-  )
-  console.log(res, props.name)
-  downloadBlob(res, props.name)
-  ElMessage.success(t('dpMsg_success'))
+  try {
+    loading.value = true
+    const res = await globalApi.api.postContactgroupIdContactdetailExport(
+      props.id,
+      {
+        fileType: command
+      },
+      {},
+      {
+        format: 'blob'
+      }
+    )
+    console.log(res, props.name)
+    downloadBlob(res, props.name)
+  } catch (error) {
+    console.error(error)
+  } finally {
+    loading.value = false
+  }
 }
 </script>
 <style lang="scss" scoped></style>
