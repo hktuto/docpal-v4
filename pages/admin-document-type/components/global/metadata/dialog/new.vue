@@ -43,7 +43,7 @@ const { t } = useI18n()
 const validationFormRef = ref<FormInstance>()
 const visible = defineModel<boolean>('visible', { required: true })
 const selectedType = ref<MetadataOption['name']>('Text')
-
+const emits = defineEmits(['reload'])
 const loading = ref(false)
 const formData = reactive({
   name: '',
@@ -111,6 +111,7 @@ async function handleCreate() {
           })
         )
         close()
+        emits('reload', result)
       } else {
         ElMessage.error(
           t('meta.create_error', {

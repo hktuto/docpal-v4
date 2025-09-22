@@ -104,6 +104,8 @@ const FormRef = ref()
 const MetaFormRef = ref()
 
 function formChange({ fieldName, newValue, oldValue, formModel }) {
+  console.log(fieldName, newValue, oldValue, formModel);
+  
   if (fieldName === 'documentType') handleDocTypeChange(newValue)
 }
 async function handleDocTypeChange(docType: string) {
@@ -123,7 +125,7 @@ async function handleDocTypeChange(docType: string) {
   }, [])
   state.dragList.push(
     { name: 'fc:label', metadata: 'fc:label', dataType: 'string' },
-    { name: 'fc:createDate', metadata: 'fc:createDate', dataType: 'date' },
+    { name: 'fc.createDate', metadata: 'fc:createDate', dataType: 'date' },
     { name: 'fc:creator', metadata: 'fc:creator', dataType: 'string' },
     { name: 'fc:docTitle', metadata: 'fc:docTitle', dataType: 'string' }
   )

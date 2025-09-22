@@ -6,7 +6,7 @@
     </div>
     <template #footer>
       <div class="dialog-footer">
-        <el-button @click="handleClose"> {{ $t("button.close") }}</el-button>
+        <el-button @click="handleClose"> {{ $t('button.close') }}</el-button>
         <el-button :loading="loading" type="primary" @click="handleConfirm">{{ $t('confirmText') }}</el-button>
       </div>
     </template>
@@ -16,6 +16,7 @@
 <script setup lang="ts">
 import { adminApi } from 'api'
 import { ref } from 'vue'
+import { ElMessage } from 'element-plus'
 const props = defineProps<{
   targetOptions: any[]
 }>()
@@ -24,6 +25,7 @@ const dialogVisible = ref(false)
 const loading = ref(false)
 const formRef = ref()
 const isEditMode = ref(false)
+const { t } = useI18n()
 let permissionId = ''
 type FormData = {
   resourceId: string
@@ -68,18 +70,28 @@ async function open(row: any, documentId: string) {
 }
 
 const handleConfirm = async () => {
-  const data = await formRef.value.getFormData()
-  if (!data) return
-  loading.value = true
-  // 处理确认逻辑
-  if (isEditMode.value) {
-    await adminApi.api.putAclResourcePermissionsId(permissionId, data)
-  } else {
-    await adminApi.api.postAclResourcePermissions(data)
+  try {
+    const data = await formRef.value.getFormData()
+    if (!data) return
+    if(data.permissionLevel === 4 && data.permissionIds.length === 0) {
+      ElMessage.error(t('tip.selectAtLeastOnePermission'))
+      return
+    }
+    loading.value = true
+    // 处理确认逻辑
+    if (isEditMode.value) {
+      await adminApi.api.putAclResourcePermissionsId(permissionId, data)
+    } else {
+      await adminApi.api.postAclResourcePermissions(data)
+    }
+    loading.value = false
+    emits('success')
+    handleClose()
+  } catch (error) {
+    console.error(error)
+  } finally {
+    loading.value = false
   }
-  loading.value = false
-  emits('success')
-  handleClose()
 }
 
 const handleClose = () => {
