@@ -5,7 +5,7 @@
 # RUN npm i -g pnpm
 
 
-FROM node:20-alpine AS base
+FROM electronuserland/builder:20-wine AS base
 
 # 更新并安装必要工具
 RUN apt-get update && \
