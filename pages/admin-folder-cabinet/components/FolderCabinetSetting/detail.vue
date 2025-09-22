@@ -125,7 +125,7 @@ async function handleDocTypeChange(docType: string) {
   }, [])
   state.dragList.push(
     { name: 'fc:label', metadata: 'fc:label', dataType: 'string' },
-    { name: 'fc:createDate', metadata: 'fc:createDate', dataType: 'date' },
+    { name: 'fc.createDate', metadata: 'fc:createDate', dataType: 'date' },
     { name: 'fc:creator', metadata: 'fc:creator', dataType: 'string' },
     { name: 'fc:docTitle', metadata: 'fc:docTitle', dataType: 'string' }
   )
