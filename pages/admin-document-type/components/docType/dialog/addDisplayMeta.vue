@@ -138,13 +138,16 @@ async function handleSubmit(addMore: boolean = false) {
       await adminApi.api.postDocpaltypeSettingsDocpalTypeV2AddMetadataDocpaltypeid(props.id, formData)
       ElMessage.success(t('common_addSuccess'))
     }
-
+    const newMetadata = JSON.parse(JSON.stringify(formData))
     // Close dialog and refresh
     emits('refresh', addMore)
     state.visible = false
     // If add more, reopen dialog
     if (addMore) {
       nextTick(() => {
+        state.metadataList.push({
+          id: newMetadata.metadataId,
+        })
         handleOpen(state.metadataList, null)
       })
     }
