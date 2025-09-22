@@ -2,6 +2,7 @@
 import dayjs, { Dayjs } from 'dayjs'
 import type { CalendarEventExternal } from '@schedule-x/calendar'
 
+const { t } = useI18n()
 const emits = defineEmits(['delete', 'refreshSetting'])
 const showPreview = ref(false)
 const props = withDefaults(
@@ -23,13 +24,14 @@ const { settingRef, cardRef, refresh, loading } = useDashboardCard({
   }
 })
 const newEvent = ref([])
+const eventDialogRef = ref()
 
 async function handleDelete() {
   emits('delete')
 }
 
 function editEvent(event: CalendarEventExternal) {
-
+  eventDialogRef.value.edit(event)
 }
 
 function popNewEvent(dateTime: string) {
@@ -40,10 +42,8 @@ function updateEvent(params: CalendarEventExternal) {
   newEvent.value = params
 }
 
-const createDialogRef = ref()
-
 function openNewEventDialog() {
-  createDialogRef.value.open()
+  eventDialogRef.value.open()
 }
 
 onDeactivated(() => {
@@ -75,11 +75,9 @@ onDeactivated(() => {
     </template>
     <el-button id="HomePage__Calendar__NewEvent" @click="openNewEventDialog">{{ $t('New Event') }}</el-button>
     <el-skeleton v-if="!hideSetting && !showPreview" :rows="5"></el-skeleton>
-    <!--    <Calendar v-else ref="CalendarRef" :options="setting" :editItem="newEvent" @openDetail="editEvent"-->
-    <!--              @createEvent="popNewEvent" @updateEvent="updateEvent" />-->
     <Calendar v-else ref="CalendarRef" :options="setting" @openDetail="editEvent" @createEvent="popNewEvent"
               @updateEvent="updateEvent" />
-    <CalendarWidgetDialog ref="createDialogRef" @reload="refresh" />
+    <CalendarWidgetDialog ref="eventDialogRef" :options="setting" @reload="refresh" />
     <CalendarWidgetSetting ref="settingRef" :setting="setting" @submit="(setting) => $emit('refreshSetting', setting)"
                            @delete="handleDelete" />
   </DashboardCard>

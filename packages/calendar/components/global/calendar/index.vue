@@ -3,7 +3,11 @@ import { clientApi } from 'api'
 import type { CalendarEventExternal } from '@schedule-x/calendar'
 
 const { setting: calendarSettiing, categoriesOption, locationsOption } = useCalendarStore()
-import { type CalendarOptions, type DocPalEventType, convertSiteEventToCalendarEvent } from '../../../utils/calendarHelper'
+import {
+  type CalendarOptions,
+  type DocPalEventType,
+  convertSiteEventToCalendarEvent
+} from '../../../utils/calendarHelper'
 import CalendarViewer from './viewer.vue'
 import CalendarDetailDialog from './detailDialog.vue'
 
@@ -12,7 +16,6 @@ const detailDialogRef = ref<InstanceType<typeof CalendarDetailDialog>>()
 const props = defineProps<{
   options: CalendarOptions
   addtionalCheckBeforeEventUpdate: (oldEvent: any, editedEvent: any) => boolean
-  editItem?: any
 }>()
 
 const displayOption = ref<CalendarOptions>({
@@ -20,6 +23,7 @@ const displayOption = ref<CalendarOptions>({
 })
 
 const emits = defineEmits(['createEvent', 'filterChange', 'openDetail', 'onEventUpdate', 'updateEvent'])
+
 function addEvent(newEvent: CalendarEventExternal) {
   viewerRef.value?.addEvent(newEvent)
 }
@@ -40,6 +44,7 @@ const filter = ref({
   workflow: ''
 })
 const userFiterOptions = ref<any>([])
+
 async function getFilterOptions() {
   try {
     let user: any = []
@@ -88,6 +93,7 @@ async function setDefaultFilter() {
     displayOption.value.firstDayOfWeek = calendarSettiing.value?.basic.default_first_week
   }
 }
+
 // #endregion
 
 function openDetail(event: CalendarEventExternal) {
@@ -97,8 +103,8 @@ function openDetail(event: CalendarEventExternal) {
 // calendar Event
 const calendarEvents = {
   onEventClick: (args: any) => {
-    if (props.options.allowCreate && args.detail.eventId === props.editItem.value?.id) {
-      console.log('onEventClick editItem', args)
+    console.log('onEventClick', props.options, args)
+    if (props.options.allowCreate) {
       emits('openDetail', args)
       return
     }
@@ -112,6 +118,8 @@ const calendarEvents = {
     console.log('onClickDate', args)
   },
   onClickDateTime: (args: string) => {
+    // Create an event in a blank space
+    console.log('onClickDateTime')
     if (!props.options.allowCreate) return
     // if editItem is exist, update it
     emits('createEvent', args)
@@ -130,6 +138,7 @@ const calendarEvents = {
     // emits('updateEvent', args)
   }
 }
+
 function filterChange() {
   emits('filterChange', filter.value)
   viewerRef.value?.getList()
@@ -150,9 +159,11 @@ const filtetColumnWidth = computed(() => {
 })
 
 const showCalendar = ref(true)
+
 function refresh() {
   viewerRef.value.getList()
 }
+
 onMounted(async () => {
   await setDefaultFilter()
 })
@@ -199,8 +210,9 @@ defineExpose({
         </ElRow>
       </ElForm>
     </div>
-    <CalendarViewer ref="viewerRef" :options="options" :filter="filter" :editItem="editItem" v-on="calendarEvents" />
-    <CalendarDetailDialog ref="detailDialogRef" width="80%" :options="options" :addtionalCheckBeforeEventUpdate="addtionalCheckBeforeEventUpdate" />
+    <CalendarViewer ref="viewerRef" :options="options" :filter="filter" v-on="calendarEvents" />
+    <CalendarDetailDialog ref="detailDialogRef" width="80%" :options="options"
+                          :addtionalCheckBeforeEventUpdate="addtionalCheckBeforeEventUpdate" />
   </div>
 </template>
 
