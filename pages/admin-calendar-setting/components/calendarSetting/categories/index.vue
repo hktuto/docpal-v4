@@ -1,6 +1,8 @@
 <script lang="ts" setup>
 import { adminApi } from 'api'
 
+const { t } = useI18n()
+const routerProvider = inject(MenuRouterKey)
 const { setting } = useCalendarStore()
 let extraParams: any = {}
 const remoteOption = await getPermissionPairOption()
