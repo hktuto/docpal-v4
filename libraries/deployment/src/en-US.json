@@ -2963,6 +2963,7 @@
     "rename": "Rename",
     "replace": "Replace File",
     "samePassword": "New password cannot be the same as old password",
+    "selectAtLeastOnePermission": "Select at least one permission",
     "selectHere": "Select here",
     "share": "External share",
     "subscribe": "Subscribe",

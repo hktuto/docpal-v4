@@ -2963,6 +2963,7 @@
     "rename": "重新命名",
     "replace": "替换文件",
     "samePassword": "新密码不能与旧密码相同",
+    "selectAtLeastOnePermission": "至少选择一个权限",
     "selectHere": "在此选择",
     "share": "外部分享",
     "subscribe": "订阅",
