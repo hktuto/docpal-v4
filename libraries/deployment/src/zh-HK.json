@@ -2961,6 +2961,7 @@
     "rename": "重新命名",
     "replace": "替換文件",
     "samePassword": "新密碼不能與舊密碼相同",
+    "selectAtLeastOnePermission": "至少選擇一個權限",
     "selectHere": "在此選擇",
     "share": "外部分享",
     "subscribe": "訂閱",
