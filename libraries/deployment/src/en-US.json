@@ -2333,7 +2333,7 @@
       "apply": "A new application has been submitted during the review process. Please check and process it in time.",
       "canceld": "The review process has been rejected. Please check and handle it promptly and adjust the relevant content as needed.",
       "comment": "Workflow : {businessName} has a new comment",
-      "rejected": " ",
+      "rejected": "The review process has been rejected. Please check and handle it promptly and adjust the relevant content as needed.",
       "success": " The approval process has been successfully passed, please check the relevant results in time."
     }
   },

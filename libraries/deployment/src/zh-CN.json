@@ -2333,7 +2333,7 @@
       "apply": "审核过程中有新的申请提交，请及时查看并处理。",
       "canceld": "审核流程已被拒绝。请及时查看处理，并根据需要调整相关内容.",
       "comment": "工作流程 : {businessName} 有一则新评论",
-      "rejected": "notification.workflow.rejected",
+      "rejected": "审核流程已被拒绝。请及时查看处理，并根据需要调整相关内容.",
       "success": "审批流程已成功通过，请及时查看相关结果"
     }
   },

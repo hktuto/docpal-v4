@@ -1,9 +1,11 @@
 import { adminApi } from 'api'
+import { clientApi } from 'api'
 
 export const usePermissionOption = () => useState('permission', () => ([]))
 
 export const getFromServer = async function() {
   const options = usePermissionOption()
+  // 需要根據不同的環境調用對應的接口前綴
   const [user, role, group] = await Promise.all([
     adminApi.api.postNuxeoIdentityUsers().then((res) => res.data),
     adminApi.api.postAclRoleList([{
@@ -96,4 +98,33 @@ export const getCachePermissionOptions = async () => {
     await getFromServer()
     return options.value
   }
+}
+
+export const getUserSelectOption = async () => {
+  const list = await adminApi.api.postNuxeoIdentityUsers().then((res) => res.data)
+  if (list.length === 0) return []
+
+  return list.map((item: any) => ({
+    id: item.id,
+    name: item.username,
+    email: item.email
+  }))
+}
+
+export const getRoleSelectOption = async () => {
+  const list = await adminApi.api.postAclRoleList([{
+    column: 'status',
+    type: 'EQ',
+    values: '1'
+  }]).then((res) => res.data)
+  if (list.length === 0) return []
+
+  return list.map((item) => ({
+    id: item.id,
+    name: item.name
+  }))
+}
+
+export const getGroupsSelectOption = async () => {
+  return await adminApi.api.postNuxeoIdentityGroups().then((res) => res.data)
 }
