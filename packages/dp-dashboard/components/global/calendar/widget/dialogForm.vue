@@ -7,7 +7,8 @@ const state = reactive({
   formJson: {},
   readonly: false,
   tableData: [],
-  userList: []
+  userList: [],
+  isEdit: false
 })
 const userList = ref([])
 const { formJson } = toRefs(state)
@@ -125,11 +126,19 @@ async function getUserList() {
   userList.value = await getUserSelectOption()
 }
 
+function setFormData(isEdit: boolean, data: any) {
+  state.isEdit = isEdit
+  state.userList = data.user.split(',')
+  delete data.user
+  console.log(22, data)
+  FormRendererRef.value.setFormData(data)
+}
+
 onMounted(() => {
   getUserList()
 })
 
-defineExpose({ setForm, getFormData, disableForm, enableForm })
+defineExpose({ setForm, getFormData, setFormData, disableForm, enableForm })
 </script>
 
 <template>
