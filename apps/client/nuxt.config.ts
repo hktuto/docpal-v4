@@ -1,9 +1,11 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
+console.log("env",process.env.PROXY )
+
 export default defineNuxtConfig({
     compatibilityDate: '2024-04-03',
     devtools: {enabled: true},
     ssr: false,
-    modules: ['@nuxt/test-utils/module'],
+    modules: [],
     extends: [
         "../../packages/icon",
         '../../packages/authApp',
@@ -66,6 +68,7 @@ export default defineNuxtConfig({
         '../../pages/public-share',
         '../../pages/public-upload',
         '../../pages/public-easy-form',
+        '../../packages/dp-contact',
     ],
     features: {
         inlineStyles: true,

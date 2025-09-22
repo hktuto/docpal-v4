@@ -4,7 +4,7 @@
       <FormRenderer ref="FormRendererRef" class="div1" :form-json="formJson" />
       <div class="div2" v-loading="previewFile.loading">
         <template v-if="state.loadingFileFail">
-          <div class="no-file-preview"> {{ $t('tip.loadingFileFail') }}</div>
+          <div class="no-file-preview">{{ $t('tip.loadingFileFail') }}</div>
         </template>
         <template v-else-if="previewFile.name">
           <div class="reader-container">
@@ -13,12 +13,10 @@
           </div>
         </template>
         <template v-else>
-          <div class="no-file-preview"> {{ $t('tip.pleaseSelectFile') }}</div>
+          <div class="no-file-preview">{{ $t('tip.pleaseSelectFile') }}</div>
         </template>
       </div>
-      <BrowseShareTableSet :tableData="state.minTypeShareList" class="div3"
-                           @db-click="handleDblclick"
-                           @delete="handleDeleteRow" />
+      <BrowseShareTableSet :tableData="state.minTypeShareList" class="div3" @db-click="handleDblclick" @delete="handleDeleteRow" />
       <div class="div4 flex-x-end">
         <div>
           <!-- <el-button type="primary" @click="handleAddMore">{{ $t('share.addMore') }}</el-button> -->
@@ -29,7 +27,6 @@
     </main>
   </div>
 </template>
-
 
 <script lang="ts" setup>
 import { ElMessage, ElMessageBox, ElNotification } from 'element-plus'
@@ -84,23 +81,29 @@ async function handleDblclick(row: any) {
           handlePreviewFail()
         }
 
-        const res = await clientApi.api.getNuxeoSharePrepareDownloadDocid(row.id).then(res => res.data)
+        const res = await clientApi.api.getNuxeoSharePrepareDownloadDocid(row.id).then((res) => res.data)
         if (res === 'YES') {
           clearInterval(state.interval)
 
-          previewFile.blob = await clientApi.api.getWatermarkDocumentPreview({
-            watermarkTemplateId: row.watermark,
-            documentId: row.id
-          }, {
-            format: 'blob'
-          })
+          previewFile.blob = await clientApi.api.getWatermarkDocumentPreview(
+            {
+              watermarkTemplateId: row.watermark,
+              documentId: row.id
+            },
+            {
+              format: 'blob'
+            }
+          )
           previewFile.loading = false
         }
       }, 1000)
     } else {
-      previewFile.blob = await clientApi.api.postNuxeoDocumentPreview({ idOrPath: row.id }, {
-        format: 'blob'
-      })
+      previewFile.blob = await clientApi.api.postNuxeoDocumentPreview(
+        { idOrPath: row.id },
+        {
+          format: 'blob'
+        }
+      )
       previewFile.loading = false
     }
     previewFile.name = row.name
@@ -114,20 +117,37 @@ async function handleDblclick(row: any) {
     state.loadingFileFail = true
   }
 }
+function isValidateEmail(emailList) {
+  let isValidate = true
+  const emailRef = FormRendererRef.value.vFormRenderRef.getWidgetRef('emailList')
+  const contactList = emailRef.getOptionItems()
+  const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
 
+  emailList.forEach((item: any) => {
+    if (!emailRegex.test(item) && !isInContactList(item)) {
+      ElMessage.error(t('tip.enterValidEmail') +' 【'+ item+'】')
+      isValidate = false
+    }
+  })
+  return isValidate
+  function isInContactList(email: string) {
+    return contactList.some((item: any) => item.value === email)
+  }
+}
 async function handleSubmit() {
   try {
     state.loading = true
     if (!!state.interval) clearInterval(state.interval)
     const formData = await FormRendererRef.value.getFormData()
     if (!formData) throw new Error('no emailList')
+    if (!isValidateEmail(formData.emailList)) return
     const param = {
       emailList: formData.emailList,
       documentList: documentIdListGet(),
       password: formData.password ? formData.password : '',
       tokenLiveInMinutes: diffMinute(formData.dueDate)
     }
-    const response = await clientApi.api.postNuxeoShareNew(param).then(res => res.data)
+    const response = await clientApi.api.postNuxeoShareNew(param).then((res) => res.data)
     routerProvider?.message.success(t('share_success'))
     updateShareList([])
     const item = createBrowseListPageParams({
@@ -135,6 +155,7 @@ async function handleSubmit() {
     })
     routerProvider?.back(item)
   } catch (error: any) {
+    console.log(error.message)
     routerProvider?.message.error(error.message)
   } finally {
     state.loading = false
@@ -148,11 +169,10 @@ async function handleSubmit() {
   // }
   function documentIdListGet() {
     return state.minTypeShareList.map((item: any) => ({
-        docId: item.id,
-        readOnly: item.readOnly,
-        watermarkTemplateId: item.watermark || ''
-      })
-    )
+      docId: item.id,
+      readOnly: item.readOnly,
+      watermarkTemplateId: item.watermark || ''
+    }))
   }
 }
 
@@ -161,9 +181,7 @@ function handleDeleteRow(row: any) {
   state.minTypeShareList.splice(index, 1)
   if (state.minTypeShareList.length === 0) {
     handleDiscard()
-  }else{
-
-    
+  } else {
     updateShareList(state.minTypeShareList)
   }
 }
@@ -187,27 +205,29 @@ function handleAddMore() {
   routerProvider?.navigateTo(item)
 }
 
-watch(shareList, async(newVal) => {
-  try {
-    state.minTypeShareList = await getMineTypeShareList()
-    if (state.minTypeShareList.length === 0) {
-    const item = createBrowseListPageParams({
-      idOrPath: props.backPath
-    })
-      routerProvider?.navigateTo(item)
-    }
-    const mimeTypeList = state.minTypeShareList.reduce((prev: any, item: any) => {
-      if (item.mimeType && getUseWatermark(item.mimeType)) prev.push(item.id)
-      return prev
-    }, [])
-    clientApi.api.postNuxeoSharePrepareDownload(mimeTypeList)
-  } catch (error) {
-
+watch(
+  shareList,
+  async (newVal) => {
+    try {
+      state.minTypeShareList = await getMineTypeShareList()
+      if (state.minTypeShareList.length === 0) {
+        const item = createBrowseListPageParams({
+          idOrPath: props.backPath
+        })
+        routerProvider?.navigateTo(item)
+      }
+      const mimeTypeList = state.minTypeShareList.reduce((prev: any, item: any) => {
+        if (item.mimeType && getUseWatermark(item.mimeType)) prev.push(item.id)
+        return prev
+      }, [])
+      clientApi.api.postNuxeoSharePrepareDownload(mimeTypeList)
+    } catch (error) {}
+  },
+  {
+    immediate: true,
+    deep: true
   }
-},{
-  immediate: true,
-  deep: true
-})
+)
 
 // onMounted(async () => {
 //   state.backPath = props.backPath || '/'
@@ -266,7 +286,10 @@ onUnmounted(() => {
     grid-area: 3 / 1 / 4 / 3;
   }
 
-  .div1, .div2, .div3, .div4 {
+  .div1,
+  .div2,
+  .div3,
+  .div4 {
     overflow: hidden;
   }
 
