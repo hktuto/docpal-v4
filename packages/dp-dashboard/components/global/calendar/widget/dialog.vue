@@ -4,13 +4,7 @@ import { clientApi, adminApi } from 'api'
 const emits = defineEmits(['reload'])
 const { t } = useI18n()
 const opened = ref(false)
-const {
-  setting: calendarSetting,
-  categoriesOption,
-  locationsOption,
-  calendarViewOptions,
-  weekDayOptions
-} = useCalendarStore()
+const { setting: calendarSetting, categoriesOption, locationsOption, calendarViewOptions, weekDayOptions } = useCalendarStore()
 const props = defineProps({
   options: {}
 })
@@ -31,8 +25,8 @@ const categories = ref()
 async function initWorkflowForm(name: string) {
   state.loading = true
   try {
+    categories.value = categoriesOption.value.find((item: any) => item.id === state.workflowId)
     if (!categories.value || !categories.value.flows || categories.value.flows.length === 0) return
-
     // TODO：名稱之後需要重新定義
     const flow = categories.value.flows.find((item: any) => {
       if (item.name.toLowerCase().includes(name)) {
@@ -41,10 +35,8 @@ async function initWorkflowForm(name: string) {
     })
     if (!flow) return
     state.workflowKey = deepCopy(flow.key)
-
-    const workflow = await adminApi.api.getWorkflowVersionKeyProcessdefinitionkey(flow.key).then(r => r.data)
+    const workflow = await adminApi.api.getWorkflowVersionKeyProcessdefinitionkey(flow.key).then((r) => r.data)
     if (!workflow) return
-
     const formJson = await formJsonGet(workflow.processDefinitionKey, workflow.id)
     setTimeout(() => {
       createDialogFormRef.value.setForm(formJson)
@@ -58,11 +50,13 @@ async function initWorkflowForm(name: string) {
 }
 
 async function formJsonGet(processKey: string, versionId: string) {
-  const response: any = await clientApi.api.getRelationQuery({
-    userTaskId: 'start',
-    processKey,
-    versionId
-  }).then(res => res.data)
+  const response: any = await clientApi.api
+    .getRelationQuery({
+      userTaskId: 'start',
+      processKey,
+      versionId
+    })
+    .then((res: any) => res.data)
   if (!response[0] || (response[0] && !response[0].jsonValue)) return {}
   return JSON.parse(response[0].jsonValue)
 }
@@ -139,7 +133,7 @@ async function submit() {
 
     state.loading = true
     try {
-      await clientApi.api.postWorkflowProcessStart(form, { async: false }).then(res => res.data)
+      await clientApi.api.postWorkflowProcessStart(form, { async: false }).then((res) => res.data)
       state.formDialogVisible = false
       emits('reload')
     } catch (error) {
@@ -150,10 +144,6 @@ async function submit() {
   opened.value = false
 }
 
-watch(() => state.workflowId, (newValue, oldValue) => {
-  categories.value = categoriesOption.value.find((item: any) => item.id === newValue)
-})
-
 defineExpose({ open, edit })
 </script>
 
@@ -163,8 +153,7 @@ defineExpose({ open, edit })
       <el-form-item :label="t('Calendar')">
         <!-- todo: 允許變更  calendar的話，會存在無法判定是創建還是更新     -->
         <el-select v-model="state.workflowId" @change="create">
-          <el-option v-for="categories in categoriesOption" :key="categories.key" :label="categories.name"
-                     :value="categories.id" />
+          <el-option v-for="categories in categoriesOption" :key="categories.key" :label="categories.name" :value="categories.id" />
         </el-select>
       </el-form-item>
     </el-form>
