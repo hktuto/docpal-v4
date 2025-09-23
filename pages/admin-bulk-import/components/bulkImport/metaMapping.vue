@@ -80,7 +80,11 @@ const {tableConfig, tableEvent, tableRef, reload} = useVxeTable({
     ]
   ],
   dblClickAction: ({row}: any) => handleDialogShow(row),
-  permissionMethod: (params: PermissionMethodParams) => {
+  permissionMethod: (args: PermissionMethodParams) => {
+    if (!args.row) {
+      return { visible: false, disabled: false }
+    }
+
     return {visible: true, disabled: false}
   }
 })

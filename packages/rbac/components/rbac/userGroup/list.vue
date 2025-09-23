@@ -1,30 +1,30 @@
 <template>
-<div class="pageContainer">
-  <VxeGrid ref="tableRef" v-bind="tableConfig" v-on="tableEvent" >
-    <template #toolbar_buttons>
-      <div class="tableActions">
+  <div class="pageContainer">
+    <VxeGrid ref="tableRef" v-bind="tableConfig" v-on="tableEvent">
+      <template #toolbar_buttons>
+        <div class="tableActions">
 
-      <ResponsiveFilter 
-        ref="filterRef" 
-        inputKey="q" 
-        @form-change="handleFilterFormChange" 
-      />
-      <ElButton type="primary" @click="createRoleDialogRef.open({type: 2})">{{ t('common_add') }}</ElButton>
-      </div>
-    </template>
-  </VxeGrid>
-  <RbacCreateDialog
-    ref="createRoleDialogRef"
-    @success="reload"
-  />
-  <RbacEditRoleSidebar
-    ref="editRoleSidebarRef"
-    :role-id="selectedRoleId"
-    :role-options="flatRole"
-    @success="reload"
-    @close="reload"
-  />
-</div>
+          <ResponsiveFilter
+            ref="filterRef"
+            inputKey="q"
+            @form-change="handleFilterFormChange"
+          />
+          <ElButton type="primary" @click="createRoleDialogRef.open({type: 2})">{{ t('common_add') }}</ElButton>
+        </div>
+      </template>
+    </VxeGrid>
+    <RbacCreateDialog
+      ref="createRoleDialogRef"
+      @success="reload"
+    />
+    <RbacEditRoleSidebar
+      ref="editRoleSidebarRef"
+      :role-id="selectedRoleId"
+      :role-options="flatRole"
+      @success="reload"
+      @close="reload"
+    />
+  </div>
 </template>
 
 <script lang="ts" setup>
@@ -55,35 +55,36 @@ interface Condition {
 
 const editRoleSidebarRef = ref()
 const selectedRoleId = ref()
-const {flatRole} = useRBAC()
+const { flatRole } = useRBAC()
 const filterRef = ref()
 const conditions = reactive<Condition[]>([])
 const createRoleDialogRef = ref()
 const searchQuery = ref<SearchQuery>({
-  sort_by: "updateTime",
-  sort_type: "DESC",
-  status: 1,
+  sort_by: 'updateTime',
+  sort_type: 'DESC',
+  status: 1
 })
 
 function dblClickHandler(row: UserGroup) {
   selectedRoleId.value = row.id
-  editRoleSidebarRef.value.open({...row})
+  editRoleSidebarRef.value.open({ ...row })
 }
+
 const { t } = useI18n()
 const { tableConfig, tableEvent, tableRef, reload } = useVxeTable({
-  id:'userGroupList',
-  api: async( params:any )=>{
+  id: 'userGroupList',
+  api: async (params: any) => {
     const defaultCondition = [{
       column: 'type',
       type: 'EQ',
-      values: "2"
+      values: '2'
     }]
 
     // Add search condition if exists
     if (searchQuery.value?.q) {
       defaultCondition.push({
         column: 'name',
-        type: "LIKE",
+        type: 'LIKE',
         values: searchQuery.value.q
       })
     }
@@ -92,7 +93,7 @@ const { tableConfig, tableEvent, tableRef, reload } = useVxeTable({
     if (searchQuery.value?.status) {
       defaultCondition.push({
         column: 'status',
-        type: "EQ",
+        type: 'EQ',
         values: String(searchQuery.value.status)
       })
     }
@@ -101,8 +102,8 @@ const { tableConfig, tableEvent, tableRef, reload } = useVxeTable({
     if (searchQuery.value?.sort_by) {
       defaultCondition.push({
         column: searchQuery.value.sort_by,
-        type: searchQuery.value.sort_type === "ASC" ? "ORDER_BY_ASC" : "ORDER_BY_DESC",
-        values: ""
+        type: searchQuery.value.sort_type === 'ASC' ? 'ORDER_BY_ASC' : 'ORDER_BY_DESC',
+        values: ''
       })
     }
 
@@ -161,6 +162,10 @@ const { tableConfig, tableEvent, tableRef, reload } = useVxeTable({
     dblClickHandler(row)
   },
   permissionMethod: ({ row, code }: { row: UserGroup; code?: string }) => {
+    if (!row) {
+      return { visible: false, disabled: false }
+    }
+
     // Show edit action for all user groups
     if (code === 'edit') {
       return {
@@ -168,7 +173,7 @@ const { tableConfig, tableEvent, tableRef, reload } = useVxeTable({
         disabled: false
       }
     }
-    
+
     // Show activate action only for inactive user groups
     if (code === 'activate') {
       return {
@@ -176,7 +181,7 @@ const { tableConfig, tableEvent, tableRef, reload } = useVxeTable({
         disabled: false
       }
     }
-    
+
     // Show deactivate action only for active user groups
     if (code === 'deactivate') {
       return {
@@ -190,14 +195,14 @@ const { tableConfig, tableEvent, tableRef, reload } = useVxeTable({
       disabled: true
     }
   },
-  columns:[
+  columns: [
     {
       title: 'table_name',
-      field: 'name',
+      field: 'name'
     },
     {
-      title: "user",
-      field: "userIds",
+      title: 'user',
+      field: 'userIds',
       formatter: ({ cellValue }: { cellValue: string[] }) => cellValue.join(',')
     },
     {
@@ -206,7 +211,7 @@ const { tableConfig, tableEvent, tableRef, reload } = useVxeTable({
       formatter: ({ cellValue }: { cellValue: string }) => formatDate(cellValue)
     },
     {
-      title: "Modified At",
+      title: 'Modified At',
       field: 'updateTime',
       formatter: ({ cellValue }: { cellValue: string }) => formatDate(cellValue)
     },
@@ -214,10 +219,10 @@ const { tableConfig, tableEvent, tableRef, reload } = useVxeTable({
       title: 'Status',
       field: 'status',
       formatter: ({ cellValue }: { cellValue: number }) => cellValue === 1 ? 'Active' : 'Inactive'
-    },
+    }
   ],
   remoteSort: true,
-  remoteFilter: true,
+  remoteFilter: true
 })
 
 // Initialize filters
@@ -225,7 +230,7 @@ onMounted(() => {
   filterRef.value.init([
     {
       label: t('tableHeader_status'),
-      key: "status",
+      key: 'status',
       isMultiple: false,
       value: [1],
       options: [
@@ -235,37 +240,37 @@ onMounted(() => {
     },
     {
       label: t('tableHeader.sortBy'),
-      key: "sort_by",
+      key: 'sort_by',
       isMultiple: false,
-      value: ["updateTime"],
+      value: ['updateTime'],
       options: [
         {
           label: t('tableHeader_name'),
-          value: "name"
+          value: 'name'
         },
         {
           label: t('tableHeader_createdAt'),
-          value: "createTime"
+          value: 'createTime'
         },
         {
           label: t('tableHeader_lastModified'),
-          value: "updateTime"
+          value: 'updateTime'
         }
       ]
     },
     {
       label: t('tableHeader.sortOrder'),
-      key: "sort_type",
+      key: 'sort_type',
       isMultiple: false,
-      value: ["DESC"],
+      value: ['DESC'],
       options: [
         {
           label: t('tableHeader.asc'),
-          value: "ASC",
+          value: 'ASC'
         },
         {
           label: t('tableHeader.desc'),
-          value: "DESC",
+          value: 'DESC'
         }
       ]
     }
@@ -280,7 +285,7 @@ const debounceFilter = useDebounceFn(() => {
 function handleFilterFormChange(form: SearchQuery) {
   conditions.length = 0
   searchQuery.value = form
-  
+
   if (form.status) {
     conditions.push({
       column: 'status',
@@ -298,8 +303,8 @@ function handleFilterFormChange(form: SearchQuery) {
   if (form.sort_by) {
     conditions.push({
       column: form.sort_by,
-      type: form.sort_type === "ASC" ? "ORDER_BY_ASC" : "ORDER_BY_DESC",
-      values: ""
+      type: form.sort_type === 'ASC' ? 'ORDER_BY_ASC' : 'ORDER_BY_DESC',
+      values: ''
     })
   }
 }
@@ -311,12 +316,13 @@ watch(conditions, (newVal) => {
 </script>
 
 <style lang="scss" scoped>
-.pageContainer{
+.pageContainer {
   height: 100%;
   width: 100%;
   padding: var(--app-spacing-s);
 }
-.tableActions{
+
+.tableActions {
   display: flex;
   gap: var(--app-spacing-s);
   align-items: center;

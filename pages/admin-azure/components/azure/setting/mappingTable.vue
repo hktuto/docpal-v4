@@ -92,6 +92,10 @@ const { tableConfig, tableEvent, tableRef, reload, query } = useVxeTable({
     AzureSettingMappingDialogRef.value.handleOpen(row)
   },
   permissionMethod: (args: PermissionMethodParams) => {
+    if (!args.row) {
+      return { visible: false, disabled: false }
+    }
+
     if (args.code === 'inactive') {
       return {
         visible: args.row.status === 'open',

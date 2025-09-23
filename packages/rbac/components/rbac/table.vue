@@ -6,6 +6,7 @@ import { useDebounceFn } from '@vueuse/core'
 import { ResponsiveFilter } from '#components'
 import { useI18n } from 'vue-i18n'
 import { ElMessageBox } from 'element-plus'
+
 const { t } = useI18n()
 
 interface Role {
@@ -38,6 +39,7 @@ function handleEdit(row: Role) {
     status: row.status
   })
 }
+
 // Define table actions
 const bodyActions: TableMenuActions[][] = [
   [
@@ -192,7 +194,12 @@ const { tableConfig, tableEvent, tableRef, reload, query } = useVxeTable({
   refresh: true,
   remoteSort: true,
   remoteFilter: true,
-  permissionMethod: ({ row, code }) => {
+  permissionMethod: (args: PermissionMethodParams) => {
+    const row = args.row
+    if (!row) {
+      return { visible: false, disabled: false }
+    }
+
     // Show edit action for all roles
     if (code === 'edit') {
       return {
@@ -230,6 +237,7 @@ const { tableConfig, tableEvent, tableRef, reload, query } = useVxeTable({
 })
 
 const { flatRole } = useRBAC()
+
 async function initFilter() {
   ResponsiveFilterRef.value.init([
     {
@@ -319,6 +327,7 @@ onMounted(async () => {
 // open create dialog
 const createDialogRef = ref()
 const editDialogRef = ref()
+
 function handleAddRole() {
   createDialogRef.value.open()
 }
@@ -356,6 +365,7 @@ function handleAddRole() {
 .search-input {
   width: 300px;
 }
+
 .tableActions {
   display: flex;
   gap: var(--app-space-s);
