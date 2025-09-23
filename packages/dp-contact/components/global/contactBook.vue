@@ -19,10 +19,32 @@
 import { ElMessageBox } from 'element-plus'
 import { globalApi } from 'api'
 import { routeContactList } from '~/utils/routerHelper'
-
+const { getPermission, isDelete, isManage } = useContactPermissionHelper()
+const platform = useAppPlatform()
+const userId = useUserId()
 const routerProvider = inject(MenuRouterKey)
 const { t } = useI18n()
 let extraParams: any = {}
+const bodyActions = {
+  edit: {
+    code: 'contactbook_edit',
+    name: t('common_edit'),
+    visible: true,
+    disabled: false,
+    action: ({ row }: any) => {
+      handleDblclick(row)
+    }
+  },
+  delete: {
+    code: 'contactbook_delete',
+    name: t('common_remove'),
+    visible: true,
+    disabled: false,
+    action: ({ row }: any) => {
+      deleteItem(row)
+    }
+  }
+}
 const { tableConfig, tableEvent, tableRef, query, reload, cleanSelectedRows } = useVxeTable({
   id: 'contactBook',
   api: (pageParams: any) => {
@@ -103,10 +125,35 @@ const { tableConfig, tableEvent, tableRef, query, reload, cleanSelectedRows } = 
       }
     ]
   ],
+  asyncPermission: async ({ options, row, code }: any) => {
+    if (platform.value === 'admin') {
+      return options
+    }
+    const isDelete = await getRowPermission(row)
+    options.forEach((list: any) => {
+      list.forEach((item: any) => {
+        if (item.code === 'contactbook_edit') {
+          item.visible = true
+          item.disabled = false
+        }
+        if (item.code === 'contactbook_delete') {
+          item.visible = isDelete
+          item.disabled = false
+        }
+      })
+    })
+    console.log('options', options, isDelete)
+    return options
+  },
   dblClickAction: ({ row, column, event }: any) => {
     handleDblclick(row)
   }
 })
+async function getRowPermission(row: any) {
+  const { data } = await globalApi.api.getContactgroupIdUserUseridPermission(row.id, userId.value)
+  getPermission(data)
+  return isDelete.value || isManage.value
+}
 function formatPermission(permissions: any, key: string = 'Read') {
   if (!permissions[key] || permissions[key].length === 0) return '-'
   return permissions[key].reduce((prev: any, item: any, index: number) => {
