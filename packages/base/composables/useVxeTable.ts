@@ -181,6 +181,13 @@ export const useVxeTable = (params: UseVxeTableParams) => {
         className: 'contextMenuContainer',
         visibleMethod: async ({ options, column, row, rowIndex }: TableMenuValidateMethodParams) => {
           let additionalData: any
+          if(params.asyncPermission) {
+            console.log('asyncPermission')
+            if(params.asyncPermission) {
+              return visibleMethodHelper()
+            }
+            return await params.asyncPermission({ options, column, row, rowIndex })
+          }
           if (params.additionalPermission) {
             additionalData = await params.additionalPermission({ column, row, rowIndex })
           }
@@ -207,6 +214,7 @@ export const useVxeTable = (params: UseVxeTableParams) => {
               }
             })
           })
+          console.log('options', options)
           return options
         }
       },
@@ -284,6 +292,10 @@ export const useVxeTable = (params: UseVxeTableParams) => {
         }
         const bus = useEventBus(EventType.TABLE_CONTEXT_MENU_OPEN)
         let additionalData: any
+        if(params.asyncPermission) {
+          console.log('asyncPermission')
+          return await params.asyncPermission({ actions, column, row, rowIndex })
+        }
         if (params.additionalPermission) {
           additionalData = await params.additionalPermission({ column, row, rowIndex })
         }
@@ -573,7 +585,10 @@ export const useVxeTable = (params: UseVxeTableParams) => {
     query
   }
 }
-
+function visibleMethodHelper(params: any) {
+  
+  return params.visible
+}
 function getPageSize(id: string) {
   try {
     return useUserPreference()?.value?.tableSettings[id]?.tablePageSize || 20

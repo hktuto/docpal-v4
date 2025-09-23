@@ -283,50 +283,12 @@ export interface UserDTO {
     groupDTOList?: GroupDTO[];
 }
 
-/** Updated import job information */
-export interface ExternalStorageImportJobDTO {
-    /** Unique identifier for the import job */
-    id?: string;
-    /**
-     * Type of the job
-     * @example "import_job"
-     */
-    type?: string;
-    /** Profile ID associated with the job */
-    profileId?: string;
-    /** Name of the file being imported */
-    fileName?: string;
-    /** Name of the profile */
-    profileName?: string;
-    /** Source of the import */
-    source?: string;
-    /** Batch ID for grouping related jobs */
-    batchId?: string;
-    /** Status of the import job */
-    status?: string;
-    /** @format int64 */
-    queue_order?: number;
-    /** Activity log in JSON format */
-    activityLog?: Record<string, object>[];
-    /**
-     * Creation timestamp
-     * @format date-time
-     */
-    createdDate?: string;
-    /**
-     * Last modification timestamp
-     * @format date-time
-     */
-    modifiedDate?: string;
-}
-
-export interface ResultExternalStorageImportJobDTO {
+export interface ResultListMapStringObject {
     result?: boolean;
     /** @format int32 */
     code?: number;
     message?: string;
-    /** Updated import job information */
-    data?: ExternalStorageImportJobDTO;
+    data?: Record<string, object>[];
     messageKey?: string;
     locale?: string;
 }
@@ -402,6 +364,65 @@ export interface ContactGroupResponseDTO {
     modifiedDate?: string;
     permissions?: Record<string, BasicField[]>;
     attributes?: ContactAttribute[];
+    hasPermissions?: string[];
+}
+
+export interface ResultListContactGroupResponseDTO {
+    result?: boolean;
+    /** @format int32 */
+    code?: number;
+    message?: string;
+    data?: ContactGroupResponseDTO[];
+    messageKey?: string;
+    locale?: string;
+}
+
+/** Updated import job information */
+export interface ExternalStorageImportJobDTO {
+    /** Unique identifier for the import job */
+    id?: string;
+    /**
+     * Type of the job
+     * @example "import_job"
+     */
+    type?: string;
+    /** Profile ID associated with the job */
+    profileId?: string;
+    /** Name of the file being imported */
+    fileName?: string;
+    /** Name of the profile */
+    profileName?: string;
+    /** Source of the import */
+    source?: string;
+    /** Batch ID for grouping related jobs */
+    batchId?: string;
+    /** Status of the import job */
+    status?: string;
+    /** @format int64 */
+    queue_order?: number;
+    /** Activity log in JSON format */
+    activityLog?: Record<string, object>[];
+    /**
+     * Creation timestamp
+     * @format date-time
+     */
+    createdDate?: string;
+    /**
+     * Last modification timestamp
+     * @format date-time
+     */
+    modifiedDate?: string;
+}
+
+export interface ResultExternalStorageImportJobDTO {
+    result?: boolean;
+    /** @format int32 */
+    code?: number;
+    message?: string;
+    /** Updated import job information */
+    data?: ExternalStorageImportJobDTO;
+    messageKey?: string;
+    locale?: string;
 }
 
 export interface ResultContactGroupResponseDTO {
@@ -1467,33 +1488,6 @@ export interface ResultCaseType {
     locale?: string;
 }
 
-export interface CmmnDashboard {
-    id?: string;
-    caseTypeId?: string;
-    deploymentId?: string;
-    cmmnVersionId?: string;
-    label?: string;
-    userGroup?: string;
-    status?: string;
-    styleJson?: string;
-    createdBy?: string;
-    modifiedBy?: string;
-    /** @format date-time */
-    createdDate?: string;
-    /** @format date-time */
-    modifiedDate?: string;
-}
-
-export interface ResultCmmnDashboard {
-    result?: boolean;
-    /** @format int32 */
-    code?: number;
-    message?: string;
-    data?: CmmnDashboard;
-    messageKey?: string;
-    locale?: string;
-}
-
 /** Case model dashboard (RequestDTO) */
 export interface CmmnDashboardRequestDTO {
     q?: string;
@@ -1514,7 +1508,9 @@ export interface CmmnDashboardRequestDTO {
     id?: string;
     caseTypeId?: string;
     label?: string;
+    /** @deprecated */
     userGroup?: string;
+    permissions?: Record<string, string[]>;
     versionNumber?: string;
     styleJson?: string;
     cmmnVersionId?: string;
@@ -1524,6 +1520,39 @@ export interface CmmnDashboardRequestDTO {
     descSort?: SortObject;
     desc?: boolean;
     orderByValue?: string;
+}
+
+/** Case model dashboard (RequestDTO) */
+export interface CmmnDashboardResponseDTO {
+    id?: string;
+    caseTypeId?: string;
+    deploymentId?: string;
+    cmmnVersionId?: string;
+    label?: string;
+    /** @deprecated */
+    userGroup?: string;
+    status?: string;
+    styleJson?: string;
+    createdBy?: string;
+    modifiedBy?: string;
+    /** @format date-time */
+    createdDate?: string;
+    /** @format date-time */
+    modifiedDate?: string;
+    createdByName?: string;
+    modifiedByName?: string;
+    permissions?: BasicField[];
+}
+
+export interface ResultCmmnDashboardResponseDTO {
+    result?: boolean;
+    /** @format int32 */
+    code?: number;
+    message?: string;
+    /** Case model dashboard (RequestDTO) */
+    data?: CmmnDashboardResponseDTO;
+    messageKey?: string;
+    locale?: string;
 }
 
 /** Calendar (Request) */
@@ -3805,6 +3834,7 @@ export interface DocpalTypeDetailResponseVO {
     category?: string;
     isFolder?: string;
     langs?: Record<string, object>;
+    acls?: string[];
     metadataList?: DocpalTypeMetadataResponseVO[];
 }
 
@@ -5468,16 +5498,6 @@ export interface ResultMasterTableResponseDTO {
     locale?: string;
 }
 
-export interface ResultListMapStringObject {
-    result?: boolean;
-    /** @format int32 */
-    code?: number;
-    message?: string;
-    data?: Record<string, object>[];
-    messageKey?: string;
-    locale?: string;
-}
-
 export interface PaginationDTOMasterTableResponseDTO {
     entryList?: MasterTableResponseDTO[];
     /** @format int32 */
@@ -6821,8 +6841,37 @@ export interface ResultListPlanItemInstanceDTO {
     locale?: string;
 }
 
-export interface PaginationDTOCmmnDashboard {
-    entryList?: CmmnDashboard[];
+export interface CmmnDashboard {
+    id?: string;
+    caseTypeId?: string;
+    deploymentId?: string;
+    cmmnVersionId?: string;
+    label?: string;
+    /** @deprecated */
+    userGroup?: string;
+    permissions?: string[];
+    status?: string;
+    styleJson?: string;
+    createdBy?: string;
+    modifiedBy?: string;
+    /** @format date-time */
+    createdDate?: string;
+    /** @format date-time */
+    modifiedDate?: string;
+}
+
+export interface ResultCmmnDashboard {
+    result?: boolean;
+    /** @format int32 */
+    code?: number;
+    message?: string;
+    data?: CmmnDashboard;
+    messageKey?: string;
+    locale?: string;
+}
+
+export interface PaginationDTOCmmnDashboardResponseDTO {
+    entryList?: CmmnDashboardResponseDTO[];
     /** @format int32 */
     totalSize?: number;
     /** @format int32 */
@@ -6834,12 +6883,12 @@ export interface PaginationDTOCmmnDashboard {
     isNextPageAvailable?: boolean;
 }
 
-export interface ResultPaginationDTOCmmnDashboard {
+export interface ResultPaginationDTOCmmnDashboardResponseDTO {
     result?: boolean;
     /** @format int32 */
     code?: number;
     message?: string;
-    data?: PaginationDTOCmmnDashboard;
+    data?: PaginationDTOCmmnDashboardResponseDTO;
     messageKey?: string;
     locale?: string;
 }
@@ -7700,16 +7749,6 @@ export interface ResultListAclPermissionDTO {
     code?: number;
     message?: string;
     data?: AclPermissionDTO[];
-}
-
-export interface ResultListContactGroupResponseDTO {
-    result?: boolean;
-    /** @format int32 */
-    code?: number;
-    message?: string;
-    data?: ContactGroupResponseDTO[];
-    messageKey?: string;
-    locale?: string;
 }
 
 export interface ResultListAclUserRelationshipWithUserGroup {
@@ -9645,6 +9684,82 @@ export class Admin<SecurityDataType extends unknown> extends HttpClient<Security
             }),
 
         /**
+         * No description
+         *
+         * @tags ContactController
+         * @name GetContactgroupIdContactdetaillist
+         * @summary Get contact detail list include filter and sort by
+         * @request GET:/api/docpal/contactGroup/{id}/contactDetailList
+         */
+        getContactgroupIdContactdetaillist: (id: string, data: any, params: RequestParams = {}) =>
+            this.request<ResultListMapStringObject, Result | (ResultObject | Result | ResultString)>({
+                path: `/docpal/contactGroup/${id}/contactDetailList`,
+                method: "GET",
+                body: data,
+                type: ContentType.Json,
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags ContactController
+         * @name PostContactgroupIdContactdetaillist
+         * @summary Get contact detail list include filter and sort by
+         * @request POST:/api/docpal/contactGroup/{id}/contactDetailList
+         */
+        postContactgroupIdContactdetaillist: (id: string, data: any, params: RequestParams = {}) =>
+            this.request<ResultListMapStringObject, Result | (ResultObject | Result | ResultString)>({
+                path: `/docpal/contactGroup/${id}/contactDetailList`,
+                method: "POST",
+                body: data,
+                type: ContentType.Json,
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags ContactController
+         * @name GetContactgroupList
+         * @summary Query all contact group without filter condition
+         * @request GET:/api/docpal/contactGroup/list
+         */
+        getContactgroupList: (
+            query: {
+                requestDTO: ContactGroupRequestDTO;
+            },
+            params: RequestParams = {},
+        ) =>
+            this.request<ResultListContactGroupResponseDTO, Result | (ResultObject | Result | ResultString)>({
+                path: `/docpal/contactGroup/list`,
+                method: "GET",
+                query: query,
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags ContactController
+         * @name PostContactgroupList
+         * @summary Query all contact group without filter condition
+         * @request POST:/api/docpal/contactGroup/list
+         */
+        postContactgroupList: (
+            query: {
+                requestDTO: ContactGroupRequestDTO;
+            },
+            params: RequestParams = {},
+        ) =>
+            this.request<ResultListContactGroupResponseDTO, Result | (ResultObject | Result | ResultString)>({
+                path: `/docpal/contactGroup/list`,
+                method: "POST",
+                query: query,
+                ...params,
+            }),
+
+        /**
          * @description Get detailed information of an import job by ID
          *
          * @tags Document
@@ -9733,6 +9848,22 @@ export class Admin<SecurityDataType extends unknown> extends HttpClient<Security
                 path: `/registered-server/contactGroup/${id}`,
                 method: "DELETE",
                 query: query,
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags Document
+         * @name PatchRegisteredServerContactgroupId
+         * @request PATCH:/api/registered-server/contactGroup/{id}
+         */
+        patchRegisteredServerContactgroupId: (id: string, data: ContactGroupRequestDTO, params: RequestParams = {}) =>
+            this.request<ResultContactGroupResponseDTO, Result | (ResultObject | Result | ResultString)>({
+                path: `/registered-server/contactGroup/${id}`,
+                method: "PATCH",
+                body: data,
+                type: ContentType.Json,
                 ...params,
             }),
 
@@ -10947,6 +11078,23 @@ export class Admin<SecurityDataType extends unknown> extends HttpClient<Security
             }),
 
         /**
+         * @description Update contact group with the specified information
+         *
+         * @tags ContactController
+         * @name PatchContactgroupId
+         * @summary Reference to update contact group
+         * @request PATCH:/api/docpal/contactGroup/{id}
+         */
+        patchContactgroupId: (id: string, data: ContactGroupRequestDTO, params: RequestParams = {}) =>
+            this.request<ResultContactGroupResponseDTO, Result | (ResultObject | Result | ResultString)>({
+                path: `/docpal/contactGroup/${id}`,
+                method: "PATCH",
+                body: data,
+                type: ContentType.Json,
+                ...params,
+            }),
+
+        /**
          * No description
          *
          * @tags ContactController
@@ -10970,7 +11118,6 @@ export class Admin<SecurityDataType extends unknown> extends HttpClient<Security
          *
          * @tags ContactController
          * @name PutContactgroupIdContactdetailContactdetailid
-         * @summary Edit contact record with the specified information
          * @request PUT:/api/docpal/contactGroup/{id}/contactDetail/{contactDetailId}
          */
         putContactgroupIdContactdetailContactdetailid: (
@@ -11004,6 +11151,28 @@ export class Admin<SecurityDataType extends unknown> extends HttpClient<Security
             this.request<ResultBoolean, Result | (ResultObject | Result | ResultString)>({
                 path: `/docpal/contactGroup/${id}/contactDetail/${contactDetailId}`,
                 method: "DELETE",
+                body: data,
+                type: ContentType.Json,
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags ContactController
+         * @name PatchContactgroupIdContactdetailContactdetailid
+         * @summary Edit contact record with the specified information
+         * @request PATCH:/api/docpal/contactGroup/{id}/contactDetail/{contactDetailId}
+         */
+        patchContactgroupIdContactdetailContactdetailid: (
+            id: string,
+            contactDetailId: string,
+            data: Record<string, object>,
+            params: RequestParams = {},
+        ) =>
+            this.request<ResultMapStringObject, Result | (ResultObject | Result | ResultString)>({
+                path: `/docpal/contactGroup/${id}/contactDetail/${contactDetailId}`,
+                method: "PATCH",
                 body: data,
                 type: ContentType.Json,
                 ...params,
@@ -11243,8 +11412,8 @@ export class Admin<SecurityDataType extends unknown> extends HttpClient<Security
          * @summary Update case dashboard
          * @request PUT:/api/docpal/case/dashboard
          */
-        putCaseDashboard: (data: CmmnDashboard, params: RequestParams = {}) =>
-            this.request<ResultCmmnDashboard, Result | (ResultObject | Result | ResultString)>({
+        putCaseDashboard: (data: CmmnDashboardRequestDTO, params: RequestParams = {}) =>
+            this.request<ResultCmmnDashboardResponseDTO, Result | (ResultObject | Result | ResultString)>({
                 path: `/docpal/case/dashboard`,
                 method: "PUT",
                 body: data,
@@ -11261,7 +11430,7 @@ export class Admin<SecurityDataType extends unknown> extends HttpClient<Security
          * @request POST:/api/docpal/case/dashboard
          */
         postCaseDashboard: (data: CmmnDashboardRequestDTO, params: RequestParams = {}) =>
-            this.request<ResultCmmnDashboard, Result | (ResultObject | Result | ResultString)>({
+            this.request<ResultCmmnDashboardResponseDTO, Result | (ResultObject | Result | ResultString)>({
                 path: `/docpal/case/dashboard`,
                 method: "POST",
                 body: data,
@@ -12672,6 +12841,20 @@ export class Admin<SecurityDataType extends unknown> extends HttpClient<Security
          * No description
          *
          * @tags Identity
+         * @name PostNuxeoIdentityGroupsActive
+         * @request POST:/api/nuxeo/identity/groups/active
+         */
+        postNuxeoIdentityGroupsActive: (params: RequestParams = {}) =>
+            this.request<ResultListGroupDTO, Result | (ResultObject | Result | ResultString)>({
+                path: `/nuxeo/identity/groups/active`,
+                method: "POST",
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags Identity
          * @name PostNuxeoIdentityGroup
          * @request POST:/api/nuxeo/identity/group
          */
@@ -13527,6 +13710,23 @@ export class Admin<SecurityDataType extends unknown> extends HttpClient<Security
         postExternalstorageIdProfilesPage: (id: string, data: ExternalProfileRequestDTO, params: RequestParams = {}) =>
             this.request<ResultPaginationDTOExternalProfileDTO, Result | (ResultObject | Result | ResultString)>({
                 path: `/externalStorage/${id}/profiles/page`,
+                method: "POST",
+                body: data,
+                type: ContentType.Json,
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags ExternalStorageController
+         * @name PostExternalstorageIdConnectionTest
+         * @summary Testing SMB connection is correct
+         * @request POST:/api/externalStorage/{id}/connection/test
+         */
+        postExternalstorageIdConnectionTest: (id: string, data: Record<string, string>, params: RequestParams = {}) =>
+            this.request<ResultBoolean, Result | (ResultObject | Result | ResultString)>({
+                path: `/externalStorage/${id}/connection/test`,
                 method: "POST",
                 body: data,
                 type: ContentType.Json,
@@ -17603,7 +17803,7 @@ export class Admin<SecurityDataType extends unknown> extends HttpClient<Security
          * @request POST:/api/docpal/case/dashboard/page
          */
         postCaseDashboardPage: (data: CmmnDashboardRequestDTO, params: RequestParams = {}) =>
-            this.request<ResultPaginationDTOCmmnDashboard, Result | (ResultObject | Result | ResultString)>({
+            this.request<ResultPaginationDTOCmmnDashboardResponseDTO, Result | (ResultObject | Result | ResultString)>({
                 path: `/docpal/case/dashboard/page`,
                 method: "POST",
                 body: data,
@@ -17650,6 +17850,20 @@ export class Admin<SecurityDataType extends unknown> extends HttpClient<Security
                 method: "POST",
                 body: data,
                 type: ContentType.Json,
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags CmmnDashboardController
+         * @name PostCaseDashboardDatapatchRolepermission
+         * @request POST:/api/docpal/case/dashboard/dataPatch/rolePermission
+         */
+        postCaseDashboardDatapatchRolepermission: (params: RequestParams = {}) =>
+            this.request<void, Result | (ResultObject | Result | ResultString)>({
+                path: `/docpal/case/dashboard/dataPatch/rolePermission`,
+                method: "POST",
                 ...params,
             }),
 
@@ -19039,6 +19253,25 @@ export class Admin<SecurityDataType extends unknown> extends HttpClient<Security
         getSystemAdminSetupFileModifiedDate: (params: RequestParams = {}) =>
             this.request<ResultVoid, Result | (ResultObject | Result | ResultString)>({
                 path: `/system_admin/setup_file_modified_date`,
+                method: "GET",
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags Document
+         * @name GetRegisteredServerContactgroupIdUserUseridPermission
+         * @summary Get permission of contact group
+         * @request GET:/api/registered-server/contactGroup/{id}/user/{userId}/permission
+         */
+        getRegisteredServerContactgroupIdUserUseridPermission: (
+            id: string,
+            userId: string,
+            params: RequestParams = {},
+        ) =>
+            this.request<ResultListString, Result | (ResultObject | Result | ResultString)>({
+                path: `/registered-server/contactGroup/${id}/user/${userId}/permission`,
                 method: "GET",
                 ...params,
             }),
@@ -22238,37 +22471,14 @@ export class Admin<SecurityDataType extends unknown> extends HttpClient<Security
          * No description
          *
          * @tags ContactController
-         * @name GetContactgroupIdContactdetaillist
-         * @summary Get contact detail list include filter and sort by
-         * @request GET:/api/docpal/contactGroup/{id}/contactDetailList
+         * @name GetContactgroupIdUserUseridPermission
+         * @summary Get permission of contact group
+         * @request GET:/api/docpal/contactGroup/{id}/user/{userId}/permission
          */
-        getContactgroupIdContactdetaillist: (id: string, data: any, params: RequestParams = {}) =>
-            this.request<ResultListMapStringObject, Result | (ResultObject | Result | ResultString)>({
-                path: `/docpal/contactGroup/${id}/contactDetailList`,
+        getContactgroupIdUserUseridPermission: (id: string, userId: string, params: RequestParams = {}) =>
+            this.request<ResultListString, Result | (ResultObject | Result | ResultString)>({
+                path: `/docpal/contactGroup/${id}/user/${userId}/permission`,
                 method: "GET",
-                body: data,
-                type: ContentType.Json,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags ContactController
-         * @name GetContactgroupList
-         * @summary Query all contact group without filter condition
-         * @request GET:/api/docpal/contactGroup/list
-         */
-        getContactgroupList: (
-            query: {
-                requestDTO: ContactGroupRequestDTO;
-            },
-            params: RequestParams = {},
-        ) =>
-            this.request<ResultListContactGroupResponseDTO, Result | (ResultObject | Result | ResultString)>({
-                path: `/docpal/contactGroup/list`,
-                method: "GET",
-                query: query,
                 ...params,
             }),
 
@@ -22781,7 +22991,7 @@ export class Admin<SecurityDataType extends unknown> extends HttpClient<Security
          * @request GET:/api/docpal/case/dashboard/{id}
          */
         getCaseDashboardId: (id: string, params: RequestParams = {}) =>
-            this.request<ResultCmmnDashboard, Result | (ResultObject | Result | ResultString)>({
+            this.request<ResultCmmnDashboardResponseDTO, Result | (ResultObject | Result | ResultString)>({
                 path: `/docpal/case/dashboard/${id}`,
                 method: "GET",
                 ...params,
@@ -22828,6 +23038,21 @@ export class Admin<SecurityDataType extends unknown> extends HttpClient<Security
         getCaseDashboardVersionVersionidPrimaryform: (versionId: string, params: RequestParams = {}) =>
             this.request<ResultCmmnPlanFormDTO, Result | (ResultObject | Result | ResultString)>({
                 path: `/docpal/case/dashboard/version/${versionId}/primaryForm`,
+                method: "GET",
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags CmmnDashboardController
+         * @name GetCaseDashboardVersionVersionidPrimaryformData
+         * @summary Retrieve information and information data of this case version
+         * @request GET:/api/docpal/case/dashboard/version/{versionId}/primaryForm/data
+         */
+        getCaseDashboardVersionVersionidPrimaryformData: (versionId: string, params: RequestParams = {}) =>
+            this.request<ResultCaseInstanceFormDataDTO, Result | (ResultObject | Result | ResultString)>({
+                path: `/docpal/case/dashboard/version/${versionId}/primaryForm/data`,
                 method: "GET",
                 ...params,
             }),
