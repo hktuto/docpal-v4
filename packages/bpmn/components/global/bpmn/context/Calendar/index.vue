@@ -29,7 +29,6 @@ function refreshData() {
     console.log('form', form.value)
   } else {
     // data error reset data
-
   }
 }
 
@@ -68,7 +67,16 @@ const booleanFields = computed(() => {
   const allField = Object.fromEntries(
     Object.entries(graphProvider.allFormField.value).filter(([key, value]) => value.attr_type === 'boolean')
   )
+  return Object.keys(allField).map((key: string) => {
+    return graphProvider.allFormField.value[key]
+  })
+})
 
+const dateTimeFields = computed(() => {
+  if (!graphProvider?.allFormField.value) return []
+  const allField = Object.fromEntries(
+    Object.entries(graphProvider.allFormField.value).filter(([key, value]) => value.attr_type === 'date')
+  )
   return Object.keys(allField).map((key: string) => {
     return graphProvider.allFormField.value[key]
   })
@@ -95,14 +103,19 @@ function setUpListener() {
   })
 }
 
+function updataDescription() {
+  form.value.attr_description = node.data.name
+  updateData()
+}
+
 watch(form, () => {
   if (form.value) {
     updateData()
   }
 }, {
+  immediate: true,
   deep: true
 })
-
 
 onMounted(async () => {
   setUpListener()
@@ -113,60 +126,64 @@ onMounted(async () => {
 
 <template>
   <div class="formContainer">
-    <BpmnSidebarEditLabel :node="node" />
+    <BpmnSidebarEditLabel :node="node" @updateNode="updataDescription" />
     <div class="eventForm">
       <h4>Event</h4>
-      <ElForm label-position="top" :disabled="editorProvider.readonly.value">
-        <ElFormItem label="Action">
-          <ElSelect v-model="form.attr_actionType">
-            <ElOption v-for="item in actionTypeOptions" :key="item" :label="item" :value="item" />
-          </ElSelect>
-        </ElFormItem>
-        <ElFormItem v-if="'Create' !==form.attr_actionType" label="Event Id">
-          <ElSelect v-model="form.attr_eventId">
-            <ElOption v-for="item in allFields" :key="item.attr_id" :label="item.attr_name" :value="item.attr_id" />
-          </ElSelect>
-        </ElFormItem>
-        <ElFormItem label="Event Name">
-          <ElSelect v-model="form.attr_eventName">
-            <ElOption v-for="item in allFields" :key="item.attr_id" :label="item.attr_name" :value="item.attr_id" />
-          </ElSelect>
-        </ElFormItem>
-        <ElFormItem label="Event Description">
-          <ElSelect v-model="form.attr_description">
-            <ElOption v-for="item in allFields" :key="item.attr_id" :label="item.attr_name" :value="item.attr_id" />
-          </ElSelect>
-        </ElFormItem>
-        <ElFormItem label="Event Category">
-          <ElSelect v-model="form.attr_category">
-            <ElOption v-for="item in allFields" :key="item.attr_id" :label="item.attr_name" :value="item.attr_id" />
-          </ElSelect>
-        </ElFormItem>
-        <ElFormItem label="Event Location">
-          <ElSelect v-model="form.attr_location">
-            <ElOption v-for="item in allFields" :key="item.attr_id" :label="item.attr_name" :value="item.attr_id" />
-          </ElSelect>
-        </ElFormItem>
-        <ElFormItem label="Start Time">
-          <ElSelect v-model="form.attr_startTime">
-            <ElOption v-for="item in allFields" :key="item.attr_id" :label="item.attr_name" :value="item.attr_id" />
-          </ElSelect>
-        </ElFormItem>
-        <ElFormItem label="End Time">
-          <ElSelect v-model="form.attr_endTime">
-            <ElOption v-for="item in allFields" :key="item.attr_id" :label="item.attr_name" :value="item.attr_id" />
-          </ElSelect>
-        </ElFormItem>
-        <ElFormItem label="is All Day">
-          <ElSelect v-model="form.attr_isAllDay">
-            <ElOption v-for="item in booleanFields" :key="item.attr_id" :label="item.attr_name" :value="item.attr_id" />
-          </ElSelect>
-        </ElFormItem>
-        <ElFormItem v-if="form.related" label="User">
-          <ElSelect v-model="form.related.attr_user">
-            <ElOption v-for="item in allFields" :key="item.attr_id" :label="item.attr_name" :value="item.attr_id" />
-          </ElSelect>
-        </ElFormItem>
+      <el-form label-position="top" :disabled="editorProvider.readonly.value">
+        <el-input v-show="false" disabled v-model="form.attr_description" />
+        <el-form-item label="Action">
+          <el-select v-model="form.attr_actionType">
+            <el-option v-for="item in actionTypeOptions" :key="item" :label="item" :value="item" />
+          </el-select>
+        </el-form-item>
+        <el-form-item v-if="'Create' !==form.attr_actionType" label="Event Id">
+          <el-select v-model="form.attr_eventId" clearable>
+            <el-option v-for="item in allFields" :key="item.attr_id" :label="item.attr_name" :value="item.attr_id" />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="Event Name">
+          <el-select v-model="form.attr_eventName" clearable>
+            <el-option v-for="item in allFields" :key="item.attr_id" :label="item.attr_name" :value="item.attr_id" />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="Event Description">
+          <el-select v-model="form.attr_eventDescription" clearable>
+            <el-option v-for="item in allFields" :key="item.attr_id" :label="item.attr_name" :value="item.attr_id" />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="Event Category">
+          <el-select v-model="form.attr_category" clearable>
+            <el-option v-for="item in allFields" :key="item.attr_id" :label="item.attr_name" :value="item.attr_id" />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="Event Location">
+          <el-select v-model="form.attr_location" clearable>
+            <el-option v-for="item in allFields" :key="item.attr_id" :label="item.attr_name" :value="item.attr_id" />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="Start Time">
+          <el-select v-model="form.attr_startTime" clearable>
+            <el-option v-for="item in dateTimeFields" :key="item.attr_id" :label="item.attr_name"
+                       :value="item.attr_id" />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="End Time">
+          <el-select v-model="form.attr_endTime" clearable>
+            <el-option v-for="item in dateTimeFields" :key="item.attr_id" :label="item.attr_name"
+                       :value="item.attr_id" />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="is All Day">
+          <el-select v-model="form.attr_isAllDay" clearable>
+            <el-option v-for="item in booleanFields" :key="item.attr_id" :label="item.attr_name"
+                       :value="item.attr_id" />
+          </el-select>
+        </el-form-item>
+        <el-form-item v-if="form.related" label="User">
+          <el-select v-model="form.related.attr_user" clearable>
+            <el-option v-for="item in allFields" :key="item.attr_id" :label="item.attr_name" :value="item.attr_id" />
+          </el-select>
+        </el-form-item>
         <div class="reminderListContainer">
           <bpmnContextCalendarReminder
             v-for="(reminder,index) in form.reminder"
@@ -179,9 +196,8 @@ onMounted(async () => {
             <ElButton text @click="addNewReminder">Add</ElButton>
           </div>
         </div>
-      </ElForm>
+      </el-form>
     </div>
-
   </div>
 </template>
 
