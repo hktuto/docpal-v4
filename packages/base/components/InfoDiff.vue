@@ -10,6 +10,7 @@
 </template>
 
 <script lang="ts" setup>
+import {CodeDiff} from 'v-code-diff'
 const props = defineProps<{
     newVersion: Object,
     oldVersion: Object
