@@ -17,7 +17,7 @@
   "dependencies": {
     "@sqlite.org/sqlite-wasm": "3.41.2",
     "fabric": "^6.7.1",
-    "nuxt": "3.17.7",
+    "nuxt": "3.19.2",
     "sql.js": "^1.13.0",
     "tippy.js": "^6.3.7",
     "v-form": "file:..\\..\\packages\\dp-form\\dist\\v-form-designer-3.3.13.tar.gz",
@@ -25,7 +25,12 @@
     "vue-router": "latest",
     "ws": "^8.18.2",
     "y-prosemirror": "^1.3.5",
-    "yjs": "^13.6.27"
+    "yjs": "^13.6.27",
+    "eventbus": "workspace:*",
+    "api": "workspace:*",
+    "deployment": "workspace:*",
+    "docpal-document-editor": "workspace:*",
+    "tiptap-extension-pagination": "workspace:*"
   },
   "devDependencies": {
     "@antv/layout": "0.3.25",
@@ -66,10 +71,8 @@
     "@schedule-x/resize": "^2.19.0",
     "@schedule-x/theme-default": "^2.19.0",
     "@schedule-x/vue": "^2.17.0",
-    "@tiptap/extension-collaboration": "^2.12.0",
-    "@tiptap/extension-collaboration-caret": "3.0.0-next.7",
-    "@tiptap/extension-collaboration-cursor": "^2.12.0",
-    "@tiptap/vue-3": "^2.12.0",
+    "@tiptap/vue-3": "^3.1.0",
+    "@tiptap/core": "^3.1.0",
     "@vue-office/excel": "^1.7.14",
     "@vue/test-utils": "^2.4.6",
     "@vueuse/components": "^12.8.2",
@@ -80,10 +83,7 @@
     "@ysx-libs/vue-virtual-tree": "^0.0.13",
     "ace-builds": "^1.43.2",
     "animejs": "^3.2.2",
-    "eventbus": "workspace:*",
-    "api": "workspace:*",
-    "deployment": "workspace:*",
-    "docpal-document-editor": "workspace:*",
+    
     "bmp-js": "^0.1.0",
     "codemirror": "^6.0.2",
     "dayjs": "^1.11.13",
@@ -108,7 +108,7 @@
     "pptxjs": "^0.0.0",
     "sass": "^1.85.0",
     "splitpanes": "^3.2.0",
-    "tiptap-extension-pagination": "workspace:*",
+    
     "typescript": "^5.7.3",
     "v-code-diff": "^1.13.1",
     "v-viewer": "^3.0.21",
