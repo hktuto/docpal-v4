@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { DocTemplateProveKey } from '~/utils/docTemplateHelper'
-import { defaultAvailableFonts } from 'docpal-document-editor/src/utils/fontHelper'
+import { defaultAvailableFonts } from 'docpal-document-editor/src/utils'
 import { useI18n } from 'vue-i18n'
 import { inject, reactive, ref } from 'vue'
 

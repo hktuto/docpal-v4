@@ -8,7 +8,20 @@
   "i18n-ally.keystyle": "nested",
   "i18n-ally.sortKeys": true,
   "i18n-ally.enabledParsers": ["json"],
-  "cSpell.words": ["Dagre", "docpal", "hitbox", "iconify", "Keycloak", "lucide", "nuxi", "predev", "splitpanes", "typecheck", "vueuse"],
+  "cSpell.words": [
+    "Dagre",
+    "docpal",
+    "hitbox",
+    "iconify",
+    "Keycloak",
+    "lucide",
+    "nuxi",
+    "predev",
+    "splitpanes",
+    "typecheck",
+    "vuedraggable",
+    "vueuse"
+  ],
   // format
   "editor.formatOnSave": false, // 保存文件自动format
   "javascript.format.semicolons": "ignore", // js文件，强制必须有分号，设置`remove`则禁止分号
