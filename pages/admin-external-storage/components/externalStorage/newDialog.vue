@@ -7,7 +7,7 @@
     :close-on-click-modal="false"
     destroy-on-close
   >
-    <FormRenderer ref="FormRendererRef" :form-json="formJson"> </FormRenderer>
+    <FormRenderer ref="FormRendererRef" :form-json="formJson" />
     <template #footer>
       <div class="footer-grid">
         <el-button id="submit" type="primary" :loading="state.loading" @click="handleSubmit">
@@ -21,6 +21,7 @@
 import formJson from './newDialog.vform.json'
 import { adminApi } from 'api'
 import { ElMessage } from 'element-plus'
+
 const { t } = useI18n()
 const emits = defineEmits(['refresh'])
 const state = reactive<any>({
@@ -48,7 +49,7 @@ async function handleSubmit() {
         password: data.password,
         secret: data.secret,
         username: data.username,
-        host: data.host,
+        host: data.host
       }
     }
     if (state.isEdit) {
@@ -77,6 +78,7 @@ function handleOpen() {
     state.loading = false
   })
 }
+
 function handleEdit(data: any) {
   state.visible = true
   state.isEdit = true
@@ -85,8 +87,9 @@ function handleEdit(data: any) {
     name: data.name,
     connection_type: data.connection_type,
     path: data.path,
-    status: data.status === 'A' ? true : false,
+    status: data.status === 'A',
     work_group: data.work_group,
+    host: data.credentials?.host,
     password: data.credentials?.password,
     secret: data.credentials?.secret,
     username: data.credentials?.username,
@@ -99,6 +102,7 @@ function handleEdit(data: any) {
     state.loading = false
   })
 }
+
 defineExpose({ handleOpen, handleEdit })
 </script>
 <style lang="scss" scoped></style>

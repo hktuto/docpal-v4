@@ -3,7 +3,7 @@ import { DocumentTemplateProviderKey } from '#imports';
 
 const listProvider = inject(DocumentTemplateProviderKey)
 if(!listProvider) {
-    throw createError('DocumentTemplateProviderKey is not define') 
+    throw createError('DocumentTemplateProviderKey is not define')
 }
 
 const {pageNum, pageSize, orderBy, isDesc, filters}= defineProps<{
@@ -19,7 +19,7 @@ const { tableRef, tableConfig, tableEvent, reload } = useVxeTable({
     api: listProvider?.getListApi,
     columns: [
         {
-            title: '', 
+            title: '',
             fixed: 'left',
             width: 44,
             slots:{
@@ -81,6 +81,9 @@ const { tableRef, tableConfig, tableEvent, reload } = useVxeTable({
         ]
     ],
     permissionMethod: (args:PermissionMethodParams) => {
+        if (!args.row) {
+          return { visible: false, disabled: false }
+        }
         return listProvider.actionPermission(args)
     },
     dblClickAction: ({ row, column, event }:any) => {

@@ -36,6 +36,9 @@ const { tableRef, tableConfig, tableEvent, reload } = useVxeTable({
     ]
   ],
   permissionMethod: ({ row, rowIndex, code }: any) => {
+    if (!row) {
+      return { visible: false, disabled: false }
+    }
     return {
       visible: true,
       disabled: false

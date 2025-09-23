@@ -3,6 +3,7 @@ import { getDisplayProperties } from '@/components/meta/metadata'
 import { useEventListener } from '@vueuse/core'
 import { clientApi } from 'api'
 import { emitBus, EventType } from 'eventbus'
+
 const props = defineProps<{
   doc: any
 }>()
@@ -24,18 +25,21 @@ async function iconClickHandler(doc: any) {
   dialogOpened.value = true
   state.docPath = doc.path
   state.loading = true
-  const { data: docData } = await clientApi.api.postNuxeoDocument({ idOrPath: doc.id })
-  state.doc = docData
-  // await clientApi.api.getTypesActive()
-  state.dispalyMeta = getDisplayProperties(state.doc.properties)
-  if (!state.doc.properties) state.doc.properties = {}
-  if (!state.doc.properties.maskList) state.doc.properties.maskList = []
-  if (!state.doc.properties.readonlyList) state.doc.properties.readonlyList = []
-  await MetaFormRef.value.init(state.doc.type, {
-    isFolder: state.doc.isFolder,
-    hiddenFields: state.doc.properties.maskList,
-    readonlyFields: state.doc.properties.readonlyList
-  })
+
+  try {
+    state.doc = await clientApi.api.postNuxeoDocument({ idOrPath: doc.id }).then(r => r.data)
+    state.dispalyMeta = getDisplayProperties(state.doc.properties)
+    if (!state.doc.properties) state.doc.properties = {}
+    if (!state.doc.properties.maskList) state.doc.properties.maskList = []
+    if (!state.doc.properties.readonlyList) state.doc.properties.readonlyList = []
+    await MetaFormRef.value.init(state.doc.type, {
+      isFolder: state.doc.isFolder,
+      hiddenFields: state.doc.properties.maskList,
+      readonlyFields: state.doc.properties.readonlyList
+    })
+  } catch (e) {
+    console.log(e)
+  }
   setTimeout(() => {
     if (!state.doc.properties) state.doc.properties = {}
     MetaFormRef.value?.setData({
@@ -45,9 +49,6 @@ async function iconClickHandler(doc: any) {
   }, 100)
   // MetaFormRef.value.setData({ ...state.doc.properties, documentType: doc.type || doc.documentType || doc.docpalType })
   // open upload dialog
-  setTimeout(() => {
-    handleReset()
-  })
   state.loading = false
 }
 
@@ -99,8 +100,6 @@ function getMetaValue(row: any) {
   return row.label || row || '-'
 }
 
-function handleReset() {}
-
 onMounted(async () => {
   useEventListener(document, 'docActionChangeDocType', (event: any) => iconClickHandler(event.detail))
 })
@@ -129,8 +128,9 @@ defineExpose({ iconClickHandler })
         <BrowseActionsChangeDocTypeCopyItem :label="$t('info_created')" :value="formatDate(state.doc.createdDate)" />
         <BrowseActionsChangeDocTypeCopyItem :label="$t('info_by')" :value="state.doc.createdBy" />
         <template v-if="state.dispalyMeta && state.dispalyMeta.length > 0 && state.doc.properties">
-          <el-divider></el-divider>
-          <BrowseActionsChangeDocTypeCopyItem v-for="item in state.dispalyMeta" :label="$t(item.metaData)" :value="getMetaValue(item.value)" />
+          <el-divider />
+          <BrowseActionsChangeDocTypeCopyItem v-for="item in state.dispalyMeta" :label="$t(item.metaData)"
+                                              :value="getMetaValue(item.value)" />
         </template>
       </div>
       <div class="border"></div>
@@ -151,6 +151,7 @@ main {
   gap: var(--app-space-xs);
   height: calc(80vh - 10rem);
   overflow: hidden;
+
   .border {
     border-right: 1px solid #ddd;
   }

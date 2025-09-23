@@ -78,6 +78,11 @@ const { tableConfig, tableEvent, tableRef, query, reload } = useVxeTable({
 
   dblClickAction: ({ row, column, event }: any) => {
     handleDblclick(row)
+  },
+  permissionMethod: (args: PermissionMethodParams) => {
+    if (!args.row) {
+      return { visible: false, disabled: false }
+    }
   }
 })
 

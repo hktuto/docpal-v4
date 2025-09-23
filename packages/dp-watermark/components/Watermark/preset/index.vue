@@ -1,7 +1,7 @@
 <script  lang="ts" setup>
 
-import {Watermark} from "~/compossible/Watermark";
-import type {fabric} from "fabric";
+import type {Watermark} from "../../../composables/Watermark";
+import * as fabric from "fabric";
 type Preset = {
   name : string,
   setting : Watermark,

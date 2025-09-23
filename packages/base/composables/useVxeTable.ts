@@ -76,7 +76,10 @@ export const useVxeTable = (params: UseVxeTableParams) => {
     columns = [],
     zoom = true,
     refresh = true,
-    permissionMethod = () => {
+    permissionMethod = (args: PermissionMethodParams) => {
+      if (!args.row) {
+        return { visible: false, disabled: false }
+      }
       return { visible: true, disabled: false }
     },
     bodyActions: actions = [],

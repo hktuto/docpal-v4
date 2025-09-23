@@ -21,6 +21,7 @@
 <script lang="ts" setup>
 import { adminApi } from 'api'
 import { ElMessageBox } from 'element-plus'
+
 const props = defineProps<{
   id: string,
 }>()
@@ -106,6 +107,10 @@ const { tableConfig, tableEvent, tableRef, query, reload, cleanSelectedRows } = 
     ]
   ],
   permissionMethod: (args: PermissionMethodParams) => {
+    if (!args.row) {
+      return { visible: false, disabled: false }
+    }
+
     if (args.code === 'inactive') {
       return {
         visible: args.row.status === 'A',
@@ -138,7 +143,9 @@ async function handleActive(row: any, status: string) {
     if (!!result) {
       row.status = status
     }
-  } catch (error) {}
+  } catch (error) {
+    console.log(error)
+  }
 }
 
 function handleFilterFormChange(formModel: any) {
@@ -151,13 +158,16 @@ const DialogRef = ref()
 async function handleAdd() {
   DialogRef.value.handleAdd()
 }
+
 async function handleDelete(row: any) {
   try {
     const action = await ElMessageBox.confirm(`${t('msg_confirmWhetherToDelete')}`)
     if (action !== 'confirm') return
     await adminApi.api.deleteCompanyprofilesCompanyidChopsCompanychopid(props.id, row.id).then((res) => res.data)
     reload()
-  } catch (error) {}
+  } catch (error) {
+    console.log(error)
+  }
 }
 
 </script>

@@ -409,6 +409,7 @@ const ignoreDisplayList = [
   'dpe:approver',
   'dpm:contractExpirationDate',
   'dpa:docpalType',
+  'dpc:fileModifiedDate',
   'maskList',
   'readonlyList'
 ]

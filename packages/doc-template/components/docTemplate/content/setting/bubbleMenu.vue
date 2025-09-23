@@ -1,5 +1,4 @@
 <script lang="ts" setup>
-import { BubbleMenu } from '@tiptap/vue-3'
 import { DocTemplateProveKey } from '../../../../utils/docTemplateHelper'
 
 const editorProvider = inject(DocTemplateProveKey)

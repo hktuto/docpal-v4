@@ -1,6 +1,6 @@
 <script lang="ts" setup>
-import {CaseManagementDetailProviderKey} from '#imports'
-import {adminApi} from 'api'
+import { CaseManagementDetailProviderKey } from '#imports'
+import { adminApi } from 'api'
 
 
 const props = defineProps<{
@@ -15,7 +15,7 @@ const routerProvider = inject(MenuRouterKey)
 if (!routerProvider) {
   throw new Error('MenuRouterKey not found')
 }
-const {t} = useI18n()
+const { t } = useI18n()
 const loading = ref(false)
 const buttonLoading = ref(false)
 const caseInfo = ref<any>()
@@ -58,29 +58,29 @@ async function promoteToProduction() {
 
 async function saveAsNewVersion() {
   // console.log("props",props);
-  
+
   buttonLoading.value = true
   const {data} = await adminApi.api.postCaseTypesVersionVersionidNew(props.caseTypeId)
   //TODO : get all form in case and save as to new version
   // Step 1 : get all form in case
   const allFrom = await xmlRef.value.getAllForm()
-  for(let i = 0; i < allFrom.length; i++) {
+  for (let i = 0; i < allFrom.length; i++) {
     const form = allFrom[i]
     const params = form.params
-    params.versionId = data?.id;
+    params.versionId = data?.id
     params.jsonValue = JSON.stringify(form.form)
     await adminApi.api.postRelationSave(params)
   }
 
   routerProvider?.updateProps({
     caseTypeId: data.id,
-    currentVersion: data.versionNumber,
+    currentVersion: data.versionNumber
   })
-  
+
   buttonLoading.value = false
   // console.log("new props", props)
   nextTick(() => {
-    init();
+    init()
   })
 }
 
@@ -102,11 +102,11 @@ function openEditor() {
     props.currentVersion,
     props.caseTypeId
   )
-  console.log("newItm", newItm)
+  console.log('newItm', newItm)
   routerProvider?.navigateTo(newItm)
 }
 
-const production = ref(false);
+const production = ref(false)
 
 async function init() {
   loading.value = true
@@ -120,8 +120,6 @@ async function init() {
   loading.value = false
   routerProvider?.updateTabName(props.name + ` - (${props.currentVersion})`)
 }
-
-
 
 defineOptions({
   name: 'CaseManagementDetailDead'
@@ -141,7 +139,7 @@ provide(CaseManagementDetailProviderKey, {
   caseData,
   caseInfo,
   currentVersionId: caseTypeId,
-  currentVersion: currentVersion,
+  currentVersion: currentVersion
 })
 
 
@@ -152,11 +150,13 @@ provide(CaseManagementDetailProviderKey, {
 
     <CaseManagementDetailInfo :detail="caseTypeInfo">
       <template v-if="!production">
-        <ElButton id="CaseManagement__Detail__BasicInfo__PromoteToProduction" :loading="buttonLoading" type="primary" @click="promoteToProduction">
-          {{ $t('workflowEditor_promoteToProduction', {currentVersion: currentVersion}) }}
+        <ElButton id="CaseManagement__Detail__BasicInfo__PromoteToProduction" :loading="buttonLoading" type="primary"
+                  @click="promoteToProduction">
+          {{ $t('workflowEditor_promoteToProduction', { currentVersion: currentVersion }) }}
         </ElButton>
       </template>
-      <ElButton id="CaseManagement__Detail__BasicInfo__SaveAsNewVersion" :loading="buttonLoading" type="primary" @click="saveAsNewVersion">
+      <ElButton id="CaseManagement__Detail__BasicInfo__SaveAsNewVersion" :loading="buttonLoading" type="primary"
+                @click="saveAsNewVersion">
         {{ $t('workflowEditor_saveAsNewVersion') }}
       </ElButton>
       <ElButton id="CaseManagement__Detail__BasicInfo__VersionList" @click="openVersionList" type="primary">
@@ -167,8 +167,8 @@ provide(CaseManagementDetailProviderKey, {
       </ElButton>
     </CaseManagementDetailInfo>
     <CaseManagementDetailCaseInfomation :caseInformation="caseData.caseInformation" :node="caseData.caseNode"
-                                        @save="handleSave"/>
-    <CaseManagementDetailPermission ref="permissionRef" :node="caseData.caseNode" @save="handleSave"/>
+                                        @save="handleSave" />
+    <CaseManagementDetailPermission ref="permissionRef" :node="caseData.caseNode" @save="handleSave" />
     <!-- <CmmnDetailPermission :node="caseData.caseNode"/>  -->
     <CaseManagementDetailXml ref="xmlRef" v-bind="props" @getCase="getCase" @update="handleUpdate"/>
     <CaseManagementDetailDashboard :caseDetail="caseTypeInfo" :caseDetailId="caseInfo.caseTypeId" v-bind="props"/>
