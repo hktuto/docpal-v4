@@ -921,6 +921,60 @@ export const bpmnElement: BpmnElement = {
             }
           })
         })
+      },
+      {
+        icon: 'bpmn:calendar',
+        label: 'Calendar',
+        group: '',
+        order: 0,
+        dropData: (id: string) => ({
+          id,
+          ...bpmnElement.serviceTask.nodeStyle({
+            ['attr_flowable:delegateExpression']: '${calendarEventDelegate}',
+            extensionElements: {
+              'flowable:calendarEvent': {
+                attr_description: 'New Calendar Task',
+                attr_eventId: '',
+                attr_eventName: '',
+                attr_actionType: '',
+                attr_eventDescription: '',
+                attr_category: '',
+                attr_location: '',
+                attr_startTime: '',
+                attr_endTime: '',
+                attr_isAllDay: '',
+                related: {
+                  attr_user: ''
+                },
+                reminder: []
+              }
+            }
+          }),
+          label: 'New Calendar Task',
+          data: bpmnElement.serviceTask.newNodeData(id, 'New Calendar Task', {
+            attr_id: id,
+            attr_name: 'New Calendar Task',
+            ['attr_flowable:delegateExpression']: '${calendarEventDelegate}',
+            extensionElements: {
+              'flowable:calendarEvent': {
+                attr_description: 'New Calendar Task',
+                attr_eventId: false,
+                attr_eventName: '',
+                attr_actionType: '',
+                attr_eventDescription: '',
+                attr_category: '',
+                attr_location: '',
+                attr_startTime: '',
+                attr_endTime: '',
+                attr_isAllDay: '',
+                related: {
+                  attr_user: ''
+                },
+                reminder: []
+              }
+            }
+          })
+        })
       }
     ],
     newNodeData: (id, label, data) => ({
