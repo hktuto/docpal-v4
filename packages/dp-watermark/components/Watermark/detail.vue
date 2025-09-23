@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import {ElMessage} from 'element-plus'
-import {fabric} from "fabric";
+import * as fabric from "fabric";
 import {useEventListener} from '@vueuse/core'
 import {useWatermark, WatermarkTemplateDetail, Watermark} from '../../composables/Watermark'
 
