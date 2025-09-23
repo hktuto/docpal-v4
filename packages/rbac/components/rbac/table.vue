@@ -195,11 +195,11 @@ const { tableConfig, tableEvent, tableRef, reload, query } = useVxeTable({
   remoteSort: true,
   remoteFilter: true,
   permissionMethod: (args: PermissionMethodParams) => {
-    const row = args.row
+    const {row,code} = args
     if (!row) {
       return { visible: false, disabled: false }
     }
-
+    
     // Show edit action for all roles
     if (code === 'edit') {
       return {
