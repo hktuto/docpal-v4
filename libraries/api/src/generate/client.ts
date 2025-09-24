@@ -708,6 +708,7 @@ export interface ContactGroupRequestDTO {
     permissions?: Record<string, Permission>;
     attributes?: ContactAttribute[];
     operator?: string;
+    verifyReadPermission?: boolean;
     sort?: SortObject;
     sortOrder?: string;
     descSort?: SortObject;
@@ -741,6 +742,7 @@ export interface ContactGroupResponseDTO {
     modifiedDate?: string;
     permissions?: Record<string, BasicField[]>;
     attributes?: ContactAttribute[];
+    hasPermissions?: string[];
 }
 
 export interface ResultContactGroupResponseDTO {
@@ -806,6 +808,8 @@ export interface CalendarTaskReq {
     eventId?: string;
     /** Event Name */
     eventName?: string;
+    /** Event Description */
+    eventDescription?: string;
     /** Action Type[Create/Edit/Cancel/Remove] */
     actionType?: string;
     /** Event all day */
@@ -5020,14 +5024,17 @@ export interface CmmnDashboardRequestDTO {
     /** The sort ASC or DESC */
     isDesc?: boolean;
     id?: string;
+    label?: string;
     caseTypeId?: string;
     /** Case definition version Id */
     cmmnVersionId?: string;
+    permissions?: Record<string, string[]>;
     /** Is need to detail */
     detail?: boolean;
     /** Where Condition */
     where?: Record<string, object>;
     businessKey?: string;
+    versionNumber?: string;
     sort?: SortObject;
     sortOrder?: string;
     descSort?: SortObject;
@@ -5226,7 +5233,12 @@ export interface CaseTypeInfo {
 /** Case Type Permission RequestDTO */
 export interface CaseTypePermissionRequestDTO {
     userGroupId?: string;
+    groupName?: string;
     permissions?: Record<string, PlanTableFieldDTO[]>;
+    userId?: string;
+    username?: string;
+    roleId?: string;
+    roleName?: string;
 }
 
 export interface CaseTypeResponseDTO {
@@ -5614,7 +5626,9 @@ export interface CmmnDashboard {
     deploymentId?: string;
     cmmnVersionId?: string;
     label?: string;
+    /** @deprecated */
     userGroup?: string;
+    permissions?: string[];
     status?: string;
     styleJson?: string;
     createdBy?: string;
@@ -8371,12 +8385,35 @@ export interface ResultListCaseInstanceDTO {
     locale?: string;
 }
 
-export interface ResultCmmnDashboard {
+/** Case model dashboard (RequestDTO) */
+export interface CmmnDashboardResponseDTO {
+    id?: string;
+    caseTypeId?: string;
+    deploymentId?: string;
+    cmmnVersionId?: string;
+    label?: string;
+    /** @deprecated */
+    userGroup?: string;
+    status?: string;
+    styleJson?: string;
+    createdBy?: string;
+    modifiedBy?: string;
+    /** @format date-time */
+    createdDate?: string;
+    /** @format date-time */
+    modifiedDate?: string;
+    createdByName?: string;
+    modifiedByName?: string;
+    permissions?: BasicField[];
+}
+
+export interface ResultCmmnDashboardResponseDTO {
     result?: boolean;
     /** @format int32 */
     code?: number;
     message?: string;
-    data?: CmmnDashboard;
+    /** Case model dashboard (RequestDTO) */
+    data?: CmmnDashboardResponseDTO;
     messageKey?: string;
     locale?: string;
 }
@@ -8387,7 +8424,9 @@ export interface CmmnDashboardDTO {
     deploymentId?: string;
     cmmnVersionId?: string;
     label?: string;
+    /** @deprecated */
     userGroup?: string;
+    permissions?: BasicField[];
     status?: string;
     styleJson?: string;
     createdBy?: string;
@@ -10380,6 +10419,23 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
             this.request<ResultBoolean, ResultString | (ResultString | Result)>({
                 path: `/docpal/contactGroup/${id}`,
                 method: "DELETE",
+                ...params,
+            }),
+
+        /**
+         * @description Update contact group with the specified information
+         *
+         * @tags ContactController
+         * @name PatchContactgroupId
+         * @summary Reference to update contact group
+         * @request PATCH:/api/docpal/contactGroup/{id}
+         */
+        patchContactgroupId: (id: string, data: ContactGroupRequestDTO, params: RequestParams = {}) =>
+            this.request<ResultContactGroupResponseDTO, ResultString | (ResultString | Result)>({
+                path: `/docpal/contactGroup/${id}`,
+                method: "PATCH",
+                body: data,
+                type: ContentType.Json,
                 ...params,
             }),
 
@@ -21523,6 +21579,21 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
          * No description
          *
          * @tags ContactController
+         * @name GetContactgroupIdUserUseridPermission
+         * @summary Get permission of contact group
+         * @request GET:/api/docpal/contactGroup/{id}/user/{userId}/permission
+         */
+        getContactgroupIdUserUseridPermission: (id: string, userId: string, params: RequestParams = {}) =>
+            this.request<ResultListString, ResultString | (ResultString | Result)>({
+                path: `/docpal/contactGroup/${id}/user/${userId}/permission`,
+                method: "GET",
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags ContactController
          * @name GetContactgroupIdContactdetaillist
          * @summary Get contact detail list include filter and sort by
          * @request GET:/api/docpal/contactGroup/{id}/contactDetailList
@@ -21924,6 +21995,7 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
         getCaseInstanceList: (
             query?: {
                 id?: string;
+                label?: string;
                 caseTypeId?: string;
                 /** Case definition version Id */
                 cmmnVersionId?: string;
@@ -21932,6 +22004,7 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
                 /** Is need to detail */
                 detail?: string;
                 businessKey?: string;
+                versionNumber?: string;
                 /** Page Number */
                 pageNum?: string;
                 /** Page Size */
@@ -22064,7 +22137,7 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
          * @request GET:/api/docpal/case/dashboard/{id}
          */
         getCaseDashboardId: (id: string, params: RequestParams = {}) =>
-            this.request<ResultCmmnDashboard, ResultString | (ResultString | Result)>({
+            this.request<ResultCmmnDashboardResponseDTO, ResultString | (ResultString | Result)>({
                 path: `/docpal/case/dashboard/${id}`,
                 method: "GET",
                 ...params,
@@ -22266,21 +22339,6 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
                 path: `/docpal/case/dashboard/instance/stage/planItems`,
                 method: "GET",
                 query: query,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags CmmnDashboardController
-         * @name GetCaseDashboardCasetypeCasetypeid
-         * @summary Query the list of case dashboard
-         * @request GET:/api/docpal/case/dashboard/caseType/{caseTypeId}
-         */
-        getCaseDashboardCasetypeCasetypeid: (caseTypeId: string, params: RequestParams = {}) =>
-            this.request<ResultListCmmnDashboard, ResultString | (ResultString | Result)>({
-                path: `/docpal/case/dashboard/caseType/${caseTypeId}`,
-                method: "GET",
                 ...params,
             }),
 
@@ -22607,6 +22665,20 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
          * No description
          *
          * @tags FolderCabinetController
+         * @name GetCabinetRefreshCompletestatusFoldercabinetid
+         * @request GET:/api/docpal/cabinet/refresh/completeStatus/{folderCabinetId}
+         */
+        getCabinetRefreshCompletestatusFoldercabinetid: (folderCabinetId: string, params: RequestParams = {}) =>
+            this.request<ResultBoolean, ResultString | (ResultString | Result)>({
+                path: `/docpal/cabinet/refresh/completeStatus/${folderCabinetId}`,
+                method: "GET",
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags FolderCabinetController
          * @name GetCabinetRefreshcompletestatusId
          * @request GET:/api/docpal/cabinet/refreshCompleteStatus/{id}
          */
@@ -22653,10 +22725,16 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
          * @summary Query template list of Top-level folder cabinet that belong to current logged-in user
          * @request GET:/api/docpal/cabinet/loginUser/list
          */
-        getCabinetLoginuserList: (params: RequestParams = {}) =>
+        getCabinetLoginuserList: (
+            query?: {
+                label?: string;
+            },
+            params: RequestParams = {},
+        ) =>
             this.request<ResultListFolderCabinetResponseDTO, ResultString | (ResultString | Result)>({
                 path: `/docpal/cabinet/loginUser/list`,
                 method: "GET",
+                query: query,
                 ...params,
             }),
 

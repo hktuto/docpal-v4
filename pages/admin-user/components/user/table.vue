@@ -150,6 +150,15 @@ const { tableConfig, tableEvent, tableRef, reload, cleanSelectedRows } = useVxeT
         }
       },
       {
+        code:"sendInvitation",
+        name:"Send Invitation",
+        action:({row}:any) => {
+          if(!row.registered){
+            userProvider?.sendInvitation(row)
+          }
+        }
+      },
+      {
         code: 'delete_user',
         name: 'Delete User',
         visible: true,
@@ -160,6 +169,19 @@ const { tableConfig, tableEvent, tableRef, reload, cleanSelectedRows } = useVxeT
       }
     ]
   ],
+  permissionMethod:({row,code}) => {
+    console.log("row", row)
+    if(code === 'sendInvitation'){
+      return {
+        visible: row.registered === 'Pending',
+        disabled: false
+      }
+    }
+    return {
+      visible:true,
+      disabled: false,
+    }
+  },
   optionalConfig: {
     rowConfig: {
       height: 60,
@@ -180,7 +202,6 @@ const { tableConfig, tableEvent, tableRef, reload, cleanSelectedRows } = useVxeT
                         $event
                       }: any) => {
         const key = column.property
-        console.log(key, row)
         if (!key || !row) return ''
         const value = row[key] ?? ''
         if (key === 'groupDTOList') {

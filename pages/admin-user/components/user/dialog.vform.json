@@ -241,6 +241,65 @@
       "id": "input106852"
     },
     {
+      "key": 103703,
+      "type": "select",
+      "icon": "select-field",
+      "formItemFlag": true,
+      "options": {
+        "name": "userLevel",
+        "label": "User Level",
+        "labelAlign": "",
+        "defaultValue": "Standard",
+        "placeholder": "",
+        "columnWidth": "200px",
+        "size": "",
+        "labelWidth": null,
+        "labelHidden": false,
+        "disabled": false,
+        "hidden": false,
+        "clearable": false,
+        "filterable": true,
+        "allowCreate": false,
+        "popperClass": "",
+        "remote": false,
+        "automaticDropdown": false,
+        "multiple": false,
+        "multipleLimit": 0,
+        "optionItems": [
+          {
+            "value": "Standard",
+            "label": "Standard"
+          },
+          {
+            "value": "Essential",
+            "label": "Essential"
+          },
+          {
+            "value": "Premium",
+            "label": "Premium"
+          }
+        ],
+        "required": false,
+        "requiredHint": "",
+        "validation": "",
+        "validationHint": "",
+        "customClass": "",
+        "labelIconClass": null,
+        "labelIconPosition": "rear",
+        "labelTooltip": null,
+        "onCreated": "",
+        "onMounted": "",
+        "onRemoteQuery": "",
+        "onChange": "",
+        "changeSettings": [],
+        "onChangeSetting": true,
+        "onFocus": "",
+        "onBlur": "",
+        "onValidate": ""
+      },
+      "id": "select64143"
+    },
+    {
       "key": 29314,
       "type": "input",
       "icon": "text-field",
@@ -312,7 +371,128 @@
         "automaticDropdown": false,
         "multiple": true,
         "multipleLimit": 0,
-        "optionItems": [],
+        "optionItems": [
+          {
+            "id": "Adhoc_Group",
+            "name": "Adhoc Group",
+            "isCanModified": true,
+            "kcGroupId": "Adhoc Group",
+            "value": "Adhoc_Group",
+            "label": "Adhoc Group"
+          },
+          {
+            "id": "administrators",
+            "name": "Administrators Group",
+            "isCanModified": true,
+            "kcGroupId": "Administrators Group",
+            "value": "administrators",
+            "label": "Administrators Group"
+          },
+          {
+            "id": "BedfordshireDept",
+            "name": "Bedfordshire Dept",
+            "isCanModified": true,
+            "kcGroupId": "Bedfordshire Dept",
+            "value": "BedfordshireDept",
+            "label": "Bedfordshire Dept"
+          },
+          {
+            "id": "BOOK",
+            "name": "BOOK",
+            "isCanModified": true,
+            "kcGroupId": "BOOK",
+            "value": "BOOK",
+            "label": "BOOK"
+          },
+          {
+            "id": "BOOK1",
+            "name": "BOOK1",
+            "isCanModified": true,
+            "kcGroupId": "BOOK1",
+            "value": "BOOK1",
+            "label": "BOOK1"
+          },
+          {
+            "id": "Chris_Case_-_Sales_Team_Member",
+            "name": "Chris_Case - Sales Team Member",
+            "isCanModified": true,
+            "kcGroupId": "Chris_Case - Sales Team Member",
+            "value": "Chris_Case_-_Sales_Team_Member",
+            "label": "Chris_Case - Sales Team Member"
+          },
+          {
+            "id": "Chris_Folder_-_SalesTeam",
+            "name": "Chris_Folder - SalesTeam",
+            "isCanModified": true,
+            "kcGroupId": "Chris_Folder - SalesTeam",
+            "value": "Chris_Folder_-_SalesTeam",
+            "label": "Chris_Folder - SalesTeam"
+          },
+          {
+            "id": "CPA-Members",
+            "name": "CPA-Members",
+            "isCanModified": true,
+            "kcGroupId": "CPA-Members",
+            "value": "CPA-Members",
+            "label": "CPA-Members"
+          },
+          {
+            "id": "Del_Group",
+            "name": "Del Group",
+            "isCanModified": true,
+            "kcGroupId": "Del Group",
+            "value": "Del_Group",
+            "label": "Del Group"
+          },
+          {
+            "id": "HR_dept",
+            "name": "HR deptartment",
+            "isCanModified": true,
+            "kcGroupId": "HR deptartment",
+            "value": "HR_dept",
+            "label": "HR deptartment"
+          },
+          {
+            "id": "IT_Group",
+            "name": "IT Group",
+            "isCanModified": true,
+            "kcGroupId": "IT Group",
+            "value": "IT_Group",
+            "label": "IT Group"
+          },
+          {
+            "id": "ITDept",
+            "name": "IT Dept",
+            "isCanModified": true,
+            "kcGroupId": "IT Dept",
+            "value": "ITDept",
+            "label": "IT Dept"
+          },
+          {
+            "id": "Market_Group",
+            "name": "Market Group",
+            "isCanModified": true,
+            "kcGroupId": "Market Group",
+            "value": "Market_Group",
+            "label": "Market Group"
+          },
+          {
+            "id": "Sales_Group",
+            "name": "Sales Group",
+            "isCanModified": true,
+            "kcGroupId": "Sales Group",
+            "value": "Sales_Group",
+            "label": "Sales Group"
+          },
+          {
+            "id": "Test-Group",
+            "name": "Test-Group",
+            "isCanModified": true,
+            "kcGroupId": "Test-Group",
+            "value": "Test-Group",
+            "label": "Test-Group"
+          }
+        ],
         "required": false,
         "requiredHint": "",
         "validation": "",
@@ -381,10 +561,9 @@
     "onFormMounted": "",
     "onFormDataChange": "",
     "dhList": [],
+    "onFormValidate": "",
     "saveRemoteOptions": "never",
     "labelFormUniqueName": true,
-    "onFormValidate": "",
     "dataSources": []
   }
 }
-

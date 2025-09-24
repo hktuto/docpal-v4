@@ -97,6 +97,65 @@
       "id": "input47313"
     },
     {
+      "key": 113343,
+      "type": "select",
+      "icon": "select-field",
+      "formItemFlag": true,
+      "options": {
+        "name": "userLevel",
+        "label": "User Level",
+        "labelAlign": "",
+        "defaultValue": "Standard",
+        "placeholder": "",
+        "columnWidth": "200px",
+        "size": "",
+        "labelWidth": null,
+        "labelHidden": false,
+        "disabled": false,
+        "hidden": false,
+        "clearable": true,
+        "filterable": true,
+        "allowCreate": false,
+        "popperClass": "",
+        "remote": false,
+        "automaticDropdown": false,
+        "multiple": false,
+        "multipleLimit": 0,
+        "optionItems": [
+          {
+            "value": "Standard",
+            "label": "Standard"
+          },
+          {
+            "value": "Essential",
+            "label": "Essential"
+          },
+          {
+            "value": "Premium",
+            "label": "Premium"
+          }
+        ],
+        "required": false,
+        "requiredHint": "",
+        "validation": "",
+        "validationHint": "",
+        "customClass": "",
+        "labelIconClass": null,
+        "labelIconPosition": "rear",
+        "labelTooltip": null,
+        "onCreated": "",
+        "onMounted": "",
+        "onRemoteQuery": "",
+        "onChange": "",
+        "changeSettings": [],
+        "onChangeSetting": true,
+        "onFocus": "",
+        "onBlur": "",
+        "onValidate": ""
+      },
+      "id": "select97193"
+    },
+    {
       "key": 29314,
       "type": "input",
       "icon": "text-field",
@@ -158,9 +217,11 @@
     "functions": "",
     "layoutType": "PC",
     "jsonVersion": 3,
+    "isCreateDynamicCode": true,
     "onFormCreated": "",
     "onFormMounted": "",
     "onFormDataChange": "",
+    "dhList": [],
     "onFormValidate": "",
     "saveRemoteOptions": "never",
     "labelFormUniqueName": true,
