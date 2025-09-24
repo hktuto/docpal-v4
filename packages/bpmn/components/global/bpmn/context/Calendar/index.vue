@@ -102,14 +102,18 @@ function updateDescription() {
   updateData()
 }
 
-watch(form, () => {
-  if (form.value) {
-    updateData()
+watch(
+  form,
+  () => {
+    if (form.value) {
+      updateData()
+    }
+  },
+  {
+    immediate: true,
+    deep: true
   }
-}, {
-  immediate: true,
-  deep: true
-})
+)
 
 onMounted(async () => {
   setUpListener()
@@ -167,7 +171,7 @@ onMounted(async () => {
         </el-form-item>
         <el-form-item label="is All Day">
           <el-select v-model="form.attr_isAllDay" clearable>
-            <el-option v-for="item in allFields" :key="item.attr_id" :label="item.attr_name" :value="item.attr_id" />
+            <el-option v-for="item in booleanFields" :key="item.attr_id" :label="item.attr_name" :value="item.attr_id" />
           </el-select>
         </el-form-item>
         <el-form-item v-if="form.related" label="User">

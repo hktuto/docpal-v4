@@ -2,14 +2,7 @@
 import dayjs from 'dayjs'
 
 import { ScheduleXCalendar } from '@schedule-x/vue'
-import {
-  createCalendar,
-  createViewDay,
-  createViewMonthAgenda,
-  createViewMonthGrid,
-  createViewWeek,
-  type CalendarEventExternal
-} from '@schedule-x/calendar'
+import { createCalendar, createViewDay, createViewMonthAgenda, createViewMonthGrid, createViewWeek, type CalendarEventExternal } from '@schedule-x/calendar'
 
 import '@schedule-x/theme-default/dist/index.css'
 import { createCurrentTimePlugin } from '@schedule-x/current-time'
@@ -24,9 +17,9 @@ import { displayTimeFn } from '../../../utils/calendarHelper'
 
 const { setting, calendarViewerCategories } = useCalendarStore()
 const props = defineProps<{
-  options: CalendarOptions;
-  filter: any;
-  addtionalCheckBeforeEventUpdate?: (oldEvent: any, editedEvent: any) => boolean,
+  options: CalendarOptions
+  filter: any
+  addtionalCheckBeforeEventUpdate?: (oldEvent: any, editedEvent: any) => boolean
 }>()
 
 let calendarApp: any
@@ -36,7 +29,16 @@ const calendarControls = createCalendarControlsPlugin()
 const eventsServicePlugin = createEventsServicePlugin()
 // dialog ref
 
-const emits = defineEmits(['onSelectedDateUpdate', 'onEventUpdate', 'onEventClick', 'onClickDate', 'onClickDateTime', 'onClickAgendaDate', 'onClickPlusEvents', 'onBeforeEventUpdate'])
+const emits = defineEmits([
+  'onSelectedDateUpdate',
+  'onEventUpdate',
+  'onEventClick',
+  'onClickDate',
+  'onClickDateTime',
+  'onClickAgendaDate',
+  'onClickPlusEvents',
+  'onBeforeEventUpdate'
+])
 
 const temEvent = ref()
 const eventList = ref<CalendarEventExternal[]>([])
@@ -75,6 +77,7 @@ function getEvent(id: string) {
 }
 
 async function getList() {
+  // TODO: 結果集合需要排除刪除的數據
   eventList.value = await getEventFromApi(calendarApp, calendarControls, props.filter)
   // add custom event
   console.log('get List', eventList.value)
@@ -84,11 +87,7 @@ function setupCalendar() {
   showCalendar.value = false
 
   try {
-    const plugins = [
-      createCurrentTimePlugin(),
-      calendarControls,
-      eventsServicePlugin
-    ]
+    const plugins = [createCurrentTimePlugin(), calendarControls, eventsServicePlugin]
     const slot = setting.value.basic.allow_custom_slot ? null : setting.value.basic.slot
     plugins.push(createDragAndDropPlugin(slot))
     if (props.options.editable) {
@@ -98,59 +97,52 @@ function setupCalendar() {
     }
 
     calendarApp = createCalendar({
-        selectedDate: dayjs().format('YYYY-MM-DD'),
-        firstDayOfWeek: setting.value.basic.first_day_of_week === 'MONDAY' ? 1 : 0,
-        dayBoundaries: {
-          start: setting.value.basic.office_start_time || '08:00',
-          end: setting.value.basic.office_end_time || '20:00'
-        },
-        calendars: { ...calendarViewerCategories.value },
-        monthGridOptions: {
-          nEventsPerDay: 10
-        },
-        isResponsive: true,
-        views: [
-          createViewDay(),
-          createViewWeek(),
-          createViewMonthGrid(),
-          createViewMonthAgenda()
-        ],
-        events: [],
-        callbacks: {
-          onRangeUpdate: () => getList(),
-          onSelectedDateUpdate: (args) => emits('onSelectedDateUpdate', args),
-          onEventUpdate: (args) => emits('onEventUpdate', args),
-          onEventClick: (args) => emits('onEventClick', args),
-          onClickDate: (args) => emits('onClickDate', args),
-          onClickDateTime: (args) => emits('onClickDateTime', args),
-          onClickAgendaDate: (args) => emits('onClickAgendaDate', args),
-          onClickPlusEvents: (args) => emits('onClickPlusEvents', args),
-          onBeforeEventUpdate: onBeforeEventUpdate
-        },
-        plugins
-      }
-    )
+      selectedDate: dayjs().format('YYYY-MM-DD'),
+      firstDayOfWeek: setting.value.basic.first_day_of_week === 'MONDAY' ? 1 : 0,
+      dayBoundaries: {
+        start: setting.value.basic.office_start_time || '08:00',
+        end: setting.value.basic.office_end_time || '20:00'
+      },
+      calendars: { ...calendarViewerCategories.value },
+      monthGridOptions: {
+        nEventsPerDay: 10
+      },
+      isResponsive: true,
+      views: [createViewDay(), createViewWeek(), createViewMonthGrid(), createViewMonthAgenda()],
+      events: [],
+      callbacks: {
+        onRangeUpdate: () => getList(),
+        onSelectedDateUpdate: (args) => emits('onSelectedDateUpdate', args),
+        onEventUpdate: (args) => emits('onEventUpdate', args),
+        onEventClick: (args) => emits('onEventClick', args),
+        onClickDate: (args) => emits('onClickDate', args),
+        onClickDateTime: (args) => emits('onClickDateTime', args),
+        onClickAgendaDate: (args) => emits('onClickAgendaDate', args),
+        onClickPlusEvents: (args) => emits('onClickPlusEvents', args),
+        onBeforeEventUpdate: onBeforeEventUpdate
+      },
+      plugins
+    })
     nextTick(() => {
-        showCalendar.value = true
-        if (props.options.view) {
-          calendarControls.setView(props.options.view)
-        } else {
-          const view = setting.value?.basic.default_view
-          if (view) {
-            calendarControls.setView(view)
-          }
+      showCalendar.value = true
+      if (props.options.view) {
+        calendarControls.setView(props.options.view)
+      } else {
+        const view = setting.value?.basic.default_view
+        if (view) {
+          calendarControls.setView(view)
         }
-        if (props.options.firstDayOfWeek) {
-          calendarControls.setFirstDayOfWeek(props.options.firstDayOfWeek === 'MONDAY' ? 1 : 0)
-        } else {
-          const firstDayOfWeek = setting.value?.basic.default_first_week
-          if (firstDayOfWeek) {
-            calendarControls.setFirstDayOfWeek(firstDayOfWeek === 'MONDAY' ? 1 : 0)
-          }
-        }
-        getList()
       }
-    )
+      if (props.options.firstDayOfWeek) {
+        calendarControls.setFirstDayOfWeek(props.options.firstDayOfWeek === 'MONDAY' ? 1 : 0)
+      } else {
+        const firstDayOfWeek = setting.value?.basic.default_first_week
+        if (firstDayOfWeek) {
+          calendarControls.setFirstDayOfWeek(firstDayOfWeek === 'MONDAY' ? 1 : 0)
+        }
+      }
+      getList()
+    })
   } catch (e) {
     console.log('setupCalendar', e)
   }
@@ -164,7 +156,7 @@ function getCalendarStyle(event: any) {
   const categories = useCalenarCategories()
   const catId = event.detail.category || event.calendarId
   if (!catId) return ''
-  const category = categories.value.find(item => item.id === catId)
+  const category = categories.value.find((item) => item.id === catId)
   if (!category) return ''
 
   checkColor(category)
@@ -187,21 +179,24 @@ function checkColor(category: any) {
 }
 
 function makeDescription(event: CalendarEventExternal) {
-  return event.location + ' - ' + event.people.join(', ') + ' - ' + dayjs(event.start).format('YYYY-MM-DD HH:mm') + ' - ' + dayjs(event.end).format('YYYY-MM-DD HH:mm')
+  return `${event.location} - ${event.people.join(', ')} - ${dayjs(event.start).format('YYYY-MM-DD HH:mm')} - ${dayjs(event.end).format('YYYY-MM-DD HH:mm')}`
 }
 
-function getRowData(row: any) {
-}
+function getRowData(row: any) {}
 
-watch(() => [setting, props.options], async () => {
-  if (setting.value) {
-    console.log('calendar setting changed')
-    setupCalendar()
+watch(
+  () => [setting, props.options],
+  async () => {
+    if (setting.value) {
+      console.log('calendar setting changed')
+      setupCalendar()
+    }
+  },
+  {
+    deep: true,
+    immediate: true
   }
-}, {
-  deep: true,
-  immediate: true
-})
+)
 
 onDeactivated(() => {
   showCalendar.value = false
@@ -226,11 +221,11 @@ defineExpose({
 </script>
 
 <template>
-  <div :class="{calendarViewerContainer:true, editMode: editItem && editItem.eventId, createMode: options.allowCreate}">
+  <div :class="{ calendarViewerContainer: true, editMode: editItem && editItem.eventId, createMode: options.allowCreate }">
     <ScheduleXCalendar v-if="showCalendar" :calendar-app="calendarApp">
       <template #monthAgendaEvent="{ calendarEvent }">
         <div
-          :class="{eventContainer:true, isEditItem: editItem && calendarEvent.detail.eventId ===  editItem.eventId}"
+          :class="{ eventContainer: true, isEditItem: editItem && calendarEvent.detail.eventId === editItem.eventId }"
           :style="getCalendarStyle(calendarEvent)"
         >
           {{ calendarEvent }}
@@ -254,8 +249,9 @@ defineExpose({
       </template>
 
       <template #timeGridEvent="{ calendarEvent }">
-        <div :class="{eventContainer:true, isEditItem: editItem && calendarEvent.detail.eventId ===  editItem.eventId}"
-             :style="getCalendarStyle(calendarEvent)"
+        <div
+          :class="{ eventContainer: true, isEditItem: editItem && calendarEvent.detail.eventId === editItem.eventId }"
+          :style="getCalendarStyle(calendarEvent)"
         >
           <ElTooltip placement="top">
             <div class="eventInfoGroup">
@@ -285,7 +281,7 @@ defineExpose({
 
       <template #monthGridEvent="{ calendarEvent }">
         <div
-          :class="{eventContainer:true, isEditItem: editItem && calendarEvent.detail.eventId ===  editItem.eventId, small: true}"
+          :class="{ eventContainer: true, isEditItem: editItem && calendarEvent.detail.eventId === editItem.eventId, small: true }"
           :style="getCalendarStyle(calendarEvent)"
         >
           <ElTooltip placement="top">
