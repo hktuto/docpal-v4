@@ -2,15 +2,7 @@
 import dayjs from 'dayjs'
 
 import { ScheduleXCalendar } from '@schedule-x/vue'
-import {
-  createCalendar,
-  createViewDay,
-  createViewMonthAgenda,
-  createViewMonthGrid,
-  createViewWeek,
-  type CalendarEventExternal
-} from '@schedule-x/calendar'
-
+import { createCalendar, createViewDay, createViewMonthAgenda, createViewMonthGrid, createViewWeek, type CalendarEventExternal } from '@schedule-x/calendar'
 
 import '@schedule-x/theme-default/dist/index.css'
 import { createCurrentTimePlugin } from '@schedule-x/current-time'
@@ -25,10 +17,9 @@ import { displayTimeFn } from '../../../utils/calendarHelper'
 
 const { setting, calendarViewerCategories } = useCalendarStore()
 const props = defineProps<{
-  options: CalendarOptions;
-  filter: any;
-  addtionalCheckBeforeEventUpdate?: (oldEvent: any, editedEvent: any) => boolean,
-  editItem?: any
+  options: CalendarOptions
+  filter: any
+  addtionalCheckBeforeEventUpdate?: (oldEvent: any, editedEvent: any) => boolean
 }>()
 
 let calendarApp: any
@@ -38,13 +29,22 @@ const calendarControls = createCalendarControlsPlugin()
 const eventsServicePlugin = createEventsServicePlugin()
 // dialog ref
 
-const emits = defineEmits(['onSelectedDateUpdate', 'onEventUpdate', 'onEventClick', 'onClickDate', 'onClickDateTime', 'onClickAgendaDate', 'onClickPlusEvents', 'onBeforeEventUpdate'])
+const emits = defineEmits([
+  'onSelectedDateUpdate',
+  'onEventUpdate',
+  'onEventClick',
+  'onClickDate',
+  'onClickDateTime',
+  'onClickAgendaDate',
+  'onClickPlusEvents',
+  'onBeforeEventUpdate'
+])
 
 const temEvent = ref()
 const eventList = ref<CalendarEventExternal[]>([])
 
 function onBeforeEventUpdate(oldEvent: CalendarEventExternal, editedEvent: CalendarEventExternal) {
-  // isEventValid(eventList.value, editedEvent)  
+  // isEventValid(eventList.value, editedEvent)
   return true
 }
 
@@ -77,30 +77,27 @@ function getEvent(id: string) {
 }
 
 async function getList() {
-  eventList.value = await getEventFromApi(calendarApp, calendarControls, props.filter, props.editItem)
+  // TODO: 結果集合需要排除刪除的數據
+  eventList.value = await getEventFromApi(calendarApp, calendarControls, props.filter)
   // add custom event
   console.log('get List', eventList.value)
-
 }
 
 function setupCalendar() {
   showCalendar.value = false
 
-  const plugins = [
-    createCurrentTimePlugin(),
-    calendarControls,
-    eventsServicePlugin
-  ]
-  const slot = setting.value.basic.allow_custom_slot ? null : setting.value.basic.slot
-  plugins.push(createDragAndDropPlugin(slot))
-  if (props.options.editable) {
-    if (setting.value.basic.allow_custom_slot) {
-      plugins.push(createResizePlugin())
+  try {
+    const plugins = [createCurrentTimePlugin(), calendarControls, eventsServicePlugin]
+    const slot = setting.value.basic.allow_custom_slot ? null : setting.value.basic.slot
+    plugins.push(createDragAndDropPlugin(slot))
+    if (props.options.editable) {
+      if (setting.value.basic.allow_custom_slot) {
+        plugins.push(createResizePlugin())
+      }
     }
-  }
 
-  calendarApp = createCalendar({
-      selectedDate: props.editItem ? dayjs(props.editItem.startTime).format('YYYY-MM-DD') : dayjs().format('YYYY-MM-DD'),
+    calendarApp = createCalendar({
+      selectedDate: dayjs().format('YYYY-MM-DD'),
       firstDayOfWeek: setting.value.basic.first_day_of_week === 'MONDAY' ? 1 : 0,
       dayBoundaries: {
         start: setting.value.basic.office_start_time || '08:00',
@@ -111,12 +108,7 @@ function setupCalendar() {
         nEventsPerDay: 10
       },
       isResponsive: true,
-      views: [
-        createViewDay(),
-        createViewWeek(),
-        createViewMonthGrid(),
-        createViewMonthAgenda()
-      ],
+      views: [createViewDay(), createViewWeek(), createViewMonthGrid(), createViewMonthAgenda()],
       events: [],
       callbacks: {
         onRangeUpdate: () => getList(),
@@ -130,9 +122,8 @@ function setupCalendar() {
         onBeforeEventUpdate: onBeforeEventUpdate
       },
       plugins
-    }
-  )
-  nextTick(() => {
+    })
+    nextTick(() => {
       showCalendar.value = true
       if (props.options.view) {
         calendarControls.setView(props.options.view)
@@ -151,8 +142,10 @@ function setupCalendar() {
         }
       }
       getList()
-    }
-  )
+    })
+  } catch (e) {
+    console.log('setupCalendar', e)
+  }
 }
 
 onDeactivated(() => {
@@ -163,7 +156,7 @@ function getCalendarStyle(event: any) {
   const categories = useCalenarCategories()
   const catId = event.detail.category || event.calendarId
   if (!catId) return ''
-  const category = categories.value.find(item => item.id === catId)
+  const category = categories.value.find((item) => item.id === catId)
   if (!category) return ''
 
   checkColor(category)
@@ -186,27 +179,24 @@ function checkColor(category: any) {
 }
 
 function makeDescription(event: CalendarEventExternal) {
-  return event.location + ' - ' + event.people.join(', ') + ' - ' + dayjs(event.start).format('YYYY-MM-DD HH:mm') + ' - ' + dayjs(event.end).format('YYYY-MM-DD HH:mm')
+  return `${event.location} - ${event.people.join(', ')} - ${dayjs(event.start).format('YYYY-MM-DD HH:mm')} - ${dayjs(event.end).format('YYYY-MM-DD HH:mm')}`
 }
 
-function handleDblclick(calendarEvent: any) {
-  console.log(222, calendarEvent)
-}
+function getRowData(row: any) {}
 
-function getRowData(row: any) {
-
-
-}
-
-watch(() => [setting, props.options], async () => {
-  if (setting.value) {
-    console.log('calendar setting changed')
-    setupCalendar()
+watch(
+  () => [setting, props.options],
+  async () => {
+    if (setting.value) {
+      console.log('calendar setting changed')
+      setupCalendar()
+    }
+  },
+  {
+    deep: true,
+    immediate: true
   }
-}, {
-  deep: true,
-  immediate: true
-})
+)
 
 onDeactivated(() => {
   showCalendar.value = false
@@ -231,11 +221,11 @@ defineExpose({
 </script>
 
 <template>
-  <div :class="{calendarViewerContainer:true, editMode: editItem && editItem.eventId, createMode: options.allowCreate}">
+  <div :class="{ calendarViewerContainer: true, editMode: editItem && editItem.eventId, createMode: options.allowCreate }">
     <ScheduleXCalendar v-if="showCalendar" :calendar-app="calendarApp">
       <template #monthAgendaEvent="{ calendarEvent }">
         <div
-          :class="{eventContainer:true, isEditItem: editItem && calendarEvent.detail.eventId ===  editItem.eventId}"
+          :class="{ eventContainer: true, isEditItem: editItem && calendarEvent.detail.eventId === editItem.eventId }"
           :style="getCalendarStyle(calendarEvent)"
         >
           {{ calendarEvent }}
@@ -259,11 +249,12 @@ defineExpose({
       </template>
 
       <template #timeGridEvent="{ calendarEvent }">
-        <div :class="{eventContainer:true, isEditItem: editItem && calendarEvent.detail.eventId ===  editItem.eventId}"
-             :style="getCalendarStyle(calendarEvent)"
+        <div
+          :class="{ eventContainer: true, isEditItem: editItem && calendarEvent.detail.eventId === editItem.eventId }"
+          :style="getCalendarStyle(calendarEvent)"
         >
           <ElTooltip placement="top">
-            <div class="eventInfoGroup" @dblclick="handleDblclick(calendarEvent)">
+            <div class="eventInfoGroup">
               <div class="eventInfo">
                 <strong>{{ calendarEvent.title }}</strong>
               </div>
@@ -290,7 +281,7 @@ defineExpose({
 
       <template #monthGridEvent="{ calendarEvent }">
         <div
-          :class="{eventContainer:true, isEditItem: editItem && calendarEvent.detail.eventId ===  editItem.eventId, small: true}"
+          :class="{ eventContainer: true, isEditItem: editItem && calendarEvent.detail.eventId === editItem.eventId, small: true }"
           :style="getCalendarStyle(calendarEvent)"
         >
           <ElTooltip placement="top">
@@ -317,15 +308,15 @@ defineExpose({
   flex: 1;
   overflow: hidden;
 
-  &.editMode, &.createMode {
-    .eventContainer {
-      filter: grayscale(1);
-
-      &.isEditItem {
-        filter: grayscale(0);
-      }
-    }
-  }
+  //&.editMode, &.createMode {
+  //  .eventContainer {
+  //    filter: grayscale(1);
+  //
+  //    &.isEditItem {
+  //      filter: grayscale(0);
+  //    }
+  //  }
+  //}
 }
 
 .eventInfoGroup {

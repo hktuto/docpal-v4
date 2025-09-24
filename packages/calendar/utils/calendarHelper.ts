@@ -75,8 +75,7 @@ export function convertCalendarEventToSiteEvent(event: CalendarEventExternal): D
   }
 }
 
-export async function getEventFromApi(calendarApp: any, calendarControls: any, filter: any, editItem?: any) {
-  console.log('editItem', editItem)
+export async function getEventFromApi(calendarApp: any, calendarControls: any, filter: any) {
   const range = calendarControls.getRange()
   const params: any = {
     startTime: dayjs(range.start).toISOString(),
@@ -110,22 +109,6 @@ export async function getEventFromApi(calendarApp: any, calendarControls: any, f
   // filter events
 
   // dummy full date event
-  //TODO： remove later
-
-  // check editItem
-  if (editItem) {
-    const editItemIndex = events.findIndex(item => editItem && item?.detail?.eventId === editItem.eventId)
-    if (editItemIndex !== -1) {
-      events[editItemIndex]._options = {
-        disableResize: false,
-        disableDND: false
-      }
-    } else {
-      // add new event
-      events.push(editItem)
-    }
-  }
-  // if editItem is not exist, add it
 
   calendarApp.eventsService.set(events)
   return events
