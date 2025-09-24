@@ -16,6 +16,7 @@ const newEventId = ref(new Date().valueOf().toString())
 const state = reactive({
   workflowKey: '',
   workflowId: {},
+  formJson: {},
   loading: false,
   isEdit: false
 })
@@ -37,10 +38,7 @@ async function initWorkflowForm(name: string) {
     state.workflowKey = deepCopy(flow.key)
     const workflow = await adminApi.api.getWorkflowVersionKeyProcessdefinitionkey(flow.key).then((r) => r.data)
     if (!workflow) return
-    const formJson = await formJsonGet(workflow.processDefinitionKey, workflow.id)
-    setTimeout(() => {
-      createDialogFormRef.value.setForm(formJson)
-    })
+    state.formJson = await formJsonGet(workflow.processDefinitionKey, workflow.id)
   } catch (e) {
     console.log(e)
     state.loading = false
@@ -61,36 +59,48 @@ async function formJsonGet(processKey: string, versionId: string) {
   return JSON.parse(response[0].jsonValue)
 }
 
-function open() {
+async function setForm(isEdit: boolean, data: any) {
+  setTimeout(() => {
+    createDialogFormRef.value.setForm(state.formJson)
+    createDialogFormRef.value.setFormData(isEdit, data)
+  }, 100)
+}
+
+async function open() {
+  state.isEdit = false
+  state.userList = []
   state.workflowId = ''
   if (!!props.options.defaultNewEventCalendar && '' !== props.options.defaultNewEventCalendar) {
     state.workflowId = props.options.defaultNewEventCalendar
-    initWorkflowForm('create calendar event')
+    await initWorkflowForm('create calendar event')
+    const data = {
+      category: state.workflowId
+    }
+    setForm(false, data)
   }
   opened.value = true
 }
 
 async function create() {
   await initWorkflowForm('create calendar event')
+
+  const data = {
+    category: state.workflowId
+  }
+  setForm(false, data)
 }
 
 function edit(event: any) {
   state.isEdit = true
-  // 打開update event的workflow表單
+  state.userList = []
   state.workflowId = event.calendarId
-
-  setTimeout(() => {
-    editForm(event)
-  }, 100)
-
+  editForm(event)
   opened.value = true
 }
 
-function editForm(event: any) {
+async function editForm(event: any) {
   const startTime = event.start.split(' ')
   const endTime = event.end.split(' ')
-
-  console.log(2, event)
 
   // TODO: eventDescription沒有數據
   const data = {
@@ -111,17 +121,17 @@ function editForm(event: any) {
     time.push(`${endTime[1]}:00`)
     data.time = time
   }
-  initWorkflowForm('update calendar event')
+  await initWorkflowForm('update calendar event')
 
-  setTimeout(() => {
-    createDialogFormRef.value.setFormData(true, data)
-  }, 1000)
+  setForm(true, data)
 }
 
 async function submit() {
-  const data = await createDialogFormRef.value.getFormData()
-
-  if (data) {
+  try {
+    const data = await createDialogFormRef.value.getFormData()
+    if (!data) {
+      return
+    }
     const form = {
       processKey: state.workflowKey,
       businessKey: '',
@@ -132,16 +142,14 @@ async function submit() {
     }
 
     state.loading = true
-    try {
-      await clientApi.api.postWorkflowProcessStart(form, { async: false }).then((res) => res.data)
-      state.formDialogVisible = false
-      emits('reload')
-    } catch (error) {
-      console.log(error)
-    }
+    await clientApi.api.postWorkflowProcessStart(form, { async: false }).then((res) => res.data)
+    state.formDialogVisible = false
+    emits('reload')
+    state.loading = false
+    opened.value = false
+  } catch (e) {
+    console.log(e)
   }
-  state.loading = false
-  opened.value = false
 }
 
 defineExpose({ open, edit })
@@ -149,15 +157,14 @@ defineExpose({ open, edit })
 
 <template>
   <el-dialog v-model="opened" :title="state.isEdit ? t('Edit Event') : t('New Event')" append-to-body>
-    <el-form label-position="top">
+    <el-form label-position="top" v-show="!state.isEdit">
       <el-form-item :label="t('Calendar')">
-        <!-- todo: 允許變更  calendar的話，會存在無法判定是創建還是更新     -->
         <el-select v-model="state.workflowId" @change="create">
           <el-option v-for="categories in categoriesOption" :key="categories.key" :label="categories.name" :value="categories.id" />
         </el-select>
       </el-form-item>
     </el-form>
-    <el-divider />
+    <el-divider v-show="!state.isEdit" />
 
     <div v-loading="state.loading">
       <LazyCalendarWidgetDialogForm ref="createDialogFormRef" />
