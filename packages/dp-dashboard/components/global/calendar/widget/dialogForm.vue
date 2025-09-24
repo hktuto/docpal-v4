@@ -7,7 +7,8 @@ const state = reactive({
   formJson: {},
   readonly: false,
   tableData: [],
-  userList: []
+  userList: [],
+  isEdit: false
 })
 const userList = ref([])
 const { formJson } = toRefs(state)
@@ -18,6 +19,7 @@ async function setForm(json: string | object) {
     return
   }
   state.formJson = json
+  state.tableData = []
   FormRendererRef.value.setFormJson(json)
 }
 
@@ -68,22 +70,26 @@ function handleRemoveUser(userId: string) {
   state.userList = state.userList.filter((item: any) => item !== userId)
 }
 
-watch(() => state.tableData, () => {
-  tableConfig.data = state.tableData
-  reload()
-})
+watch(
+  () => state.tableData,
+  () => {
+    tableConfig.data = state.tableData
+    reload()
+  }
+)
 
 async function getFormData() {
   try {
-    let formData = await FormRendererRef.value.getFormData()
+    let formData = await FormRendererRef.value
+      .getFormData()
       .then((res: any) => {
         return res
       })
       .catch((error: any) => {
         console.log(error)
-        return false
+        return
       })
-    if (!formData) return false
+    if (!formData) return
 
     if (state.userList.length === 0) {
       routerProvider?.message.error(t('Please add a user'))
@@ -105,6 +111,12 @@ async function getFormData() {
       data.startTime = formData.startTime + ' ' + formData.time[0]
       data.endTime = formData.endTime + ' ' + formData.time[1]
     }
+
+    // Update operation requires id
+    if (state.isEdit) {
+      data.eventId = formData.eventId
+    }
+
     return data
   } catch (error) {
     console.error(error)
@@ -125,11 +137,23 @@ async function getUserList() {
   userList.value = await getUserSelectOption()
 }
 
+function setFormData(isEdit: boolean, data: any) {
+  state.isEdit = isEdit
+  if (isEdit) {
+    state.userList = data.user.split(',')
+    delete data.user
+    handleUserListConfirm()
+  }
+  setTimeout(() => {
+    FormRendererRef.value.setFormData(data)
+  })
+}
+
 onMounted(() => {
   getUserList()
 })
 
-defineExpose({ setForm, getFormData, disableForm, enableForm })
+defineExpose({ setForm, getFormData, setFormData, disableForm, enableForm })
 </script>
 
 <template>
@@ -139,8 +163,7 @@ defineExpose({ setForm, getFormData, disableForm, enableForm })
         <template #toolbar_buttons>
           <div class="actions">
             <p>Participants</p>
-            <el-button id="Home__Dashboard__Calendar__NewEvent__AddParticipants" @click="openSelectUser"
-                       class="button-container" type="primary">
+            <el-button id="Home__Dashboard__Calendar__NewEvent__AddParticipants" @click="openSelectUser" class="button-container" type="primary">
               {{ $t('Add Participants') }}
             </el-button>
           </div>
@@ -155,12 +178,10 @@ defineExpose({ setForm, getFormData, disableForm, enableForm })
           </el-select>
         </el-form-item>
         <template #footer>
-          <el-button id="Home__Dashboard__Calendar__NewEvent__AddParticipants__Cancel"
-                     @click="showSelectUserDialog = false">
+          <el-button id="Home__Dashboard__Calendar__NewEvent__AddParticipants__Cancel" @click="showSelectUserDialog = false">
             {{ $t('vxe.button.cancel') }}
           </el-button>
-          <el-button id="Home__Dashboard__Calendar__NewEvent__AddParticipants__Confirm" type="primary"
-                     @click="handleUserListConfirm">
+          <el-button id="Home__Dashboard__Calendar__NewEvent__AddParticipants__Confirm" type="primary" @click="handleUserListConfirm">
             {{ $t('dpButtom_confirm') }}
           </el-button>
         </template>
@@ -175,7 +196,7 @@ defineExpose({ setForm, getFormData, disableForm, enableForm })
   display: flex;
   flex-flow: row nowrap;
   align-items: center;
-  justify-content: space-between
+  justify-content: space-between;
 }
 
 .button-container {
