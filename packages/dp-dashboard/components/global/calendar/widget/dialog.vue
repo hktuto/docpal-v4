@@ -99,6 +99,12 @@ function edit(event: any) {
 }
 
 async function editForm(event: any) {
+  const data = convertData(event)
+  await initWorkflowForm('update calendar event')
+  setForm(true, data)
+}
+
+function convertData(event: any) {
   const startTime = event.start.split(' ')
   const endTime = event.end.split(' ')
 
@@ -121,9 +127,29 @@ async function editForm(event: any) {
     time.push(`${endTime[1]}:00`)
     data.time = time
   }
-  await initWorkflowForm('update calendar event')
+  return data
+}
 
-  setForm(true, data)
+async function cancelAndRemove(iscancel: boolean, event: any) {
+  state.isEdit = true
+  state.userList = []
+  state.workflowId = event.calendarId
+  const data = convertData(event)
+  if (!data) return
+
+  const statue = iscancel ? 'cancel calendar event' : 'delete calendar event'
+  await initWorkflowForm(statue)
+
+  const form = {
+    processKey: state.workflowKey,
+    businessKey: '',
+    properties: Object.entries(data).reduce((newObj, [key, val]) => {
+      if (val || val === false || val == '0') newObj[key] = val
+      return newObj
+    }, {})
+  }
+  await clientApi.api.postWorkflowProcessStart(form, { async: false }).then((res) => res.data)
+  emits('reload')
 }
 
 async function submit() {
@@ -152,7 +178,7 @@ async function submit() {
   }
 }
 
-defineExpose({ open, edit })
+defineExpose({ open, edit, cancelAndRemove })
 </script>
 
 <template>
