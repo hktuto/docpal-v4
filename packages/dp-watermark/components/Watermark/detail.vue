@@ -1,8 +1,8 @@
 <script lang="ts" setup>
 import {ElMessage} from 'element-plus'
-import * as fabric from "fabric";
+import {fabric}  from "fabric";
 import {useEventListener} from '@vueuse/core'
-import {useWatermark, WatermarkTemplateDetail, Watermark} from '../../composables/Watermark'
+import {useWatermark, type WatermarkTemplateDetail, type Watermark} from '../../composables/Watermark'
 
 const emits = defineEmits(['update', 'change', 'delete', 'anchorChange'])
 
