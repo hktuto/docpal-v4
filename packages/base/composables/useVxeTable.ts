@@ -42,7 +42,8 @@ export interface UseVxeTableParams<R = any> {
   headerActions?: TableMenuActions[][]
   footerActions?: TableMenuActions[][]
   bodyActions?: TableMenuActions[][]
-  permissionMethod?: (params: PermissionMethodParams) => { visible: boolean; disabled: boolean }
+  permissionMethod?: (params: PermissionMethodParams) => { visible: boolean; disabled: boolean },
+  asyncPermission?: (params: any) => Promise<any>
   optionalConfig?: VxeGridProps<R>
   selectChangeHander?: (selectedRows: any[], selectedRow: any) => void
   optionalEvent?: VxeGridListeners<R>
@@ -184,6 +185,9 @@ export const useVxeTable = (params: UseVxeTableParams) => {
         className: 'contextMenuContainer',
         visibleMethod: async ({ options, column, row, rowIndex }: TableMenuValidateMethodParams) => {
           let additionalData: any
+          if (params.asyncPermission) {
+            return await visibleMethodHelper(row, options, params)
+          }
           if (params.additionalPermission) {
             additionalData = await params.additionalPermission({ column, row, rowIndex })
           }
@@ -285,11 +289,23 @@ export const useVxeTable = (params: UseVxeTableParams) => {
         if (!columns) {
           throw new Error('columns is required')
         }
-        const bus = useEventBus(EventType.TABLE_CONTEXT_MENU_OPEN)
+        const CONTEXT_MENU_OPEN_BUS = useEventBus(EventType.TABLE_CONTEXT_MENU_OPEN)
         let additionalData: any
+        if (params.asyncPermission) {
+          const asyncPermissionOptions = await visibleMethodHelper(row, actions, params)
+          CONTEXT_MENU_OPEN_BUS.emit({
+            row,
+            column,
+            rowIndex,
+            options: asyncPermissionOptions,
+            event: $event
+          })
+          return
+        }
         if (params.additionalPermission) {
           additionalData = await params.additionalPermission({ column, row, rowIndex })
         }
+        
         const options = actions.map((list) => {
           return list.map((item) => {
             if (item.children) {
@@ -320,7 +336,7 @@ export const useVxeTable = (params: UseVxeTableParams) => {
           options,
           event: $event
         }
-        bus.emit(evtParams)
+        CONTEXT_MENU_OPEN_BUS.emit(evtParams)
       }
       if (optionalEvent?.cellClick && typeof optionalEvent.cellClick === 'function') {
         optionalEvent.cellClick({
@@ -576,7 +592,27 @@ export const useVxeTable = (params: UseVxeTableParams) => {
     query
   }
 }
-
+async function visibleMethodHelper(row: any, options: any, params: any) {
+  const permission = await params.asyncPermission({  row })
+  options.forEach((list: any) => {
+    list.forEach((item: any) => {
+      if(item.children) {
+        item.children.forEach((child: any) => {
+          if(permission[child.code]) {
+            child.visible = permission[child.code].visible
+            child.disabled = permission[child.code].disabled
+          }
+        })
+      } else {
+        if(permission[item.code]) {
+          item.visible = permission[item.code].visible
+          item.disabled = permission[item.code].disabled
+        }
+      }
+    })
+  })
+  return options
+}
 function getPageSize(id: string) {
   try {
     return useUserPreference()?.value?.tableSettings[id]?.tablePageSize || 20
