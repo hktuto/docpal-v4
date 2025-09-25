@@ -1,7 +1,7 @@
 // import { globalApi } from 'api'
 import { ref, onMounted } from 'vue'
 
-export const useContactPermissionHelper = (contactId: string) => {
+export const useContactPermissionHelper = () => {
   const isEdit = ref(false)
   const isDelete = ref(false)
   const isCreate = ref(false)
