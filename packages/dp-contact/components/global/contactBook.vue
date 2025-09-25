@@ -125,25 +125,17 @@ const { tableConfig, tableEvent, tableRef, query, reload, cleanSelectedRows } = 
       }
     ]
   ],
-  asyncPermission: async ({ options, row, code }: any) => {
+  asyncPermission: async ({ row }) => {
     if (platform.value === 'admin') {
-      return options
+      return {}
     }
     const isDelete = await getRowPermission(row)
-    options.forEach((list: any) => {
-      list.forEach((item: any) => {
-        if (item.code === 'contactbook_edit') {
-          item.visible = true
-          item.disabled = false
-        }
-        if (item.code === 'contactbook_delete') {
-          item.visible = isDelete
-          item.disabled = false
-        }
-      })
-    })
-    console.log('options', options, isDelete)
-    return options
+    return {
+      contactbook_delete: {
+        visible: isDelete,
+        disabled: false
+      }
+    }
   },
   dblClickAction: ({ row, column, event }: any) => {
     handleDblclick(row)
