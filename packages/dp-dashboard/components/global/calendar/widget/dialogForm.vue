@@ -70,13 +70,10 @@ function handleRemoveUser(userId: string) {
   state.userList = state.userList.filter((item: any) => item !== userId)
 }
 
-watch(
-  () => state.tableData,
-  () => {
-    tableConfig.data = state.tableData
-    reload()
-  }
-)
+watch(() => state.tableData, () => {
+  tableConfig.data = state.tableData
+  reload()
+})
 
 async function getFormData() {
   try {

@@ -34,7 +34,9 @@ function editEvent(event: CalendarEventExternal) {
   eventDialogRef.value.edit(event)
 }
 
-function popNewEvent(dateTime: string) {}
+function popNewEvent(dateTime: string) {
+  eventDialogRef.value.open(dateTime)
+}
 
 function updateEvent(params: CalendarEventExternal) {
   newEvent.value = params
@@ -75,10 +77,12 @@ onDeactivated(() => {
       {{ $t('New Event') }}
     </el-button>
     <el-skeleton v-if="!hideSetting && !showPreview" :rows="5"></el-skeleton>
-    <Calendar v-else ref="CalendarRef" :options="setting" @openDetail="editEvent" @createEvent="popNewEvent" @updateEvent="updateEvent" />
+    <Calendar v-else ref="CalendarRef" :options="setting" @openDetail="editEvent" @createEvent="popNewEvent"
+              @updateEvent="updateEvent" />
 
     <CalendarWidgetDialog ref="eventDialogRef" :options="setting" @reload="refresh" />
-    <CalendarWidgetSetting ref="settingRef" :setting="setting" @submit="(setting) => $emit('refreshSetting', setting)" @delete="handleDelete" />
+    <CalendarWidgetSetting ref="settingRef" :setting="setting" @submit="(setting) => $emit('refreshSetting', setting)"
+                           @delete="handleDelete" />
   </DashboardCard>
 </template>
 
