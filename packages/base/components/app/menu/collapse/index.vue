@@ -62,7 +62,7 @@ watch(selectedMenuItem, (newSelectedMenuItem) => {
   justify-content: flex-start;
   align-items: flex-start;
   gap: var(--app-space-xs);
-  color: var(--app-success-6);
+  color: var(--menu-color);
   width: var(--app-space-xl);
 
   

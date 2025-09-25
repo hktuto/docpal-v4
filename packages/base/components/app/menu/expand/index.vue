@@ -64,7 +64,7 @@ watch(selectedMenuItem, (newSelectedMenuItem) => {
   padding: var(--app-space-xs);
   border-bottom: 1px solid var(--app-grey-800);
   font-size: var(--app-font-size-l);
-  color: var(--app-success-6);
+  color: var(--menu-color);
   margin-block: var(--app-space-s);
   .label{
     
