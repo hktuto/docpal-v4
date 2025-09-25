@@ -138,16 +138,9 @@ function edit(event: any) {
 }
 
 async function editForm(event: any) {
-  const data = convertData(event)
-  await initWorkflowForm('update calendar event')
-  await setForm(true, data)
-}
-
-function convertData(event: any) {
   const startTime = event.start.split(' ')
   const endTime = event.end.split(' ')
 
-  // TODO: eventDescription沒有數據
   const data = {
     eventId: event.detail.eventId,
     eventName: event.detail.eventName,
@@ -166,18 +159,28 @@ function convertData(event: any) {
     time.push(`${endTime[1]}:00`)
     data.time = time
   }
-  return data
+
+  await initWorkflowForm('update calendar event')
+  await setForm(true, data)
 }
 
-async function cancelAndRemove(iscancel: boolean, event: any) {
+async function cancelAndRemove(isCancel: boolean, event: any) {
   state.isEdit = true
   state.userList = []
   state.workflowId = event.calendarId
   state.location = ''
-  const data = convertData(event)
-  if (!data) return
-
-  const statue = iscancel ? 'cancel calendar event' : 'delete calendar event'
+  const data = {
+    eventId: event.detail.eventId,
+    eventName: event.detail.eventName,
+    eventDescription: event.detail.eventDescription,
+    category: event.detail.category,
+    location: event.detail.location,
+    startTime: event.start,
+    endTime: event.end,
+    user: event.detail.relatedUsers.user,
+    isAllDay: event.detail.isAllDay
+  }
+  const statue = isCancel ? 'cancel calendar event' : 'delete calendar event'
   await initWorkflowForm(statue)
 
   const form = {
