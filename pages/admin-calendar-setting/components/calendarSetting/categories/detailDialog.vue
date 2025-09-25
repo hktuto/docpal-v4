@@ -26,28 +26,34 @@ const groupOptions = ref([])
 const locationsOptions = ref([])
 const limitSeat = ref(false)
 // TODO 在創建時會默認加載以下的workflow
-const defWorkflow = ref([
-  {
-    'key': `test_new_event_form_1757554075071_${Date.now()}`,
-    'name': 'Create Calendar Event',
-    'type': 'test_new_event_form_1757554075071'
-  },
-  {
-    'key': `test_update_event_form_1757558021415_${Date.now()}`,
-    'name': 'Update Calendar Event',
-    'type': 'test_update_event_form_1757558021415'
-  },
-  {
-    'key': `test_remove_event_form_1757561803395_${Date.now()}`,
-    'name': 'Delete Calendar Event',
-    'type': 'test_remove_event_form_1757561803395'
-  },
-  {
-    'key': `test_cancel_event_form_1757561126341_${Date.now()}`,
-    'name': 'Cancel Calendar Event',
-    'type': 'test_cancel_event_form_1757561126341'
-  }
-])
+const defWorkflow = ref()
+
+function generateDefWorkflow(name: string) {
+  const date = Date.now()
+  const defWorkflow = [
+    {
+      'key': `test_new_event_form_1757554075071_${date}`,
+      'name': `${name} - Create Calendar Event`,
+      'type': 'test_new_event_form_1757554075071'
+    },
+    {
+      'key': `test_update_event_form_1757558021415_${date}`,
+      'name': `${name} - Update Calendar Event`,
+      'type': 'test_update_event_form_1757558021415'
+    },
+    {
+      'key': `test_remove_event_form_1757561803395_${date}`,
+      'name': `${name} - Delete Calendar Event`,
+      'type': 'test_remove_event_form_1757561803395'
+    },
+    {
+      'key': `test_cancel_event_form_1757561126341_${date}`,
+      'name': `${name} - Cancel Calendar Event`,
+      'type': 'test_cancel_event_form_1757561126341'
+    }
+  ]
+  return defWorfklow
+}
 
 async function init() {
   permissionOptions.value = await getPermissionSelectOption()
@@ -212,6 +218,7 @@ async function submit() {
       routerProvider?.message.success(t('tip_updateSuccessMsg', { modelName: null, name: currentData.value.name }))
     } else {
       // TODO use def value
+      defWorkflow.value = generateDefWorkflow(currentData.value.name)
       currentData.value.flows = defWorkflow.value
       const result = await adminApi.api.postEventCalendarsSetting(currentData.value)
       routerProvider?.message.success(t('tip_createdSuccessMsg', { modelName: null, name: currentData.value.name }))
