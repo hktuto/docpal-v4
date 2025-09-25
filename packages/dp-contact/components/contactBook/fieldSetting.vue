@@ -14,7 +14,7 @@
     </el-button>
 
     <!-- Add Field Dialog -->
-    <FieldSettingDialog v-model="showAddDialog" @confirm="handleAddFieldConfirm" />
+    <FieldSettingDialog v-model="showAddDialog" :existingFields="existingFields" @confirm="handleAddFieldConfirm" />
   </div>
 </template>
 

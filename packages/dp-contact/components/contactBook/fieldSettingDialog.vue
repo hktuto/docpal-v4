@@ -11,7 +11,7 @@
     </el-form>
 
     <template #footer>
-      <el-button type="primary" @click="handleConfirm">{{$t('button.add', { name: $t('contactBook.field') })}}</el-button>
+      <el-button type="primary" @click="handleConfirm">{{ $t('button.add', { name: $t('contactBook.field') }) }}</el-button>
     </template>
   </el-dialog>
 </template>
@@ -24,21 +24,14 @@ interface Field {
   name: string
   value: string
 }
-
-// Props
-interface Props {
-  modelValue: boolean
-}
-
 // Emits
 interface Emits {
   (e: 'update:modelValue', value: boolean): void
   (e: 'confirm', field: Field): void
 }
-
-const props = defineProps<Props>()
+const props = defineProps(['existingFields'])
 const emit = defineEmits<Emits>()
-
+const { t } = useI18n()
 // Reactive data
 const formRef = ref<FormInstance>()
 const visible = ref(props.modelValue)
@@ -52,11 +45,18 @@ const formData = reactive<Field>({
 // Form validation rules
 const formRules: FormRules = {
   name: [
-    { required: true, message: 'Please enter field name', trigger: 'blur' },
-    { min: 1, max: 50, message: 'Field name must be between 1 and 50 characters', trigger: 'blur' }
+    { required: true, message: t('render.hint.fieldRequired', { name: t('contactBook.fieldName') }), trigger: 'blur' },
+    { min: 1, max: 50, message: t('render.hint.fieldLength', { name: t('contactBook.fieldName'), min: 1, max: 50 }), trigger: 'blur' },
+    { validator: checkIfFieldExists, trigger: 'blur' }
   ]
 }
-
+function checkIfFieldExists(rule: any, value: any, callback: any) {
+  if (props.existingFields.some((field: any) => field.name.toLowerCase() === value.toLowerCase())) {
+    callback(new Error(t('common_nameExists')))
+  } else {
+    callback()
+  }
+}
 // Utility function to convert name to value (remove special characters)
 function convertNameToValue(name: string): string {
   return name
@@ -98,22 +98,25 @@ function handleCancel() {
   formRef.value?.resetFields()
 }
 
-function handleConfirm() {
+async function handleConfirm() {
   if (!formRef.value) return
-  formRef.value.validate((valid) => {
-    if (valid) {
-      // Emit the new field data
-      emit('confirm', {
-        name: formData.name,
-        value: formData.value,
-        dataType: formData.dataType
-      })
-
-      // Reset form and close dialog
-      formRef.value?.resetFields()
-      visible.value = false
+  try {
+    const valid = await formRef.value.validate()
+    if (!valid) {
+      return
     }
-  })
+    emit('confirm', {
+      name: formData.name,
+      value: formData.value,
+      dataType: formData.dataType
+    })
+
+    // Reset form and close dialog
+    formRef.value?.resetFields()
+    visible.value = false
+  } catch (error) {
+    console.error(error)
+  }
 }
 </script>
 
