@@ -152,7 +152,9 @@ watch(() => [layout, hightLightPanel], () => {
     deep:true,
     immediate: true
 })
-
+watch(() => props.admin, () => {
+    generateMenu()
+})
 onMounted(() => {
     // const menuState = localStorage.getItem('app-menu-mode')
     // if(menuState === 'expand'){

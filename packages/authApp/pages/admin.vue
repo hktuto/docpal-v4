@@ -30,6 +30,7 @@ defaultTab.value =  {
 .appFullPage{
   --app-bg: radial-gradient(72% 72% at 2% -5%, #f3d4b9 0%, #efebe8 51%, #f3f0f0 100%);
   --app-accent-color: #512e0e;
+  --menu-color: #512e0e;
 }
 </style>
 

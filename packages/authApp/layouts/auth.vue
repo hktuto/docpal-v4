@@ -4,7 +4,6 @@ import { TabApp } from "#components";
 const {public : { platform }} = useRuntimeConfig()
 const localeReady = ref(false)
 const appPlatform = useAppPlatform()
-appPlatform.value = platform || 'client'
 const defaultTab = useAppDefaultTab()
 
 
