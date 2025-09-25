@@ -358,11 +358,11 @@ importers:
         specifier: ^4.1.0
         version: 4.1.0(vue@3.5.20)
       vxe-pc-ui:
-        specifier: 4.3.2
-        version: 4.3.2(vue@3.5.20)
+        specifier: ~4.9.35
+        version: 4.9.35(vue@3.5.20)
       vxe-table:
-        specifier: 4.9.4
-        version: 4.9.4(vue@3.5.20)
+        specifier: ~4.16.16
+        version: 4.16.19(vue@3.5.20)
       ws:
         specifier: ^8.18.2
         version: 8.18.3
@@ -21026,18 +21026,18 @@ packages:
       vue: 3.5.20(typescript@5.9.2)
     dev: false
 
-  /vxe-pc-ui@4.3.2(vue@3.5.20):
-    resolution: {integrity: sha512-gH7r1bOKvEJ5Tdok9AsZ/FvxnumKFSD3qebj9h09cJqlpZdIygOs9c+HbTJevgAVkHhwy9o3KdE43ze8wRP2tQ==}
+  /vxe-pc-ui@4.9.35(vue@3.5.20):
+    resolution: {integrity: sha512-67/ir826hKjuTvSKG5TtViMzmGWlul6wyZlqxj/UxctCfZGokE81AUGo1ZBH1hwQK5PqlYIbqdy63fxf0SZsug==}
     dependencies:
       '@vxe-ui/core': 4.2.12(vue@3.5.20)
     transitivePeerDependencies:
       - vue
     dev: false
 
-  /vxe-table@4.9.4(vue@3.5.20):
-    resolution: {integrity: sha512-/3UEbtADvzJh1qSvhWQMfNEcCYmnXxm7U0dE8nsAZcfvxbaKci8OM7TUzvan0TdVgdz0FZz2L/cUCwbaLe9E+Q==}
+  /vxe-table@4.16.19(vue@3.5.20):
+    resolution: {integrity: sha512-W+tC4N7seBiOajyOsHq7WfZnhOgJ41dTyUPHDDhybIABsbjPy9vpc+opm8T4g0oWklR+grBEie11tYf/1F6fpg==}
     dependencies:
-      vxe-pc-ui: 4.3.2(vue@3.5.20)
+      vxe-pc-ui: 4.9.35(vue@3.5.20)
     transitivePeerDependencies:
       - vue
     dev: false

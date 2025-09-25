@@ -9,6 +9,8 @@ const hightLightPanel = useCurrentTargetPanel()
 // #region hot key to close tab
 const activeElement = useActiveElement()
 
+const appPlatform = useAppPlatform()
+
 const notUsingInput = computed(() =>
   activeElement.value?.tagName !== 'INPUT'
   && activeElement.value?.tagName !== 'TEXTAREA'
@@ -199,9 +201,14 @@ defineExpose({
 </script>
 
 <template>
-<AppWrapper>
+<TabWrapper>
         <template #sidebar>
-            <slot name="sidebar" />
+          <AppMenu class="sideMenu" :admin="appPlatform === 'admin'">
+                <template #header>
+                </template>
+                <template #footer>
+                </template>
+            </AppMenu>
             
         </template>
         <template #default>
@@ -229,7 +236,7 @@ defineExpose({
                     </template>
                 </div>
 
-                <div v-if="fullscreenItem" class="fullScreenContainer" >
+                <!-- <div v-if="fullscreenItem" class="fullScreenContainer" >
                     <div class="header" :data-tab-id="fullscreenItem.id" :id="`fullscreen-tab-header-${fullscreenItem.parent}-${fullscreenItem.id}`">
                         <div class="tabLeftTeleportContainer" >
 
@@ -243,11 +250,11 @@ defineExpose({
                     <div class="fullscreenContent" :id="'fullscreen-' + fullscreenItem.parent + '_' + fullscreenItem.id">
                       
                     </div>
-                </div>
+                </div> -->
 
             </template>
         </template>
-    </AppWrapper>
+    </TabWrapper>
     <TabPastePathDialog ref="PasteDialogRef"  @openInNewTab="(data) => openTab(data, true)" />
 </template>
 

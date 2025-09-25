@@ -1,44 +1,29 @@
 export default defineAppConfig({
-  // appMenu:[
-  //     {
-  //         name:'client-browse'
-  //     },
-  //     {
-  //         name:'client-search'
-  //     },
-  //     {
-  //         name:'client-master-table'
-  //     },
-  //     {
-  //         name:'client-folder-cabinet'
-  //     }
-  // ],
+
   appMenu: [
     {
       name: 'client-work-panel'
     },
     {
-      name: 'client-browse'
-    },
-    {
-      name: 'client-search'
-    },
-    {
-      label: 'file_uploads',
-      icon: 'uil:upload',
-      children: [
+      name: 'client-browse',
+      icon: 'dp-icon:browse-outline',
+      hoverIcon: 'dp-icon:browse-fill',
+      children:[
+        {
+          name: 'client-browse',
+        },
+        {
+          name: 'client-search'
+        },
+        {
+          name: 'client-collections'
+        },
         {
           name: 'client-ai-upload'
         },
         {
           name: 'client-fileRequest'
-        }
-      ]
-    },
-    {
-      label: 'file_share_module',
-      icon: 'meteor-icons:share',
-      children: [
+        },
         {
           name: 'client-share'
         },
@@ -47,23 +32,26 @@ export default defineAppConfig({
         },
         {
           name: 'client-share-other'
-        }
+        },
+        {
+          name: 'client-folder-cabinet'
+        },
+        {
+          name: 'client-trash'
+        },
       ]
     },
-    {
-      name: 'client-collections'
-    },
+    
+    
     // {
     //     name: "client-smartFolder"
     // },
-    {
-      name: 'client-folder-cabinet'
-    },
+    
     {
       name: 'client-workflow'
     },
     {
-      label: 'retention_policies',
+      name: 'client-retention',
       icon: 'ic:outline-lock-clock',
       children: [
         {
@@ -80,9 +68,7 @@ export default defineAppConfig({
     {
       name: 'client-master-table'
     },
-    {
-      name: 'client-trash'
-    },
+    
     {
       name: 'client-case-manage'
     },
