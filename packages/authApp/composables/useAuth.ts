@@ -44,13 +44,14 @@ export async function verifly() {
   const logedIn = useLoginState()
   const isDesktopMode = useDesktopMode()
   await Promise.all([getUser(), getFeature(), getUserPreference(), getOCRSetting()])
-  isDesktopMode.value = !(!window || !window.navigator || !window.navigator.userAgent || !window.navigator.userAgent.toLowerCase().includes('electron'))
+  isDesktopMode.value = !(!window || !window.navigator || !window.navigator.userAgent || !window.navigator?.userAgent?.toLowerCase().includes('electron'))
   logedIn.value = true
   const token = localStorage.getItem('access_token') || ''
   const decodedToken = parseJwt(token)
-  if(decodedToken) {
+  if(decodedToken && decodedToken.roles) {
     const isAdmin = useIsAdmin()
     const isSuperAdmin = useOsSuperAdmin()
+    console.log('decodedToken', decodedToken)
     const hasAdmin = decodedToken.roles.includes('ROLE_ADMIN')
     const hasSuperAdmin = decodedToken.roles.includes('ROLE_SUPER_ADMIN')
     isAdmin.value = hasAdmin
