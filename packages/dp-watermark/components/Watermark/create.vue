@@ -14,7 +14,7 @@
 </template>
 
 <script lang="ts" setup>
-import { useWatermark, WatermarkTemplate } from '../../composables/Watermark'
+import { useWatermark, type WatermarkTemplate } from '../../composables/Watermark'
 
 const routerProvider = inject(MenuRouterKey)
 const emits = defineEmits(['submit'])
