@@ -2509,6 +2509,7 @@
       "downloadFile": "Download",
       "endDatePlaceholder": "End date",
       "endTimePlaceholder": "End time",
+      "fieldLength": "{name} must be between {min} and {max} characters",
       "fieldRequired": "{name} cannot be empty.",
       "fileLoading": "The file is being uploaded, please try again later",
       "fileSizeExceed": "File size out of limit: ",
