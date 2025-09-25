@@ -37,7 +37,9 @@ const emits = defineEmits([
   'onClickDateTime',
   'onClickAgendaDate',
   'onClickPlusEvents',
-  'onBeforeEventUpdate'
+  'onBeforeEventUpdate',
+  'deleteEvent',
+  'cancelEvent'
 ])
 
 const temEvent = ref()
@@ -78,9 +80,9 @@ function getEvent(id: string) {
 
 async function getList() {
   // TODO: 結果集合需要排除刪除的數據
-  eventList.value = await getEventFromApi(calendarApp, calendarControls, props.filter)
-  // add custom event
-  console.log('get List', eventList.value)
+  const eventList = await getEventFromApi(calendarApp, calendarControls, props.filter)
+  console.log('get List', eventList)
+  eventList.value = eventList
 }
 
 function setupCalendar() {
@@ -119,7 +121,8 @@ function setupCalendar() {
         onClickDateTime: (args) => emits('onClickDateTime', args),
         onClickAgendaDate: (args) => emits('onClickAgendaDate', args),
         onClickPlusEvents: (args) => emits('onClickPlusEvents', args),
-        onBeforeEventUpdate: onBeforeEventUpdate
+        onBeforeEventUpdate: onBeforeEventUpdate,
+        onEventContextMenu: (args) => handleRightClick(args)
       },
       plugins
     })
@@ -182,7 +185,42 @@ function makeDescription(event: CalendarEventExternal) {
   return `${event.location} - ${event.people.join(', ')} - ${dayjs(event.start).format('YYYY-MM-DD HH:mm')} - ${dayjs(event.end).format('YYYY-MM-DD HH:mm')}`
 }
 
-function getRowData(row: any) {}
+function getRowData(row: any) {
+}
+
+const showMenu = ref(false)
+const state = reactive({
+  menuX: '',
+  menuY: ''
+})
+
+const eventData = ref()
+function handleRightClick(def: any, event: any) {
+  console.log(123123, def, event)
+  if (!event){
+    return
+  }
+  // 阻止默认的右键菜单
+  def.preventDefault()
+
+  eventData.value = event
+
+  state.menuX = def.clientX
+  state.menuY = def.clientY
+
+  console.log(`右击事件在位置 (${state.menuX}, ${state.menuY}) 发生`)
+  showMenu.value = true
+}
+
+function handleCancel() {
+  emits('cancelEvent',eventData.value)
+  showMenu.value = false
+}
+
+function handleDetele() {
+  emits('deleteEvent',eventData.value)
+  showMenu.value = false
+}
 
 watch(
   () => [setting, props.options],
@@ -221,7 +259,8 @@ defineExpose({
 </script>
 
 <template>
-  <div :class="{ calendarViewerContainer: true, editMode: editItem && editItem.eventId, createMode: options.allowCreate }">
+  <div
+    :class="{ calendarViewerContainer: true, editMode: editItem && editItem.eventId, createMode: options.allowCreate }">
     <ScheduleXCalendar v-if="showCalendar" :calendar-app="calendarApp">
       <template #monthAgendaEvent="{ calendarEvent }">
         <div
@@ -252,6 +291,7 @@ defineExpose({
         <div
           :class="{ eventContainer: true, isEditItem: editItem && calendarEvent.detail.eventId === editItem.eventId }"
           :style="getCalendarStyle(calendarEvent)"
+          @contextmenu.prevent="(event) => handleRightClick(event, calendarEvent)"
         >
           <ElTooltip placement="top">
             <div class="eventInfoGroup">
@@ -300,6 +340,13 @@ defineExpose({
         </div>
       </template>
     </ScheduleXCalendar>
+  </div>
+
+  <div v-if="showMenu" :style="{ top: `${state.menuY}px`, left: `${state.menuX}px` }" class="context-menu">
+    <ul>
+      <li @click="handleCancel">Cancel</li>
+      <li @click="handleDetele">Detele</li>
+    </ul>
   </div>
 </template>
 
@@ -378,5 +425,29 @@ defineExpose({
     background-color: var(--app-primary-color) !important;
     border: 1px solid #000 !important;
   }
+}
+
+
+.context-menu {
+  position: absolute;
+  background-color: white;
+  border: 1px solid #ccc;
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+}
+
+.context-menu ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.context-menu li {
+  padding: 8px 12px;
+  cursor: pointer;
+}
+
+.context-menu li:hover {
+  background-color: #f0f0f0;
 }
 </style>

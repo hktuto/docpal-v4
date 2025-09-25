@@ -52,7 +52,7 @@ function generateDefWorkflow(name: string) {
       'type': 'test_cancel_event_form_1757561126341'
     }
   ]
-  return defWorfklow
+  return defWorkflow
 }
 
 async function init() {
