@@ -93,7 +93,7 @@ function convertId(options: any) {
       let id = option.id
       switch (item.label) {
         case 'User':
-          id = 'user_' + id
+          id = 'user_' + option.userId
           break
         case 'Role':
           id = 'role_' + id
@@ -152,7 +152,7 @@ export const getUserPermissionSelectOption = async () => {
 
   return userList.value.map((item: any) => {
     const name = item.name || item.userName || item.username || ''
-    return { label: name, value: item.id, email: item.email, userId: item.userId }
+    return { label: name, value: item.userId, email: item.email, userId: item.userId }
   })
 }
 
@@ -201,4 +201,39 @@ export const getCachePermissionOptions = async () => {
     await getFromServer(true, true, true)
     return options.value
   }
+}
+
+export const getUserSelectOption = async () => {
+  const list: any = await adminApi.api.postNuxeoIdentityUsers().then((res) => res.data)
+  if (list.length === 0) return []
+
+  return list.map((item: any) => ({
+    id: item.userId,
+    name: item.username,
+    email: item.email
+  }))
+}
+
+export const getRoleSelectOption = async () => {
+  const list: any = await adminApi.api.postAclRoleList([{
+    column: 'status',
+    type: 'EQ',
+    values: '1'
+  }]).then((res) => res.data)
+  if (list.length === 0) return []
+
+  return list.map((item) => ({
+    id: item.id,
+    name: item.name
+  }))
+}
+
+export const getGroupsSelectOption = async () => {
+  let list = await adminApi.api.postNuxeoIdentityGroups().then((res) => res.data)
+  if (list.length === 0) return []
+
+  return list.map((item) => ({
+    id: item.id,
+    name: item.name
+  }))
 }
