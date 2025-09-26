@@ -78,7 +78,7 @@
     </el-form>
     <CaseManagementDetailPermissionDrag :list="state.permissionField"/>
     <template #footer>
-      <el-button id="CaseManagement__Detail__Permission__AddPermission__Delete" v-if="state.setting?.name" type="danger"
+      <el-button id="CaseManagement__Detail__Permission__AddPermission__Delete" v-if="state.isEdit" type="danger"
                  @click="handleDelete">
         {{ $t('common_delete') }}
       </el-button>
