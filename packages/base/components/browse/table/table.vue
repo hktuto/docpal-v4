@@ -24,63 +24,63 @@ const lastSelectedIndex = ref(-1)
 const lastSelectedRow = ref<any>(null)
 const { shift } = useMagicKeys()
 
-const { find, syncData } = useSqliteTable<DocumentColumnData>({
-  schema: {
-    name: 'docpal_documents',
-    columns: documentColumn,
-    indexes: documentIndex
-  },
-  hooks: {
-    afterFind: async (result: DocumentColumnData[], where: any, options: any) => {
-      const list = (await loadData([], where.parentRef)) as DocumentApiData[]
+// const { find, syncData } = useSqliteTable<DocumentColumnData>({
+//   schema: {
+//     name: 'docpal_documents',
+//     columns: documentColumn,
+//     indexes: documentIndex
+//   },
+//   hooks: {
+//     afterFind: async (result: DocumentColumnData[], where: any, options: any) => {
+//       const list = (await loadData([], where.parentRef)) as DocumentApiData[]
 
-      // step 2 calculate diff between apiList and result
-      const batchData = {
-        create: [],
-        update: [],
-        delete: []
-      } as {
-        create: DocumentColumnData[]
-        update: DocumentColumnData[]
-        delete: DocumentColumnData[]
-      }
-      // find updatd and delete items in result
-      result.forEach((item: DocumentColumnData) => {
-        if (!list.some((apiItem: DocumentApiData) => apiItem.id === item.id)) {
-          batchData.delete.push(item)
-        }
-      })
-      // find create items in list
-      list.forEach((item: DocumentApiData) => {
-        const existingItem = result.find((apiItem: DocumentColumnData) => apiItem.id === item.id)
-        if (!existingItem) {
-          batchData.create.push(apiToColumn(item))
-        } else {
-          if (item.modifiedDate !== existingItem.modifiedDate) {
-            batchData.update.push(apiToColumn(item))
-          }
-        }
-      })
+//       // step 2 calculate diff between apiList and result
+//       const batchData = {
+//         create: [],
+//         update: [],
+//         delete: []
+//       } as {
+//         create: DocumentColumnData[]
+//         update: DocumentColumnData[]
+//         delete: DocumentColumnData[]
+//       }
+//       // find updatd and delete items in result
+//       result.forEach((item: DocumentColumnData) => {
+//         if (!list.some((apiItem: DocumentApiData) => apiItem.id === item.id)) {
+//           batchData.delete.push(item)
+//         }
+//       })
+//       // find create items in list
+//       list.forEach((item: DocumentApiData) => {
+//         const existingItem = result.find((apiItem: DocumentColumnData) => apiItem.id === item.id)
+//         if (!existingItem) {
+//           batchData.create.push(apiToColumn(item))
+//         } else {
+//           if (item.modifiedDate !== existingItem.modifiedDate) {
+//             batchData.update.push(apiToColumn(item))
+//           }
+//         }
+//       })
 
-      // update table
-      tableRef.value?.insert(batchData.create.map((item) => columnToApi(item)))
-      tableRef.value?.setRow(batchData.update.map((item) => columnToApi(item)))
-      tableRef.value?.remove(batchData.delete.map((item) => columnToApi(item)))
-      syncData(batchData)
-      tableRef.value?.sort([
-        {
-          field: 'isFolder',
-          order: 'desc'
-        },
-        {
-          field: 'name',
-          order: 'asc'
-        }
-      ])
-      // sync data
-    }
-  }
-})
+//       // update table
+//       tableRef.value?.insert(batchData.create.map((item) => columnToApi(item)))
+//       tableRef.value?.setRow(batchData.update.map((item) => columnToApi(item)))
+//       tableRef.value?.remove(batchData.delete.map((item) => columnToApi(item)))
+//       syncData(batchData)
+//       tableRef.value?.sort([
+//         {
+//           field: 'isFolder',
+//           order: 'desc'
+//         },
+//         {
+//           field: 'name',
+//           order: 'asc'
+//         }
+//       ])
+//       // sync data
+//     }
+//   }
+// })
 
 async function loadData(entry: any[], path?: string, pageNum: number = 0) {
   const { data } = await listProvider?.getchildApi({ idOrPath: path, pageSize: 1000, pageNum })
