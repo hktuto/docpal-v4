@@ -24,63 +24,63 @@ const lastSelectedIndex = ref(-1)
 const lastSelectedRow = ref<any>(null)
 const { shift } = useMagicKeys()
 
-const { find, syncData } = useSqliteTable<DocumentColumnData>({
-  schema: {
-    name: 'docpal_documents',
-    columns: documentColumn,
-    indexes: documentIndex
-  },
-  hooks: {
-    afterFind: async (result: DocumentColumnData[], where: any, options: any) => {
-      const list = (await loadData([], where.parentRef)) as DocumentApiData[]
+// const { find, syncData } = useSqliteTable<DocumentColumnData>({
+//   schema: {
+//     name: 'docpal_documents',
+//     columns: documentColumn,
+//     indexes: documentIndex
+//   },
+//   hooks: {
+//     afterFind: async (result: DocumentColumnData[], where: any, options: any) => {
+//       const list = (await loadData([], where.parentRef)) as DocumentApiData[]
 
-      // step 2 calculate diff between apiList and result
-      const batchData = {
-        create: [],
-        update: [],
-        delete: []
-      } as {
-        create: DocumentColumnData[]
-        update: DocumentColumnData[]
-        delete: DocumentColumnData[]
-      }
-      // find updatd and delete items in result
-      result.forEach((item: DocumentColumnData) => {
-        if (!list.some((apiItem: DocumentApiData) => apiItem.id === item.id)) {
-          batchData.delete.push(item)
-        }
-      })
-      // find create items in list
-      list.forEach((item: DocumentApiData) => {
-        const existingItem = result.find((apiItem: DocumentColumnData) => apiItem.id === item.id)
-        if (!existingItem) {
-          batchData.create.push(apiToColumn(item))
-        } else {
-          if (item.modifiedDate !== existingItem.modifiedDate) {
-            batchData.update.push(apiToColumn(item))
-          }
-        }
-      })
+//       // step 2 calculate diff between apiList and result
+//       const batchData = {
+//         create: [],
+//         update: [],
+//         delete: []
+//       } as {
+//         create: DocumentColumnData[]
+//         update: DocumentColumnData[]
+//         delete: DocumentColumnData[]
+//       }
+//       // find updatd and delete items in result
+//       result.forEach((item: DocumentColumnData) => {
+//         if (!list.some((apiItem: DocumentApiData) => apiItem.id === item.id)) {
+//           batchData.delete.push(item)
+//         }
+//       })
+//       // find create items in list
+//       list.forEach((item: DocumentApiData) => {
+//         const existingItem = result.find((apiItem: DocumentColumnData) => apiItem.id === item.id)
+//         if (!existingItem) {
+//           batchData.create.push(apiToColumn(item))
+//         } else {
+//           if (item.modifiedDate !== existingItem.modifiedDate) {
+//             batchData.update.push(apiToColumn(item))
+//           }
+//         }
+//       })
 
-      // update table
-      tableRef.value?.insert(batchData.create.map((item) => columnToApi(item)))
-      tableRef.value?.setRow(batchData.update.map((item) => columnToApi(item)))
-      tableRef.value?.remove(batchData.delete.map((item) => columnToApi(item)))
-      syncData(batchData)
-      tableRef.value?.sort([
-        {
-          field: 'isFolder',
-          order: 'desc'
-        },
-        {
-          field: 'name',
-          order: 'asc'
-        }
-      ])
-      // sync data
-    }
-  }
-})
+//       // update table
+//       tableRef.value?.insert(batchData.create.map((item) => columnToApi(item)))
+//       tableRef.value?.setRow(batchData.update.map((item) => columnToApi(item)))
+//       tableRef.value?.remove(batchData.delete.map((item) => columnToApi(item)))
+//       syncData(batchData)
+//       tableRef.value?.sort([
+//         {
+//           field: 'isFolder',
+//           order: 'desc'
+//         },
+//         {
+//           field: 'name',
+//           order: 'asc'
+//         }
+//       ])
+//       // sync data
+//     }
+//   }
+// })
 
 async function loadData(entry: any[], path?: string, pageNum: number = 0) {
   const { data } = await listProvider?.getchildApi({ idOrPath: path, pageSize: 1000, pageNum })
@@ -132,15 +132,16 @@ const { tableConfig, tableEvent, tableRef, reload, cleanSelectedRows } = useVxeT
     cleanSelectedRows()
     // if mode is browse, use loadData to get current path data
     if (listProvider.mode.value === 'browse') {
-      const data = await find({
-        parentRef: listProvider.idOrPath?.value || '/'
-      }).then((data) => {
-        return data.map((item) => columnToApi(item))
-      })
-      if (data) {
-        data.sort(sortEntry)
+      const list = (await loadData([], listProvider.idOrPath?.value || '/')) as DocumentApiData[]
+      // const data = await find({
+      //   parentRef: listProvider.idOrPath?.value || '/'
+      // }).then((data) => {
+      //   return data.map((item) => columnToApi(item))
+      // })
+      if (list) {
+        list.sort(sortEntry)
         emits('selectedChange', [])
-        return data
+        return list
       }
       return []
     }
@@ -519,19 +520,8 @@ const { tableConfig, tableEvent, tableRef, reload, cleanSelectedRows } = useVxeT
       hasChildField: 'isFolder',
       loadMethod: async (params) => {
         try {
-          const entry = await find({ parentRef: params.row.id }, {}, { skipIfEmpty: true })
-          if (entry.length === 0) {
-            const apiData = (await loadData([], params.row.id)) as DocumentApiData[]
-            const syncList = {
-              create: apiData.map((item: DocumentApiData) => apiToColumn(item)),
-              update: [],
-              delete: []
-            }
-            await syncData(syncList)
-            return apiData.sort(sortEntry)
-          } else {
-            return entry.map((item: DocumentColumnData) => columnToApi(item)).sort(sortEntry)
-          }
+          const apiData = (await loadData([], params.row.id)) as DocumentApiData[]
+          return apiData.sort(sortEntry)
         } catch (e) {
           // if error, return empty array and remove item from expandedItems
           console.error(e)
