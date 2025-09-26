@@ -136,6 +136,14 @@ const calendarEvents = {
     emits('updateEvent', newData)
     // convert scheduls-x event to calendar event
     // emits('updateEvent', args)
+  },
+  cancelEvent:(args: any)=>{
+    console.log("calendar/index-cancelEvent",args)
+    emits('cancelEvent',args)
+  },
+  deleteEvent:(args: any)=>{
+    console.log("calendar/index-deleteEvent",args)
+    emits('deleteEvent',args)
   }
 }
 
