@@ -42,6 +42,8 @@ export function canCollaboraEdit(mimeType: string) {
   // is mimeType is .doc or .docx file
   // check is doc or docx
   const excelType = [
+    'text/plain',
+    'text/csv',
     'application/vnd.ms-excel',
     'application/msexcel',
     'application/x-msexcel',

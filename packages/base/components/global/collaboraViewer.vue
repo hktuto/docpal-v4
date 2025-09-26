@@ -7,11 +7,23 @@ import {nextTick, ref, toRefs} from 'vue';
 const userPreference = useUserPreference()
 const props = defineProps<{
   docId?: string,
+  doc?: any,
   readonly: boolean
   editable: boolean
   fileType: string,
   editMode: boolean
 }>()
+const isEditable = computed(() => {
+  if(!props.editable) return false
+  if(props.doc){
+    const mineType = getMimeTypeFromDocument(props.doc)
+    const blockList = [ 'text/plain','text/csv']
+    if(!mineType ||blockList.includes(mineType)){
+      return false
+    }
+  }
+  return true
+})
 const timestamp = ref(Date.now())
 const {docId} = toRefs(props)
 const iframeReady = ref(false)
@@ -130,7 +142,7 @@ defineExpose({
   <el-button :type="mode === 'view' ? 'info' : 'primary'" :class="{editToggleButton:true, iframeReady}"
              :disabled="!iframeReady" @click="toggleMode">
     {{ $t('collabora.' + mode) }}
-    <SvgIcon v-if="editable" class="el-icon--right"
+    <SvgIcon v-if="isEditable" class="el-icon--right"
              :src="mode === 'view' ? '/icons/file/edit.svg' : '/icons/close.svg'"></SvgIcon>
   </el-button>
   <div class="xlsContainer">

@@ -1,33 +1,45 @@
 <script lang="ts" setup>
 import { clientApi, adminApi } from 'api'
 
+const routerProvider = inject(MenuRouterKey)
 const emits = defineEmits(['reload'])
 const { t } = useI18n()
 const opened = ref(false)
-const { setting: calendarSetting, categoriesOption, locationsOption, calendarViewOptions, weekDayOptions } = useCalendarStore()
+const {
+  setting: calendarSetting,
+  categoriesOption,
+  locationsOption,
+  calendarViewOptions,
+  weekDayOptions
+} = useCalendarStore()
 const props = defineProps({
   options: {}
 })
-
-// const newEventId = defineModel<string>('newEventId')
 const createDialogFormRef = ref()
-const newEventId = ref(new Date().valueOf().toString())
 
 const state = reactive({
   workflowKey: '',
   workflowId: {},
+  location: '',
   formJson: {},
   loading: false,
   isEdit: false
 })
+const event = reactive({
+  id: '',
+  category: '',
+  location: ''
+})
 
 const categories = ref()
-
 async function initWorkflowForm(name: string) {
   state.loading = true
   try {
     categories.value = categoriesOption.value.find((item: any) => item.id === state.workflowId)
-    if (!categories.value || !categories.value.flows || categories.value.flows.length === 0) return
+    if (!categories.value || !categories.value.flows || categories.value.flows.length === 0) {
+      state.workflowId = ''
+      return
+    }
     // TODO：名稱之後需要重新定義
     const flow = categories.value.flows.find((item: any) => {
       if (item.name.toLowerCase().includes(name)) {
@@ -35,7 +47,11 @@ async function initWorkflowForm(name: string) {
       }
     })
     if (!flow) return
-    state.workflowKey = deepCopy(flow.key)
+    state.workflowKey = flow.key
+    if (!!categories.value.location && categories.value.location.value.length > 0) {
+      state.location = categories.value.location.value.map(item => item.id).join(',')
+    }
+
     const workflow = await adminApi.api.getWorkflowVersionKeyProcessdefinitionkey(flow.key).then((r) => r.data)
     if (!workflow) return
     state.formJson = await formJsonGet(workflow.processDefinitionKey, workflow.id)
@@ -48,35 +64,57 @@ async function initWorkflowForm(name: string) {
 }
 
 async function formJsonGet(processKey: string, versionId: string) {
-  const response: any = await clientApi.api
-    .getRelationQuery({
+  const response: any = await clientApi.api.getRelationQuery(
+    {
       userTaskId: 'start',
       processKey,
       versionId
-    })
-    .then((res: any) => res.data)
+    }).then((res: any) => res.data)
   if (!response[0] || (response[0] && !response[0].jsonValue)) return {}
   return JSON.parse(response[0].jsonValue)
 }
 
 async function setForm(isEdit: boolean, data: any) {
-  setTimeout(() => {
+  if (!state.formJson && '' !== state.formJson) {
+    routerProvider?.message.error('The form does not exist')
+    return
+  }
+  nextTick(() => {
     createDialogFormRef.value.setForm(state.formJson)
     createDialogFormRef.value.setFormData(isEdit, data)
-  }, 100)
+  })
 }
 
-async function open() {
+async function open(dateTime: string) {
   state.isEdit = false
   state.userList = []
   state.workflowId = ''
-  if (!!props.options.defaultNewEventCalendar && '' !== props.options.defaultNewEventCalendar) {
-    state.workflowId = props.options.defaultNewEventCalendar
-    await initWorkflowForm('create calendar event')
-    const data = {
-      category: state.workflowId
+  state.location = ''
+  try {
+    if (!!props.options.defaultNewEventCalendar && '' !== props.options.defaultNewEventCalendar) {
+      state.workflowId = props.options.defaultNewEventCalendar
+      await initWorkflowForm('create calendar event')
+      const data = {
+        category: state.workflowId
+      }
+      if(''!==state.location){
+        data.location = state.location
+      }
+
+      // allow to create
+      if (!!dateTime && dateTime !== '') {
+        const startTime = dateTime.split(' ')
+        data.startTime = startTime[0]
+        data.isAllDay = false
+        const time = []
+        time.push(`${startTime[1]}:00`)
+        time.push('23:59:00')
+        data.time = time
+      }
+      await setForm(false, data)
     }
-    setForm(false, data)
+  } catch (e) {
+    console.log(e)
   }
   opened.value = true
 }
@@ -87,28 +125,22 @@ async function create() {
   const data = {
     category: state.workflowId
   }
-  setForm(false, data)
+  await setForm(false, data)
 }
 
 function edit(event: any) {
   state.isEdit = true
   state.userList = []
   state.workflowId = event.calendarId
+  state.location = ''
   editForm(event)
   opened.value = true
 }
 
 async function editForm(event: any) {
-  const data = convertData(event)
-  await initWorkflowForm('update calendar event')
-  setForm(true, data)
-}
-
-function convertData(event: any) {
   const startTime = event.start.split(' ')
   const endTime = event.end.split(' ')
 
-  // TODO: eventDescription沒有數據
   const data = {
     eventId: event.detail.eventId,
     eventName: event.detail.eventName,
@@ -127,17 +159,28 @@ function convertData(event: any) {
     time.push(`${endTime[1]}:00`)
     data.time = time
   }
-  return data
+
+  await initWorkflowForm('update calendar event')
+  await setForm(true, data)
 }
 
-async function cancelAndRemove(iscancel: boolean, event: any) {
+async function cancelAndRemove(isCancel: boolean, event: any) {
   state.isEdit = true
   state.userList = []
   state.workflowId = event.calendarId
-  const data = convertData(event)
-  if (!data) return
-
-  const statue = iscancel ? 'cancel calendar event' : 'delete calendar event'
+  state.location = ''
+  const data = {
+    eventId: event.detail.eventId,
+    eventName: event.detail.eventName,
+    eventDescription: event.detail.eventDescription,
+    category: event.detail.category,
+    location: event.detail.location,
+    startTime: event.start,
+    endTime: event.end,
+    user: event.detail.relatedUsers.user,
+    isAllDay: event.detail.isAllDay
+  }
+  const statue = isCancel ? 'cancel calendar event' : 'delete calendar event'
   await initWorkflowForm(statue)
 
   const form = {
@@ -168,6 +211,7 @@ async function submit() {
     }
 
     state.loading = true
+    console.log("submit",data,form)
     await clientApi.api.postWorkflowProcessStart(form, { async: false }).then((res) => res.data)
     state.formDialogVisible = false
     emits('reload')
@@ -186,14 +230,15 @@ defineExpose({ open, edit, cancelAndRemove })
     <el-form label-position="top" v-show="!state.isEdit">
       <el-form-item :label="t('Calendar')">
         <el-select v-model="state.workflowId" @change="create">
-          <el-option v-for="categories in categoriesOption" :key="categories.key" :label="categories.name" :value="categories.id" />
+          <el-option v-for="categories in categoriesOption" :key="categories.key" :label="categories.name"
+                     :value="categories.id" />
         </el-select>
       </el-form-item>
     </el-form>
     <el-divider v-show="!state.isEdit" />
 
     <div v-loading="state.loading">
-      <LazyCalendarWidgetDialogForm ref="createDialogFormRef" />
+      <CalendarWidgetDialogForm ref="createDialogFormRef"/>
     </div>
 
     <template #footer>
