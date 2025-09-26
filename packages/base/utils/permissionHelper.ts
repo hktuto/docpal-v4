@@ -89,8 +89,8 @@ const permissionOptions = [
   { label: 'rbac.permission.editMetadata', value: RbacPermission.editMetadata, group: 'write', name: 'editMetadata' },
   { label: 'share.share', value: RbacPermission.share, group: 'write', name: 'share' },
 
-  { label: 'rbac.permission.createFolder', value: RbacPermission.createSubFolder, group: 'write', name: 'createSubFolder' },
-  { label: 'rbac.permission.createFile', value: RbacPermission.create, group: 'write', name: 'create' },
+  { label: 'rbac.permission.createFolder', value: RbacPermission.createSubFolder, group: 'write', name: 'createSubFolder', isFolder: 'true' },
+  { label: 'rbac.permission.createFile', value: RbacPermission.create, group: 'write', name: 'create', isFolder: 'true' },
 
   { label: 'rbac.permission.deleteFolder', value: RbacPermission.delete, group: 'manage', name: 'delete' },
   { label: 'rbac.permission.deleteSubContent', value: RbacPermission.deleteSubContent, group: 'manage', name: 'deleteSubContent', isFolder: 'true' },
