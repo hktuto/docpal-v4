@@ -8,14 +8,13 @@
 import { Loading } from '@element-plus/icons-vue'
 import { ElNotification, ElMessageBox } from 'element-plus'
 import { clientApi } from 'api'
+
 const props = defineProps<{
   selectedList: any
 }>()
-
-
-
 const emits = defineEmits(['success'])
 const { t } = useI18n()
+
 async function deleteSelected() {
   let msg = await checkAllShareInternal()
   msg += t('msg_confirmWhetherToDelete')
@@ -49,6 +48,7 @@ async function deleteSelected() {
     noti.close()
   }
 }
+
 async function checkAllShareInternal() {
   let msg = ''
   let pList: any = []
@@ -56,7 +56,8 @@ async function checkAllShareInternal() {
     pList.push(checkShareInternal(element))
   })
   await Promise.all(pList)
-  return msg ? `<span class="color__danger">${msg} ${t('msg_isShareInternalFiles')}, </span>` : ''
+  return msg ? `<span class="color__danger">${msg} ${t('msg_isShareInternalFile')}, </span>` : ''
+
   async function checkShareInternal(row: any) {
     const isShareInternal = await clientApi.api.postInternalshareCheckdocumentisinshare({
       documentId: row.id
@@ -65,5 +66,7 @@ async function checkAllShareInternal() {
     if (isShareInternal) msg += row.name
   }
 }
-onMounted(() => {})
+
+onMounted(() => {
+})
 </script>

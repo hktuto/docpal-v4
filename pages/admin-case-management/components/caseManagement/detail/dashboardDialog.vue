@@ -5,57 +5,73 @@
     :close-on-click-modal="false"
     destroy-on-close
   >
-    <FormRenderer ref="FormRendererRef" :form-json="formJson"> </FormRenderer>
+    <el-form label-position="top" :model="state">
+      <el-form-item :label="t('dpTable_label')" required prop="label">
+        <el-input v-model="state.label" id="CaseManagement__Detail__CaseDashboardView__Add__Label" />
+      </el-form-item>
+      <el-form-item :label="t('dpTable_permission')" required prop="permission">
+        <el-select v-model="state.permission" multiple filterable collapse-tags :max-collapse-tags="6"
+                   :placeholder="t('common_selectedIsMultiSelectRequiredMsg')"
+                   id="CaseManagement__Detail__CaseDashboardView__Add__Permission">
+          <el-option-group v-for="group in permissionOptions" :key="group.label" :label="group.label">
+            <el-option v-for="item in group.options" :key="item.value" :label="item.label" :value="item.value" />
+          </el-option-group>
+        </el-select>
+      </el-form-item>
+    </el-form>
+
     <template #footer>
-      <el-button id="CaseManagement__Detail__CaseDashboardView__Add__Submit" type="primary" :loading="state.loading" @click="handleSubmit">
+      <el-button id="CaseManagement__Detail__CaseDashboardView__Add__Submit" type="primary" :loading="state.loading"
+                 @click="handleSubmit">
         {{ $t('common_submit') }}
       </el-button>
     </template>
   </el-dialog>
 </template>
 <script lang="ts" setup>
-import formJson from './form/dashobard.vform.json'
 import { adminApi } from 'api'
 
+const permissionOptions = ref<any>([])
 const emits = defineEmits(['refresh'])
+const { t } = useI18n()
 
 const props = defineProps<{
   caseDetail: any
   caseTypeId: string
   name: string
-  currentVersion: string
+  currentVersion: string,
+  caseDetailId: string
 }>()
 const state = reactive<any>({
   loading: false,
   visible: false,
-  setting: {},
-  isEdit: false
+  isEdit: false,
+  id: '',
+  label: '',
+  permission: []
 })
-const route = useRoute()
-const FormRendererRef = ref()
 
 async function handleSubmit() {
   try {
-    const data = await FormRendererRef.value.getFormData()
-    const params: any = {
-      caseTypeId: props.caseDetail.id,
-      label: data.label,
-      userGroup: data.userGroup.join(',')
+    const form = {
+      caseTypeId: props.caseDetailId,
+      cmmnVersionId: props.caseTypeId,
+      label: state.label,
+      permissions: convertPermissionObjectByPermissions(state.permission)
     }
-    console.log('params', params)
-    state.visible = false
+
     if (!state.isEdit) {
-      params.cmmnVersionId = props.caseTypeId
-      await adminApi.api.postCaseDashboard(params as any)
+      await adminApi.api.postCaseDashboard(form as any)
     } else {
       await adminApi.api.putCaseDashboard({
-        ...params,
-        id: state.setting.id
+        ...form,
+        id: state.id
       } as any)
     }
+    state.visible = false
     emits('refresh')
-  } catch (error) {
-    console.error(error)
+  } catch (e) {
+    console.log(e)
   }
 }
 
@@ -63,22 +79,36 @@ function handleOpen(setting: any) {
   state.visible = true
   if (!!setting) {
     state.isEdit = true
-    state.setting = setting
-    setTimeout(async () => {
-      FormRendererRef.value.vFormRenderRef.setFormData({
-        label: setting.label,
-        userGroup: setting.userGroup.split(',')
-      })
-    })
+    state.id = setting.id
+    state.label = setting.label
+    state.permission = toPermissions(setting.permissions)
   } else {
     state.isEdit = false
-    setTimeout(async () => {
-      FormRendererRef.value.vFormRenderRef.setFormData({})
-    })
+    state.label = ''
+    state.permission = []
   }
 }
 
-onMounted(async () => {})
+function toPermissions(permissions: any) {
+  const permission = []
+  permissions.forEach((item: any) => {
+    const type = item.dataType
+    switch (type) {
+      case 'role':
+        permission.push(`role_${item.value}`)
+        break
+      case 'group':
+        permission.push(`group_${item.value}`)
+        break
+    }
+  })
+  return permission
+}
+
+onMounted(async () => {
+  permissionOptions.value = await getRoleAndGroupPermissionSelectOption()
+})
+
 defineExpose({ handleOpen })
 </script>
 <style lang="scss" scoped></style>

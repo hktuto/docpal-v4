@@ -1,11 +1,12 @@
 <script lang="ts" setup>
-import { NodeSettingItem } from "../../../utils/cmmnX6Elements";
-import {CaseItemType} from "../../../utils/cmmn";
+import type { NodeSettingItem } from "../../../utils/cmmnX6Elements";
+import type {CaseItemType} from "../../../utils/cmmn";
 const props = defineProps<{
     setting: NodeSettingItem
     type: CaseItemType
     disabled: boolean
 }>();
+
 
 const emits = defineEmits(['mousedown'])
 

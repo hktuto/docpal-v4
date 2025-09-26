@@ -67,6 +67,9 @@ const {
     ]
   ],
   permissionMethod: (args: PermissionMethodParams) => {
+    if (!args.row) {
+      return { visible: false, disabled: false }
+    }
     return {
       visible: retryStatues.includes(args.row.state.toLowerCase()),
       disabled: false

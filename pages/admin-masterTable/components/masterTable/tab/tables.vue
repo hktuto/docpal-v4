@@ -81,13 +81,17 @@ const { tableConfig, tableEvent, tableRef, reload, query } = useVxeTable({
     ]
   ],
   permissionMethod: (args: PermissionMethodParams) => {
+    if (!args.row) {
+      return { visible: false, disabled: false }
+    }
     // options 是 menuConfig 中的 body 配置
     if (args.code === 'active') {
       return {
         visible: args.row.status === 'D',
         disabled: false
       }
-    } else if (args.code === 'actions.inactive') {
+    }
+    if (args.code === 'actions.inactive') {
       return {
         visible: args.row.status === 'A',
         disabled: false
@@ -198,7 +202,7 @@ defineExpose({ query, reload })
 
 <style lang="scss" scoped>
 .responsive-container {
-  :deep(.el-input ){
+  :deep(.el-input ) {
     width: 200px;
   }
 }

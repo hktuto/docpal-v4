@@ -180,6 +180,8 @@ export interface DocumentDTO {
     statusName?: string;
     /** Document Creator */
     createdBy?: string;
+    /** Document Modifier */
+    modifiedBy?: string;
     /**
      * Document Created Date
      * @format date-time
@@ -706,6 +708,7 @@ export interface ContactGroupRequestDTO {
     permissions?: Record<string, Permission>;
     attributes?: ContactAttribute[];
     operator?: string;
+    verifyReadPermission?: boolean;
     sort?: SortObject;
     sortOrder?: string;
     descSort?: SortObject;
@@ -739,6 +742,7 @@ export interface ContactGroupResponseDTO {
     modifiedDate?: string;
     permissions?: Record<string, BasicField[]>;
     attributes?: ContactAttribute[];
+    hasPermissions?: string[];
 }
 
 export interface ResultContactGroupResponseDTO {
@@ -804,6 +808,8 @@ export interface CalendarTaskReq {
     eventId?: string;
     /** Event Name */
     eventName?: string;
+    /** Event Description */
+    eventDescription?: string;
     /** Action Type[Create/Edit/Cancel/Remove] */
     actionType?: string;
     /** Event all day */
@@ -833,6 +839,8 @@ export interface CalendarTaskRespDTO {
     eventId?: string;
     /** Event Name */
     eventName?: string;
+    /** Event Description */
+    eventDescription?: string;
     /** Action Type */
     actionType?: string;
     /** Event all day */
@@ -1803,20 +1811,6 @@ export interface SendMessageResponseDTO {
     messageId?: string;
 }
 
-export interface MailSendRequest {
-    fromEmail?: string;
-    to?: string;
-    tos?: string[];
-    ccs?: string[];
-    bcc?: string[];
-    subject?: string;
-    text?: string;
-    templateId?: string;
-    variables?: Record<string, object>;
-    files?: File[];
-    accessToken?: string;
-}
-
 export interface SubNotificationRequest {
     action?:
         | "DOCUMENT_CREATE"
@@ -2279,6 +2273,8 @@ export interface DocumentResponseDTO {
     statusName?: string;
     /** Document Creator */
     createdBy?: string;
+    /** Document Modifier */
+    modifiedBy?: string;
     /**
      * Document Created Date
      * @format date-time
@@ -3938,6 +3934,21 @@ export interface ValidateJsonSchemaRequestDTO {
     };
 }
 
+export interface MailSendRequest {
+    fromEmail?: string;
+    to?: string;
+    tos?: string[];
+    ccs?: string[];
+    bcc?: string[];
+    subject?: string;
+    text?: string;
+    templateId?: string;
+    variables?: Record<string, object>;
+    files?: File[];
+    userId?: string;
+    accessToken?: string;
+}
+
 export interface TemplateRequestDTO {
     id?: string;
     subject?: boolean;
@@ -4890,6 +4901,54 @@ export interface ResultPaginationDTOFormDesignResponseDTO {
     locale?: string;
 }
 
+export interface BatchMailSendRequest {
+    batchTaskId?: string;
+    fromEmail: string;
+    subject?: string;
+    text?: string;
+    templateId?: string;
+    tos: string[];
+    ccs?: string[];
+    bcc?: string[];
+    variables?: Record<string, object>;
+    userId?: string;
+    accessToken?: string;
+    /** @format int64 */
+    sendInterval?: number;
+    /** @format int32 */
+    batchSize?: number;
+    /** @format int64 */
+    batchInterval?: number;
+    async?: boolean;
+}
+
+export interface BatchSendEmailResponseDTO {
+    batchTaskId?: string;
+    /** @format int32 */
+    totalCount?: number;
+    /** @format int32 */
+    successCount?: number;
+    /** @format int32 */
+    failedCount?: number;
+    status?: string;
+    /** @format date-time */
+    createdTime?: string;
+    /** @format date-time */
+    completedTime?: string;
+    errorMessages?: string[];
+    async?: boolean;
+    /** @format double */
+    progress?: number;
+}
+
+export interface ResultBatchSendEmailResponseDTO {
+    result?: boolean;
+    /** @format int32 */
+    code?: number;
+    message?: string;
+    data?: BatchSendEmailResponseDTO;
+}
+
 export interface ResultListBasicField {
     result?: boolean;
     /** @format int32 */
@@ -5016,14 +5075,17 @@ export interface CmmnDashboardRequestDTO {
     /** The sort ASC or DESC */
     isDesc?: boolean;
     id?: string;
+    label?: string;
     caseTypeId?: string;
     /** Case definition version Id */
     cmmnVersionId?: string;
+    permissions?: Record<string, string[]>;
     /** Is need to detail */
     detail?: boolean;
     /** Where Condition */
     where?: Record<string, object>;
     businessKey?: string;
+    versionNumber?: string;
     sort?: SortObject;
     sortOrder?: string;
     descSort?: SortObject;
@@ -5222,7 +5284,12 @@ export interface CaseTypeInfo {
 /** Case Type Permission RequestDTO */
 export interface CaseTypePermissionRequestDTO {
     userGroupId?: string;
+    groupName?: string;
     permissions?: Record<string, PlanTableFieldDTO[]>;
+    userId?: string;
+    username?: string;
+    roleId?: string;
+    roleName?: string;
 }
 
 export interface CaseTypeResponseDTO {
@@ -5610,7 +5677,9 @@ export interface CmmnDashboard {
     deploymentId?: string;
     cmmnVersionId?: string;
     label?: string;
+    /** @deprecated */
     userGroup?: string;
+    permissions?: string[];
     status?: string;
     styleJson?: string;
     createdBy?: string;
@@ -8074,6 +8143,38 @@ export interface ResultEasyFormBaseEmailDTO {
     locale?: string;
 }
 
+export interface DocPalEmailTemplate {
+    id?: string;
+    /** @format int64 */
+    emailLayoutId?: number;
+    emailTemplateJson?: string;
+    emailTemplateVariable?: string;
+    to?: string;
+    from?: string;
+    label?: string;
+    cc?: string;
+    bcc?: string;
+    subject?: string;
+    body?: string;
+    status?: string;
+    createdBy?: string;
+    modifiedBy?: string;
+    display?: string;
+    /** @format date-time */
+    createdDate?: string;
+    /** @format date-time */
+    modifiedDate?: string;
+    emailLayoutName?: string;
+}
+
+export interface ResultListDocPalEmailTemplate {
+    result?: boolean;
+    /** @format int32 */
+    code?: number;
+    message?: string;
+    data?: DocPalEmailTemplate[];
+}
+
 export interface ResultListDocTemplateSignatureResponseDTO {
     result?: boolean;
     /** @format int32 */
@@ -8367,12 +8468,35 @@ export interface ResultListCaseInstanceDTO {
     locale?: string;
 }
 
-export interface ResultCmmnDashboard {
+/** Case model dashboard (RequestDTO) */
+export interface CmmnDashboardResponseDTO {
+    id?: string;
+    caseTypeId?: string;
+    deploymentId?: string;
+    cmmnVersionId?: string;
+    label?: string;
+    /** @deprecated */
+    userGroup?: string;
+    status?: string;
+    styleJson?: string;
+    createdBy?: string;
+    modifiedBy?: string;
+    /** @format date-time */
+    createdDate?: string;
+    /** @format date-time */
+    modifiedDate?: string;
+    createdByName?: string;
+    modifiedByName?: string;
+    permissions?: BasicField[];
+}
+
+export interface ResultCmmnDashboardResponseDTO {
     result?: boolean;
     /** @format int32 */
     code?: number;
     message?: string;
-    data?: CmmnDashboard;
+    /** Case model dashboard (RequestDTO) */
+    data?: CmmnDashboardResponseDTO;
     messageKey?: string;
     locale?: string;
 }
@@ -8383,7 +8507,9 @@ export interface CmmnDashboardDTO {
     deploymentId?: string;
     cmmnVersionId?: string;
     label?: string;
+    /** @deprecated */
     userGroup?: string;
+    permissions?: BasicField[];
     status?: string;
     styleJson?: string;
     createdBy?: string;
@@ -10380,6 +10506,23 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
             }),
 
         /**
+         * @description Update contact group with the specified information
+         *
+         * @tags ContactController
+         * @name PatchContactgroupId
+         * @summary Reference to update contact group
+         * @request PATCH:/api/docpal/contactGroup/{id}
+         */
+        patchContactgroupId: (id: string, data: ContactGroupRequestDTO, params: RequestParams = {}) =>
+            this.request<ResultContactGroupResponseDTO, ResultString | (ResultString | Result)>({
+                path: `/docpal/contactGroup/${id}`,
+                method: "PATCH",
+                body: data,
+                type: ContentType.Json,
+                ...params,
+            }),
+
+        /**
          * No description
          *
          * @tags ContactController
@@ -10431,14 +10574,11 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
         deleteContactgroupIdContactdetailContactdetailid: (
             id: string,
             contactDetailId: string,
-            data: any,
             params: RequestParams = {},
         ) =>
             this.request<ResultBoolean, ResultString | (ResultString | Result)>({
                 path: `/docpal/contactGroup/${id}/contactDetail/${contactDetailId}`,
                 method: "DELETE",
-                body: data,
-                type: ContentType.Json,
                 ...params,
             }),
 
@@ -11483,75 +11623,6 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
                 method: "POST",
                 body: data,
                 type: ContentType.Json,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Document (Nuxeo)
-         * @name PostNuxeoRegisteredserverSendMailText
-         * @request POST:/api/nuxeo/registeredServer/send/mail/text
-         */
-        postNuxeoRegisteredserverSendMailText: (data: MailSendRequest, params: RequestParams = {}) =>
-            this.request<ResultBoolean, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/registeredServer/send/mail/text`,
-                method: "POST",
-                body: data,
-                type: ContentType.Json,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Document (Nuxeo)
-         * @name PostNuxeoRegisteredserverSendMailHtml
-         * @request POST:/api/nuxeo/registeredServer/send/mail/html
-         */
-        postNuxeoRegisteredserverSendMailHtml: (data: MailSendRequest, params: RequestParams = {}) =>
-            this.request<ResultBoolean, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/registeredServer/send/mail/html`,
-                method: "POST",
-                body: data,
-                type: ContentType.Json,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Document (Nuxeo)
-         * @name PostNuxeoRegisteredserverSendMailAttachments
-         * @request POST:/api/nuxeo/registeredServer/send/mail/attachments
-         */
-        postNuxeoRegisteredserverSendMailAttachments: (data: MailSendRequest, params: RequestParams = {}) =>
-            this.request<ResultBoolean, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/registeredServer/send/mail/attachments`,
-                method: "POST",
-                body: data,
-                type: ContentType.Json,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Document (Nuxeo)
-         * @name PostNuxeoRegisteredserverSendMailAttachment
-         * @request POST:/api/nuxeo/registeredServer/send/mail/attachment
-         */
-        postNuxeoRegisteredserverSendMailAttachment: (
-            query: {
-                mailSendRequest: MailSendRequest;
-                multipartFiles: File[];
-            },
-            params: RequestParams = {},
-        ) =>
-            this.request<ResultBoolean, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/registeredServer/send/mail/attachment`,
-                method: "POST",
-                query: query,
                 ...params,
             }),
 
@@ -16518,6 +16589,22 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
             }),
 
         /**
+         * No description
+         *
+         * @tags DocPalEmailController
+         * @name PostEmailBatchSend
+         * @request POST:/api/docpal/email/batch/send
+         */
+        postEmailBatchSend: (data: BatchMailSendRequest, params: RequestParams = {}) =>
+            this.request<ResultBatchSendEmailResponseDTO, ResultString | (ResultString | Result)>({
+                path: `/docpal/email/batch/send`,
+                method: "POST",
+                body: data,
+                type: ContentType.Json,
+                ...params,
+            }),
+
+        /**
          * @description 创建一个新的文档模板签名配置
          *
          * @tags DocTemplateSignatureController
@@ -16685,15 +16772,12 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
                 /** File Type */
                 fileType: string;
             },
-            data: object,
             params: RequestParams = {},
         ) =>
             this.request<string[], ResultString | (ResultString | Result)>({
                 path: `/docpal/contactGroup/${id}/contactDetail/export`,
                 method: "POST",
                 query: query,
-                body: data,
-                type: ContentType.FormData,
                 ...params,
             }),
 
@@ -21042,7 +21126,7 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
          * @request GET:/api/docpal/notification/unRead/number
          */
         getNotificationUnreadNumber: (params: RequestParams = {}) =>
-            this.request<ResultObject, ResultString | (ResultString | Result) | void>({
+            this.request<ResultObject | ResultString, ResultString | (ResultString | Result) | void>({
                 path: `/docpal/notification/unRead/number`,
                 method: "GET",
                 ...params,
@@ -21487,6 +21571,20 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
             }),
 
         /**
+         * No description
+         *
+         * @tags DocPalEmailController
+         * @name GetEmailTemplateList
+         * @request GET:/api/docpal/email/template/list
+         */
+        getEmailTemplateList: (params: RequestParams = {}) =>
+            this.request<ResultListDocPalEmailTemplate, ResultString | (ResultString | Result)>({
+                path: `/docpal/email/template/list`,
+                method: "GET",
+                ...params,
+            }),
+
+        /**
          * @description 获取指定文档模板关联的所有签名模板
          *
          * @tags DocTemplateController
@@ -21511,6 +21609,21 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
         getDamSettings: (params: RequestParams = {}) =>
             this.request<ResultMapStringListDAMConversionSetting, ResultString | (ResultString | Result)>({
                 path: `/docpal/dam/settings`,
+                method: "GET",
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags ContactController
+         * @name GetContactgroupIdUserUseridPermission
+         * @summary Get permission of contact group
+         * @request GET:/api/docpal/contactGroup/{id}/user/{userId}/permission
+         */
+        getContactgroupIdUserUseridPermission: (id: string, userId: string, params: RequestParams = {}) =>
+            this.request<ResultListString, ResultString | (ResultString | Result)>({
+                path: `/docpal/contactGroup/${id}/user/${userId}/permission`,
                 method: "GET",
                 ...params,
             }),
@@ -21920,6 +22033,7 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
         getCaseInstanceList: (
             query?: {
                 id?: string;
+                label?: string;
                 caseTypeId?: string;
                 /** Case definition version Id */
                 cmmnVersionId?: string;
@@ -21928,6 +22042,7 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
                 /** Is need to detail */
                 detail?: string;
                 businessKey?: string;
+                versionNumber?: string;
                 /** Page Number */
                 pageNum?: string;
                 /** Page Size */
@@ -22060,7 +22175,7 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
          * @request GET:/api/docpal/case/dashboard/{id}
          */
         getCaseDashboardId: (id: string, params: RequestParams = {}) =>
-            this.request<ResultCmmnDashboard, ResultString | (ResultString | Result)>({
+            this.request<ResultCmmnDashboardResponseDTO, ResultString | (ResultString | Result)>({
                 path: `/docpal/case/dashboard/${id}`,
                 method: "GET",
                 ...params,
@@ -22262,21 +22377,6 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
                 path: `/docpal/case/dashboard/instance/stage/planItems`,
                 method: "GET",
                 query: query,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags CmmnDashboardController
-         * @name GetCaseDashboardCasetypeCasetypeid
-         * @summary Query the list of case dashboard
-         * @request GET:/api/docpal/case/dashboard/caseType/{caseTypeId}
-         */
-        getCaseDashboardCasetypeCasetypeid: (caseTypeId: string, params: RequestParams = {}) =>
-            this.request<ResultListCmmnDashboard, ResultString | (ResultString | Result)>({
-                path: `/docpal/case/dashboard/caseType/${caseTypeId}`,
-                method: "GET",
                 ...params,
             }),
 
@@ -22603,6 +22703,20 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
          * No description
          *
          * @tags FolderCabinetController
+         * @name GetCabinetRefreshCompletestatusFoldercabinetid
+         * @request GET:/api/docpal/cabinet/refresh/completeStatus/{folderCabinetId}
+         */
+        getCabinetRefreshCompletestatusFoldercabinetid: (folderCabinetId: string, params: RequestParams = {}) =>
+            this.request<ResultBoolean, ResultString | (ResultString | Result)>({
+                path: `/docpal/cabinet/refresh/completeStatus/${folderCabinetId}`,
+                method: "GET",
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags FolderCabinetController
          * @name GetCabinetRefreshcompletestatusId
          * @request GET:/api/docpal/cabinet/refreshCompleteStatus/{id}
          */
@@ -22649,10 +22763,16 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
          * @summary Query template list of Top-level folder cabinet that belong to current logged-in user
          * @request GET:/api/docpal/cabinet/loginUser/list
          */
-        getCabinetLoginuserList: (params: RequestParams = {}) =>
+        getCabinetLoginuserList: (
+            query?: {
+                label?: string;
+            },
+            params: RequestParams = {},
+        ) =>
             this.request<ResultListFolderCabinetResponseDTO, ResultString | (ResultString | Result)>({
                 path: `/docpal/cabinet/loginUser/list`,
                 method: "GET",
+                query: query,
                 ...params,
             }),
 

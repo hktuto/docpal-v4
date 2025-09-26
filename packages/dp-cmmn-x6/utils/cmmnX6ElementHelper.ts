@@ -1,6 +1,6 @@
 
 // Region Node Element helper
-import {CaseItemType} from "./cmmn";
+import type {CaseItemType} from "./cmmn";
 import {Cell, CellView, Edge} from "@antv/x6";
 
 export const taskSize = 80

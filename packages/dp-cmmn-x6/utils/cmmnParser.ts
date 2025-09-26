@@ -1,6 +1,6 @@
 // import { HumanTask } from './cmmn.d';
 import {XMLBuilder, XMLParser} from 'fast-xml-parser';
-import {CMMN_JSON, PlanItem, Stage} from "./cmmn";
+import type {CMMN_JSON, PlanItem, Stage} from "./cmmn";
 import {Graph, Node} from '@antv/x6';
 import {nodeSetting} from './cmmnX6Elements'
 

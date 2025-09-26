@@ -1,7 +1,6 @@
 import {Cell, Graph} from "@antv/x6";
-import {Case, CaseTask, CMMN_JSON, HumanTask, Milestone, ProcessTask, Stage, UserEventListener} from "./cmmn";
+import type {Case, CaseTask, CMMN_JSON, HumanTask, Milestone, ProcessTask, Stage, UserEventListener} from "./cmmn";
 import {jsonToCmmn} from "./cmmnParser";
-import {Cmmn} from "../.playground/.nuxt/components";
 import {getExtentionProperties} from "./cmmnConfig";
 
 export const convertX6JsonToCmmnJson = (graph:Graph ,caseId:string):{xml:string,json:any} => {

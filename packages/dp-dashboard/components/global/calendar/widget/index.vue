@@ -1,4 +1,8 @@
 <script lang="ts" setup>
+import dayjs, { Dayjs } from 'dayjs'
+import type { CalendarEventExternal } from '@schedule-x/calendar'
+
+const { t } = useI18n()
 const emits = defineEmits(['delete', 'refreshSetting'])
 const showPreview = ref(false)
 const props = withDefaults(
@@ -12,10 +16,6 @@ const props = withDefaults(
     hideSetting: false
   }
 )
-
-async function handleDelete() {
-  emits('delete')
-}
 const CalendarRef = ref()
 const { settingRef, cardRef, refresh, loading } = useDashboardCard({
   props,
@@ -23,6 +23,37 @@ const { settingRef, cardRef, refresh, loading } = useDashboardCard({
     if (CalendarRef.value?.refresh) CalendarRef.value.refresh()
   }
 })
+const newEvent = ref([])
+const eventDialogRef = ref()
+
+async function handleDelete() {
+  emits('delete')
+}
+
+function editEvent(event: CalendarEventExternal) {
+  eventDialogRef.value.edit(event)
+}
+
+function allowCreateNewEvent(dateTime: string) {
+  eventDialogRef.value.open(dateTime)
+}
+
+function updateEvent(params: CalendarEventExternal) {
+  newEvent.value = params
+}
+
+function cancelEvent(event: CalendarEventExternal) {
+  eventDialogRef.value.cancelAndRemove(true, event)
+}
+
+function deleteEvent(event: CalendarEventExternal) {
+  eventDialogRef.value.cancelAndRemove(false, event)
+}
+
+function openNewEventDialog() {
+  eventDialogRef.value.open()
+}
+
 onDeactivated(() => {
   if (!props.hideSetting) {
     showPreview.value = false
@@ -36,7 +67,7 @@ onDeactivated(() => {
     v-loading="loading"
     class="dp-dashboard--card__padding"
     :hideSetting="hideSetting"
-    title="Calendar"
+    :title="setting.title ? setting.title : 'Calendar'"
     :setting="setting"
     :settingRef="settingRef"
     @delete="handleDelete"
@@ -50,10 +81,16 @@ onDeactivated(() => {
         @click="showPreview = !showPreview"
       />
     </template>
-    <el-skeleton v-if="!hideSetting && !showPreview" :rows="5"> </el-skeleton>
-    <Calendar v-else ref="CalendarRef" :options="setting" />
-    <CalendarWidgetCreateDialog ref="createDialogRef" />
-    <CalendarWidgetSetting ref="settingRef" :setting="setting" @submit="(setting) => $emit('refreshSetting', setting)" @delete="handleDelete" />
+    <el-button v-if="hideSetting || showPreview" id="HomePage__Calendar__NewEvent" @click="openNewEventDialog">
+      {{ $t('New Event') }}
+    </el-button>
+    <el-skeleton v-if="!hideSetting && !showPreview" :rows="5"></el-skeleton>
+    <Calendar v-else ref="CalendarRef" :options="setting" @openDetail="editEvent" @createEvent="allowCreateNewEvent"
+              @updateEvent="updateEvent" @cancelEvent="cancelEvent" @deleteEvent="deleteEvent" />
+
+    <CalendarWidgetDialog ref="eventDialogRef" :options="setting" @reload="refresh" />
+    <CalendarWidgetSetting ref="settingRef" :setting="setting" @submit="(setting) => $emit('refreshSetting', setting)"
+                           @delete="handleDelete" />
   </DashboardCard>
 </template>
 

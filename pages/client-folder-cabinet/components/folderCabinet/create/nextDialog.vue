@@ -8,10 +8,12 @@
     append-to-body
   >
     <main>
-      <FolderCabinetCreateUploadTree ref="FolderCabinetUploadTreeRef" :treeData="state.treeData" v-loading="state.treeLoading"> </FolderCabinetCreateUploadTree>
+      <FolderCabinetCreateUploadTree ref="FolderCabinetUploadTreeRef" :treeData="state.treeData"
+                                     v-loading="state.treeLoading"></FolderCabinetCreateUploadTree>
     </main>
     <template #footer>
-      <el-button id="FolderCabinet__AllowOtherFilesCabinet__NewItem__Next__Submit" type="primary" :loading="state.loading" @click="handleSubmit">
+      <el-button id="FolderCabinet__AllowOtherFilesCabinet__NewItem__Next__Submit" type="primary"
+                 :loading="state.loading" @click="handleSubmit">
         {{ $t('common_submit') }}
       </el-button>
     </template>
@@ -47,18 +49,14 @@ async function handleSubmit() {
     await new Promise((resolve) => setTimeout(resolve, 2000))
     await uploadFiles(uploadList, state.rootDetail.idOrPath)
     state.visible = false
-    ElMessage.success(
-      t('tip_createdSuccessMsg', {
-        modelName: t('common_item'),
-        name: uploadList[0].previewName
-      })
-    )
+    ElMessage.success(t('tip_createdMsg', { name: uploadList[0].previewName }))
     emits('refresh')
   } catch (error) {
     console.log(error)
   } finally {
     state.loading = false
   }
+
   async function uploadFiles(fileTree: any, parentPath: string) {
     const uploadPromises = fileTree.map((item: any) => {
       if (item.folder) {
@@ -85,18 +83,19 @@ async function handleSubmit() {
     })
     await Promise.all(uploadPromises)
   }
+
   async function createDirectory(directory: any) {
     let defaultValue = {}
     if (directory.metadataValue) defaultValue = JSON.parse(directory.metadataValue)
     const name = directory.previewName
       ? directory.previewName
       : getMetaName(
-          {
-            label: directory.label,
-            ...defaultValue
-          },
-          directory
-        )
+        {
+          label: directory.label,
+          ...defaultValue
+        },
+        directory
+      )
     return await clientApi.api
       .postNuxeoDocumentCreatefolders({
         templateId: props.id,
@@ -109,19 +108,20 @@ async function handleSubmit() {
       })
       .then((res) => res.data)
   }
+
   async function uploadFile(file: any, parentPath: string) {
     let defaultValue = {}
     if (file.metadataValue) defaultValue = JSON.parse(file.metadataValue)
     const name = file.previewName
       ? file.previewName
       : getMetaName(
-          {
-            label: file.label,
-            docName: file.docName,
-            ...defaultValue
-          },
-          file
-        )
+        {
+          label: file.label,
+          docName: file.docName,
+          ...defaultValue
+        },
+        file
+      )
 
     const document = {
       templateId: props.id,
@@ -170,11 +170,13 @@ function initTreeData(children: any, parentId: string = '') {
   children.forEach(async (item: any) => {
     item.isLack = false
     if (parentId) item.parentId = parentId
-    if (item.folder === true) {
-      item.properties = {}
-    }
     let defaultValue = {}
     if (item.metadataValue) defaultValue = JSON.parse(item.metadataValue)
+    if (item.folder === true) {
+      item.properties = {
+        ...defaultValue
+      }
+    }
     item.previewName = getMetaName(
       {
         ...defaultValue,
@@ -183,6 +185,7 @@ function initTreeData(children: any, parentId: string = '') {
       },
       item
     )
+    item.docName = item.label
 
     if (item.children) initTreeData(item.children, item.id)
     else item.children = []
@@ -199,7 +202,9 @@ function getMetaName(formData: any = {}, row: any) {
       docName: formData.docName
     }
     return getNameByLabelRule(labelRule, data)
-  } catch (error) {}
+  } catch (error) {
+    console.log(error)
+  }
 }
 
 // #endregion

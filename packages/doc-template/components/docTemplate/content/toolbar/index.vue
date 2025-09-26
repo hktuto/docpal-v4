@@ -34,7 +34,7 @@ if (!provider) throw new Error('DocTemplateProvider not found')
     <LinkMediaControls />
 
     <!-- Signature Controls -->
-    <SignatureControls />
+    <!-- <SignatureControls /> -->
 
     <!-- Table and Indentation Controls -->
     <TableIndentControls />

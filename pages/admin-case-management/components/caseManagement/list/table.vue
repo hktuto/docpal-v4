@@ -90,11 +90,14 @@ const { tableConfig, tableEvent, tableRef, reload, query } = useVxeTable({
       //     name:"caseManagement_saveCaseTemplate",
       //     action: ({row}) => listProvider.saveAsNewCase(row)
       // }
-
-
     ]
   ],
-  permissionMethod: listProvider.actionPermission,
+  permissionMethod: (args: PermissionMethodParams) => {
+    if (!args.row) {
+      return { visible: false, disabled: false }
+    }
+    return  listProvider.actionPermission
+  },
   dblClickAction: ({ row, column, event }: any) => {
     listProvider.openLatestVersion(row)
   },

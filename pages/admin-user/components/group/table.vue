@@ -71,6 +71,19 @@ const { tableConfig, tableEvent, tableRef, reload, query } = useVxeTable({
     ]
   ],
   virtualScroll: true,
+  permissionMethod: ({ row, code }: any) => {
+    if (code === 'delete_group') {
+      return {
+        visible: row.id !== 'members' && row.id !== 'administrators',
+        disabled: false
+      }
+      
+    }
+    return {
+        visible: true,
+        disabled: false
+      }
+  },
   optionalConfig: {}
 })
 

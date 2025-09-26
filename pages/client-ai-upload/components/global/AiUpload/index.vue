@@ -141,6 +141,9 @@ const { tableConfig, tableEvent, tableRef, reload } = useVxeTable({
     dblclickHandler(row)
   },
   permissionMethod: ({ row, code, column }) => {
+    if (!row) {
+      return { visible: false, disabled: false }
+    }
     if (code === 'delete') {
       return {
         visible: row.uploadStatus === 'Ready',

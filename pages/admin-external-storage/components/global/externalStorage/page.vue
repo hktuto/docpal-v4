@@ -4,7 +4,7 @@
       <template #toolbar_buttons>
         <div class="actions">
           <ResponsiveFilter ref="ResponsiveFilterRef" inputKey="name" @form-change="handleFilterFormChange" />
-          <el-button id="add" type="primary" @click="handleAdd()">
+          <el-button id="ExternalStorage__Add" type="primary" @click="handleAdd()">
             {{ $t('externalStorage.create') }}
           </el-button>
         </div>
@@ -21,6 +21,7 @@
 import { adminApi } from 'api'
 import { ElMessageBox } from 'element-plus'
 import { routeExternalStorageDetailPage } from '../../../util/routerHelper'
+
 const ResponsiveFilterRef = ref()
 const routerProvider = inject(MenuRouterKey)
 if (!routerProvider) {
@@ -100,6 +101,9 @@ const { tableConfig, tableEvent, tableRef, query, reload, cleanSelectedRows } = 
     ]
   ],
   permissionMethod: (args: PermissionMethodParams) => {
+    if (!args.row) {
+      return { visible: false, disabled: false }
+    }
     if (args.code === 'inactive') {
       return {
         visible: args.row.status === 'A',
@@ -133,7 +137,8 @@ async function handleActive(row: any, status: string) {
     if (!!result) {
       row.status = status
     }
-  } catch (error) {}
+  } catch (error) {
+  }
 }
 
 function handleFilterFormChange(formModel: any) {
@@ -148,6 +153,7 @@ const DialogRef = ref()
 async function handleAdd() {
   DialogRef.value.handleOpen()
 }
+
 function handleEdit(row: any) {
   DialogRef.value.handleEdit(row)
 }

@@ -1,18 +1,18 @@
 <script lang="ts" setup>
-import {useI18n} from '#imports'
-import type {Node} from '@antv/x6'
+import { useI18n } from '#imports'
+import type { Node } from '@antv/x6'
 
 const graphProvider = inject(BPMN_PROVIDER)
-const editorProvider = inject(EDITOR_PROVIDER);
+const editorProvider = inject(EDITOR_PROVIDER)
 if (!graphProvider || !editorProvider) {
   throw createError('graph provider not found')
 
 }
-
-const {node,} = defineProps<{
+const emits = defineEmits('updateNode')
+const { node } = defineProps<{
   node: Node
 }>()
-const {t} = useI18n()
+const { t } = useI18n()
 
 const form = ref({
   name: ''
@@ -29,6 +29,7 @@ function nameChange(val: string) {
   })
   node.setProp('label', val)
   node.attr('text/text', val)
+  emits('updateNode')
   graphProvider?.graph.value?.stopBatch('update-name')
 }
 
@@ -65,7 +66,7 @@ watch(() => node, () => {
            :model="form" @submit.prevent>
     <el-formItem :label="$t('tableHeader_name')" prop="name"
                  :rules="[{ required: true, message: $t('tableHeader_name') + $t('render.hint.fieldRequired')}]">
-      <el-input v-model="form.name" :disabled="editorProvider.readonly.value" @change="nameChange" placeholder="Name"/>
+      <el-input v-model="form.name" :disabled="editorProvider.readonly.value" @change="nameChange" placeholder="Name" />
     </el-formItem>
   </el-form>
 </template>

@@ -55,7 +55,8 @@ function messageChange(notiData) {
 }
 function handleAiUpload(content) {
   if (content.uploadId) {
-    const message = content['upload status'] === 'FAIL' ? 'ai.uploadCompleteAndAIFail' : 'ai.uploadAndAIComplete'
+    const message = content['upload status'] === 'FAIL' ? 'ai.uploadCompleteAndAIFail' : 'ai.uploadClick'
+      // : 'ai.uploadAndAIComplete'
     const noti = ElNotification({
       title: $i18n.t('ai.uploadcomplete'),
       message: allowFeature('AI_CLASSIFICATION') ? $i18n.t(message) : '',

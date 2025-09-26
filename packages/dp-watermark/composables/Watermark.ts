@@ -1,4 +1,4 @@
-import { fabric } from "fabric";
+import {fabric} from "fabric";
 import { clientApi, globalApi  } from 'api'
 export type Watermark = {
   id: number

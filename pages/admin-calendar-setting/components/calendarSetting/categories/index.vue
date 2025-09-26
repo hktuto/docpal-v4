@@ -1,6 +1,8 @@
 <script lang="ts" setup>
 import { adminApi } from 'api'
 
+const { t } = useI18n()
+const routerProvider = inject(MenuRouterKey)
 const { setting } = useCalendarStore()
 let extraParams: any = {}
 const remoteOption = await getPermissionPairOption()
@@ -9,7 +11,7 @@ const detailDialogRef = ref()
 const { tableConfig, tableEvent, tableRef, reload } = useVxeTable({
   id: 'calendarSetting_categories',
   api: (pageParams: any) => {
-    return adminApi.api.getEventCalendarsSettings({ ...pageParams, ...extraParams }).then(r => r.data)
+    return adminApi.api.getEventCalendarsSettings({ eventCalendarSetting: {} }).then(r => r.data)
     // return adminApi.api.getEventCalendarsSettings({ eventCalendarSetting: { ...extraParams } }).then(r => r.data)
   },
   virtualScroll: true,

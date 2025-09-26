@@ -22,6 +22,19 @@ function openUserDetail(data: any, openInNewTab = false) {
   routerProvider?.navigateTo({ ...newItem }, openInNewTab);
 }
 
+async function sendInvitation(data:any) {
+  if(!data.registered) {
+    throw new Error('only non-register user can be invitate')
+  }
+  try{
+    const response = await adminApi.api.getNuxeoIdentitySendInitPasswordEmailUserid(data.userId)
+
+  }catch(error){
+    // TODO : handle error
+  }
+
+}
+
 // #region module:
 let userTableFilter = {};
 const tableRef = ref();
@@ -61,6 +74,7 @@ provide(userProviderKey, {
     const res = await adminApi.api.postNuxeoIdentityGroups();
     return res.data;
   },
+  sendInvitation,
   openUserDetail,
 });
 </script>

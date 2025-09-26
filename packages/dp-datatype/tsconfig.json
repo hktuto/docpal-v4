@@ -1,9 +1,4 @@
 {
-  "extends": "./.nuxt/tsconfig.json",
-  "compilerOptions": {
-    "types": ["vue"]
-  },
-  "include": [
-    "types/**/*"
-  ]
+  // https://nuxt.com/docs/guide/concepts/typescript
+  "extends": "../../apps/client/tsconfig.json",
 }

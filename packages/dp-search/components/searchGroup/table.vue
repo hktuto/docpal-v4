@@ -9,7 +9,7 @@
       </div>
     </template>
     <template #logicalPath="{ row }">
-      <PathTabButton :path="row.path" :fileName="row.name" :openParent="!row.is_folder" :displayPath="row.logicalPath" canOpen />
+      <PathTabButton :path="row.path" :fileName="row.name" :openParent="!row.is_folder" canOpen />
     </template>
     <template #contributors="{ row }">
       <div v-if="row && row.contributors">
@@ -19,7 +19,7 @@
 
     <template #summary="{ row }">
       <div v-if="row.properties && row.properties.field_summaries" v-tooltip="calculateTooltip(row)">
-        
+
         {{
           row.properties.field_summaries.name && 'File Name' ||
           row.properties.field_summaries.path && 'path' ||
@@ -44,11 +44,13 @@ const emits = defineEmits(['updateAgg', 'selectChange'])
 
 function calculateTooltip(row: any) {
   const maxWords = 10
+
   function trimToWords(str: string, max: number) {
     if (!str) return ''
     const words = str.split(/\s+/)
     return words.length > max ? words.slice(0, max).join(' ') + '...' : str
   }
+
   return `
     ${row.properties.field_summaries.name ? `File Name : ${trimToWords(row.properties.field_summaries.name, maxWords)} <br/>` : ''}
     ${row.properties.field_summaries.path ? `Path : ${trimToWords(row.properties.field_summaries.path, maxWords)} <br/>` : ''}
@@ -84,7 +86,7 @@ const state = reactive<any>({
 const { tableConfig, tableEvent, tableRef, reload, query } = useVxeTable({
   id: tableId || 'search-result', // if tableId is value , use tableID to store tab ordering
   virtualScroll: false,
-  api:(params:any)=>{
+  api: (params: any) => {
     return getList(params)
   },
   columns: [
@@ -153,7 +155,7 @@ const { tableConfig, tableEvent, tableRef, reload, query } = useVxeTable({
       field: 'file_suffix'
     },
     {
-      title: "searchGroup.creators",
+      title: 'searchGroup.creators',
       field: 'create_by',
       width: 120
     },
@@ -164,7 +166,7 @@ const { tableConfig, tableEvent, tableRef, reload, query } = useVxeTable({
         default: 'contributors'
       }
     },
-    
+
     {
       title: 'search.size',
       field: 'file_content.length',
@@ -211,7 +213,7 @@ const { tableConfig, tableEvent, tableRef, reload, query } = useVxeTable({
       field: 'tags',
       width: 120,
       slots: {
-        default: 'doc_tags'
+        default: 'docTags'
       }
     }
   ],
@@ -235,8 +237,8 @@ const { tableConfig, tableEvent, tableRef, reload, query } = useVxeTable({
         const key = column.property
         const value = row[key]
         // TODO : check to send html
-        if(key === 'properties.fieldSummaries'){
-          return null;
+        if (key === 'properties.fieldSummaries') {
+          return null
         }
         if (typeof value === 'string') {
           return value
@@ -263,7 +265,7 @@ async function getList(param: any) {
       state.tableData = []
       state.aggregation = {}
       return {
-        data:{
+        data: {
           entryList: [],
           totalSize: 0
         }
@@ -272,8 +274,7 @@ async function getList(param: any) {
     const { data: res } = (await globalApi.api.postNuxeoSearchOpenSearch({ ...cleanBarParams, ...state.aggParams, ...param })) as any
     if (!res.page)
       res.page = {
-        data:{
-
+        data: {
           entryList: [],
           totalSize: 0
         }
@@ -299,7 +300,7 @@ async function getList(param: any) {
     if (state.barParams.filter) agg = { filter: { ...agg.filter, ...state.barParams.filter } }
     emits('updateAgg', state.aggregation, agg)
     return {
-      data:{
+      data: {
         entryList: list,
         totalSize: res.page.totalSize
       }
@@ -310,7 +311,7 @@ async function getList(param: any) {
     state.tableData = []
     state.aggregation = {}
     return {
-      data:{
+      data: {
         entryList: [],
         totalSize: 0
       }
@@ -324,6 +325,7 @@ function cleanSelected() {
     emits('selectedChange', [])
   }
 }
+
 // function handlePaginationChange(page: number, pageSize?: number) {
 //   if (!pageSize) pageSize = pageParams.pageSize
 //   const time = new Date().valueOf().toString()
@@ -388,15 +390,16 @@ function initBar(searchParams: any) {
 
 function initAgg(searchParams: any, isSearch: boolean = true) {
   state.aggParams = searchParams
-  if (isSearch)   reload()
+  if (isSearch) reload()
 
 }
+
 function barParamsDecorator(barParams: any) {
   const resule = {
     query: [],
-    ...barParams,
+    ...barParams
   }
-  if(!barParams.query) return resule
+  if (!barParams.query) return resule
   resule.query = barParams.query.reduce((qPrev: any, qItem: any) => {
     let matchs = []
     if (qItem.matchs) matchs = qItem.matchs.filter((mItem: any) => mItem.value)
@@ -406,6 +409,7 @@ function barParamsDecorator(barParams: any) {
 
   return resule
 }
+
 function initSearch(searchParams: any) {
   state.barParams = searchParams
   reload()
