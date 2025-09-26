@@ -34,8 +34,13 @@ async function handleExport(command: string) {
         format: 'blob'
       }
     )
-    console.log(res, props.name)
-    downloadBlob(res, props.name)
+    const map = {
+      'csv': 'text/csv',
+      'excel': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+      'vcard': 'text/vcard',
+      'vcf': 'text/vcard'
+    }
+    downloadBlob(res, props.name, map[command])
   } catch (error) {
     console.error(error)
   } finally {
