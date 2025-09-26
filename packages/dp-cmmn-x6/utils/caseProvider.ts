@@ -1,4 +1,3 @@
-import { InjectionKey, Ref } from "vue";
 
 interface CaseDashboardProvider {
     caseTypeId: Ref<string | null>,
