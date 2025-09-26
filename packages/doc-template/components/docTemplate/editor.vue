@@ -10,8 +10,7 @@ import {
   generateHtml,
   getJsonConfig
 } from 'docpal-document-editor/src/client'
-import * as Y from 'yjs'
-import { HocuspocusProvider } from '@hocuspocus/provider'
+
 
 const props = defineProps<{
   editorOptions: TipTapOptions
@@ -48,13 +47,6 @@ export type LastSelection = {
 
 const lastSelection = ref<LastSelection | null>()
 
-const ydoc = new Y.Doc()
-
-// const provider = new HocuspocusProvider({
-//   url: `ws://sit-v2.wclsolution.com/open-api/template/ws`,
-//   name: 'docpal-doc-editor',
-//   document: ydoc
-// })
 
 const headerRef = ref<any>(null)
 

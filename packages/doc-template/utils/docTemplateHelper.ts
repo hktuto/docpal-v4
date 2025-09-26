@@ -66,6 +66,7 @@ export interface DocTemplateProvider {
   addVariable: (variable: DocTemplateVariable) => void,
   removeVariable: (variable: DocTemplateVariable) => void,
   updateVariable?: (variable: DocTemplateVariable) => void
+  getEditContent: () => any
 }
 
 export const DocTemplateProveKey: InjectionKey<DocTemplateProvider> = Symbol('DocTemplateProvide')
