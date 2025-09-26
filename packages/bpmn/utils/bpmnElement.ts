@@ -925,16 +925,19 @@ export const bpmnElement: BpmnElement = {
       {
         icon: 'bpmn:calendar',
         label: 'Calendar',
+        group: '',
+        order: 0,
         dropData: (id: string) => ({
           id,
           ...bpmnElement.serviceTask.nodeStyle({
             ['attr_flowable:delegateExpression']: '${calendarEventDelegate}',
             extensionElements: {
               'flowable:calendarEvent': {
+                attr_description: 'New Calendar Task',
                 attr_eventId: '',
                 attr_eventName: '',
                 attr_actionType: '',
-                attr_description: '',
+                attr_eventDescription: '',
                 attr_category: '',
                 attr_location: '',
                 attr_startTime: '',
@@ -954,10 +957,11 @@ export const bpmnElement: BpmnElement = {
             ['attr_flowable:delegateExpression']: '${calendarEventDelegate}',
             extensionElements: {
               'flowable:calendarEvent': {
+                attr_description: 'New Calendar Task',
                 attr_eventId: false,
                 attr_eventName: '',
                 attr_actionType: '',
-                attr_description: '',
+                attr_eventDescription: '',
                 attr_category: '',
                 attr_location: '',
                 attr_startTime: '',

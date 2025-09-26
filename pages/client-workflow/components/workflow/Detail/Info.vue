@@ -104,7 +104,7 @@ async function handleUnclaim() {
     // emits('change', response, false)
     props.taskDetail.assignee = ''
   } catch (error) {
-    // routerProvider?.message.error(error.response.data.message)
+    console.log(error)
   }
   setTimeout(() => {
     state.loading = false
@@ -114,12 +114,15 @@ async function handleUnclaim() {
 async function handleClaim() {
   try {
     state.loading = true
-    const response: any = await clientApi.api.postWorkflowTaskClaim({ taskId: props.id, userId }).then((res) => res.data)
+    const response: any = await clientApi.api.postWorkflowTaskClaim({
+      taskId: props.id,
+      userId
+    }).then((res) => res.data)
     if (!response.errorCode) {
       emits('change', response, true)
     }
   } catch (error) {
-    // routerProvider?.message.error(error.response.data.message)
+    console.log(error)
   }
   setTimeout(() => {
     state.loading = false
@@ -134,7 +137,7 @@ async function handelDelete() {
       processInstanceId,
       userId
     })
-    routerProvider?.message.success(t('tip_deleteSuccessMsg', { modelName: t('common_item'), name: null }))
+    routerProvider?.message.success(t('tip_deleteSuccessMessage'))
     routerProvider?.back()
   } catch {
   } finally {
@@ -142,7 +145,9 @@ async function handelDelete() {
     deletePopoverRef.value.hide()
   }
 }
+
 const deletePopoverRef = ref()
+
 function handleDeletePopoverHide() {
   deletePopoverRef.value.hide()
 }

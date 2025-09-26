@@ -15,88 +15,91 @@ export default defineAppConfig({
   // ],
   appMenu: [
     {
-      name: "client-work-panel"
+      name: 'client-work-panel'
     },
     {
-      name: "client-browse"
+      name: 'client-browse'
     },
     {
-      name: "client-search"
+      name: 'client-search'
     },
     {
-      label: "file_uploads",
-      icon: "uil:upload",
+      label: 'file_uploads',
+      icon: 'uil:upload',
       children: [
         {
-          name: "client-ai-upload"
+          name: 'client-ai-upload'
         },
         {
-          name: "client-fileRequest"
+          name: 'client-fileRequest'
         }
       ]
     },
     {
-      label: "file_share_module",
-      icon: "meteor-icons:share",
+      label: 'file_share_module',
+      icon: 'meteor-icons:share',
       children: [
         {
-          name: "client-share"
+          name: 'client-share'
         },
         {
-          name: "client-share-me"
+          name: 'client-share-me'
         },
         {
-          name: "client-share-other"
+          name: 'client-share-other'
         }
       ]
     },
     {
-      name: "client-collections"
+      name: 'client-collections'
     },
     // {
     //     name: "client-smartFolder"
     // },
     {
-      name: "client-folder-cabinet"
+      name: 'client-folder-cabinet'
     },
     {
-      name: "client-workflow"
+      name: 'client-workflow'
     },
     {
-      label: "retention_policies",
-      icon: "ic:outline-lock-clock",
+      label: 'retention_policies',
+      icon: 'ic:outline-lock-clock',
       children: [
         {
-          name: "client-retention"
+          name: 'client-retention'
         },
         {
-          name: "client-holdPolicies"
+          name: 'client-holdPolicies'
         }
       ]
     },
     {
-      name: "client-dashboard"
+      name: 'client-dashboard'
     },
     {
-      name: "client-master-table"
+      name: 'client-master-table'
     },
     {
-      name: "client-trash"
+      name: 'client-trash'
     },
     {
-      name: "client-case-manage"
+      name: 'client-case-manage'
     },
     {
-      name: "client-easy-form"
+      name: 'client-easy-form'
     },
     {
-      name :"user-role-file-action"
+      name: 'user-role-file-action'
     },
     {
-      name: "RBAC-client-page"
+      name: 'RBAC-client-page'
+    },
+    {
+      name: 'contact-book'
     }
   ],
-  adminMenu:[
+  adminMenu: [
     {
       name: '',
       icon: 'tabler:align-box-right-bottom',
@@ -121,7 +124,9 @@ export default defineAppConfig({
         {
           name: 'admin-setting'
         },
-        
+        {
+          name: 'contact-book'
+        }
       ]
     },
     {
@@ -255,8 +260,7 @@ export default defineAppConfig({
         },
         {
           name: 'admin-password-policy'
-        },
-        
+        }
       ]
     },
     {
@@ -277,22 +281,20 @@ export default defineAppConfig({
     {
       name: 'admin-import-jobs'
     },
-    
+
     {
       name: 'admin-azure'
     },
-   
+
     {
       name: 'admin-easy-form'
     },
     {
       name: 'admin-calendar-setting'
-    },
-    
+    }
+
     // {
     //   name: 'admin-doc-template-collaboration'
     // },
-   
-    
   ]
-});
+})

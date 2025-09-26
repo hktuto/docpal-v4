@@ -9,6 +9,7 @@ interface userProvider {
     BatchUsersToGroupsApi: (params:any) => Promise<any>,
     GetGroupListApi : () => Promise<any>,
     openUserDetail: (data:any, openInNewTab?:boolean) => void,
+    sendInvitation:(data:any) => void
 }
 interface userProviderDetail {
     openUserList: (openInNewTab?: boolean) => void,

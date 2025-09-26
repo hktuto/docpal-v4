@@ -50,8 +50,7 @@ async function handleSubmit() {
       description: null
     }
     state.data = await clientApi.api.patchNuxeoCollection(params).then(res => res.data)
-    ElMessage.success(t('tip_updateSuccessMsg', {
-      modelName: t('collection_collection'),
+    ElMessage.success(t('tip_updateMsg', {
       name: data.name
     }))
     state.visible = false

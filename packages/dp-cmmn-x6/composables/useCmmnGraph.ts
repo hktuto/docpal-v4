@@ -1,7 +1,7 @@
 import { Graph } from "@antv/x6";
-import {CMMN_JSON, FormAttributes, FormField, PlanItem} from "../utils/cmmn";
+import type {CMMN_JSON, FormAttributes, FormField, PlanItem} from "../utils/cmmn";
 import {
-    CmmnConnector,
+    type CmmnConnector,
     NodeToFlatMap,
     cmmnToJson,
     createConnector,

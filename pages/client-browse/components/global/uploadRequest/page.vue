@@ -83,6 +83,9 @@ const { tableConfig, tableEvent, tableRef, reload, query } = useVxeTable({
     ]
   ],
   permissionMethod: (args: PermissionMethodParams) => {
+    if (!args.row) {
+      return { visible: false, disabled: false }
+    }
     // options 是 menuConfig 中的 body 配置
     switch (args.code) {
       case 'preview':

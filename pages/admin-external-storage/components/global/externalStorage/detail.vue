@@ -4,10 +4,10 @@
       <template #toolbar_buttons>
         <div class="actions">
           <ResponsiveFilter ref="ResponsiveFilterRef" inputKey="name" @form-change="handleFilterFormChange" />
-          <el-button id="edit" type="primary" @click="handleEdit()">
+          <el-button id="ExternalStorage__Detail__EditConnection" type="primary" @click="handleEdit()">
             {{ $t('externalStorage.editConnection') }}
           </el-button>
-          <el-button id="add" type="primary" @click="handleAdd()">
+          <el-button id="ExternalStorage__Detail__Create" type="primary" @click="handleAdd()">
             {{ $t('externalStorage.create') }}
           </el-button>
         </div>
@@ -25,6 +25,7 @@
 import { adminApi } from 'api'
 import { ElMessageBox } from 'element-plus'
 import { routeExternalStorageProfileDetailPage } from '../../../util/routerHelper'
+
 const props = defineProps(['id'])
 const ResponsiveFilterRef = ref()
 const routerProvider = inject(MenuRouterKey)
@@ -115,6 +116,9 @@ const { tableConfig, tableEvent, tableRef, query, reload, cleanSelectedRows } = 
     ]
   ],
   permissionMethod: (args: PermissionMethodParams) => {
+    if (!args.row) {
+      return { visible: false, disabled: false }
+    }
     if (args.code === 'inactive') {
       return {
         visible: args.row.status === 'A',
@@ -139,7 +143,7 @@ const { tableConfig, tableEvent, tableRef, query, reload, cleanSelectedRows } = 
 
 function handleDblclick(row: any) {
   // router.push(`/easyFormManage/${row.id}`);
-  routerProvider?.navigateTo(routeExternalStorageProfileDetailPage({...row, storageId: props.id}), false)
+  routerProvider?.navigateTo(routeExternalStorageProfileDetailPage({ ...row, storageId: props.id }), false)
 }
 
 async function handleActive(row: any, status: string) {
@@ -148,7 +152,9 @@ async function handleActive(row: any, status: string) {
     if (!!result) {
       row.status = status
     }
-  } catch (error) {}
+  } catch (error) {
+    console.log(error)
+  }
 }
 
 function handleFilterFormChange(formModel: any) {
@@ -157,22 +163,29 @@ function handleFilterFormChange(formModel: any) {
   extraParams = formModel
   reload()
 }
+
 const NewDialogRef = ref()
 const DialogRef = ref()
+
 async function handleAdd() {
   NewDialogRef.value.handleOpen()
 }
+
 function handleEdit() {
   DialogRef.value.handleEdit(detail.value)
 }
+
 async function handleDelete(row: any) {
   try {
     const action = await ElMessageBox.confirm(`${t('msg_confirmWhetherToDelete')}`)
     if (action !== 'confirm') return
     await adminApi.api.deleteExternalstorageIdProfilesProfileid(props.id, row.id)
     reload()
-  } catch (error) {}
+  } catch (error) {
+    console.log(error)
+  }
 }
+
 function getFilter() {
   const data = [
     {
@@ -200,9 +213,11 @@ function getFilter() {
   ]
   ResponsiveFilterRef.value?.init(data)
 }
+
 async function getDetail() {
   detail.value = await adminApi.api.getExternalstorageId(props.id).then((res: any) => res.data)
 }
+
 onMounted(() => {
   getFilter()
   getDetail()
@@ -219,7 +234,7 @@ onMounted(() => {
   --icon-size: var(--app-font-size-m);
 }
 
-:deep(.el-input ){
+:deep(.el-input ) {
   width: 200px;
 }
 </style>

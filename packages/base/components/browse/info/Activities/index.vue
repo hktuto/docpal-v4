@@ -110,27 +110,31 @@ watch(
     // overflow: auto;
     .timeline {
       display: flex;
-      flex-direction: row;
+      flex-direction: column;
       gap: calc(var(--app-space-xs) / 2);
-      white-space: nowrap;
+      justify-content: flex-start;
+      align-items: flex-start;
       font-family: Roboto;
       font-style: normal;
       font-weight: bold;
       color: #ffffff;
       .timestamp {
         background: #17b2c0;
-        border-radius: 1.5rem;
+        
         padding: 0.25rem;
         font-size: 0.5rem;
         line-height: 0.5625rem;
       }
       .userOrAction {
         background: var(--app-grey-950);
-        border-radius: 1.5rem;
-        padding: 0.25rem 0.75rem;
+        border-radius: var(--el-border-radius-base);
+        padding: var(--app-space-xs) var(--app-space-s);
         font-size: .8rem;
         font-weight: 500;
         color: var(--app-grey-100);
+        &.user{
+          background: var(--el-color-primary-light-8);
+        }
       }
     }
   }

@@ -1,5 +1,6 @@
 <template>
-  <el-dialog v-model="visible" :title="t('metadata.edit')" class="scroll-dialog" append-to-body :close-on-click-modal="false" destroy-on-close>
+  <el-dialog v-model="visible" :title="t('metadata.edit')" class="scroll-dialog" append-to-body
+             :close-on-click-modal="false" destroy-on-close>
     <el-form :model="formData" ref="elFormRef" label-position="top">
       <el-form-item :label="t('table_name')" prop="name" required>
         <el-input v-model="formData.name" />
@@ -7,7 +8,8 @@
       <el-form-item :label="t('metadata.dataType')" required>
         <el-select v-model="selectedType" placeholder="Select" @change="handleTypeChanged">
           <el-option-group v-for="group in METADATA_OPTIONS" :key="group.group" :label="t(group.group)">
-            <el-option v-for="option in group.options" :key="option.name" :label="t(option.name)" :value="option.name" />
+            <el-option v-for="option in group.options" :key="option.name" :label="t(option.name)"
+                       :value="option.name" />
           </el-option-group>
         </el-select>
       </el-form-item>
@@ -22,7 +24,8 @@
       <h4>{{ t('meta.mask') }}</h4>
       <el-form-item :label="t('meta.mask_type')" required>
         <el-select v-model="formData.maskRule.maskType" placeholder="Select">
-          <el-option v-for="option in MASK_OPTIONS" :key="option.value" :label="t(option.label)" :value="option.value" />
+          <el-option v-for="option in MASK_OPTIONS" :key="option.value" :label="t(option.label)"
+                     :value="option.value" />
         </el-select>
       </el-form-item>
       <el-form-item :label="t('meta.maskLength')" required>
@@ -30,7 +33,9 @@
       </el-form-item>
     </el-form>
     <template #footer>
-      <el-button type="primary" @click="handleUpdate" :loading="loading">{{ t('common_save') }}</el-button>
+      <el-button id="DocumentType__CreateNewDocumentType__Edit__Save" type="primary" @click="handleUpdate"
+                 :loading="loading">{{ t('common_save') }}
+      </el-button>
     </template>
   </el-dialog>
 </template>
@@ -38,7 +43,11 @@
 <script lang="ts" setup>
 import { adminApi } from 'api'
 import { ElMessage, type FormInstance } from 'element-plus'
-import { METADATA_OPTIONS, MASK_OPTIONS, type MetadataOption } from '../../../../../../packages/dp-datatype/utils/dataTypeHelper'
+import {
+  METADATA_OPTIONS,
+  MASK_OPTIONS,
+  type MetadataOption
+} from '../../../../../../packages/dp-datatype/utils/dataTypeHelper'
 import { mapDataType, getDefaultByType } from '../../../../../../packages/dp-datatype/utils/globalDataTypeHelper'
 
 const formData = ref<any>({
@@ -66,7 +75,7 @@ function open(data: any) {
   // check if data.validationRUle is exist, if not, set the default value
   if (!data.validationRule || !data.validationRule.validationRuleName) {
     selectedType.value = 'Text'
-    data.validationRule = getDefaultByType(selectedType.value )
+    data.validationRule = getDefaultByType(selectedType.value)
   } else if (data.validationRule.validationRuleName === 'mastertable') {
     selectedType.value = 'MasterTable'
   } else if (data.validationRule.validationRuleName === 'user_role_user_group') {
@@ -128,35 +137,10 @@ async function handleUpdate() {
           return
         }
       }
-      // step 3 check if the name is already exists
-      if (formData.value.name !== originalName.value) {
-        const nameExists = await adminApi.api
-          .postDocpaltypeSettingsMetadataV2Query({
-            metadataName: formData.value.name,
-            pageNum: 0,
-            pageSize: 1
-          })
-          .then((res) => (res.data?.entryList?.length ?? 0) > 0)
-        if (nameExists) {
-          ElMessage.error(t('dpTip.exit', { name: formData.value.name }))
-          return
-        }
-      }
-      const result = await adminApi.api.patchDocpaltypeSettingsMetadataV2Update(formData.value).then((res) => res.data)
-      if (result) {
-        ElMessage.success(
-          t('meta.update_success', {
-            name: formData.value.name
-          })
-        )
-        close()
-      } else {
-        ElMessage.error(
-          t('meta.update_error', {
-            name: formData.value.name
-          })
-        )
-      }
+      await adminApi.api.patchDocpaltypeSettingsMetadataV2Update(formData.value).then((res) => res.data)
+
+      ElMessage.success(t('meta.update_success', { name: formData.value.name }))
+      close()
     }
   } catch (error) {
     console.error(error)
@@ -164,9 +148,11 @@ async function handleUpdate() {
     loading.value = false
   }
 }
+
 function handleTypeChanged(value: string) {
   formData.value.validationRule = getDefaultByType(value)
 }
+
 defineExpose({
   open,
   close

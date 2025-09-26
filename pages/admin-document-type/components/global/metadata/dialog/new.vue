@@ -29,7 +29,7 @@
       </el-form-item>
     </el-form>
     <template #footer>
-      <el-button :loading="loading" type="primary" @click="handleCreate">{{ t('metadata.new') }}</el-button>
+      <el-button id="DocumentType__CreateNewDocumentType__Create__NewMetadata" :loading="loading" type="primary" @click="handleCreate">{{ t('metadata.new') }}</el-button>
     </template>
   </el-dialog>
 </template>
@@ -43,7 +43,7 @@ const { t } = useI18n()
 const validationFormRef = ref<FormInstance>()
 const visible = defineModel<boolean>('visible', { required: true })
 const selectedType = ref<MetadataOption['name']>('Text')
-
+const emits = defineEmits(['reload'])
 const loading = ref(false)
 const formData = reactive({
   name: '',
@@ -111,6 +111,7 @@ async function handleCreate() {
           })
         )
         close()
+        emits('reload', result)
       } else {
         ElMessage.error(
           t('meta.create_error', {

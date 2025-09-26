@@ -1,13 +1,13 @@
 import {Cell, CellView, Edge, Graph} from "@antv/x6";
-import {CaseItemType} from "./cmmn";
+import type {CaseItemType} from "./cmmn";
 import {embeddingValidateRule} from "./cmmnLogic";
 import {
     makeTaskStyle,
-    NodeSetting,
+    type NodeSetting,
     taskSize,
     eventSize,
     criterionSize,
-    ConnectionRuleArgs,
+    type ConnectionRuleArgs,
     createClickButton
 } from "./cmmnX6ElementHelper";
 

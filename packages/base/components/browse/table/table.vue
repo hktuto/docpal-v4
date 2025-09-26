@@ -1,24 +1,13 @@
 <script lang="tsx" setup>
 import { useDebounceFn, useMagicKeys } from '@vueuse/core'
 import { emitBus, EventType, useEventBus } from 'eventbus'
-import { 
-  createDropableFolder, 
-  createDropableFile, 
-  useSqliteTable, 
-  documentColumn, 
-  documentIndex, 
-  apiToColumn,
-  columnToApi,
- } from '#imports'
+import { createDropableFolder, createDropableFile, useSqliteTable, documentColumn, documentIndex, apiToColumn, columnToApi } from '#imports'
 import type { DocumentColumnData, DocumentApiData } from '#imports'
-
 
 const cleanSelectedRowsBus = useEventBus(EventType.FILE_CLEAN_SELECTED_ROWS)
 const listProvider = inject(BrowseListProviderKey)
 const routerProvider = inject(MenuRouterKey)
 import { clientApi } from 'api'
-
-
 
 if (!listProvider || !routerProvider) {
   throw new Error('BrowseListProviderKey not found')
@@ -35,19 +24,15 @@ const lastSelectedIndex = ref(-1)
 const lastSelectedRow = ref<any>(null)
 const { shift } = useMagicKeys()
 
-
-const {
-  find,
-  syncData,
-} = useSqliteTable<DocumentColumnData >({
+const { find, syncData } = useSqliteTable<DocumentColumnData>({
   schema: {
     name: 'docpal_documents',
     columns: documentColumn,
-    indexes: documentIndex,
+    indexes: documentIndex
   },
-  hooks:{
-    afterFind: async(result:DocumentColumnData[], where:any, options:any)=>{
-      const list = await loadData([], where.parentRef) as DocumentApiData[]
+  hooks: {
+    afterFind: async (result: DocumentColumnData[], where: any, options: any) => {
+      const list = (await loadData([], where.parentRef)) as DocumentApiData[]
 
       // step 2 calculate diff between apiList and result
       const batchData = {
@@ -55,46 +40,47 @@ const {
         update: [],
         delete: []
       } as {
-        create: DocumentColumnData[],
-        update: DocumentColumnData[],
+        create: DocumentColumnData[]
+        update: DocumentColumnData[]
         delete: DocumentColumnData[]
       }
       // find updatd and delete items in result
-      result.forEach((item:DocumentColumnData) => {
-        if(!list.some((apiItem:DocumentApiData) => apiItem.id === item.id)){
+      result.forEach((item: DocumentColumnData) => {
+        if (!list.some((apiItem: DocumentApiData) => apiItem.id === item.id)) {
           batchData.delete.push(item)
         }
       })
       // find create items in list
-      list.forEach((item:DocumentApiData) => {
-        const existingItem = result.find((apiItem:DocumentColumnData) => apiItem.id === item.id)
-        if(!existingItem){
+      list.forEach((item: DocumentApiData) => {
+        const existingItem = result.find((apiItem: DocumentColumnData) => apiItem.id === item.id)
+        if (!existingItem) {
           batchData.create.push(apiToColumn(item))
-        }else{
-          if(item.modifiedDate !== existingItem.modifiedDate){
+        } else {
+          if (item.modifiedDate !== existingItem.modifiedDate) {
             batchData.update.push(apiToColumn(item))
           }
         }
       })
 
       // update table
-      tableRef.value?.insert(batchData.create.map(item => columnToApi(item)))
-      tableRef.value?.setRow(batchData.update.map(item => columnToApi(item)))
-      tableRef.value?.remove(batchData.delete.map(item => columnToApi(item)))
+      tableRef.value?.insert(batchData.create.map((item) => columnToApi(item)))
+      tableRef.value?.setRow(batchData.update.map((item) => columnToApi(item)))
+      tableRef.value?.remove(batchData.delete.map((item) => columnToApi(item)))
       syncData(batchData)
-      tableRef.value?.sort([{
-        field: 'isFolder',
-        order: 'desc'
-      },{
-        field: 'name',
-        order: 'asc'
-      }])
+      tableRef.value?.sort([
+        {
+          field: 'isFolder',
+          order: 'desc'
+        },
+        {
+          field: 'name',
+          order: 'asc'
+        }
+      ])
       // sync data
     }
   }
 })
-
-
 
 async function loadData(entry: any[], path?: string, pageNum: number = 0) {
   const { data } = await listProvider?.getchildApi({ idOrPath: path, pageSize: 1000, pageNum })
@@ -140,7 +126,6 @@ const reopenFolder = useDebounceFn(() => {
   // get table opened row
 }, 300)
 
-
 const { tableConfig, tableEvent, tableRef, reload, cleanSelectedRows } = useVxeTable({
   id: 'tableSetting',
   api: async (pageParams: any) => {
@@ -149,10 +134,10 @@ const { tableConfig, tableEvent, tableRef, reload, cleanSelectedRows } = useVxeT
     if (listProvider.mode.value === 'browse') {
       const data = await find({
         parentRef: listProvider.idOrPath?.value || '/'
-      }).then(data => {
-        return data.map(item => columnToApi(item))
+      }).then((data) => {
+        return data.map((item) => columnToApi(item))
       })
-      if(data){
+      if (data) {
         data.sort(sortEntry)
         emits('selectedChange', [])
         return data
@@ -304,10 +289,10 @@ const { tableConfig, tableEvent, tableRef, reload, cleanSelectedRows } = useVxeT
         }
       },
       {
-        code:'docPreview',
-        name:'common_preview',
-        action:({row}:any)=>{
-          if(row.isFolder) return;
+        code: 'docPreview',
+        name: 'common_preview',
+        action: ({ row }: any) => {
+          if (row.isFolder) return
           emitBus(EventType.FILE_PREVIEW_OPEN, row)
         }
       },
@@ -457,17 +442,7 @@ const { tableConfig, tableEvent, tableRef, reload, cleanSelectedRows } = useVxeT
       }
     ]
   ],
-  permissionMethod: ({
-    options,
-    code,
-    column,
-    row,
-    rowIndex,
-    additionalData
-  }: any): {
-    visible: boolean
-    disabled: boolean
-  } => {
+  asyncPermission: async ({ row }: any) => {
     const clickItem = row || listProvider.docDetail?.value
     const permissionCodes = {
       docPreview: RbacPermission.read,
@@ -493,12 +468,11 @@ const { tableConfig, tableEvent, tableRef, reload, cleanSelectedRows } = useVxeT
           visible: false,
           disabled: false
         }
+        return
       }
-      // if parent is on hold, child is not editable
-      // if(!!row) clickItem.hold = listProvider.docDetail?.value.hold
-      // hide all action when click on temp file
-      if (clickItem.source === 'tempFile') {
-        return { visible: false, disabled: false }
+      let hold = {}
+      if (clickItem.hold) {
+        hold = JSON.parse(clickItem.hold)
       }
       const visible = RbacAllowTo(code, { ...clickItem, hold }, clickItem.isFolder)
       switch (key) {
@@ -523,50 +497,8 @@ const { tableConfig, tableEvent, tableRef, reload, cleanSelectedRows } = useVxeT
           }
           break
       }
-
-      const publicActionsCode = ['docActionRefresh', 'docActionNewTab', 'docOpen']
-      const map: any = {
-        createSubFolder: ['docActionPaste'],
-        create: [],
-        write: [],
-        editMetadata: ['docActionChangeDocType', 'docActionRename'],
-        delete: [],
-        deleteSubContent: []
-      }
-      if (clickItem.isFolder) {
-        map.create = ['docActionAddFolder', 'docActionUploadFolder', 'docActionNewFile', 'docActionUploadFile']
-        map.write = ['docActionCopy']
-        map.delete = []
-        map.deleteSubContent = ['docActionCut', 'docActionDelete']
-      } else {
-        map.create = []
-        map.write = ['docWatermark', 'docActionCopy']
-        map.delete = ['docActionCut', 'docActionDelete']
-        map.deleteSubContent = []
-      }
-      if (publicActionsCode.includes(code)) {
-        return { visible: true, disabled: false }
-      } else {
-        for (const key in map) {
-          if (map[key].includes(code)) {
-            const isPaste = code === 'docActionPaste' ? copyDocumentList.value.length > 0 : 1
-            return {
-              visible: (RbacAllowTo(key, clickItem, clickItem.isFolder) && isPaste) as boolean,
-              disabled: false
-            }
-          }
-        }
-      }
-
-      return {
-        visible: RbacAllowTo(code, clickItem, clickItem.isFolder),
-        disabled: false
-      }
-    }
-    return {
-      visible: false,
-      disabled: false
-    }
+    })
+    return result
   },
   selectChangeHander: (selectedRows: any[], selectedRow: any) => {
     // check if selectedRows is not Folder
@@ -586,21 +518,21 @@ const { tableConfig, tableEvent, tableRef, reload, cleanSelectedRows } = useVxeT
       showLine: true,
       hasChildField: 'isFolder',
       loadMethod: async (params) => {
-        try{
-          const entry = await find({parentRef:params.row.id},{},{skipIfEmpty:true})
-          if(entry.length === 0){
-            const apiData = await loadData([], params.row.id) as DocumentApiData[]
+        try {
+          const entry = await find({ parentRef: params.row.id }, {}, { skipIfEmpty: true })
+          if (entry.length === 0) {
+            const apiData = (await loadData([], params.row.id)) as DocumentApiData[]
             const syncList = {
-              create: apiData.map((item:DocumentApiData) => apiToColumn(item)),
+              create: apiData.map((item: DocumentApiData) => apiToColumn(item)),
               update: [],
               delete: []
             }
             await syncData(syncList)
             return apiData.sort(sortEntry)
-          }else{
-            return entry.map((item:DocumentColumnData) => columnToApi(item)).sort(sortEntry)
+          } else {
+            return entry.map((item: DocumentColumnData) => columnToApi(item)).sort(sortEntry)
           }
-        }catch(e){
+        } catch (e) {
           // if error, return empty array and remove item from expandedItems
           console.error(e)
           return []
@@ -645,7 +577,7 @@ const { tableConfig, tableEvent, tableRef, reload, cleanSelectedRows } = useVxeT
     },
     cellMouseleave: ({ row, column, rowIndex }) => {
       emitBus(EventType.FILE_PREVIEW_CLOSE, row)
-    },
+    }
   }
 })
 
@@ -789,9 +721,6 @@ watch(
     deep: true
   }
 )
-
-
-
 
 // watch mode in listProvider, if mode change then reload table
 watch(

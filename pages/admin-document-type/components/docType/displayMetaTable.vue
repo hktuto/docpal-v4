@@ -44,7 +44,7 @@ const { tableConfig, tableEvent, tableRef, reload } = useVxeTable({
     return await getList()
   },
   columns: [
-    { type: 'seq', width: 70, align: 'right' },
+    { type: 'seq', width: 70, align: 'right', dragSort: true },
     {
       field: 'name',
       title: 'rightDetail_meta',
@@ -112,7 +112,14 @@ const { tableConfig, tableEvent, tableRef, reload } = useVxeTable({
   dblClickAction: ({ row, column, event }: any) => {
     handleDialogShow(row)
   },
+  dragConfig: {
+    dragend: ({ oldRow, _index }) => {
+      const offsetIndex = _index.oldIndex - _index.newIndex
+      handleMove(oldRow, offsetIndex, false)
+    }
+  }
 })
+
 async function getList() {
   if (!isFilter.value) {
     const data: any = await adminApi.api.postDocpaltypeSettingsDocpalTypeV2MetadataQuery({ docpalTypeName: props.documentType }).then((res) => res.data)
@@ -165,13 +172,20 @@ function handleFilterFormChange(formModel: any) {
   reload()
 }
 
-async function handleMove(row: any, moveIndex: number) {
-  await adminApi.api.postDocpaltypeSettingsDocpalTypeV2MoveMetadata({
-    docpalTypeId: props.id,
-    metadataId: row.id,
-    moveIndex
-  })
-  reload()
+async function handleMove(row: any, moveIndex: number, isReload: boolean = true) {
+  try {
+    await adminApi.api.postDocpaltypeSettingsDocpalTypeV2MoveMetadata({
+      docpalTypeId: props.id,
+      metadataId: row.id,
+      moveIndex
+    })
+    if (isReload) {
+      reload()
+    }
+  } catch (error) {
+    console.error(error)
+    reload()
+  }
 }
 
 async function handleDisplayChange(row: any) {

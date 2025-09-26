@@ -64,6 +64,9 @@ const { tableConfig, tableEvent, tableRef, query, reload, cleanSelectedRows } = 
     ]
   ],
   permissionMethod: (args: PermissionMethodParams) => {
+    if (!args.row) {
+      return { visible: false, disabled: false }
+    }
     if (args.code === 'placeFirst') {
       return {
         visible: args.row.status === 'QUEUE',

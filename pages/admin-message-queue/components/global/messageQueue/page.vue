@@ -57,13 +57,15 @@ const {
     }
   ],
   permissionMethod: (args: PermissionMethodParams) => {
+    if (!args.row) {
+      return { visible: false, disabled: false }
+    }
     switch (args.code) {
       case 're-try':
         return {
           visible: args.row.status === 'ERROR',
           disabled: false
         }
-      //   break;
       default:
         return {
           visible: true,
