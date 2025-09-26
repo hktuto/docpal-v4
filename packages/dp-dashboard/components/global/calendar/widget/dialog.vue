@@ -79,10 +79,10 @@ async function setForm(isEdit: boolean, data: any) {
     routerProvider?.message.error('The form does not exist')
     return
   }
-  setTimeout(() => {
+  nextTick(() => {
     createDialogFormRef.value.setForm(state.formJson)
     createDialogFormRef.value.setFormData(isEdit, data)
-  }, 100)
+  })
 }
 
 async function open(dateTime: string) {
@@ -238,7 +238,7 @@ defineExpose({ open, edit, cancelAndRemove })
     <el-divider v-show="!state.isEdit" />
 
     <div v-loading="state.loading">
-      <LazyCalendarWidgetDialogForm ref="createDialogFormRef" />
+      <CalendarWidgetDialogForm ref="createDialogFormRef"/>
     </div>
 
     <template #footer>
