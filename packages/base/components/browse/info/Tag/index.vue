@@ -20,7 +20,6 @@
 </template>
 
 <script lang="ts" setup>
-
 import { clientApi } from 'api'
 import { ElMessage } from 'element-plus'
 const routerProvider = inject(MenuRouterKey)
