@@ -21,11 +21,11 @@
 const state = reactive<any>({
   aggregation: {}
 })
-const { tableId, searchParams } = defineProps<{
+const props = defineProps<{
   tableId?: string
   searchParams?: any
 }>()
-
+const { searchParams } = toRefs(props)
 const BarRef = ref()
 let searchState: 'firstSearch' | 'aggChange' | '' = ''
 const tableRef = ref()
@@ -49,11 +49,18 @@ function handleUpdateAgg(aggregation: any, aggParams: any = {}) {
 }
 
 onMounted(() => {
-  if (searchParams) {
-    // TODO : save query to tab if changed
-    BarRef.value.setQuery(searchParams)
-    tableRef.value.initBar(searchParams)
+  BarRef.value.setQuery(searchParams.value)
+    tableRef.value.initBar(searchParams.value)
+})
+
+watch(searchParams,(params) => {
+  if(params){
+
+    BarRef.value.setQuery(searchParams.value)
+    tableRef.value.initBar(searchParams.value)
   }
+},{
+  deep:true,
 })
 </script>
 <style lang="scss" scoped>
