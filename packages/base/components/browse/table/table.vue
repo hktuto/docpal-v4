@@ -468,14 +468,31 @@ const { tableConfig, tableEvent, tableRef, reload, cleanSelectedRows } = useVxeT
         }
         return
       }
-      const isPaste = key === 'docActionPaste' ? copyDocumentList.value.length > 0 : 1
       let hold = {}
       if (clickItem.hold) {
         hold = JSON.parse(clickItem.hold)
       }
-      result[key] = {
-        visible: RbacAllowTo(code, { ...clickItem, hold }, clickItem.isFolder) && isPaste,
-        disabled: false
+      const visible = RbacAllowTo(code, { ...clickItem, hold }, clickItem.isFolder)
+      switch (key) {
+        case 'docActionPaste':
+          const isPaste = key === 'docActionPaste' ? copyDocumentList.value.length > 0 : 1
+          result[key] = {
+            visible: visible && isPaste,
+            disabled: false
+          }
+          break
+        case 'docWatermark':
+          result[key] = {
+            visible: visible && !clickItem.isFolder,
+            disabled: false
+          }
+          break
+        default:
+          result[key] = {
+            visible: visible,
+            disabled: false
+          }
+          break
       }
     })
     return result
