@@ -106,6 +106,7 @@ function recursiveLoadChild(checkList: any[] = [], treeData: any[], result: any[
   checkList.forEach((row, index) => {
     const rowData = treeData.find((el) => el.id === row)
     if (rowData) {
+      
       if (!tableRef.value?.isTreeExpandByRow(rowData)) {
         result.push(rowData)
       } else {
@@ -118,10 +119,12 @@ function recursiveLoadChild(checkList: any[] = [], treeData: any[], result: any[
 
 // DEPRECATED: now system use sqlite to store expanded items, so this function is not needed
 const reopenFolder = useDebounceFn(() => {
-  // console.log('reopenFolder', expandedItems)
+  console.log('reopenFolder', expandedItems)
   if (!tableRef.value || expandedItems.length === 0) return
-  const tableData = tableRef.value.getData()
-  let needExpandList: any[] = recursiveLoadChild(expandedItems, tableData, [])
+  const {fullData} = tableRef.value.getTableData()
+  console.log('tableData', fullData)
+  let needExpandList: any[] = recursiveLoadChild(expandedItems, fullData, [])
+  console.log('needExpandList', needExpandList)
   tableRef.value?.setTreeExpand(needExpandList, true)
   // get table opened row
 }, 300)
@@ -154,7 +157,7 @@ const { tableConfig, tableEvent, tableRef, reload, cleanSelectedRows } = useVxeT
   childChangeHandler: () => {
     tableChildChangeHandler()
     // DEPRECATED: now system use sqlite to store expanded items, so this function is not needed
-    // reopenFolder()
+    reopenFolder()
   },
   columns: [
     {
@@ -557,7 +560,7 @@ const { tableConfig, tableEvent, tableRef, reload, cleanSelectedRows } = useVxeT
         // check if item exist in expandedItems
         if (expandedItems.includes(row.id)) return
         expandedItems.push(row.id)
-
+        console.log('expandedItems', expandedItems)
         emits('expandedItemsChange', expandedItems)
       } else {
         const index = expandedItems.findIndex((ex) => ex === row.id)
