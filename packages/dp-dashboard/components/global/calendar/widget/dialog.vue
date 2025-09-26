@@ -32,6 +32,7 @@ const event = reactive({
 })
 
 const categories = ref()
+
 async function initWorkflowForm(name: string) {
   state.loading = true
   try {
@@ -97,7 +98,7 @@ async function open(dateTime: string) {
       const data = {
         category: state.workflowId
       }
-      if(''!==state.location){
+      if ('' !== state.location) {
         data.location = state.location
       }
 
@@ -164,6 +165,11 @@ async function editForm(event: any) {
   await setForm(true, data)
 }
 
+function conversionMessage(event:any){
+  // const additionalContent = `{eventId:${event.detail.eventId},eventName:${event.detail.eventName},description:${event.detail.eventDescription},category:${event.detail.category},location: ${event.detail.location},startTime:${event.start},endTime:${event.end},user:${event.detail.relatedUsers.user},isAllDay: ${event.detail.isAllDay}}`
+  return JSON.stringify(event)
+}
+
 async function cancelAndRemove(isCancel: boolean, event: any) {
   state.isEdit = true
   state.userList = []
@@ -178,8 +184,10 @@ async function cancelAndRemove(isCancel: boolean, event: any) {
     startTime: event.start,
     endTime: event.end,
     user: event.detail.relatedUsers.user,
-    isAllDay: event.detail.isAllDay
+    isAllDay: event.detail.isAllDay,
   }
+  data.additionalContent =  conversionMessage(data)
+
   const statue = isCancel ? 'cancel calendar event' : 'delete calendar event'
   await initWorkflowForm(statue)
 
@@ -201,6 +209,9 @@ async function submit() {
     if (!data) {
       return
     }
+    // 組裝消息推送的内容
+    data.additionalContent =  conversionMessage(data)
+
     const form = {
       processKey: state.workflowKey,
       businessKey: '',
@@ -211,7 +222,7 @@ async function submit() {
     }
 
     state.loading = true
-    console.log("submit",data,form)
+    console.log('submit', data, form)
     await clientApi.api.postWorkflowProcessStart(form, { async: false }).then((res) => res.data)
     state.formDialogVisible = false
     emits('reload')
@@ -238,7 +249,7 @@ defineExpose({ open, edit, cancelAndRemove })
     <el-divider v-show="!state.isEdit" />
 
     <div v-loading="state.loading">
-      <CalendarWidgetDialogForm ref="createDialogFormRef"/>
+      <CalendarWidgetDialogForm ref="createDialogFormRef" />
     </div>
 
     <template #footer>

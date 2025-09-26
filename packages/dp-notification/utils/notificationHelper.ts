@@ -1,6 +1,18 @@
 import { clientApi } from 'api'
 
 export function notiShowView(row: any) {
+  if ('Workflow' === row.type && '' !== row.content?.message) {
+    try {
+      const message = JSON.parse(row.content?.message)
+      if (!!message.additionalContent) {
+        return true
+      }
+    } catch (e) {
+      return false
+    }
+    return false
+  }
+
   const isCancel = ['TRASH', 'DELETE', 'CANCELD'].includes(row.operate) ||
     (row.type === 'Upload-Request' && !row.content.processInstanceId)
   const showView = row.content.documentId ||

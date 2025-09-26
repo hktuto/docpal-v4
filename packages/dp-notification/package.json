@@ -10,6 +10,7 @@
     "generate": "nuxi generate .playground",
     "preview": "nuxi preview .playground",
     "postinstall": "nuxi prepare",
+    "prepare": "nuxt prepare",
     "lint": "eslint .",
     "test": "vitest --ui --watch"
   },

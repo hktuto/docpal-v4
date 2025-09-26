@@ -23,9 +23,11 @@
             })
           }}
         </div>
-        <div v-if="item.content.message"> {{ item.content.message }}</div>
-<!--        <el-alert v-if="item.content.message" :title="item.content.message"-->
-<!--                  :type="JSON.parse(item.content.message).level" :closable="false" />-->
+        <div v-if="item.content.message">
+          {{  message(item.content.message) }}
+        </div>
+        <!--        <el-alert v-if="item.content.message" :title="item.content.message"-->
+        <!--                  :type="JSON.parse(item.content.message).level" :closable="false" />-->
         {{ item.content.comment }}
         <div>{{ item.creator }}</div>
         <div>
@@ -125,6 +127,23 @@ function initData(noGetData: boolean = false) {
   state.list = []
   pageParams.value.pageNum = 0
   if (!noGetData) getList()
+}
+
+function message(message) {
+  const content = JSON.parse(message)
+  console.log(222, content)
+  if (content.showNotification) {
+    let msg = ''
+    try {
+      msg = JSON.parse(content.additionalContent)
+
+    } catch (e) {
+      console.log(e)
+      return message
+    }
+    return msg
+  }
+  return message
 }
 
 onMounted(() => {
