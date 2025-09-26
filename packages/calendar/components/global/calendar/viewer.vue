@@ -1,8 +1,15 @@
 <script setup lang="ts">
 import dayjs from 'dayjs'
-
+import { useEventBus, EventType, emitBus } from 'eventbus'
 import { ScheduleXCalendar } from '@schedule-x/vue'
-import { createCalendar, createViewDay, createViewMonthAgenda, createViewMonthGrid, createViewWeek, type CalendarEventExternal } from '@schedule-x/calendar'
+import {
+  createCalendar,
+  createViewDay,
+  createViewMonthAgenda,
+  createViewMonthGrid,
+  createViewWeek,
+  type CalendarEventExternal
+} from '@schedule-x/calendar'
 
 import '@schedule-x/theme-default/dist/index.css'
 import { createCurrentTimePlugin } from '@schedule-x/current-time'
@@ -15,6 +22,7 @@ import { getEventFromApi, type CalendarOptions, type DocPalEventType } from '../
 import { useCalendarStore } from '../../../composables/useCalendar'
 import { displayTimeFn } from '../../../utils/calendarHelper'
 
+const { t } = useI18n()
 const { setting, calendarViewerCategories } = useCalendarStore()
 const props = defineProps<{
   options: CalendarOptions
@@ -79,10 +87,10 @@ function getEvent(id: string) {
 }
 
 async function getList() {
-  // TODO: 結果集合需要排除刪除的數據
   const eventList = await getEventFromApi(calendarApp, calendarControls, props.filter)
   console.log('get List', eventList)
-  eventList.value = eventList
+  // Exclude data with deleted status
+  eventList.value = eventList.filter(item => item.detail.status !== 'D')
 }
 
 function setupCalendar() {
@@ -162,6 +170,13 @@ function getCalendarStyle(event: any) {
   const category = categories.value.find((item) => item.id === catId)
   if (!category) return ''
 
+  if ('R' === event.detail.status) {
+    const highlight_color = '#A9A9A9'
+    const text_color = '#FFFFFF'
+    const background_color = '#D3D3D3'
+    return `--bg-color: ${highlight_color}; --on-color: ${text_color}; --container_color: ${background_color};`
+  }
+
   checkColor(category)
   return `--bg-color: ${category.highlight_color}; --on-color: ${category.text_color}; --container_color: ${category.background_color};`
 }
@@ -188,38 +203,43 @@ function makeDescription(event: CalendarEventExternal) {
 function getRowData(row: any) {
 }
 
-const showMenu = ref(false)
-const state = reactive({
-  menuX: '',
-  menuY: ''
-})
-
-const eventData = ref()
 function handleRightClick(def: any, event: any) {
-  console.log(123123, def, event)
-  if (!event){
+  if (!event) {
+    console.log('No calendar events were obtained')
     return
   }
   // 阻止默认的右键菜单
   def.preventDefault()
+  const bus = useEventBus(EventType.TABLE_CONTEXT_MENU_OPEN)
+  const option = [
+    [
+      {
+        name: t('Cancel Event'),
+        label: t('Cancel Event'),
+        visible: true,
+        action: () => {
+          emits('cancelEvent', event)
+        }
+      },
+      {
+        name: t('Delete Event'),
+        label: t('Delete Event'),
+        visible: true,
+        action: () => {
+          emits('deleteEvent', event)
+        }
+      }
+    ]
+  ]
 
-  eventData.value = event
-
-  state.menuX = def.clientX
-  state.menuY = def.clientY
-
-  console.log(`右击事件在位置 (${state.menuX}, ${state.menuY}) 发生`)
-  showMenu.value = true
-}
-
-function handleCancel() {
-  emits('cancelEvent',eventData.value)
-  showMenu.value = false
-}
-
-function handleDetele() {
-  emits('deleteEvent',eventData.value)
-  showMenu.value = false
+  const evtParams: TABLE_CONTEXT_PARAMS = {
+    row: null,
+    column: null,
+    rowIndex: 0,
+    options: option,
+    event: def
+  }
+  bus.emit(evtParams)
 }
 
 watch(
@@ -266,15 +286,19 @@ defineExpose({
         <div
           :class="{ eventContainer: true, isEditItem: editItem && calendarEvent.detail.eventId === editItem.eventId }"
           :style="getCalendarStyle(calendarEvent)"
+          @contextmenu.prevent="(event) => handleRightClick(event, calendarEvent)"
         >
-          {{ calendarEvent }}
+          <div v-if="'R'===calendarEvent.detail.status">
+            <strong style="color: #ff0000">{{ $t('Event Cancelled') }}</strong>
+            <br>
+          </div>
           <div class="title eventInfo">
             <Icon name="mdi:calendar-text" />
             {{ calendarEvent.title }}
           </div>
           <div class="description eventInfo">
             <Icon name="mdi:text" />
-            {{ calendarEvent.description }}
+            {{ calendarEvent.detail.eventDescription }}
           </div>
           <div class="location eventInfo">
             <Icon name="mdi:map-marker" />
@@ -309,11 +333,18 @@ defineExpose({
             </div>
 
             <template #content>
-              {{ calendarEvent.id }}
+              <div v-if="'R'===calendarEvent.detail.status">
+                <strong style="color: #ff0000">{{ $t('Event Cancelled') }}</strong>
+                <br>
+              </div>
+
+              {{ $t('Description') }}: {{ calendarEvent.detail.eventDescription }}
+              <br>
+              {{ $t('Location') }}: {{ calendarEvent.location || calendarEvent.detail.location }}
+              <br>
+              {{ $t('Personnel') }}: {{ calendarEvent.people.join(', ') }}
               <br />
-              {{ calendarEvent.location || calendarEvent.detail.location }} - {{ calendarEvent.people.join(', ') }}
-              <br />
-              {{ displayTimeFn(calendarEvent) }}
+              {{ $t('Date') }}: {{ displayTimeFn(calendarEvent) }}
             </template>
           </ElTooltip>
         </div>
@@ -323,6 +354,7 @@ defineExpose({
         <div
           :class="{ eventContainer: true, isEditItem: editItem && calendarEvent.detail.eventId === editItem.eventId, small: true }"
           :style="getCalendarStyle(calendarEvent)"
+          @contextmenu.prevent="(event) => handleRightClick(event, calendarEvent)"
         >
           <ElTooltip placement="top">
             <div class="eventInfo small">
@@ -332,21 +364,22 @@ defineExpose({
               {{ displayTimeFn(calendarEvent, true) }}
             </div>
             <template #content>
-              {{ calendarEvent.location || calendarEvent.detail.location }} - {{ calendarEvent.people.join(', ') }}
+              <div v-if="'R'===calendarEvent.detail.status">
+                <strong style="color: #ff0000">{{ $t('Event Cancelled') }}</strong>
+                <br>
+              </div>
+              {{ $t('Description') }}: {{ calendarEvent.detail.eventDescription }}
+              <br>
+              {{ $t('Location') }}: {{ calendarEvent.location || calendarEvent.detail.location }}
+              <br>
+              {{ $t('Personnel') }} : {{ calendarEvent.people.join(', ') }}
               <br />
-              {{ displayTimeFn(calendarEvent) }}
+              {{ $t('Date') }}: {{ displayTimeFn(calendarEvent) }}
             </template>
           </ElTooltip>
         </div>
       </template>
     </ScheduleXCalendar>
-  </div>
-
-  <div v-if="showMenu" :style="{ top: `${state.menuY}px`, left: `${state.menuX}px` }" class="context-menu">
-    <ul>
-      <li @click="handleCancel">Cancel</li>
-      <li @click="handleDetele">Detele</li>
-    </ul>
   </div>
 </template>
 

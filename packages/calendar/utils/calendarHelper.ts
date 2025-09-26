@@ -77,9 +77,10 @@ export function convertCalendarEventToSiteEvent(event: CalendarEventExternal): D
 
 export async function getEventFromApi(calendarApp: any, calendarControls: any, filter: any) {
   const range = calendarControls.getRange()
+  // When using dayjs to convert time, there will be deviations in the query data due to time zone problems. Use the "utc" method to change the time zone before using
   const params: any = {
-    startTime: dayjs(range.start).toISOString(),
-    endTime: dayjs(range.end).toISOString()
+    startTime: dayjs.utc(range.start).toISOString(),
+    endTime: dayjs.utc(range.end).toISOString()
   }
   const defaultCalendarId = Object.keys(calendarControls.getCalendars())[0]
   const user = localStorage.getItem('docpal-user')
