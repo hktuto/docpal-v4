@@ -98,7 +98,8 @@ export const RbacAllowTo = (
   }
   return permissionIds.some((id: number) => {
     const option = permissionOptions.find((opt) => {
-      const folderMatch = isFolder === '' || String(isFolder) === opt.isFolder || !opt.isFolder
+      const optIsFolder = opt.isFolder === 'false' ? false : true
+      const folderMatch = isFolder === '' || Boolean(isFolder) === optIsFolder || !('isFolder' in opt)
       return opt.value === id && folderMatch
     })
 

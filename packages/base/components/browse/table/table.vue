@@ -469,10 +469,27 @@ const { tableConfig, tableEvent, tableRef, reload, cleanSelectedRows } = useVxeT
     disabled: boolean
   } => {
     const clickItem = row || listProvider.docDetail?.value
-      // if click on empty row, return empty
-    if (!!clickItem) {
-      if (clickItem.path === '/') {
-        return {
+    const permissionCodes = {
+      docPreview: RbacPermission.read,
+      docActionAddFolder: RbacPermission.createSubFolder,
+      docActionNewFile: RbacPermission.create,
+      docActionUploadFile: RbacPermission.create,
+      docActionUploadFolder: RbacPermission.createSubFolder,
+      docActionRename: RbacPermission.write,
+      docActionChangeDocType: RbacPermission.write,
+      docWatermark: RbacPermission.write,
+      docActionCopy: RbacPermission.write,
+      docActionCut: RbacPermission.delete,
+      docActionPaste: RbacPermission.createSubFolder,
+      assignPermission: RbacPermission.assignPermission,
+      docActionDelete: RbacPermission.delete,
+      download: RbacPermission.download
+    }
+    const result = {}
+    Object.keys(permissionCodes).forEach((key) => {
+      const code = permissionCodes[key]
+      if (!clickItem || clickItem.path === '/') {
+        result[key] = {
           visible: false,
           disabled: false
         }
@@ -483,8 +500,28 @@ const { tableConfig, tableEvent, tableRef, reload, cleanSelectedRows } = useVxeT
       if (clickItem.source === 'tempFile') {
         return { visible: false, disabled: false }
       }
-      if(!clickItem.isFolder && code === 'docPreview') {
-        return { visible: true, disabled: false }
+      const visible = RbacAllowTo(code, { ...clickItem, hold }, clickItem.isFolder)
+      switch (key) {
+        case 'docActionPaste':
+          const isPaste = key === 'docActionPaste' ? copyDocumentList.value.length > 0 : 1
+          result[key] = {
+            visible: visible && isPaste,
+            disabled: false
+          }
+          break
+        case 'docPreview':
+        case 'docWatermark': 
+          result[key] = {
+            visible: visible && !clickItem.isFolder,
+            disabled: false
+          }
+          break
+        default:
+          result[key] = {
+            visible: visible,
+            disabled: false
+          }
+          break
       }
 
       const publicActionsCode = ['docActionRefresh', 'docActionNewTab', 'docOpen']
