@@ -132,15 +132,16 @@ const { tableConfig, tableEvent, tableRef, reload, cleanSelectedRows } = useVxeT
     cleanSelectedRows()
     // if mode is browse, use loadData to get current path data
     if (listProvider.mode.value === 'browse') {
-      const data = await find({
-        parentRef: listProvider.idOrPath?.value || '/'
-      }).then((data) => {
-        return data.map((item) => columnToApi(item))
-      })
-      if (data) {
-        data.sort(sortEntry)
+      const list = (await loadData([], listProvider.idOrPath?.value || '/')) as DocumentApiData[]
+      // const data = await find({
+      //   parentRef: listProvider.idOrPath?.value || '/'
+      // }).then((data) => {
+      //   return data.map((item) => columnToApi(item))
+      // })
+      if (list) {
+        list.sort(sortEntry)
         emits('selectedChange', [])
-        return data
+        return list
       }
       return []
     }
@@ -516,19 +517,8 @@ const { tableConfig, tableEvent, tableRef, reload, cleanSelectedRows } = useVxeT
       hasChildField: 'isFolder',
       loadMethod: async (params) => {
         try {
-          const entry = await find({ parentRef: params.row.id }, {}, { skipIfEmpty: true })
-          if (entry.length === 0) {
-            const apiData = (await loadData([], params.row.id)) as DocumentApiData[]
-            const syncList = {
-              create: apiData.map((item: DocumentApiData) => apiToColumn(item)),
-              update: [],
-              delete: []
-            }
-            await syncData(syncList)
-            return apiData.sort(sortEntry)
-          } else {
-            return entry.map((item: DocumentColumnData) => columnToApi(item)).sort(sortEntry)
-          }
+          const apiData = (await loadData([], params.row.id)) as DocumentApiData[]
+          return apiData.sort(sortEntry)
         } catch (e) {
           // if error, return empty array and remove item from expandedItems
           console.error(e)
