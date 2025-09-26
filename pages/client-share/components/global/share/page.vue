@@ -46,7 +46,7 @@ const {
     }
   },
   columns: [
-    { field: 'emailList', title: 'tableHeader_emailList', fixed: 'left' },
+    { field: 'recipients', title: 'tableHeader_emailList', fixed: 'left' },
     { field: 'documentSize', title: 'tableHeader_numberOfFiles' },
     {
       field: 'created',
