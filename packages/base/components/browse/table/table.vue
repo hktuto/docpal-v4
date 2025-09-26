@@ -445,6 +445,7 @@ const { tableConfig, tableEvent, tableRef, reload, cleanSelectedRows } = useVxeT
   asyncPermission: async ({ row }: any) => {
     const clickItem = row || listProvider.docDetail?.value
     const permissionCodes = {
+      docPreview: RbacPermission.read,
       docActionAddFolder: RbacPermission.createSubFolder,
       docActionNewFile: RbacPermission.create,
       docActionUploadFile: RbacPermission.create,
@@ -456,7 +457,8 @@ const { tableConfig, tableEvent, tableRef, reload, cleanSelectedRows } = useVxeT
       docActionCut: RbacPermission.delete,
       docActionPaste: RbacPermission.createSubFolder,
       assignPermission: RbacPermission.assignPermission,
-      docActionDelete: RbacPermission.delete
+      docActionDelete: RbacPermission.delete,
+      download: RbacPermission.download
     }
     const result = {}
     Object.keys(permissionCodes).forEach((key) => {
@@ -481,6 +483,7 @@ const { tableConfig, tableEvent, tableRef, reload, cleanSelectedRows } = useVxeT
             disabled: false
           }
           break
+        case 'docPreview':
         case 'docWatermark': 
           result[key] = {
             visible: visible && !clickItem.isFolder,
