@@ -1,23 +1,13 @@
 <script lang="tsx" setup>
 import { useDebounceFn, useMagicKeys } from '@vueuse/core'
 import { emitBus, EventType, useEventBus } from 'eventbus'
-import {
-  createDropableFolder,
-  createDropableFile,
-  useSqliteTable,
-  documentColumn,
-  documentIndex,
-  apiToColumn,
-  columnToApi
-} from '#imports'
+import { createDropableFolder, createDropableFile, useSqliteTable, documentColumn, documentIndex, apiToColumn, columnToApi } from '#imports'
 import type { DocumentColumnData, DocumentApiData } from '#imports'
-
 
 const cleanSelectedRowsBus = useEventBus(EventType.FILE_CLEAN_SELECTED_ROWS)
 const listProvider = inject(BrowseListProviderKey)
 const routerProvider = inject(MenuRouterKey)
 import { clientApi } from 'api'
-
 
 if (!listProvider || !routerProvider) {
   throw new Error('BrowseListProviderKey not found')
@@ -34,10 +24,7 @@ const lastSelectedIndex = ref(-1)
 const lastSelectedRow = ref<any>(null)
 const { shift } = useMagicKeys()
 
-const {
-  find,
-  syncData
-} = useSqliteTable<DocumentColumnData>({
+const { find, syncData } = useSqliteTable<DocumentColumnData>({
   schema: {
     name: 'docpal_documents',
     columns: documentColumn,
@@ -45,7 +32,7 @@ const {
   },
   hooks: {
     afterFind: async (result: DocumentColumnData[], where: any, options: any) => {
-      const list = await loadData([], where.parentRef) as DocumentApiData[]
+      const list = (await loadData([], where.parentRef)) as DocumentApiData[]
 
       // step 2 calculate diff between apiList and result
       const batchData = {
@@ -53,8 +40,8 @@ const {
         update: [],
         delete: []
       } as {
-        create: DocumentColumnData[],
-        update: DocumentColumnData[],
+        create: DocumentColumnData[]
+        update: DocumentColumnData[]
         delete: DocumentColumnData[]
       }
       // find updatd and delete items in result
@@ -76,22 +63,24 @@ const {
       })
 
       // update table
-      tableRef.value?.insert(batchData.create.map(item => columnToApi(item)))
-      tableRef.value?.setRow(batchData.update.map(item => columnToApi(item)))
-      tableRef.value?.remove(batchData.delete.map(item => columnToApi(item)))
+      tableRef.value?.insert(batchData.create.map((item) => columnToApi(item)))
+      tableRef.value?.setRow(batchData.update.map((item) => columnToApi(item)))
+      tableRef.value?.remove(batchData.delete.map((item) => columnToApi(item)))
       syncData(batchData)
-      tableRef.value?.sort([{
-        field: 'isFolder',
-        order: 'desc'
-      }, {
-        field: 'name',
-        order: 'asc'
-      }])
+      tableRef.value?.sort([
+        {
+          field: 'isFolder',
+          order: 'desc'
+        },
+        {
+          field: 'name',
+          order: 'asc'
+        }
+      ])
       // sync data
     }
   }
 })
-
 
 async function loadData(entry: any[], path?: string, pageNum: number = 0) {
   const { data } = await listProvider?.getchildApi({ idOrPath: path, pageSize: 1000, pageNum })
@@ -137,7 +126,6 @@ const reopenFolder = useDebounceFn(() => {
   // get table opened row
 }, 300)
 
-
 const { tableConfig, tableEvent, tableRef, reload, cleanSelectedRows } = useVxeTable({
   id: 'tableSetting',
   api: async (pageParams: any) => {
@@ -146,8 +134,8 @@ const { tableConfig, tableEvent, tableRef, reload, cleanSelectedRows } = useVxeT
     if (listProvider.mode.value === 'browse') {
       const data = await find({
         parentRef: listProvider.idOrPath?.value || '/'
-      }).then(data => {
-        return data.map(item => columnToApi(item))
+      }).then((data) => {
+        return data.map((item) => columnToApi(item))
       })
       if (data) {
         data.sort(sortEntry)
@@ -454,82 +442,43 @@ const { tableConfig, tableEvent, tableRef, reload, cleanSelectedRows } = useVxeT
       }
     ]
   ],
-  permissionMethod: ({
-                       options,
-                       code,
-                       column,
-                       row,
-                       rowIndex,
-                       additionalData
-                     }: any): {
-    visible: boolean
-    disabled: boolean
-  } => {
+  asyncPermission: async ({ row }: any) => {
     const clickItem = row || listProvider.docDetail?.value
-    // if click on empty row, return empty
-    if (!!clickItem) {
-      if (clickItem.path === '/') {
-        return {
+    const permissionCodes = {
+      docActionAddFolder: RbacPermission.createSubFolder,
+      docActionNewFile: RbacPermission.create,
+      docActionUploadFile: RbacPermission.create,
+      docActionUploadFolder: RbacPermission.createSubFolder,
+      docActionRename: RbacPermission.write,
+      docActionChangeDocType: RbacPermission.write,
+      docWatermark: RbacPermission.write,
+      docActionCopy: RbacPermission.write,
+      docActionCut: RbacPermission.delete,
+      docActionPaste: RbacPermission.createSubFolder,
+      assignPermission: RbacPermission.assignPermission,
+      docActionDelete: RbacPermission.delete
+    }
+    const result = {}
+    Object.keys(permissionCodes).forEach((key) => {
+      const code = permissionCodes[key]
+      if (!clickItem || clickItem.path === '/') {
+        result[key] = {
           visible: false,
           disabled: false
         }
+        return
       }
-      if(listProvider.docDetail.value.hold){
-        return { visible: false, disabled: false }
+      const isPaste = key === 'docActionPaste' ? copyDocumentList.value.length > 0 : 1
+      let hold = {}
+      if (clickItem.hold) {
+        hold = JSON.parse(clickItem.hold)
       }
-      // if parent is on hold, child is not editable
-      // if(!!row) clickItem.hold = listProvider.docDetail?.value.hold
-      // hide all action when click on temp file
-      if (clickItem.source === 'tempFile') {
-        return { visible: false, disabled: false }
-      }
-      if (!clickItem.isFolder && code === 'docPreview') {
-        return { visible: true, disabled: false }
-      }
-
-      const publicActionsCode = ['docActionRefresh', 'docActionNewTab', 'docOpen']
-      const map: any = {
-        createSubFolder: ['docActionPaste'],
-        create: [],
-        write: [],
-        editMetadata: ['docActionChangeDocType', 'docActionRename'],
-        delete: [],
-        deleteSubContent: []
-      }
-      if (clickItem.isFolder) {
-        map.create = ['docActionAddFolder', 'docActionUploadFolder', 'docActionNewFile', 'docActionUploadFile']
-        map.write = ['docActionCopy']
-        map.delete = []
-        map.deleteSubContent = ['docActionCut', 'docActionDelete']
-      } else {
-        map.create = []
-        map.write = ['docWatermark', 'docActionCopy']
-        map.delete = ['docActionCut', 'docActionDelete']
-        map.deleteSubContent = []
-      }
-      if (publicActionsCode.includes(code)) {
-        return { visible: true, disabled: false }
-      } else {
-        for (const key in map) {
-          if (map[key].includes(code)) {
-            const isPaste = code === 'docActionPaste' ? copyDocumentList.value.length > 0 : 1
-            return {
-              visible: (RbacAllowTo(key, clickItem, clickItem.isFolder) && isPaste) as boolean,
-              disabled: false
-            }
-          }
-        }
-      }
-
-      return {
-        visible: RbacAllowTo(code, clickItem, clickItem.isFolder),
+      result[key] = {
+        visible: RbacAllowTo(code, { ...clickItem, hold }, clickItem.isFolder) && isPaste,
         disabled: false
       }
-    }
-    return {
-      visible: false,
-      disabled: false
-    }
+    })
+    return result
   },
   selectChangeHander: (selectedRows: any[], selectedRow: any) => {
     // check if selectedRows is not Folder
@@ -552,7 +501,7 @@ const { tableConfig, tableEvent, tableRef, reload, cleanSelectedRows } = useVxeT
         try {
           const entry = await find({ parentRef: params.row.id }, {}, { skipIfEmpty: true })
           if (entry.length === 0) {
-            const apiData = await loadData([], params.row.id) as DocumentApiData[]
+            const apiData = (await loadData([], params.row.id)) as DocumentApiData[]
             const syncList = {
               create: apiData.map((item: DocumentApiData) => apiToColumn(item)),
               update: [],
@@ -752,7 +701,6 @@ watch(
     deep: true
   }
 )
-
 
 // watch mode in listProvider, if mode change then reload table
 watch(
