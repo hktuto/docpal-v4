@@ -105,9 +105,9 @@
     "browse": "Browse Setting",
     "bulkImportConfig": "Bulk Import",
     "calendarSetting": "Calendar Setting",
-    "caseManagement": "Case management",
+    "caseManagement": "Case",
     "companyProfile": "Company Profile",
-    "contactBook": "Contact Book",
+    "contactBook": "Contacts",
     "dashboard": "Dashboard",
     "dashboardManagement": "Dashboard List",
     "directus": "Directus",
@@ -128,7 +128,7 @@
     "log": "Log Manage",
     "logManage": "Log Output Configuration",
     "mailConfig": "Notification Configuration",
-    "masterTable": "Master Table",
+    "masterTable": "Database",
     "messageTemplate": "Message Template",
     "message_queue": "Jobs Status",
     "meta": "Metadata Setting",
@@ -359,7 +359,7 @@
     "defaultSolt": "Default Slot",
     "firstOfWeek": "First of week",
     "location": "Event Locations",
-    "location_masterTable": "Master Table",
+    "location_masterTable": "Database",
     "officeEndTime": "Office Hour- End",
     "officeStartTime": "Office Hour- Start",
     "view": "Default Calendar view",
@@ -409,7 +409,7 @@
     "name": "Case Name",
     "prefix": "Case ID - Prefix",
     "startNumber": "Case ID – Starting Number",
-    "title": "Case management",
+    "title": "Case",
     "userGroup": "User Group"
   },
   "caseManagement_ImportFromWorkflow": "Import from Workflow",
@@ -456,7 +456,7 @@
   "clearFilter": "Clear All",
   "clientAIUpload": "Upload",
   "client_holdPolicies": "Hold Policy",
-  "client_retention": "Retention List",
+  "client_retention": "Retention",
   "close": "Close",
   "cmmn": {
     "input": "Input",
@@ -581,7 +581,7 @@
     "to": "to"
   },
   "contactBook": {
-    "create": "New Contact Book",
+    "create": "New Contacts",
     "field": "Field",
     "fieldName": "Field Name",
     "fieldValue": "Field Value",
@@ -1751,10 +1751,10 @@
   "en-US": "ENG",
   "error_watermark_mimetype": "Watermark Only support image, pdf and video file",
   "eventId": {
-    "mastertable_create": "Master Table Create",
-    "mastertable_delete": "Master Table Delete",
-    "mastertable_insert": "Master Table Insert",
-    "mastertable_update": "Master Table Update"
+    "mastertable_create": "Database Create",
+    "mastertable_delete": "Database Delete",
+    "mastertable_insert": "Database Insert",
+    "mastertable_update": "Database Update"
   },
   "exportDialog": {
     "availableColumns": "Available columns",
@@ -2080,7 +2080,7 @@
       "folder_cabinet_id": "Folder Cabinet ID",
       "json": "Json",
       "longText": "Long Text",
-      "master_table": "Master Table",
+      "master_table": "Database",
       "number": "Integer",
       "relation": "Relation Data",
       "short_text": "Short Text",
@@ -2101,7 +2101,7 @@
       "active": "Active",
       "activeDescription": "Active or in-active table, in-active table data will not remove , but no new item can be add.",
       "name": "Name",
-      "nameDescription": "Name of the Database, Must be unique to all databases in Master Table",
+      "nameDescription": "Name of the Database, Must be unique to all databases in Database",
       "permission": "Permissions",
       "permissionDescription": "Choose who can access the records."
     }
@@ -2124,7 +2124,7 @@
     "log": "Audit Log",
     "newRow": "New Row",
     "newSchema": "Add Column",
-    "newTable": "New Master Table",
+    "newTable": "New Database",
     "params": "Attributes",
     "records": "Records",
     "relationKey": "Relation Key",
@@ -2133,29 +2133,29 @@
     "showSchema": "Show schema",
     "table": "Table"
   },
-  "masterTable_active": "Active Master Table",
-  "masterTable_create": "Create New Master Table",
+  "masterTable_active": "Active Database",
+  "masterTable_create": "Create New Database",
   "masterTable_createAddColumn": "Add New Column",
   "masterTable_createAddColumnSuccessMsg": "The new column {columnName} has been added to {masterName} successfully.",
   "masterTable_createdBy": "Table Created By",
-  "masterTable_delete": "Delete Master Table",
+  "masterTable_delete": "Delete Database",
   "masterTable_deleteMsg": "Are you sure you want to delete the master table {name}?<br>This action cannot be undone.",
   "masterTable_deleteSelectedMsg": "Are you sure you want to delete the selected rows from the master table {name}?<br>This action cannot be undone.",
   "masterTable_deleteSelectedSuccessMsg": "The selected rows have been deleted from the master table {name} successfully.",
-  "masterTable_detailLogFilter": "Filter by Master Table Name",
-  "masterTable_detailRecordsFilter": "Filter by Master Table ID",
-  "masterTable_edit": "Edit Master Table",
+  "masterTable_detailLogFilter": "Filter by Database Name",
+  "masterTable_detailRecordsFilter": "Filter by Database ID",
+  "masterTable_edit": "Edit Database",
   "masterTable_filter": "Filter by Table Name",
-  "masterTable_id": "Master Table ID",
-  "masterTable_inactivate": "Inactivate Master Table",
-  "masterTable_masterName": "Master Table Name",
+  "masterTable_id": "Database ID",
+  "masterTable_inactivate": "Inactivate Database",
+  "masterTable_masterName": "Database Name",
   "masterTable_name": "Table Name",
   "masterTable_permissionForMaster": "permission for the master table",
   "masterTable_selected": "No. of Rows Selected",
   "masterTable_settingAddPermission": "Add Permission",
   "masterTable_settingRemoveMsg": "Are you sure you want to remove the selected permission from the master table {name}?",
   "masterTable_settingRemoveSuccessMsg": "The selected permission has been removed from the master table {name} successfully.",
-  "menu_master-table": "Master Table",
+  "menu_master-table": "Database",
   "menus_Virtual Folder": "Virtual Folder",
   "menus_VirtualFolder": "Virtual Folder",
   "menus_file": "File",
@@ -2213,7 +2213,7 @@
       },
       "masterTable": {
         "displayColumn": "Display Column",
-        "masterTableId": "Master Table",
+        "masterTableId": "Database",
         "valueColumn": "Value Column"
       },
       "number": {
@@ -2311,7 +2311,7 @@
     "filterByDescription": "Filter by description",
     "mastertable": {
       "create": {
-        "record": "Master Table has successfully imported new data through Excel"
+        "record": "Database has successfully imported new data through Excel"
       }
     },
     "operator": "Operator",
@@ -3558,7 +3558,7 @@
       "goto": "Go to",
       "gotoTitle": "Number",
       "homePage": "Home",
-      "homePageTitle": "Home page",
+      "homePageTitle": "Home",
       "nextJump": "Jump next page",
       "nextJumpTitle": "Jump next page",
       "nextPage": "next page",

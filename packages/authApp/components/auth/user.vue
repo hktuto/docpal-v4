@@ -10,6 +10,21 @@ const { uploadState } = useUploadAIStore()
 const isDesktop = useDesktopMode()
 const tabProvider = inject(TabManagerKey)
 const {menuMode} = defineProps<{menuMode?:'collapse' | 'expand'}>()
+
+const appPlatform = useAppPlatform()
+const isAdmin = useIsAdmin()
+const isSuperAdmin = useIsSuperAdmin()
+
+const showSwitchMenu = computed(() => {
+  return isAdmin.value || isSuperAdmin.value
+})
+
+function switchPlatform() {
+  const url = appPlatform.value === 'client' ? '/admin' : '/'
+  console.log('switchPlatform', url)
+  window.location.href = url
+}
+
 async function changeLanguage(langCode:string) {
     const perference = useUserPreference()
     perference.value.language = langCode
@@ -82,6 +97,10 @@ function handleOpenUpload(show: boolean = false, action: 'upload' | 'ai' | '' = 
                           {{$t(lang.code)}}
                       </ElDropdownItem>
                       <ElDivider />
+                      <template v-if="showSwitchMenu">
+                        <ElDropdownItem @click="switchPlatform()">Switch to {{ appPlatform === 'admin' ? 'Client' : 'Admin' }}</ElDropdownItem>
+                        <ElDivider />
+                      </template>                      
                       <ElDropdownItem v-if="isDesktop" @click="removeBaseUrl">Reset Desktop</ElDropdownItem>
                       <ElDropdownItem @click="logout">{{ $t('login_loginOut')}}</ElDropdownItem>
                   </template>
@@ -101,7 +120,7 @@ function handleOpenUpload(show: boolean = false, action: 'upload' | 'ai' | '' = 
     align-items: center;
     gap: var(--app-space-s);
     line-height: 1;
-    padding-right: var(--app-space-xs);
+    
     &.collapse{
       flex-flow: column nowrap;
     }
