@@ -2142,9 +2142,9 @@
   "masterTable_deleteMsg": "Are you sure you want to delete the master table {name}?<br>This action cannot be undone.",
   "masterTable_deleteSelectedMsg": "Are you sure you want to delete the selected rows from the master table {name}?<br>This action cannot be undone.",
   "masterTable_deleteSelectedSuccessMsg": "The selected rows have been deleted from the master table {name} successfully.",
-  "masterTable_detailLogFilter": "Filter by Master Table Name",
-  "masterTable_detailRecordsFilter": "Filter by Master Table ID",
-  "masterTable_edit": "Edit Master Table",
+  "masterTable_detailLogFilter": "Filter by Database Name",
+  "masterTable_detailRecordsFilter": "Filter by Database ID",
+  "masterTable_edit": "Edit Database",
   "masterTable_filter": "按表名筛选",
   "masterTable_id": "主表格 ID",
   "masterTable_inactivate": "停用主表格",
@@ -2311,7 +2311,7 @@
     "filterByDescription": "按描述过滤",
     "mastertable": {
       "create": {
-        "record": "Master Table已成功通过Excel导入新数据"
+        "record": "Database已成功通过Excel导入新数据"
       }
     },
     "operator": "操作员",

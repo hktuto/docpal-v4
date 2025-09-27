@@ -388,7 +388,7 @@
                 "optionItems": [
                   {
                     "value": "masterTable",
-                    "label": "Master Table"
+                    "label": "Database"
                   },
                   {
                     "value": "documentType",

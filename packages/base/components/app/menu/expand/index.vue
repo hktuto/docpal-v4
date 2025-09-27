@@ -1,25 +1,27 @@
 <script setup lang="ts">
-import type { MenuItem } from '#imports'
+
 const props = defineProps<{
-    menu: MenuItem,
+    menu: any,
     selectedMenuItem?:TabItem, 
 }>()
 const { selectedMenuItem } = toRefs(props)
 
+const { t } = useI18n()
+
 const selectedIndex = ref(0)
 
-watch(selectedMenuItem, (newSelectedMenuItem) => {
-  if(!newSelectedMenuItem || !props.menu.children) return
-  props.menu.children.forEach((element, index) => {
-    if(element.name === newSelectedMenuItem.name) {
-      selectedIndex.value = index
-      return
-    }
-  });
-},{
-  deep:true,
-  immediate: true
-})
+// watch(selectedMenuItem, (newSelectedMenuItem) => {
+//   if(!newSelectedMenuItem || !props.menu.children) return
+//   props.menu.children.forEach((element:any, index:number) => {
+//     if(element.name === newSelectedMenuItem.name) {
+//       selectedIndex.value = index
+//       return
+//     }
+//   });
+// },{
+//   deep:true,
+//   immediate: true
+// })
 
 
 
@@ -30,10 +32,11 @@ watch(selectedMenuItem, (newSelectedMenuItem) => {
     <div class="header">
       <Icon :name="menu.icon" />
       <div class="label">
-        {{ $t(menu.label) }}
+        {{ t(menu.label || '') }}
       </div>
     </div>
-    <template v-for="(item,index) in menu.children" :key="item.component">
+    <template v-if="menu.children && menu.children.length > 0" v-for="(item,index) in menu.children" :key="item.component">
+
       <template v-if="item.inlineComponent">
         <component :is="item.inlineComponent" :menuItem="item" :selected="selectedIndex === index"/>
       </template>
@@ -47,7 +50,7 @@ watch(selectedMenuItem, (newSelectedMenuItem) => {
 <style lang="scss" scoped>
 .expandMenuContainer{
   width: 100%;
-  max-width: 250px;
+  min-width: 250px;
   display: flex;
   flex-flow: column nowrap;
   justify-content: flex-start;

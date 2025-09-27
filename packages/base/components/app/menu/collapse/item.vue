@@ -5,8 +5,8 @@ const props= defineProps<{
   item: MenuItem
   selected: boolean
 }>()
-
-const dropOtion:UseDraggableParam = {
+const emit = defineEmits(['click'])
+const dropOtion:any = {
     key: menuKey,
     dragData: {
         key: menuKey,
@@ -22,6 +22,7 @@ if(props.item.onDropItself) {
 }
 const { dragState ,setupDrag } = useDragable(dropOtion)
 const elRef = ref()
+const { t } = useI18n()
 onMounted(() => {
     if(!elRef) return
     if(props.item.component && props.item.component !== '') {
@@ -33,13 +34,18 @@ onMounted(() => {
 
 <template>
   <div ref="elRef" :class="{menuItem:true, selected}" 
-    v-tooltip="$t(item.label)"
-  @click="$emit('click', props.item)">
+    v-tooltip="t(item.label || '')"
+  @click="emit('click', props.item)">
   <div class="icon">
-    <Icon :name="item.icon"></Icon>
+    <template v-if="selected && item.hoverIcon">
+      <Icon :name="item.hoverIcon"></Icon>
+    </template>
+    <template v-else>
+      <Icon :name="item.icon"></Icon>
+    </template>
   </div>
     <div class="label">
-      {{ $t(item.label) }}
+      {{ t(item.label || '') }}
     </div>
     <slot />
   </div>
@@ -69,16 +75,22 @@ onMounted(() => {
   }
   &.selected{
     background: var(--app-grey-1000) !important;
-    box-shadow: var(--app-shadow-s);
+    box-shadow: var(--app-shadow-m);
+    color: var(--app-accent-color);
   }
   &:hover{
-    box-shadow: var(--app-shadow-s);
-    background: var(--app-success-1);
+
+    color: var(--app-accent-color);
+    background: rgba(255, 255, 255, 0.6);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(6.3px);
+    -webkit-backdrop-filter: blur(6.3px);
+    border: 1px solid rgba(255, 255, 255, 0.31);
   }
 }
 .label{
   width: 100%;
-  font-size: var(--app-font-size-xxs);
+  font-size: var(--app-font-size-xs);
   text-align: center;
   overflow: hidden;
   text-overflow: ellipsis;

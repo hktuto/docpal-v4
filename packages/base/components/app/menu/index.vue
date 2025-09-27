@@ -106,6 +106,7 @@ function generateMenu(){
         label: "Menu",
         items: menuSearchList
     })
+    console.log('result',props.admin,result, _appMenu)
     displayMenu.value = result;
 }
 function checkVisible(row: any) {
@@ -124,13 +125,13 @@ function setSelectedMenuItem() {
             selectedMenuItem.value = selected
         }
     }
-    if(selectedMenuItem.value && selectedMenuItem.value.children && selectedMenuItem.value.children.length > 0) {
+    if(selectedMenuItem.value ) {
       expandMenu.value = JSON.parse(JSON.stringify(selectedMenuItem.value)) || []
     }
 
 }
 
-const expandMenu = ref<MenuItem[]>([])
+const expandMenu = ref<MenuItem>()
 
 function handleSelect(item:MenuItem) {
   if(menuMode.value === 'expand' && item.children&& item.children.length > 0) {
@@ -150,7 +151,6 @@ watch(() => [layout, hightLightPanel], () => {
     setSelectedMenuItem()
 },{
     deep:true,
-    immediate: true
 })
 watch(() => props.admin, () => {
     generateMenu()
@@ -212,6 +212,7 @@ onMounted(() => {
   display: flex;
   justify-content: center;
   align-items: center;
+  font-size: var(--app-font-size-xl);
 }
 
 
@@ -220,7 +221,7 @@ onMounted(() => {
     flex-flow: row wrap;
     justify-content: center;
     align-items: center;
-    padding: var(--app-space-s);
+    padding: var(--app-space-m) var(--app-space-s) 0 var(--app-space-s);
 }
 .menuExpand{
   height: 100%;
