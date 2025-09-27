@@ -92,6 +92,7 @@ async function saveTabsToLocalStorage(layout: TabPanel[]) {
   const saveData = JSON.parse(JSON.stringify(layout));
   // loop all panel and tabs to reset all initized to false
   saveData.forEach((panel: any) => {
+    console.log('panel', panel)
     panel.tabs.forEach((tab: any) => {
       tab.initized = false;
     });
