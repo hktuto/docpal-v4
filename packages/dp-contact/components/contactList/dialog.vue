@@ -51,6 +51,7 @@ function handleOpen(initData: any) {
   })
 }
 function init(initData: any) {
+  state.setting = {}
   FormVariablesRendererRef.value.createJson(attributesVForm.value)
   if (initData) {
     state.setting = initData

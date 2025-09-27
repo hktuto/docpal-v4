@@ -2509,6 +2509,7 @@
       "downloadFile": "下载",
       "endDatePlaceholder": "结束日期",
       "endTimePlaceholder": "截止时间",
+      "fieldLength": "{name} 必须介于 {min} 和 {max} 个字符之间",
       "fieldRequired": "{name} 不能为空",
       "fileLoading": "The file is being uploaded, please try again later",
       "fileSizeExceed": "文件大小已超出: ",

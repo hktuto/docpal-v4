@@ -213,7 +213,7 @@ const { tableConfig, tableEvent, tableRef, reload, query } = useVxeTable({
       field: 'tags',
       width: 120,
       slots: {
-        default: 'doc_tags'
+        default: 'docTags'
       }
     }
   ],

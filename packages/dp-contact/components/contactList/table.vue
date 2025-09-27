@@ -2,7 +2,7 @@
   <div style="overflow: hidden; height: 100%">
     <VxeGrid ref="tableRef" v-bind="tableConfig" v-on="tableEvent">
       <template #toolbar_buttons>
-        <ResponsiveFilter ref="ResponsiveFilterRef" inputKey="name" @form-change="handleFilterFormChange" inputPlaceHolder="tableHeader_name" />
+        <ResponsiveFilter ref="ResponsiveFilterRef" inputKey="q" @form-change="handleFilterFormChange" inputPlaceHolder="tableHeader_name" />
         <div class="actions">
           <ContactListExportButton class="el-icon--left" :id="id" :name="name" />
           <ContactListImportButton v-if="isCreate" :id="id" :name="name" :detail="detail" @refresh="reload" />

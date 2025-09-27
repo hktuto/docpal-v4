@@ -9,6 +9,7 @@
     "pages/*"
   ],
   "scripts": {
+    "dev": "pnpm -F client dev",
     "build": "nuxt build",
     "test": "vitest --ui",
     "test:run": "vitest run",

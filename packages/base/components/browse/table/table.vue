@@ -1,23 +1,13 @@
 <script lang="tsx" setup>
 import { useDebounceFn, useMagicKeys } from '@vueuse/core'
 import { emitBus, EventType, useEventBus } from 'eventbus'
-import {
-  createDropableFolder,
-  createDropableFile,
-  useSqliteTable,
-  documentColumn,
-  documentIndex,
-  apiToColumn,
-  columnToApi
-} from '#imports'
+import { createDropableFolder, createDropableFile, useSqliteTable, documentColumn, documentIndex, apiToColumn, columnToApi } from '#imports'
 import type { DocumentColumnData, DocumentApiData } from '#imports'
-
 
 const cleanSelectedRowsBus = useEventBus(EventType.FILE_CLEAN_SELECTED_ROWS)
 const listProvider = inject(BrowseListProviderKey)
 const routerProvider = inject(MenuRouterKey)
 import { clientApi } from 'api'
-
 
 if (!listProvider || !routerProvider) {
   throw new Error('BrowseListProviderKey not found')
@@ -34,64 +24,63 @@ const lastSelectedIndex = ref(-1)
 const lastSelectedRow = ref<any>(null)
 const { shift } = useMagicKeys()
 
-const {
-  find,
-  syncData
-} = useSqliteTable<DocumentColumnData>({
-  schema: {
-    name: 'docpal_documents',
-    columns: documentColumn,
-    indexes: documentIndex
-  },
-  hooks: {
-    afterFind: async (result: DocumentColumnData[], where: any, options: any) => {
-      const list = await loadData([], where.parentRef) as DocumentApiData[]
+// const { find, syncData } = useSqliteTable<DocumentColumnData>({
+//   schema: {
+//     name: 'docpal_documents',
+//     columns: documentColumn,
+//     indexes: documentIndex
+//   },
+//   hooks: {
+//     afterFind: async (result: DocumentColumnData[], where: any, options: any) => {
+//       const list = (await loadData([], where.parentRef)) as DocumentApiData[]
 
-      // step 2 calculate diff between apiList and result
-      const batchData = {
-        create: [],
-        update: [],
-        delete: []
-      } as {
-        create: DocumentColumnData[],
-        update: DocumentColumnData[],
-        delete: DocumentColumnData[]
-      }
-      // find updatd and delete items in result
-      result.forEach((item: DocumentColumnData) => {
-        if (!list.some((apiItem: DocumentApiData) => apiItem.id === item.id)) {
-          batchData.delete.push(item)
-        }
-      })
-      // find create items in list
-      list.forEach((item: DocumentApiData) => {
-        const existingItem = result.find((apiItem: DocumentColumnData) => apiItem.id === item.id)
-        if (!existingItem) {
-          batchData.create.push(apiToColumn(item))
-        } else {
-          if (item.modifiedDate !== existingItem.modifiedDate) {
-            batchData.update.push(apiToColumn(item))
-          }
-        }
-      })
+//       // step 2 calculate diff between apiList and result
+//       const batchData = {
+//         create: [],
+//         update: [],
+//         delete: []
+//       } as {
+//         create: DocumentColumnData[]
+//         update: DocumentColumnData[]
+//         delete: DocumentColumnData[]
+//       }
+//       // find updatd and delete items in result
+//       result.forEach((item: DocumentColumnData) => {
+//         if (!list.some((apiItem: DocumentApiData) => apiItem.id === item.id)) {
+//           batchData.delete.push(item)
+//         }
+//       })
+//       // find create items in list
+//       list.forEach((item: DocumentApiData) => {
+//         const existingItem = result.find((apiItem: DocumentColumnData) => apiItem.id === item.id)
+//         if (!existingItem) {
+//           batchData.create.push(apiToColumn(item))
+//         } else {
+//           if (item.modifiedDate !== existingItem.modifiedDate) {
+//             batchData.update.push(apiToColumn(item))
+//           }
+//         }
+//       })
 
-      // update table
-      tableRef.value?.insert(batchData.create.map(item => columnToApi(item)))
-      tableRef.value?.setRow(batchData.update.map(item => columnToApi(item)))
-      tableRef.value?.remove(batchData.delete.map(item => columnToApi(item)))
-      syncData(batchData)
-      tableRef.value?.sort([{
-        field: 'isFolder',
-        order: 'desc'
-      }, {
-        field: 'name',
-        order: 'asc'
-      }])
-      // sync data
-    }
-  }
-})
-
+//       // update table
+//       tableRef.value?.insert(batchData.create.map((item) => columnToApi(item)))
+//       tableRef.value?.setRow(batchData.update.map((item) => columnToApi(item)))
+//       tableRef.value?.remove(batchData.delete.map((item) => columnToApi(item)))
+//       syncData(batchData)
+//       tableRef.value?.sort([
+//         {
+//           field: 'isFolder',
+//           order: 'desc'
+//         },
+//         {
+//           field: 'name',
+//           order: 'asc'
+//         }
+//       ])
+//       // sync data
+//     }
+//   }
+// })
 
 async function loadData(entry: any[], path?: string, pageNum: number = 0) {
   const { data } = await listProvider?.getchildApi({ idOrPath: path, pageSize: 1000, pageNum })
@@ -117,6 +106,7 @@ function recursiveLoadChild(checkList: any[] = [], treeData: any[], result: any[
   checkList.forEach((row, index) => {
     const rowData = treeData.find((el) => el.id === row)
     if (rowData) {
+      
       if (!tableRef.value?.isTreeExpandByRow(rowData)) {
         result.push(rowData)
       } else {
@@ -129,14 +119,15 @@ function recursiveLoadChild(checkList: any[] = [], treeData: any[], result: any[
 
 // DEPRECATED: now system use sqlite to store expanded items, so this function is not needed
 const reopenFolder = useDebounceFn(() => {
-  // console.log('reopenFolder', expandedItems)
+  console.log('reopenFolder', expandedItems)
   if (!tableRef.value || expandedItems.length === 0) return
-  const tableData = tableRef.value.getData()
-  let needExpandList: any[] = recursiveLoadChild(expandedItems, tableData, [])
+  const {fullData} = tableRef.value.getTableData()
+  console.log('tableData', fullData)
+  let needExpandList: any[] = recursiveLoadChild(expandedItems, fullData, [])
+  console.log('needExpandList', needExpandList)
   tableRef.value?.setTreeExpand(needExpandList, true)
   // get table opened row
 }, 300)
-
 
 const { tableConfig, tableEvent, tableRef, reload, cleanSelectedRows } = useVxeTable({
   id: 'tableSetting',
@@ -144,15 +135,16 @@ const { tableConfig, tableEvent, tableRef, reload, cleanSelectedRows } = useVxeT
     cleanSelectedRows()
     // if mode is browse, use loadData to get current path data
     if (listProvider.mode.value === 'browse') {
-      const data = await find({
-        parentRef: listProvider.idOrPath?.value || '/'
-      }).then(data => {
-        return data.map(item => columnToApi(item))
-      })
-      if (data) {
-        data.sort(sortEntry)
+      const list = (await loadData([], listProvider.idOrPath?.value || '/')) as DocumentApiData[]
+      // const data = await find({
+      //   parentRef: listProvider.idOrPath?.value || '/'
+      // }).then((data) => {
+      //   return data.map((item) => columnToApi(item))
+      // })
+      if (list) {
+        list.sort(sortEntry)
         emits('selectedChange', [])
-        return data
+        return list
       }
       return []
     }
@@ -165,7 +157,7 @@ const { tableConfig, tableEvent, tableRef, reload, cleanSelectedRows } = useVxeT
   childChangeHandler: () => {
     tableChildChangeHandler()
     // DEPRECATED: now system use sqlite to store expanded items, so this function is not needed
-    // reopenFolder()
+    reopenFolder()
   },
   columns: [
     {
@@ -454,82 +446,63 @@ const { tableConfig, tableEvent, tableRef, reload, cleanSelectedRows } = useVxeT
       }
     ]
   ],
-  permissionMethod: ({
-                       options,
-                       code,
-                       column,
-                       row,
-                       rowIndex,
-                       additionalData
-                     }: any): {
-    visible: boolean
-    disabled: boolean
-  } => {
+  asyncPermission: async ({ row }: any) => {
     const clickItem = row || listProvider.docDetail?.value
-    // if click on empty row, return empty
-    if (!!clickItem) {
-      if (clickItem.path === '/') {
-        return {
+    const permissionCodes = {
+      docPreview: RbacPermission.read,
+      docActionAddFolder: RbacPermission.createSubFolder,
+      docActionNewFile: RbacPermission.create,
+      docActionUploadFile: RbacPermission.create,
+      docActionUploadFolder: RbacPermission.createSubFolder,
+      docActionRename: RbacPermission.write,
+      docActionChangeDocType: RbacPermission.write,
+      docWatermark: RbacPermission.write,
+      docActionCopy: RbacPermission.write,
+      docActionCut: RbacPermission.delete,
+      docActionPaste: RbacPermission.createSubFolder,
+      assignPermission: RbacPermission.assignPermission,
+      docActionDelete: RbacPermission.delete,
+      download: RbacPermission.download
+    }
+    const result = {}
+    Object.keys(permissionCodes).forEach((key) => {
+      const code = permissionCodes[key]
+      if (!clickItem || clickItem.path === '/') {
+        result[key] = {
           visible: false,
           disabled: false
         }
+        return
       }
-      if(listProvider.docDetail.value.hold){
-        return { visible: false, disabled: false }
+      let hold = {}
+      if (clickItem.hold) {
+        hold = JSON.parse(clickItem.hold)
       }
-      // if parent is on hold, child is not editable
-      // if(!!row) clickItem.hold = listProvider.docDetail?.value.hold
-      // hide all action when click on temp file
-      if (clickItem.source === 'tempFile') {
-        return { visible: false, disabled: false }
-      }
-      if (!clickItem.isFolder && code === 'docPreview') {
-        return { visible: true, disabled: false }
-      }
-
-      const publicActionsCode = ['docActionRefresh', 'docActionNewTab', 'docOpen']
-      const map: any = {
-        createSubFolder: ['docActionPaste'],
-        create: [],
-        write: [],
-        editMetadata: ['docActionChangeDocType', 'docActionRename'],
-        delete: [],
-        deleteSubContent: []
-      }
-      if (clickItem.isFolder) {
-        map.create = ['docActionAddFolder', 'docActionUploadFolder', 'docActionNewFile', 'docActionUploadFile']
-        map.write = ['docActionCopy']
-        map.delete = []
-        map.deleteSubContent = ['docActionCut', 'docActionDelete']
-      } else {
-        map.create = []
-        map.write = ['docWatermark', 'docActionCopy']
-        map.delete = ['docActionCut', 'docActionDelete']
-        map.deleteSubContent = []
-      }
-      if (publicActionsCode.includes(code)) {
-        return { visible: true, disabled: false }
-      } else {
-        for (const key in map) {
-          if (map[key].includes(code)) {
-            const isPaste = code === 'docActionPaste' ? copyDocumentList.value.length > 0 : 1
-            return {
-              visible: (RbacAllowTo(key, clickItem, clickItem.isFolder) && isPaste) as boolean,
-              disabled: false
-            }
+      const visible = RbacAllowTo(code, { ...clickItem, hold }, clickItem.isFolder)
+      switch (key) {
+        case 'docActionPaste':
+          const isPaste = key === 'docActionPaste' ? copyDocumentList.value.length > 0 : 1
+          result[key] = {
+            visible: visible && isPaste,
+            disabled: false
           }
-        }
+          break
+        case 'docPreview':
+        case 'docWatermark': 
+          result[key] = {
+            visible: visible && !clickItem.isFolder,
+            disabled: false
+          }
+          break
+        default:
+          result[key] = {
+            visible: visible,
+            disabled: false
+          }
+          break
       }
-
-      return {
-        visible: RbacAllowTo(code, clickItem, clickItem.isFolder),
-        disabled: false
-      }
-    }
-    return {
-      visible: false,
-      disabled: false
-    }
+    })
+    return result
   },
   selectChangeHander: (selectedRows: any[], selectedRow: any) => {
     // check if selectedRows is not Folder
@@ -550,19 +523,8 @@ const { tableConfig, tableEvent, tableRef, reload, cleanSelectedRows } = useVxeT
       hasChildField: 'isFolder',
       loadMethod: async (params) => {
         try {
-          const entry = await find({ parentRef: params.row.id }, {}, { skipIfEmpty: true })
-          if (entry.length === 0) {
-            const apiData = await loadData([], params.row.id) as DocumentApiData[]
-            const syncList = {
-              create: apiData.map((item: DocumentApiData) => apiToColumn(item)),
-              update: [],
-              delete: []
-            }
-            await syncData(syncList)
-            return apiData.sort(sortEntry)
-          } else {
-            return entry.map((item: DocumentColumnData) => columnToApi(item)).sort(sortEntry)
-          }
+          const apiData = (await loadData([], params.row.id)) as DocumentApiData[]
+          return apiData.sort(sortEntry)
         } catch (e) {
           // if error, return empty array and remove item from expandedItems
           console.error(e)
@@ -598,7 +560,7 @@ const { tableConfig, tableEvent, tableRef, reload, cleanSelectedRows } = useVxeT
         // check if item exist in expandedItems
         if (expandedItems.includes(row.id)) return
         expandedItems.push(row.id)
-
+        console.log('expandedItems', expandedItems)
         emits('expandedItemsChange', expandedItems)
       } else {
         const index = expandedItems.findIndex((ex) => ex === row.id)
@@ -752,7 +714,6 @@ watch(
     deep: true
   }
 )
-
 
 // watch mode in listProvider, if mode change then reload table
 watch(

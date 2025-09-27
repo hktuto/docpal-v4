@@ -104,10 +104,12 @@ function openDetail(event: CalendarEventExternal) {
 const calendarEvents = {
   onEventClick: (args: any) => {
     console.log('onEventClick', props.options, args)
-    if (props.options.allowCreate) {
-      emits('openDetail', args)
+    // Cancelled event cannot be edited
+    if ('R' === args.detail.status || 'D' === args.detail.status) {
       return
     }
+
+    // edit event
     if (props.options.editable) {
       emits('openDetail', args)
     } else {
@@ -136,6 +138,14 @@ const calendarEvents = {
     emits('updateEvent', newData)
     // convert scheduls-x event to calendar event
     // emits('updateEvent', args)
+  },
+  cancelEvent: (args: any) => {
+    console.log('calendar/index-cancelEvent', args)
+    emits('cancelEvent', args)
+  },
+  deleteEvent: (args: any) => {
+    console.log('calendar/index-deleteEvent', args)
+    emits('deleteEvent', args)
   }
 }
 

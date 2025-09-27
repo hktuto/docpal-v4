@@ -58,24 +58,44 @@ type rbacPermission =
   | 'addUserSet'
   | 'normal'
   | 'hold-write'
+export enum RbacPermission {
+  viewFolder = 1,
+  viewMetadata = 2,
+  print = 3,
+  download = 4,
+  read = 5,
+  write = 6,
+  editSubContent = 7,
+  editMetadata = 8,
+  share = 9,
+  createSubFolder = 10,
+  create = 11,
+  delete = 12,
+  deleteSubContent = 13,
+  assignPermission = 14,
+  addUserSet = 15,
+  normal = 16,
+  holdWrite = 17
+}
 const permissionOptions = [
-  { label: 'rbac.permission.viewFolder', value: 1, group: 'read', name: 'viewFolder' },
-  { label: 'rbac.permission.viewMetadata', value: 2, group: 'read', name: 'viewMetadata' },
-  { label: 'rbac.permission.print', value: 3, group: 'read', name: 'print', isFolder: 'false' },
-  { label: 'rbac.permission.download', value: 4, group: 'read', name: 'download', isFolder: 'false' },
-  { label: 'rbac.permission.read', value: 5, group: 'read', name: 'read' },
+  { label: 'rbac.permission.viewFolder', value: RbacPermission.viewFolder, group: 'read', name: 'viewFolder' },
+  { label: 'rbac.permission.viewMetadata', value: RbacPermission.viewMetadata, group: 'read', name: 'viewMetadata' },
+  { label: 'rbac.permission.print', value: RbacPermission.print, group: 'read', name: 'print', isFolder: 'false' },
+  { label: 'rbac.permission.download', value: RbacPermission.download, group: 'read', name: 'download', isFolder: 'false' },
+  { label: 'rbac.permission.read', value: RbacPermission.read, group: 'read', name: 'read' },
 
-  { label: 'rbac.permission.editFolder', value: 6, group: 'write', name: 'write' },
-  { label: 'rbac.permission.editSubContent', value: 7, group: 'write', name: 'editSubContent', isFolder: 'true' },
-  { label: 'rbac.permission.editMetadata', value: 8, group: 'write', name: 'editMetadata' },
-  { label: 'share.share', value: 9, group: 'write', name: 'share' },
-  { label: 'rbac.permission.createFolder', value: 10, group: 'write', name: 'createSubFolder' },
-  { label: 'rbac.permission.createFile', value: 11, group: 'write', name: 'create' },
+  { label: 'rbac.permission.editFolder', value: RbacPermission.write, group: 'write', name: 'write' },
+  { label: 'rbac.permission.editSubContent', value: RbacPermission.editSubContent, group: 'write', name: 'editSubContent', isFolder: 'true' },
+  { label: 'rbac.permission.editMetadata', value: RbacPermission.editMetadata, group: 'write', name: 'editMetadata' },
+  { label: 'share.share', value: RbacPermission.share, group: 'write', name: 'share' },
 
-  { label: 'rbac.permission.deleteFolder', value: 12, group: 'manage', name: 'delete' },
-  { label: 'rbac.permission.deleteSubContent', value: 13, group: 'manage', name: 'deleteSubContent', isFolder: 'true' },
-  { label: 'rbac.permission.assignPermission', value: 14, group: 'manage', name: 'assignPermission' },
-  { label: 'rbac.permission.addUserSet', value: 15, group: 'manage', name: 'addUserSet' }
+  { label: 'rbac.permission.createFolder', value: RbacPermission.createSubFolder, group: 'write', name: 'createSubFolder', isFolder: 'true' },
+  { label: 'rbac.permission.createFile', value: RbacPermission.create, group: 'write', name: 'create', isFolder: 'true' },
+
+  { label: 'rbac.permission.deleteFolder', value: RbacPermission.delete, group: 'manage', name: 'delete' },
+  { label: 'rbac.permission.deleteSubContent', value: RbacPermission.deleteSubContent, group: 'manage', name: 'deleteSubContent', isFolder: 'true' },
+  { label: 'rbac.permission.assignPermission', value: RbacPermission.assignPermission, group: 'manage', name: 'assignPermission' },
+  { label: 'rbac.permission.addUserSet', value: RbacPermission.addUserSet, group: 'manage', name: 'addUserSet' }
 ]
 export const RbacAllowTo = (
   rbacPermission: rbacPermission | any,
@@ -98,10 +118,11 @@ export const RbacAllowTo = (
   }
   return permissionIds.some((id: number) => {
     const option = permissionOptions.find((opt) => {
-      const folderMatch = isFolder === '' || String(isFolder) === opt.isFolder || !opt.isFolder
+      const optIsFolder = opt.isFolder === 'false' ? false : true
+      const folderMatch = isFolder === '' || Boolean(isFolder) === optIsFolder || !('isFolder' in opt)
       return opt.value === id && folderMatch
     })
 
-    return option && option.name === rbacPermission
+    return option && (option.name === rbacPermission || option.value === rbacPermission)
   })
 }

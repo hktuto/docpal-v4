@@ -20,7 +20,6 @@
 </template>
 
 <script lang="ts" setup>
-import '@james090500/vue-tagsinput/dist/style.css';
 import { clientApi } from 'api'
 import { ElMessage } from 'element-plus'
 const routerProvider = inject(MenuRouterKey)
