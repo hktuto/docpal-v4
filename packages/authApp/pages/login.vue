@@ -71,13 +71,13 @@ onMounted(async() => {
                     :model="form"
                     :rules="rules"
                     label-position="top">
-                    <ElFormItem label="username" :rules="rules.username">
+                    <ElFormItem label="Username" :rules="rules.username">
                         <ElInput
                             ref="usernameEl"
                             v-model="form.username"
                             type="text" />
                     </ElFormItem>
-                    <ElFormItem label="password" :rules="rules.password">
+                    <ElFormItem label="Password" :rules="rules.password">
                         <ElInput
                             v-model="form.password"
                             type="password"

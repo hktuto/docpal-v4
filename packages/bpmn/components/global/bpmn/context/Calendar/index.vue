@@ -78,7 +78,8 @@ const dateTimeFields = computed(() => {
   })
 })
 
-function addNewReminder() {}
+function addNewReminder() {
+}
 
 function removeReminder(index: number) {
   form.value.reminder.slice(index, 1)
@@ -97,23 +98,14 @@ function setUpListener() {
   })
 }
 
-function updateDescription() {
-  form.value.attr_description = node.data.name
-  updateData()
-}
-
-watch(
-  form,
-  () => {
-    if (form.value) {
-      updateData()
-    }
-  },
-  {
-    immediate: true,
-    deep: true
+watch(form, () => {
+  if (form.value) {
+    updateData()
   }
-)
+}, {
+  immediate: true,
+  deep: true
+})
 
 onMounted(async () => {
   setUpListener()
@@ -123,7 +115,7 @@ onMounted(async () => {
 
 <template>
   <div class="formContainer">
-    <BpmnSidebarEditLabel :node="node" @updateNode="updataDescription" />
+    <BpmnSidebarEditLabel :node="node" />
     <div class="eventForm">
       <h4>Event</h4>
       <el-form label-position="top" :disabled="editorProvider.readonly.value">

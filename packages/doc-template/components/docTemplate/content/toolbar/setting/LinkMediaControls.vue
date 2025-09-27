@@ -58,7 +58,6 @@ function openSetImageDialog() {
 
 function handleImage() {
   let url
-
   if (!state.isImageUrl) {
     url = state.imageLink
     state.imageLink = ''
@@ -66,9 +65,10 @@ function handleImage() {
     url = state.imageUrl
     state.imageUrl = ''
   }
-
+  console.log("state", state)
   if (url) {
     const { from, to } = editor.value.state.selection
+    console.log(url)
     editor.value.commands.setImage({ src: url })
     editor.value.commands.focus(to + 1)
   }
@@ -86,9 +86,10 @@ function handleBeforeUpload(file: File) {
   return isLt1m
 }
 
-function handlePictureCardPreview(file: UploadFile) {
+async function handlePictureCardPreview(file: UploadFile) {
   state.previewDialogImage = file.url!
   state.previewDialogVisible = true
+  state.imageUrl = await toBase64(file.raw) as string
 }
 
 const toBase64 = (file: any) => new Promise((resolve, reject) => {
@@ -99,7 +100,14 @@ const toBase64 = (file: any) => new Promise((resolve, reject) => {
 })
 
 async function handleImageSuccess(uploadFile: any, uploadFiles: any) {
-  state.imageUrl = await toBase64(uploadFiles.raw) as string
+  if(!uploadFile) return;
+  const isSizeOk = handleBeforeUpload(uploadFile.raw)
+  if(!isSizeOk) {
+    uploadRef.value.clearFiles()
+    return
+  }
+  state.imageUrl = await toBase64(uploadFile.raw) as string
+
 }
 </script>
 
@@ -161,7 +169,8 @@ async function handleImageSuccess(uploadFile: any, uploadFiles: any) {
           list-type="picture-card"
           accept="image/jpeg,image/png,image/jpg"
           limit="1"
-          :on-success="handleImageSuccess"
+          :auto-upload="false"
+          :on-change="handleImageSuccess"
           :before-upload="handleBeforeUpload"
           :on-preview="handlePictureCardPreview"
         >

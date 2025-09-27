@@ -1,6 +1,9 @@
 <script setup lang="ts">
-
-const { opened, displayList, keyword, selectedItemIndex } = useGlobalSearch()
+const tabProvider = inject(TabManagerKey)
+if(!tabProvider) {
+    throw createError('tab manger not found')
+}
+const { opened, displayList, keyword, selectedItemIndex } = useGlobalSearch(tabProvider)
 
 const keywordRef = ref()
 
@@ -17,14 +20,10 @@ const metaKey = computed(() => {
     }
 })
 
-const tabProvider = inject(TabManagerKey)
-if(!tabProvider) {
-    throw createError('tab manger not found')
-}
 
 function itemClick(item:GlobalSearchItem) {
     item.action({
-        keyword,
+        keyword: keyword.value,
         tabProvider
     })
     opened.value = false

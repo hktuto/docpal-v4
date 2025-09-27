@@ -1,5 +1,4 @@
 
-
 interface CaseDashboardProvider {
     caseTypeId: Ref<string | null>,
     instanceId?: Ref<string | null>,

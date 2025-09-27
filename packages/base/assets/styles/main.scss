@@ -4,6 +4,7 @@
 @use './elements/index.scss';
 @use './var.scss' as *;
 @use './flex.scss';
+@use './vueTagInput.css';
 
 $types: primary, success, warning, danger, error, info;
 

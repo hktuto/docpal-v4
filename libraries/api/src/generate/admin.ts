@@ -327,6 +327,7 @@ export interface ContactGroupRequestDTO {
     operator?: string;
     verifyReadPermission?: boolean;
     sort?: SortObject;
+    sortOrModifiedDate?: SortObject;
     descSort?: SortObject;
     desc?: boolean;
     orderByValue?: string;
@@ -905,6 +906,7 @@ export interface DocumentTemplateRequestDTO {
     createdBys?: string[];
     variables?: Record<string, object>;
     sort?: SortObject;
+    sortOrModifiedDate?: SortObject;
     descSort?: SortObject;
     desc?: boolean;
     orderByValue?: string;
@@ -1062,6 +1064,7 @@ export interface RetentionPolicyRequestDTO {
     /** the list of retention policy id */
     ids?: number[];
     sort?: SortObject;
+    sortOrModifiedDate?: SortObject;
     descSort?: SortObject;
     desc?: boolean;
     orderByValue?: string;
@@ -1179,6 +1182,7 @@ export interface PersonalDashboardRequestDTO {
     groupId?: string;
     styleJson?: string;
     sort?: SortObject;
+    sortOrModifiedDate?: SortObject;
     descSort?: SortObject;
     desc?: boolean;
     orderByValue?: string;
@@ -1250,6 +1254,7 @@ export interface MTRecordRequestDTO {
     /** Relation Record */
     relationRecords?: MTRecordDTO[];
     sort?: SortObject;
+    sortOrModifiedDate?: SortObject;
     descSort?: SortObject;
     desc?: boolean;
     orderByValue?: string;
@@ -1420,6 +1425,7 @@ export interface CompanyChopRequestDTO {
     /** @format binary */
     file?: File;
     sort?: SortObject;
+    sortOrModifiedDate?: SortObject;
     descSort?: SortObject;
     desc?: boolean;
     orderByValue?: string;
@@ -1517,6 +1523,7 @@ export interface CmmnDashboardRequestDTO {
     businessKey?: string;
     status?: string;
     sort?: SortObject;
+    sortOrModifiedDate?: SortObject;
     descSort?: SortObject;
     desc?: boolean;
     orderByValue?: string;
@@ -2053,6 +2060,7 @@ export interface ContactRequestDTO {
     customData?: Record<string, object>;
     operator?: string;
     sort?: SortObject;
+    sortOrModifiedDate?: SortObject;
     descSort?: SortObject;
     desc?: boolean;
     orderByValue?: string;
@@ -2548,6 +2556,7 @@ export interface SmartFolderRequestDTO {
     json_value?: string;
     userGroupIds?: string[];
     sort?: SortObject;
+    sortOrModifiedDate?: SortObject;
     descSort?: SortObject;
     desc?: boolean;
     orderByValue?: string;
@@ -3223,6 +3232,7 @@ export interface ExternalStorageImportJobRequestDTO {
     /** End date for filtering */
     endDate?: string;
     sort?: SortObject;
+    sortOrModifiedDate?: SortObject;
     descSort?: SortObject;
     desc?: boolean;
     orderByValue?: string;
@@ -3276,6 +3286,7 @@ export interface ExternalProfileRequestDTO {
     /** Status of the external storage profile (ACTIVE, INACTIVE, etc.) */
     status?: string;
     sort?: SortObject;
+    sortOrModifiedDate?: SortObject;
     descSort?: SortObject;
     desc?: boolean;
     orderByValue?: string;
@@ -3365,6 +3376,7 @@ export interface ExternalStorageRequestDTO {
     /** Authentication credentials for the storage */
     credentials?: Record<string, object>;
     sort?: SortObject;
+    sortOrModifiedDate?: SortObject;
     descSort?: SortObject;
     desc?: boolean;
     orderByValue?: string;
@@ -3419,6 +3431,7 @@ export interface BasePageRequest {
     /** The sort ASC or DESC */
     isDesc?: boolean;
     sort?: SortObject;
+    sortOrModifiedDate?: SortObject;
     descSort?: SortObject;
     desc?: boolean;
     orderByValue?: string;
@@ -3496,6 +3509,7 @@ export interface DocPalTypeRequestDTO {
     createBys?: string[];
     metadataFieldMap?: Record<string, object>;
     sort?: SortObject;
+    sortOrModifiedDate?: SortObject;
     descSort?: SortObject;
     desc?: boolean;
     orderByValue?: string;
@@ -3601,6 +3615,7 @@ export interface QueryMetadataRequestDTO {
     metadataName?: string;
     docpalTypeName?: string;
     sort?: SortObject;
+    sortOrModifiedDate?: SortObject;
     descSort?: SortObject;
     desc?: boolean;
     orderByValue?: string;
@@ -3973,6 +3988,7 @@ export interface ProcessVersionRequestDTO {
     publishStatus?: string;
     operator?: string;
     sort?: SortObject;
+    sortOrModifiedDate?: SortObject;
     descSort?: SortObject;
     desc?: boolean;
     orderByValue?: string;
@@ -4382,6 +4398,7 @@ export interface QueryWorkflowJobRequest {
     state?: string;
     businessKey?: string;
     sort?: SortObject;
+    sortOrModifiedDate?: SortObject;
     descSort?: SortObject;
     desc?: boolean;
     orderByValue?: string;
@@ -4545,6 +4562,7 @@ export interface ProcessDefinitionRequestDTO {
     /** Process categories */
     categories?: string[];
     sort?: SortObject;
+    sortOrModifiedDate?: SortObject;
     descSort?: SortObject;
     desc?: boolean;
     orderByValue?: string;
@@ -4847,6 +4865,7 @@ export interface EmailTemplateRequestDTO {
     emailLayoutIds?: number[];
     name?: string;
     sort?: SortObject;
+    sortOrModifiedDate?: SortObject;
     descSort?: SortObject;
     desc?: boolean;
     orderByValue?: string;
@@ -4923,6 +4942,7 @@ export interface EmailLayoutRequestDTO {
     /** Email Layout Modified By */
     modifiedBy?: string;
     sort?: SortObject;
+    sortOrModifiedDate?: SortObject;
     descSort?: SortObject;
     desc?: boolean;
     orderByValue?: string;
@@ -5128,6 +5148,7 @@ export interface HoldPolicyRequestDTO {
     /** HoldPolicy status */
     status?: string;
     sort?: SortObject;
+    sortOrModifiedDate?: SortObject;
     descSort?: SortObject;
     desc?: boolean;
     orderByValue?: string;
@@ -5301,6 +5322,7 @@ export interface MetadataRequestDTO {
     dataType?: string;
     status?: string;
     sort?: SortObject;
+    sortOrModifiedDate?: SortObject;
     descSort?: SortObject;
     desc?: boolean;
     orderByValue?: string;
@@ -5328,6 +5350,7 @@ export interface MessageTemplateRequestDTO {
     createdBy?: string;
     modifiedBy?: string;
     sort?: SortObject;
+    sortOrModifiedDate?: SortObject;
     descSort?: SortObject;
     desc?: boolean;
     orderByValue?: string;
@@ -5451,6 +5474,7 @@ export interface MasterTableRequestDTO {
     /** Where Condition */
     where?: Record<string, object>;
     sort?: SortObject;
+    sortOrModifiedDate?: SortObject;
     descSort?: SortObject;
     desc?: boolean;
     orderByValue?: string;
@@ -5552,6 +5576,7 @@ export interface MTAuditLogRequestDTO {
     /** Master Table Logs Principal Name list */
     eventCategory?: string;
     sort?: SortObject;
+    sortOrModifiedDate?: SortObject;
     descSort?: SortObject;
     desc?: boolean;
     orderByValue?: string;
@@ -5693,6 +5718,7 @@ export interface IdTemplateRequestDTO {
     /** Name */
     name?: string;
     sort?: SortObject;
+    sortOrModifiedDate?: SortObject;
     descSort?: SortObject;
     desc?: boolean;
     orderByValue?: string;
@@ -5784,6 +5810,7 @@ export interface FormDesignRequestDTO {
     /** Where Condition (Equal) */
     equals?: Record<string, object>;
     sort?: SortObject;
+    sortOrModifiedDate?: SortObject;
     descSort?: SortObject;
     desc?: boolean;
     orderByValue?: string;
@@ -5922,6 +5949,7 @@ export interface EasyFormResultRequestDTO {
     name?: string;
     formResult?: EasyFormResult;
     sort?: SortObject;
+    sortOrModifiedDate?: SortObject;
     descSort?: SortObject;
     desc?: boolean;
     orderByValue?: string;
@@ -5970,6 +5998,7 @@ export interface EasyFormEmailQueryRequestDTO {
     easyFormId?: string;
     status?: string;
     sort?: SortObject;
+    sortOrModifiedDate?: SortObject;
     descSort?: SortObject;
     desc?: boolean;
     orderByValue?: string;
@@ -6114,6 +6143,7 @@ export interface DictRequestDTO {
      */
     version?: number;
     sort?: SortObject;
+    sortOrModifiedDate?: SortObject;
     descSort?: SortObject;
     desc?: boolean;
     orderByValue?: string;
@@ -6233,6 +6263,7 @@ export interface CompanyRequestDTO {
     /** Contact Address */
     address?: string;
     sort?: SortObject;
+    sortOrModifiedDate?: SortObject;
     descSort?: SortObject;
     desc?: boolean;
     orderByValue?: string;
@@ -6443,6 +6474,7 @@ export interface CmmnVersionRequestDTO {
     /** The style json */
     styleJson?: string;
     sort?: SortObject;
+    sortOrModifiedDate?: SortObject;
     descSort?: SortObject;
     desc?: boolean;
     orderByValue?: string;
@@ -6497,6 +6529,7 @@ export interface CaseTypeRequestDTO {
     enable?: boolean;
     caseIds?: string[];
     sort?: SortObject;
+    sortOrModifiedDate?: SortObject;
     descSort?: SortObject;
     desc?: boolean;
     orderByValue?: string;
@@ -6585,6 +6618,7 @@ export interface CaseTableRequestDTO {
     /** User */
     operator?: UserDTO;
     sort?: SortObject;
+    sortOrModifiedDate?: SortObject;
     descSort?: SortObject;
     desc?: boolean;
     orderByValue?: string;
@@ -6747,6 +6781,7 @@ export interface CaseInstanceRequestDTO {
     /** PlanItem Definition Type list */
     planItemDefinitionTypes?: string[];
     sort?: SortObject;
+    sortOrModifiedDate?: SortObject;
     descSort?: SortObject;
     desc?: boolean;
     orderByValue?: string;
@@ -6917,6 +6952,7 @@ export interface CmmnProcessRequestDTO {
     processDefinitionKeys?: string[];
     assignee?: string;
     sort?: SortObject;
+    sortOrModifiedDate?: SortObject;
     descSort?: SortObject;
     desc?: boolean;
     orderByValue?: string;
@@ -7120,6 +7156,7 @@ export interface FolderCabinetRequestDTO {
     summaryReportEmail?: FCNotificationConfig;
     delayEmail?: FCNotificationConfig;
     sort?: SortObject;
+    sortOrModifiedDate?: SortObject;
     descSort?: SortObject;
     desc?: boolean;
     orderByValue?: string;
@@ -7292,6 +7329,7 @@ export interface OcrTransactionLogRequestDTO {
     /** scanType */
     scanType?: string;
     sort?: SortObject;
+    sortOrModifiedDate?: SortObject;
     descSort?: SortObject;
     desc?: boolean;
     orderByValue?: string;
@@ -9930,15 +9968,12 @@ export class Admin<SecurityDataType extends unknown> extends HttpClient<Security
             query: {
                 operator: string;
             },
-            data: any,
             params: RequestParams = {},
         ) =>
             this.request<ResultBoolean, Result | (ResultObject | Result | ResultString)>({
                 path: `/registered-server/contactGroup/${id}/contactDetail/${contactDetailId}`,
                 method: "DELETE",
                 query: query,
-                body: data,
-                type: ContentType.Json,
                 ...params,
             }),
 
@@ -12084,6 +12119,31 @@ export class Admin<SecurityDataType extends unknown> extends HttpClient<Security
          * No description
          *
          * @tags Document
+         * @name PostRegisteredServerContactgroupIdContactdetaillist
+         * @summary Get contact detail list include filter and sort by
+         * @request POST:/api/registered-server/contactGroup/{id}/contactDetailList
+         */
+        postRegisteredServerContactgroupIdContactdetaillist: (
+            id: string,
+            query: {
+                operator: string;
+            },
+            data: Record<string, object>,
+            params: RequestParams = {},
+        ) =>
+            this.request<ResultListMapStringObject, Result | (ResultObject | Result | ResultString)>({
+                path: `/registered-server/contactGroup/${id}/contactDetailList`,
+                method: "POST",
+                query: query,
+                body: data,
+                type: ContentType.Json,
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags Document
          * @name PostRegisteredServerContactgroupIdContactdetailPage
          * @summary Page query contact detail list
          * @request POST:/api/registered-server/contactGroup/{id}/contactDetail/page
@@ -12480,7 +12540,7 @@ export class Admin<SecurityDataType extends unknown> extends HttpClient<Security
         /**
          * No description
          *
-         * @tags Share (Nuxeo)
+         * @tags External Share
          * @name PostNuxeoSharePage
          * @request POST:/api/nuxeo/share/page
          */
@@ -12496,7 +12556,7 @@ export class Admin<SecurityDataType extends unknown> extends HttpClient<Security
         /**
          * No description
          *
-         * @tags Share (Nuxeo)
+         * @tags External Share
          * @name PostNuxeoShareGet
          * @request POST:/api/nuxeo/share/get
          */
@@ -17120,15 +17180,12 @@ export class Admin<SecurityDataType extends unknown> extends HttpClient<Security
                 /** File Type */
                 fileType: string;
             },
-            data: object,
             params: RequestParams = {},
         ) =>
             this.request<string[], Result | (ResultObject | Result | ResultString)>({
                 path: `/docpal/contactGroup/${id}/contactDetail/export`,
                 method: "POST",
                 query: query,
-                body: data,
-                type: ContentType.FormData,
                 ...params,
             }),
 
@@ -18492,7 +18549,7 @@ export class Admin<SecurityDataType extends unknown> extends HttpClient<Security
         /**
          * No description
          *
-         * @tags Share (Nuxeo)
+         * @tags External Share
          * @name DeleteNuxeoShare
          * @request DELETE:/api/nuxeo/share
          */
@@ -18508,7 +18565,7 @@ export class Admin<SecurityDataType extends unknown> extends HttpClient<Security
         /**
          * No description
          *
-         * @tags Share (Nuxeo)
+         * @tags External Share
          * @name PatchNuxeoShare
          * @request PATCH:/api/nuxeo/share
          */
@@ -19273,31 +19330,6 @@ export class Admin<SecurityDataType extends unknown> extends HttpClient<Security
             this.request<ResultListString, Result | (ResultObject | Result | ResultString)>({
                 path: `/registered-server/contactGroup/${id}/user/${userId}/permission`,
                 method: "GET",
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Document
-         * @name GetRegisteredServerContactgroupIdContactdetaillist
-         * @summary Get contact detail list include filter and sort by
-         * @request GET:/api/registered-server/contactGroup/{id}/contactDetailList
-         */
-        getRegisteredServerContactgroupIdContactdetaillist: (
-            id: string,
-            query: {
-                operator: string;
-            },
-            data: any,
-            params: RequestParams = {},
-        ) =>
-            this.request<ResultListMapStringObject, Result | (ResultObject | Result | ResultString)>({
-                path: `/registered-server/contactGroup/${id}/contactDetailList`,
-                method: "GET",
-                query: query,
-                body: data,
-                type: ContentType.Json,
                 ...params,
             }),
 

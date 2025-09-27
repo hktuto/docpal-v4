@@ -839,6 +839,8 @@ export interface CalendarTaskRespDTO {
     eventId?: string;
     /** Event Name */
     eventName?: string;
+    /** Event Description */
+    eventDescription?: string;
     /** Action Type */
     actionType?: string;
     /** Event all day */
@@ -1807,20 +1809,6 @@ export interface ResultSendMessageResponseDTO {
 export interface SendMessageResponseDTO {
     successCallWhatsAppApi?: boolean;
     messageId?: string;
-}
-
-export interface MailSendRequest {
-    fromEmail?: string;
-    to?: string;
-    tos?: string[];
-    ccs?: string[];
-    bcc?: string[];
-    subject?: string;
-    text?: string;
-    templateId?: string;
-    variables?: Record<string, object>;
-    files?: File[];
-    accessToken?: string;
 }
 
 export interface SubNotificationRequest {
@@ -3946,6 +3934,21 @@ export interface ValidateJsonSchemaRequestDTO {
     };
 }
 
+export interface MailSendRequest {
+    fromEmail?: string;
+    to?: string;
+    tos?: string[];
+    ccs?: string[];
+    bcc?: string[];
+    subject?: string;
+    text?: string;
+    templateId?: string;
+    variables?: Record<string, object>;
+    files?: File[];
+    userId?: string;
+    accessToken?: string;
+}
+
 export interface TemplateRequestDTO {
     id?: string;
     subject?: boolean;
@@ -4896,6 +4899,54 @@ export interface ResultPaginationDTOFormDesignResponseDTO {
     data?: PaginationDTOFormDesignResponseDTO;
     messageKey?: string;
     locale?: string;
+}
+
+export interface BatchMailSendRequest {
+    batchTaskId?: string;
+    fromEmail: string;
+    subject?: string;
+    text?: string;
+    templateId?: string;
+    tos: string[];
+    ccs?: string[];
+    bcc?: string[];
+    variables?: Record<string, object>;
+    userId?: string;
+    accessToken?: string;
+    /** @format int64 */
+    sendInterval?: number;
+    /** @format int32 */
+    batchSize?: number;
+    /** @format int64 */
+    batchInterval?: number;
+    async?: boolean;
+}
+
+export interface BatchSendEmailResponseDTO {
+    batchTaskId?: string;
+    /** @format int32 */
+    totalCount?: number;
+    /** @format int32 */
+    successCount?: number;
+    /** @format int32 */
+    failedCount?: number;
+    status?: string;
+    /** @format date-time */
+    createdTime?: string;
+    /** @format date-time */
+    completedTime?: string;
+    errorMessages?: string[];
+    async?: boolean;
+    /** @format double */
+    progress?: number;
+}
+
+export interface ResultBatchSendEmailResponseDTO {
+    result?: boolean;
+    /** @format int32 */
+    code?: number;
+    message?: string;
+    data?: BatchSendEmailResponseDTO;
 }
 
 export interface ResultListBasicField {
@@ -8092,6 +8143,38 @@ export interface ResultEasyFormBaseEmailDTO {
     locale?: string;
 }
 
+export interface DocPalEmailTemplate {
+    id?: string;
+    /** @format int64 */
+    emailLayoutId?: number;
+    emailTemplateJson?: string;
+    emailTemplateVariable?: string;
+    to?: string;
+    from?: string;
+    label?: string;
+    cc?: string;
+    bcc?: string;
+    subject?: string;
+    body?: string;
+    status?: string;
+    createdBy?: string;
+    modifiedBy?: string;
+    display?: string;
+    /** @format date-time */
+    createdDate?: string;
+    /** @format date-time */
+    modifiedDate?: string;
+    emailLayoutName?: string;
+}
+
+export interface ResultListDocPalEmailTemplate {
+    result?: boolean;
+    /** @format int32 */
+    code?: number;
+    message?: string;
+    data?: DocPalEmailTemplate[];
+}
+
 export interface ResultListDocTemplateSignatureResponseDTO {
     result?: boolean;
     /** @format int32 */
@@ -10491,14 +10574,11 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
         deleteContactgroupIdContactdetailContactdetailid: (
             id: string,
             contactDetailId: string,
-            data: any,
             params: RequestParams = {},
         ) =>
             this.request<ResultBoolean, ResultString | (ResultString | Result)>({
                 path: `/docpal/contactGroup/${id}/contactDetail/${contactDetailId}`,
                 method: "DELETE",
-                body: data,
-                type: ContentType.Json,
                 ...params,
             }),
 
@@ -11543,75 +11623,6 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
                 method: "POST",
                 body: data,
                 type: ContentType.Json,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Document (Nuxeo)
-         * @name PostNuxeoRegisteredserverSendMailText
-         * @request POST:/api/nuxeo/registeredServer/send/mail/text
-         */
-        postNuxeoRegisteredserverSendMailText: (data: MailSendRequest, params: RequestParams = {}) =>
-            this.request<ResultBoolean, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/registeredServer/send/mail/text`,
-                method: "POST",
-                body: data,
-                type: ContentType.Json,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Document (Nuxeo)
-         * @name PostNuxeoRegisteredserverSendMailHtml
-         * @request POST:/api/nuxeo/registeredServer/send/mail/html
-         */
-        postNuxeoRegisteredserverSendMailHtml: (data: MailSendRequest, params: RequestParams = {}) =>
-            this.request<ResultBoolean, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/registeredServer/send/mail/html`,
-                method: "POST",
-                body: data,
-                type: ContentType.Json,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Document (Nuxeo)
-         * @name PostNuxeoRegisteredserverSendMailAttachments
-         * @request POST:/api/nuxeo/registeredServer/send/mail/attachments
-         */
-        postNuxeoRegisteredserverSendMailAttachments: (data: MailSendRequest, params: RequestParams = {}) =>
-            this.request<ResultBoolean, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/registeredServer/send/mail/attachments`,
-                method: "POST",
-                body: data,
-                type: ContentType.Json,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Document (Nuxeo)
-         * @name PostNuxeoRegisteredserverSendMailAttachment
-         * @request POST:/api/nuxeo/registeredServer/send/mail/attachment
-         */
-        postNuxeoRegisteredserverSendMailAttachment: (
-            query: {
-                mailSendRequest: MailSendRequest;
-                multipartFiles: File[];
-            },
-            params: RequestParams = {},
-        ) =>
-            this.request<ResultBoolean, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/registeredServer/send/mail/attachment`,
-                method: "POST",
-                query: query,
                 ...params,
             }),
 
@@ -16578,6 +16589,22 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
             }),
 
         /**
+         * No description
+         *
+         * @tags DocPalEmailController
+         * @name PostEmailBatchSend
+         * @request POST:/api/docpal/email/batch/send
+         */
+        postEmailBatchSend: (data: BatchMailSendRequest, params: RequestParams = {}) =>
+            this.request<ResultBatchSendEmailResponseDTO, ResultString | (ResultString | Result)>({
+                path: `/docpal/email/batch/send`,
+                method: "POST",
+                body: data,
+                type: ContentType.Json,
+                ...params,
+            }),
+
+        /**
          * @description 创建一个新的文档模板签名配置
          *
          * @tags DocTemplateSignatureController
@@ -16745,15 +16772,12 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
                 /** File Type */
                 fileType: string;
             },
-            data: object,
             params: RequestParams = {},
         ) =>
             this.request<string[], ResultString | (ResultString | Result)>({
                 path: `/docpal/contactGroup/${id}/contactDetail/export`,
                 method: "POST",
                 query: query,
-                body: data,
-                type: ContentType.FormData,
                 ...params,
             }),
 
@@ -21542,6 +21566,20 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
         getFormDesignEmailHistoryLogId: (id: number, params: RequestParams = {}) =>
             this.request<ResultEasyFormBaseEmailDTO, ResultString | (ResultString | Result)>({
                 path: `/docpal/form/design/email/history/log/${id}`,
+                method: "GET",
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags DocPalEmailController
+         * @name GetEmailTemplateList
+         * @request GET:/api/docpal/email/template/list
+         */
+        getEmailTemplateList: (params: RequestParams = {}) =>
+            this.request<ResultListDocPalEmailTemplate, ResultString | (ResultString | Result)>({
+                path: `/docpal/email/template/list`,
                 method: "GET",
                 ...params,
             }),

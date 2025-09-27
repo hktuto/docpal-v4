@@ -42,8 +42,11 @@ export interface UseVxeTableParams<R = any> {
   headerActions?: TableMenuActions[][]
   footerActions?: TableMenuActions[][]
   bodyActions?: TableMenuActions[][]
-  permissionMethod?: (params: PermissionMethodParams) => { visible: boolean; disabled: boolean },
-  asyncPermission?: (params: any) => Promise<any>
+  permissionMethod?: (params: PermissionMethodParams) => { visible: boolean; disabled: boolean }
+  asyncPermission?: ({ row }: any) => Promise<any>
+  dragConfig?: {
+    dragend?: (params: any) => void
+  }
   optionalConfig?: VxeGridProps<R>
   selectChangeHander?: (selectedRows: any[], selectedRow: any) => void
   optionalEvent?: VxeGridListeners<R>
@@ -218,7 +221,8 @@ export const useVxeTable = (params: UseVxeTableParams) => {
         }
       },
       rowConfig: {
-        useKey: true
+        useKey: true,
+        drag: params.dragConfig ? true : false
       },
       data: []
     },
@@ -229,7 +233,11 @@ export const useVxeTable = (params: UseVxeTableParams) => {
   if (params.customeToolBar) {
     tableConfig.toolbarConfig.slots.tools = 'toolbarTools'
   }
-
+  if (params.dragConfig) {
+    if (params.dragConfig.dragend) {
+      tableEvent.rowDragend = params.dragConfig.dragend
+    }
+  }
   // #region handle actions column
   // Step 1: add actions to tableEvent
   if (params.dblClickAction) {
@@ -305,7 +313,7 @@ export const useVxeTable = (params: UseVxeTableParams) => {
         if (params.additionalPermission) {
           additionalData = await params.additionalPermission({ column, row, rowIndex })
         }
-        
+
         const options = actions.map((list) => {
           return list.map((item) => {
             if (item.children) {
@@ -593,18 +601,18 @@ export const useVxeTable = (params: UseVxeTableParams) => {
   }
 }
 async function visibleMethodHelper(row: any, options: any, params: any) {
-  const permission = await params.asyncPermission({  row })
+  const permission = await params.asyncPermission({ row })
   options.forEach((list: any) => {
     list.forEach((item: any) => {
-      if(item.children) {
+      if (item.children) {
         item.children.forEach((child: any) => {
-          if(permission[child.code]) {
+          if (permission[child.code]) {
             child.visible = permission[child.code].visible
             child.disabled = permission[child.code].disabled
           }
         })
       } else {
-        if(permission[item.code]) {
+        if (permission[item.code]) {
           item.visible = permission[item.code].visible
           item.disabled = permission[item.code].disabled
         }
