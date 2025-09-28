@@ -2,7 +2,7 @@
 import { clientApi } from 'api'
 import type { CalendarEventExternal } from '@schedule-x/calendar'
 
-const { setting: calendarSettiing, categoriesOption, locationsOption } = useCalendarStore()
+const { setting: calendarSetting, categoriesOption, locationsOption } = useCalendarStore()
 import {
   type CalendarOptions,
   type DocPalEventType,
@@ -22,7 +22,7 @@ const displayOption = ref<CalendarOptions>({
   ...props.options
 })
 
-const emits = defineEmits(['createEvent', 'filterChange', 'openDetail', 'onEventUpdate', 'updateEvent'])
+const emits = defineEmits(['createEvent', 'filterChange', 'openDetail', 'editEvent', 'onEventUpdate', 'updateEvent'])
 
 function addEvent(newEvent: CalendarEventExternal) {
   viewerRef.value?.addEvent(newEvent)
@@ -87,16 +87,17 @@ async function setDefaultFilter() {
     filter.value.category = props.options.defaultCategory
   }
   if (!props.options.view) {
-    displayOption.value.view = calendarSettiing.value?.basic.default_view
+    displayOption.value.view = calendarSetting.value?.basic.default_view
   }
   if (!props.options.firstDayOfWeek) {
-    displayOption.value.firstDayOfWeek = calendarSettiing.value?.basic.default_first_week
+    displayOption.value.firstDayOfWeek = calendarSetting.value?.basic.default_first_week
   }
 }
 
 // #endregion
 
 function openDetail(event: CalendarEventExternal) {
+  // 查看狀態時顯示
   detailDialogRef.value?.open(event)
 }
 
@@ -111,9 +112,11 @@ const calendarEvents = {
 
     // edit event
     if (props.options.editable) {
-      emits('openDetail', args)
+      emits('editEvent', args)
     } else {
-      detailDialogRef.value?.open(args)
+      // 不可編輯狀態，該點擊應該讓user選擇是否操作頁面
+      // detailDialogRef.value?.open(args)
+      emits('openDetail', args)
     }
   },
   onClickDate: (args: string) => {

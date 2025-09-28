@@ -48,7 +48,14 @@ export async function notiHandleView(row: any, tabProvider: any) {
       status
     })
     tabProvider?.openTab(newItem, true)
+  }
 
+  // workflow message
+  else if (row.content.message && 'Workflow' === row.type) {
+    const event = JSON.parse(row.content.message)
+    // TODO：You need to jump to a different page according to the type of workflow message
+    const newItem = routeCalendarWorkflowMessage(JSON.parse(event.additionalContent))
+    tabProvider?.openTab(newItem, true)
   }
 }
 

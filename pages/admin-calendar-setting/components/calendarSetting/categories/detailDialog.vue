@@ -50,6 +50,11 @@ function generateDefWorkflow(name: string) {
       'key': `test_cancel_event_form_1757561126341_${date}`,
       'name': `${name} - Cancel Calendar Event`,
       'type': 'test_cancel_event_form_1757561126341'
+    },
+    {
+      'key': `test_reject_event_form_1759053572163_${date}`,
+      'name': `${name} - Reject Calendar Event`,
+      'type': 'test_reject_event_form_1759053572163'
     }
   ]
   return defWorkflow
