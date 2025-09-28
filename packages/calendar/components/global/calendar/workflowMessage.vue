@@ -8,14 +8,14 @@ const userId = useUserId()
 const showDetail = ref(false)
 const calendarRef = ref()
 const options = ref({
-  'title': '',
-  'showUserFilter': true,
-  'showCategoryFilter': true,
-  'showLocationFilter': true,
-  'view': 'week',
-  'firstDayOfWeek': 'MONDAY',
-  'allowCreate': false,
-  'editable': false
+  title: '',
+  showUserFilter: true,
+  showCategoryFilter: true,
+  showLocationFilter: true,
+  view: 'week',
+  firstDayOfWeek: 'MONDAY',
+  allowCreate: false,
+  editable: false
 })
 const event = ref({
   id: '',
@@ -26,19 +26,20 @@ const event = ref({
   category: '',
   startTime: '',
   endTime: '',
+  user: '',
   isEdit: undefined
 })
 const { setting: calendarSetting, categoriesOption, locationsOption } = useCalendarStore()
 
+const rejectEventDialogRef = ref()
+
 function init() {
   // get location list and category
   console.log(222, calendarSetting, categoriesOption, locationsOption)
-
 }
 
 function openDetail(eventExternal: CalendarEventExternal) {
   // 更新props.event的數據
-  console.log(11, event)
   event.value = {
     id: eventExternal.detail.eventId,
     eventName: eventExternal.title,
@@ -47,7 +48,8 @@ function openDetail(eventExternal: CalendarEventExternal) {
     location: eventExternal.detail.location,
     isAllDay: eventExternal.detail.isAllDay,
     startTime: eventExternal.start,
-    endTime: eventExternal.end
+    endTime: eventExternal.end,
+    user: eventExternal.detail.relatedUsers.user
   }
 
   const location = locationsOption.value.find((item: any) => item.id === eventExternal.detail.location)
@@ -64,26 +66,19 @@ function openDetail(eventExternal: CalendarEventExternal) {
     } else {
       event.value.isEdit = false
     }
-
   } else {
     event.value.categoriesName = ''
   }
-
-  console.log(222, event.value)
   showDetail.value = true
 }
 
 function handleRejectEvent() {
   // 打開 dialog
-
+  rejectEventDialogRef.value.openDialog(event)
   // 執行update event的操作
-
-
 }
 
-function handleAcceptEvent() {
-
-}
+function handleAcceptEvent() {}
 
 function getCategoryName(id: string) {
   if ('' === id) return
@@ -112,8 +107,6 @@ onMounted(() => {
       </div>
     </el-col>
     <el-col :span="8">
-      11 : {{ showDetail }}
-      22 : {{ event.isEdit }}
       <div v-if="showDetail && event.isEdit !== undefined && !event.isEdit">
         <h2 style="color: #9e9e9e">{{ $t('Event Detail') }}</h2>
         <el-space direction="vertical" alignment="stretch" class="left-aligned">
@@ -129,7 +122,6 @@ onMounted(() => {
 
       <!--  update form  -->
 
-
       <div v-if="showDetail && event.isEdit !== undefined && !event.isEdit">
         <el-divider />
         <el-text>{{ $t('Response') }}</el-text>
@@ -140,6 +132,8 @@ onMounted(() => {
       </div>
     </el-col>
   </el-row>
+
+  <CalendarRejectEventDialog ref="rejectEventDialogRef" :categoriesOption="categoriesOption" />
 </template>
 
 <style scoped lang="scss">
