@@ -98,7 +98,7 @@ export const useGlobalSearch = ( tabProvide : any) => {
     function itemClick(item:GlobalSearchItem) {
         if(item.action) {
             item.action({
-                keyword:keyword.value,
+                keyword: keyword.value,
                 tabProvider,
             })
         }

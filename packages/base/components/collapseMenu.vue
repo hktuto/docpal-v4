@@ -10,25 +10,14 @@ onClickOutside(outsideTarget, (event) => {
   }
 })
 
+
 watch(opened,(bool) => {
   emits('openedChange', bool)
 })
 </script>
 
 <template>
-  <!-- <div class="collapseContainer">
-    <div class="collapseWrapper desktop">
-      <slot :collapse="false" />
-    </div>
-    <div class="collapseWrapper mobile">
-      <div class="mobileCollapse" @click.stop="() => {}">
-          <SvgIcon src="/icons/menu.svg" round @click="opened = true"/>
-          <div ref="outsideTarget" :class="{listContainer:true, opened}">
-            <slot :collapse="true" />
-          </div>
-        </div>
-    </div>
-  </div> -->
+  
   <div class="collapseWrapper desktop">
     <slot :collapse="false" />
   </div>
@@ -40,6 +29,7 @@ watch(opened,(bool) => {
         </div>
       </div>
   </div>
+  
 </template>
 
 <style scoped lang="scss">
