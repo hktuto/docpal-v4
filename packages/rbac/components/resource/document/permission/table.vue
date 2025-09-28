@@ -68,6 +68,9 @@ const { tableConfig, tableEvent, tableRef, reload } = useVxeTable({
     },
     { field: 'inheritFromPath', title: 'rbac.permission.inheritFrom' }
   ],
+  dblClickAction: ({ row, column, event }: any) => {
+    handleDblClick(row)
+  },
   bodyActions: [
     [
       {
