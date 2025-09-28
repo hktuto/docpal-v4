@@ -49,13 +49,16 @@ function handleUpdateAgg(aggregation: any, aggParams: any = {}) {
 }
 
 onMounted(() => {
-  BarRef.value.setQuery(searchParams.value)
+  if(searchParams.value){
+    console.log('searchParams', searchParams.value)
+    BarRef.value.setQuery(searchParams.value)
     tableRef.value.initBar(searchParams.value)
+  }
 })
 
 watch(searchParams,(params) => {
   if(params){
-
+    
     BarRef.value.setQuery(searchParams.value)
     tableRef.value.initBar(searchParams.value)
   }
