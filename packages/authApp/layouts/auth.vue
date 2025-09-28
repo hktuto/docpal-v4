@@ -27,6 +27,7 @@ const inited = ref(false)
 
 async function getTabsFromServer() {
   // check if new tab
+  console.log("getTabsFromServer", inited.value);
   if(inited.value) return
   let storageTabs = localStorage.getItem('docpal-app-tab');
 
@@ -44,6 +45,7 @@ async function getTabsFromServer() {
       })
       // TODO : check if storageTabs is array, and handle restore other tabs
       tabAppRef.value?.setLayout(newLayout);
+      console.log("set layout", newLayout);
     } else {
       // init a basic layout
       tabAppRef.value?.setHightLightPanel("dummy-tab-container");
@@ -58,6 +60,7 @@ async function getTabsFromServer() {
           tabs: [_defaultTab],
         },
       ]);
+      console.log("set default tab");
     }
   } catch (error) {
     console.log("error", error)
@@ -102,8 +105,8 @@ async function saveTabsToLocalStorage(layout: TabPanel[]) {
 const { t } = useI18n();
 onMounted(async () => {
   await getLocale();
-  emits("ready");
-  getTabsFromServer();
+  // emits("ready");
+  // getTabsFromServer();
 });
 </script>
 
