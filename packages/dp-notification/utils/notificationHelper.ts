@@ -1,17 +1,14 @@
 import { clientApi } from 'api'
 
 export function notiShowView(row: any) {
-  const isCancel = ['TRASH', 'DELETE', 'CANCELD'].includes(row.operate) ||
-    (row.type === 'Upload-Request' && !row.content.processInstanceId)
-  const showView = row.content.documentId ||
-    row.content.uploadId ||
-    row.content.processInstanceId
+  const isCancel = ['TRASH', 'DELETE', 'CANCELD'].includes(row.operate) || (row.type === 'Upload-Request' && !row.content.processInstanceId)
+  const showView = row.content.documentId || row.content.uploadId || row.content.processInstanceId
   return !isCancel && showView
 }
 
 export async function notiHandleView(row: any, tabProvider: any) {
   // const router = useRouter()
-  if (row.content.processInstanceId) {
+  if (row.content.processInstanceId && !row.content.processDefinitionId.includes('adhocApproval')) {
     if (row.type === 'Upload-Request') {
       // router.push(`/fileRequest/${row.content.processInstanceId}`)
       const newItem = createUploadRequestDetailParams({
@@ -23,9 +20,15 @@ export async function notiHandleView(row: any, tabProvider: any) {
       if (!!newItem) tabProvider?.openTab(newItem, true)
     }
   } else if (row.content.documentId) {
+    const params: any = { idOrPath: row.content.documentId }
+    if (row.content.commentId) {
+      params.commentId = row.content.commentId
+    }
+    if (row.content.processDefinitionId.includes('adhocApproval')) {
+      params.showInfo = true
+    }
     const newItem = createBrowseListPageParams({
-      idOrPath: row.content.documentId,
-      commentId: row.content.commentId
+      ...params
     })
     tabProvider?.openTab(newItem, true)
   } else if (row.content.uploadId) {
@@ -36,13 +39,12 @@ export async function notiHandleView(row: any, tabProvider: any) {
       status
     })
     tabProvider?.openTab(newItem, true)
-
   }
 }
 
 export const getWorkflowRoute = async (processInstanceId: string) => {
   try {
-    const taskList: any = await clientApi.api.getWorkflowTasks({ processInstanceId }).then(res => res.data)
+    const taskList: any = await clientApi.api.getWorkflowTasks({ processInstanceId }).then((res) => res.data)
     let newTab = {}
     if (taskList && taskList.length > 0) {
       newTab = routeWorkflowDetail({
