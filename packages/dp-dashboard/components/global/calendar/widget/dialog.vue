@@ -166,7 +166,6 @@ async function editForm(event: any) {
 }
 
 function conversionMessage(event:any){
-  // const additionalContent = `{eventId:${event.detail.eventId},eventName:${event.detail.eventName},description:${event.detail.eventDescription},category:${event.detail.category},location: ${event.detail.location},startTime:${event.start},endTime:${event.end},user:${event.detail.relatedUsers.user},isAllDay: ${event.detail.isAllDay}}`
   return JSON.stringify(event)
 }
 
@@ -209,6 +208,10 @@ async function submit() {
     if (!data) {
       return
     }
+
+    // TODO: 後端需要加參數 eId， 該值用於在通知頁面獲取eventId
+    data.eId = `${Math.random().toString(36).substring(2, 9)}-${Date.now()}`
+
     // 組裝消息推送的内容
     data.additionalContent =  conversionMessage(data)
 

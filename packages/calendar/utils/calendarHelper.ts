@@ -173,6 +173,19 @@ export function displayTimeFn(event: any, dateMode = false) {
   }
 }
 
+export const routeCalendarWorkflowMessage = function(params: any) {
+  return {
+    id: 'calendar-workflow-message-' + new Date().getTime(),
+    name: 'calendar-workflow-message-',
+    icon: null,
+    label: 'Calendar Management',
+    component: 'LazyCalendarWorkflowMessage',
+    props: {
+      messageEvent: params
+    }
+  } as TabItem
+}
+
 
 /**
  * example workflow setting

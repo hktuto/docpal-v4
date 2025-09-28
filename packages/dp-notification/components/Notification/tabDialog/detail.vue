@@ -24,7 +24,7 @@
           }}
         </div>
         <div v-if="item.content.message">
-          {{  message(item.content.message) }}
+          {{ message(item.content.message) }}
         </div>
         <!--        <el-alert v-if="item.content.message" :title="item.content.message"-->
         <!--                  :type="JSON.parse(item.content.message).level" :closable="false" />-->
@@ -112,6 +112,7 @@ async function handleDismiss(item: any) {
     state.list.splice(index, 1)
     emits('unreadCountChange', item)
   } catch (error) {
+    console.log(error)
   } finally {
     item.loading = false
   }
@@ -119,7 +120,7 @@ async function handleDismiss(item: any) {
 
 async function handleView(item: any) {
   notiHandleView(item, tabProvider)
-  handleDismiss(item)
+  // handleDismiss(item)
   emits('close')
 }
 
@@ -131,17 +132,12 @@ function initData(noGetData: boolean = false) {
 
 function message(message) {
   const content = JSON.parse(message)
-  console.log(222, content)
-  if (content.showNotification) {
-    let msg = ''
+  if (content.showNotification && content.additionalContent) {
     try {
-      msg = JSON.parse(content.additionalContent)
-
+      return JSON.parse(content.additionalContent)
     } catch (e) {
-      console.log(e)
       return message
     }
-    return msg
   }
   return message
 }
