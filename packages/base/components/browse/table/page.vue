@@ -12,6 +12,7 @@ const props = withDefaults(
     commentId?: string
     expandedItems: any[]
     isReload?: boolean
+    showInfo?: boolean
   }>(),
   {
     idOrPath: '/',
@@ -20,7 +21,7 @@ const props = withDefaults(
   }
 )
 
-const { idOrPath, commentId, expandedItems } = toRefs(props)
+const { idOrPath, commentId, expandedItems, showInfo } = toRefs(props)
 const currentIdOrPath = ref(idOrPath.value)
 const tabProvider = inject(TabManagerKey)
 const routerProvider = inject(MenuRouterKey)
@@ -154,15 +155,14 @@ async function handleRefreshChild(childId: string) {
 }
 
 function itemDeleted() {}
-
 watch(
-  [idOrPath, commentId],
+  [idOrPath, commentId, showInfo],
   (newVal, oldVal) => {
     getDoc()
     currentIdOrPath.value = newVal[0]
-    if (newVal && newVal[1]) {
+    if (newVal && (newVal[1] || newVal[2])) {
       infoOpened.value = true
-    } else if (oldVal && oldVal[1]) {
+    } else {
       infoOpened.value = false
     }
   },
@@ -290,7 +290,7 @@ function handleSearchBlur() {
               </div>
             </slot>
             <slot name="toolbarTools">
-              <div :class="{searchContainer:true, expanded: isSearchExpanded}">
+              <div :class="{ searchContainer: true, expanded: isSearchExpanded }">
                 <div v-if="!isSearchExpanded" class="searchButton" @click="expandSearch">
                   <Icon name="mdi:magnify" />
                 </div>
@@ -333,13 +333,7 @@ function handleSearchBlur() {
         </BrowseTable>
       </Pane>
       <Pane v-if="idOrPath !== '/' && infoOpened" :min-size="minSize" :size="minSize">
-        <BrowseInfo
-          :doc="docDetail"
-          :infoOpened="infoOpened"
-          :commentId="commentId"
-          @close="infoOpened = false"
-          @refresh="handleRefresh"
-        />
+        <BrowseInfo :doc="docDetail" :infoOpened="infoOpened" :commentId="commentId" @close="infoOpened = false" @refresh="handleRefresh" />
       </Pane>
     </splitpanes>
   </div>
@@ -405,12 +399,12 @@ function handleSearchBlur() {
   justify-content: center;
   align-items: center;
   margin-right: var(--app-space-xs);
-  .searchButton{
+  .searchButton {
     line-height: 1;
     padding: 0;
     height: fit-content;
   }
-  &.expanded{
+  &.expanded {
     justify-content: flex-start;
   }
   cursor: pointer;

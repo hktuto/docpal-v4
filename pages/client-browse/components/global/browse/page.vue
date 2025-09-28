@@ -5,7 +5,9 @@ const props = defineProps<{
   home: any
   commentId: string
   expandedItems: any[]
+  showInfo: boolean
 }>()
+
 </script>
 
 <template>
