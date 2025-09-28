@@ -19,11 +19,10 @@
 
     <template #summary="{ row }">
       <div v-if="row.properties && row.properties.field_summaries" v-tooltip="calculateTooltip(row)">
-
         {{
-          row.properties.field_summaries.name && 'File Name' ||
-          row.properties.field_summaries.path && 'path' ||
-          row.properties.field_summaries.content && 'content'
+          (row.properties.field_summaries.name && 'File Name') ||
+          (row.properties.field_summaries.path && 'path') ||
+          (row.properties.field_summaries.content && 'content')
         }}
       </div>
     </template>
@@ -35,13 +34,13 @@ import * as mime from 'mime-types'
 import { globalApi } from 'api'
 
 const { tableId, showCheckbox } = defineProps<{
-  tableId: string,
+  tableId: string
   showCheckbox: boolean
 }>()
 
 const routerProvider = inject(MenuRouterKey)
 const emits = defineEmits(['updateAgg', 'selectChange'])
-
+const { t } = useI18n()
 function calculateTooltip(row: any) {
   const maxWords = 10
 
@@ -152,7 +151,11 @@ const { tableConfig, tableEvent, tableRef, reload, query } = useVxeTable({
     },
     {
       title: 'docType_documentType',
-      field: 'docpal_type'
+      field: 'docpal_type',
+      formatter: ({ cellValue, row }: any) => {
+        if (!cellValue) return '-'
+        return t(cellValue)
+      }
     },
     {
       title: 'docInfo.fileExtension',
@@ -237,7 +240,7 @@ const { tableConfig, tableEvent, tableRef, reload, query } = useVxeTable({
     },
     tooltipConfig: {
       contentMethod: ({ items, row, rowIndex, $rowIndex, column, columnIndex, $columnIndex, type, cell, $event }: any) => {
-        if(!row) return ''
+        if (!row) return ''
         const key = column.property
         const value = row[key]
         // TODO : check to send html
@@ -395,7 +398,6 @@ function initBar(searchParams: any) {
 function initAgg(searchParams: any, isSearch: boolean = true) {
   state.aggParams = searchParams
   if (isSearch) reload()
-
 }
 
 function barParamsDecorator(barParams: any) {
@@ -491,8 +493,6 @@ defineExpose({ initBar, initAgg, initSearch, cleanSelected })
     cursor: pointer;
   }
 }
-
-
 </style>
 <style lang="scss">
 .document_name {
