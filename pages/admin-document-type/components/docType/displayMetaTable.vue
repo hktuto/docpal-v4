@@ -143,6 +143,7 @@ async function getList() {
   return filterData
 }
 function handleRefresh(addMore: boolean = false) {
+  isFilter.value = false
   if (addMore) handleDialogShow()
   reload()
 }
