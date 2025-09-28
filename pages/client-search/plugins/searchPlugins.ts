@@ -53,6 +53,7 @@ export default defineNuxtPlugin((nuxtApp) => {
                                     }
                                 }
                             }
+                            console.log('newItem', newItem, keyword)
                             tabProvider.openTab(newItem, true)
                         }
                     }] as GlobalSearchItem[]
