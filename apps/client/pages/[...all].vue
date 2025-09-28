@@ -7,8 +7,10 @@
 let index = 0;
 const route = useRoute();
 const router = useRouter();
+const appPlatform = useAppPlatform()
+const tabName = appPlatform.value + '-app-tab'
 function openTab(tabItem: any) {
-  let storageTabs = localStorage.getItem("app-tab");
+  let storageTabs = localStorage.getItem(tabName);
   let newLayout: any = [];
   if (storageTabs) {
     // const id = new Date().valueOf() + index
@@ -34,7 +36,7 @@ function openTab(tabItem: any) {
     ];
     localStorage.setItem("app-tab-hightLightPanel", 'dummy-tab-container');
   }
-  localStorage.setItem("app-tab", JSON.stringify(newLayout));
+  localStorage.setItem(tabName, JSON.stringify(newLayout));
 
   router.push("/");
 }
@@ -50,6 +52,7 @@ onMounted(async () => {
   switch (path) {
     case "/browse":
       const idOrPath = (route.query.id || route.query.path || "/") as string;
+      console.log('idOrPath', idOrPath, decodeURI(idOrPath))
       const newTab = createBrowseListPageParams({
         idOrPath: decodeURI(idOrPath),
       });
