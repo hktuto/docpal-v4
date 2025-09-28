@@ -151,6 +151,10 @@ const { tableConfig, tableEvent, tableRef, reload, query } = useVxeTable({
       }
     },
     {
+      title: 'docType_documentType',
+      field: 'docpal_type'
+    },
+    {
       title: 'docInfo.fileExtension',
       field: 'file_suffix'
     },
