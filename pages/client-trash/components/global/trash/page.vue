@@ -178,7 +178,9 @@ async function handleDeleteAll() {
       dangerouslyUseHTMLString: true,
       confirmButtonText: t('common_confirmDelete')
     }
-  )
+  ).catch(() => {
+    return
+  })
   if (action !== 'confirm') return
 
   state.loading = true
@@ -229,7 +231,9 @@ async function handleBathDelete(status: boolean, selectList: any) {
       dangerouslyUseHTMLString: true,
       confirmButtonText: t('common_confirmDelete')
     }
-  )
+  ).catch(() => {
+    return
+  })
   if (action !== 'confirm') return
 
   state.loading = true
