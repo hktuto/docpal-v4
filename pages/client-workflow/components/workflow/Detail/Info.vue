@@ -114,10 +114,12 @@ async function handleUnclaim() {
 async function handleClaim() {
   try {
     state.loading = true
-    const response: any = await clientApi.api.postWorkflowTaskClaim({
-      taskId: props.id,
-      userId
-    }).then((res) => res.data)
+    const response: any = await clientApi.api
+      .postWorkflowTaskClaim({
+        taskId: props.id,
+        userId
+      })
+      .then((res) => res.data)
     if (!response.errorCode) {
       emits('change', response, true)
     }
@@ -137,7 +139,7 @@ async function handelDelete() {
       processInstanceId,
       userId
     })
-    routerProvider?.message.success(t('tip_deleteSuccessMessage'))
+    routerProvider?.message.success(t('tip_deleteSuccessMessage', { name: t('common_item') }))
     routerProvider?.back()
   } catch {
   } finally {

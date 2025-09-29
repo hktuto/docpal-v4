@@ -2,10 +2,7 @@
   <div class="pageContainer--padding">
     <VxeGrid ref="tableRef" v-bind="tableConfig" v-on="tableEvent">
       <template #toolbar_buttons>
-        <ResponsiveFilter
-          ref="ResponsiveFilterRef"
-          @form-change="handleFilterFormChange"
-        />
+        <ResponsiveFilter ref="ResponsiveFilterRef" @form-change="handleFilterFormChange" />
       </template>
     </VxeGrid>
     <ShareDialog ref="shareInfoDialogRef" @submit="handleSubmit"></ShareDialog>
@@ -20,14 +17,7 @@ const routerProvider = inject(MenuRouterKey)
 const ResponsiveFilterRef = ref()
 const { t } = useI18n()
 let extraParams: any = {}
-const {
-  tableConfig,
-  tableEvent,
-  tableRef,
-  query,
-  reload,
-  cleanSelectedRows
-} = useVxeTable({
+const { tableConfig, tableEvent, tableRef, query, reload, cleanSelectedRows } = useVxeTable({
   id: 'c-share',
   api: async (pageParams: any) => {
     const params = {
@@ -37,7 +27,7 @@ const {
     }
     delete params.pageNum
     delete params.pageSize
-    const res: any = await clientApi.api.postNuxeoSharePage({ ...params, ...extraParams }).then(res => res.data)
+    const res: any = await clientApi.api.postNuxeoSharePage({ ...params, ...extraParams }).then((res) => res.data)
     return {
       data: {
         entryList: res.list,
@@ -66,7 +56,7 @@ const {
   bodyActions: [
     [
       {
-        code: 'delete',
+        code: 'edit',
         name: t('externalSharing_edit'),
         visible: true,
         disabled: false,
@@ -91,18 +81,15 @@ const {
 })
 
 async function handleDisabled(row: any) {
-  const action = await ElMessageBox.confirm(
-    `${t('externalSharing_deleteMsg')}`,
-    {
-      confirmButtonClass: 'el-button el-button--warning',
-      confirmButtonText: t('common_confirmDelete')
-    }
-  )
+  const action = await ElMessageBox.confirm(`${t('externalSharing_deleteMsg')}`, {
+    confirmButtonClass: 'el-button el-button--warning',
+    confirmButtonText: t('common_confirmDelete')
+  })
   if (action !== 'confirm') return
   const param = []
   param.push(row.shareID)
   await clientApi.api.deleteNuxeoShare(param)
-  routerProvider?.message.success(t('externalSharing_deleteSuccessMsg'))
+  routerProvider?.message.success(t('tip_deleteSuccessMessage', { name: t('externalSharing_sharingRequest') }))
   query()
 }
 

@@ -142,7 +142,7 @@ const { tableConfig, tableEvent, tableRef, query, reload, cleanSelectedRows } = 
     ]
   ],
   permissionMethod: ({ options, column, row, rowIndex }: any) => {
-    if(!row) {
+    if (!row) {
       return {
         visible: false,
         disabled: false
@@ -205,6 +205,8 @@ async function handleDelete(row: any) {
   const action = await ElMessageBox.confirm(t('collection_deleteMsg', { name: row.name }), {
     confirmButtonClass: 'el-button el-button--warning',
     confirmButtonText: t('common_confirmDelete')
+  }).catch(() => {
+    return
   })
   if (action !== 'confirm') return
   await clientApi.api.deleteNuxeoCollectionDeleteCollectionCollectionid(row.id)
