@@ -6,7 +6,7 @@
     </div>
     <FormRenderer ref="FormRendererRef" :form-json="formJson" @enter="handleSubmit" />
     <div class="footer">
-      <el-button id="public_Share_Submit" @click="handleSubmit">
+      <el-button id="public_Share_Submit" type="primary" @click="handleSubmit">
         {{ $t('common_submit') }}
       </el-button>
     </div>
