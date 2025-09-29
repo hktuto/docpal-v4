@@ -2,22 +2,24 @@
   <el-card>
     <template #header>
       <div class="card-header">
-        <span style="font-size: 18px;">{{ $t('caseManagement_detailPermission') }}</span>
+        <span style="font-size: 18px">{{ $t('caseManagement_detailPermission') }}</span>
       </div>
     </template>
     <div class="permissionItemContainer">
-      <CaseManagementDetailPermissionCard v-for="(item, index) in state.groups" :key="index" :data="item"
-                                          :caseInformation="state.caseInformation"
-                                          :roleList="flatRole"
-                                          @refresh="(data) => handleRefresh(data, index)"
-                                          @delete="handleDelete"/>
+      <CaseManagementDetailPermissionCard
+        v-for="(item, index) in state.groups"
+        :key="index"
+        :data="item"
+        :caseInformation="state.caseInformation"
+        :roleList="flatRole"
+        @refresh="(data) => handleRefresh(data, index)"
+        @delete="handleDelete"
+      />
     </div>
     <el-button id="CaseManagement__Detail__Permission__AddPermission" type="primary" text @click="handleAdd()">
       {{ $t('caseManagement.addPermission') }}
     </el-button>
-    <CaseManagementDetailPermissionDialog ref="dialogRef" :caseInformation="state.caseInformation"
-                                          @refresh="handleRefresh"
-    />
+    <CaseManagementDetailPermissionDialog ref="dialogRef" :caseInformation="state.caseInformation" @refresh="handleRefresh" />
   </el-card>
 </template>
 <script lang="ts" setup>
@@ -35,10 +37,9 @@ function handleAdd() {
 }
 const { flatRole, getRoleTree } = useRBAC()
 async function getRole() {
-  if(flatRole.value.length === 0) {
+  if (flatRole.value.length === 0) {
     await getRoleTree()
   }
-  
 }
 
 // #endregion
@@ -49,8 +50,8 @@ function init(nodeData: any) {
 
   state.caseInformation = getExtentionProperties(nodeData.data.casePlanModel, 'docpal:form')
   if (!state.caseInformation) state.caseInformation = []
-  permission.forEach(item => {
-    let index = state.groups.findIndex(g => g.group === item.group || g.role === item.role)
+  permission.forEach((item) => {
+    let index = state.groups.findIndex((g) => g.group === item.group || g.role === item.role)
     if (index === -1) {
       state.groups.push({
         group: item.group,
@@ -60,8 +61,8 @@ function init(nodeData: any) {
     }
     state.groups[index].permission = getWholePermissionField(item)
   })
-  filter.forEach(item => {
-    let index = state.groups.findIndex(g => g.group === item.group || g.role === item.role)
+  filter.forEach((item) => {
+    let index = state.groups.findIndex((g) => g.group === item.group || g.role === item.role)
     if (index === -1) {
       state.groups.push({
         group: item.group,
@@ -75,14 +76,15 @@ function init(nodeData: any) {
 
 function getWholePermissionField(permission) {
   try {
-    state.caseInformation.forEach(item => {
-      const isExist = permission.field.find(p => p.id === item.id)
-      if (!isExist) permission.field.push({
-        accesstype: 'hidden',
-        id: item.id
-      })
+    state.caseInformation.forEach((item) => {
+      const isExist = permission.field.find((p) => p.id === item.id)
+      if (!isExist)
+        permission.field.push({
+          accesstype: 'hidden',
+          id: item.id
+        })
     })
-    permission.field = permission.field.filter(item => state.caseInformation.find(c => c.id === item.id))
+    permission.field = permission.field.filter((item) => state.caseInformation.find((c) => c.id === item.id))
   } catch (error) {
   } finally {
     return permission
@@ -91,9 +93,9 @@ function getWholePermissionField(permission) {
 
 function getWholeFilter(filter) {
   try {
-    filter.filed_condition = filter.filed_condition.filter(item => state.caseInformation.find(c => c.id === item.id))
+    filter.filed_condition = filter.filed_condition.filter((item) => state.caseInformation.find((c) => c.id === item.id))
   } catch (error) {
-    console.log("getWholeFilter", error)
+    console.log('getWholeFilter', error)
   } finally {
     return filter
   }
@@ -107,19 +109,22 @@ function handleSave(attributes, filters) {
 }
 
 function handleDelete(data) {
-  const index = state.groups.findIndex(item => item.group === data.group || item.role === data.role)
+  const index = state.groups.findIndex((item) => item.group === data.group || item.role === data.role)
   state.groups.splice(index, 1)
   const _data = [...state.groups]
 
-  handleSave(_data.map(item => ({
-    ...item.permission,
-    group: item.group,
-    role: item.role
-  })), _data.map(item => ({
-    ...item.filter,
-    group: item.group,
-    role: item.role
-  })))
+  handleSave(
+    _data.map((item) => ({
+      ...item.permission,
+      group: item.group,
+      role: item.role
+    })),
+    _data.map((item) => ({
+      ...item.filter,
+      group: item.group,
+      role: item.role
+    }))
+  )
 }
 
 function handleRefresh(data, index) {
@@ -131,22 +136,24 @@ function handleRefresh(data, index) {
     state.groups = deepCopy([...state.groups, data])
   }
   const _data = [...state.groups]
-  handleSave(_data.map(item => ({
-    ...item.permission,
-    casetable: props.node.id,
-    group: item.group,
-    role: item.role
-  })), _data.map(item => ({
-    ...item.filter,
-    casetable: props.node.id,
-    group: item.group,
-    role: item.role
-  })))
+  handleSave(
+    _data.map((item) => ({
+      ...item.permission,
+      casetable: props.node.id,
+      group: item.group,
+      role: item.role
+    })),
+    _data.map((item) => ({
+      ...item.filter,
+      casetable: props.node.id,
+      group: item.group,
+      role: item.role
+    }))
+  )
 }
 
-defineExpose({init})
+defineExpose({ init })
 </script>
-
 
 <style lang="scss" scoped>
 .permissionCard {
@@ -167,6 +174,5 @@ defineExpose({init})
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   grid-template-rows: masonry;
   gap: var(--app-space-xs);
-
 }
 </style>
