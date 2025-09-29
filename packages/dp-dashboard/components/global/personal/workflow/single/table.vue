@@ -15,20 +15,20 @@ const isValid = computed(() => {
   return props.setting?.selectedWorkflow && props.setting.columns.length > 0
 })
 
-async function queryTaskDetail(instanceId: string) {
-  try {
-    const res = await clientApi.api
-      .getWorkflowVariablesInstanceid(instanceId, {
-        headers: {
-          noThrowError: true
-        }
-      })
-      .then((res) => res.data)
-    return res
-  } catch (err) {
-    return {}
-  }
-}
+// async function queryTaskDetail(instanceId: string) {
+//   try {
+//     const res = await clientApi.api
+//       .getWorkflowVariablesInstanceid(instanceId, {
+//         headers: {
+//           noThrowError: true
+//         }
+//       })
+//       .then((res) => res.data)
+//     return res
+//   } catch (err) {
+//     return {}
+//   }
+// }
 
 function getRecursiveValue(obj: any, path: string) {
   if (path.includes('.')) {
@@ -146,30 +146,15 @@ async function getAllWorkingInstances(processKey: string, pageNum: number = 0, p
   }
   const { data }: any = await clientApi.api.postWorkflowTasksUser(pageParams)
   // filter step name
-  totalLength += data?.entryList?.length || 0
   const entryList = filterStep(data?.entryList || [])
-  let promise = []
-  for (let i = 0; i < entryList.length; i++) {
-    const instanceId = entryList[i]?.taskInstance?.processInstanceId
-    if (instanceId) {
-      promise.push(queryTaskDetail(instanceId))
+  const _entryList = entryList.map((item: any) => {
+    return {
+      ...item.taskInstance,
+      ...item,
+      ...item.taskInstance.processVariables
     }
-  }
-  const detailList = await Promise.all(promise)
-  for (let i = 0; i < detailList.length; i++) {
-    const detail = detailList[i]
-    if (detail) {
-      entryList[i] = {
-        ...entryList[i],
-        ...detail
-      }
-    }
-  }
-  result.push(...entryList)
-  if (data?.totalSize > totalLength) {
-    const nextPageNum = pageNum + 1
-    return await getAllWorkingInstances(processKey, nextPageNum, pageSize, entryList, totalLength)
-  }
+  })
+  result.push(..._entryList)
   return sortAndFilterList(result)
 }
 

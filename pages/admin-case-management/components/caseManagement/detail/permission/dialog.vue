@@ -18,11 +18,11 @@
         >
           <el-select-v2
             v-model="form.role"
-            :options="state.roleList"
+            :options="enableRoleList"
             clearable
-            @change="handleRecordChange"
             filterable
             :placeholder="$t('common_selectedIsRequiredMsg')"
+            @change="handleRecordChange"
           />
         </el-form-item>
       </template>
@@ -34,7 +34,7 @@
         >
           <el-select-v2
             v-model="form.group"
-            :options="state.groupList"
+            :options="enableGroupList"
             clearable
             filterable
             @change="handleRecordChange"
@@ -117,6 +117,7 @@ const emits = defineEmits(['refresh', 'delete'])
 const props = defineProps<{
   groups: any[]
   caseInformation: []
+  exitList: []
 }>()
 const state = reactive<any>({
   loading: false,
@@ -148,7 +149,20 @@ const form = ref<any>({
   filed_condition: []
 })
 const FormRef = ref()
-
+const enableGroupList = computed(() => {
+  if(!state.groupList) return []
+  return state.groupList.map((item: any) => {
+    item.disabled = props.exitList.some((exitItem: any) => exitItem.group === item.value)
+    return item
+  })
+})
+const enableRoleList = computed(() => {
+  if(!state.roleList) return []
+  return state.roleList.map((item: any) => {
+    item.disabled = props.exitList.some((exitItem: any) => exitItem.role === item.value)
+    return item
+  })
+})
 function handleIsGroupChange(value: boolean) {
   if (value) {
     form.value.role = ''
@@ -226,6 +240,8 @@ function handleDelete() {
 function handleOpen(setting: any) {
   state.visible = true
   state.isEdit = false
+  form.value.group = ''
+  form.value.role = ''
   state.permissionField = {
     hidden: [],
     mask: [],

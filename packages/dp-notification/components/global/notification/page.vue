@@ -85,7 +85,12 @@ const {
           })
         } else {
           if ('message' in content) {
-            const message = JSON.parse(content.message)
+            let message = ''
+            try {
+              message = JSON.parse(content.message)
+            } catch (e) {
+              return content.message
+            }
             description = t(message.templateId)
           } else {
             description = t(content.templateId, '')

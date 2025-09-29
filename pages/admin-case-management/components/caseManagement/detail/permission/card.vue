@@ -30,14 +30,17 @@
       </template>
     </div>
     <el-icon class="absoluteTop" @click="handleEdit"><Setting /></el-icon>
-    <CaseManagementDetailPermissionDialog ref="dialogRef" :caseInformation="caseInformation" @refresh="handleRefresh" @delete="(data) => emits('delete', data)"/>
+    <CaseManagementDetailPermissionDialog ref="dialogRef" :caseInformation="caseInformation" :exitList="enableExitList" @refresh="handleRefresh" @delete="(data) => emits('delete', data)"/>
   </div>
 </template>
 <script lang="ts" setup>
 import { Setting } from '@element-plus/icons-vue'
-const props = defineProps(['data', 'caseInformation', 'roleList'])
+const props = defineProps(['data', 'caseInformation', 'roleList', 'exitList'])
 const emits = defineEmits(['refresh', 'delete'])
-
+const enableExitList = computed(() => {
+  const data = props.exitList.filter((item: any) => item.role !== props.data.role || item.group !== props.data.group)
+  return data
+})
 function getRoleName(roleId: string) {
   return props.roleList.find(item => item.id === roleId)?.name
 }
