@@ -276,4 +276,7 @@ defineExpose({ init })
     transform: rotate(360deg);
   }
 }
+.color__danger {
+  color: var(--app-error-color);
+}
 </style>
