@@ -12,6 +12,7 @@
         :data="item"
         :caseInformation="state.caseInformation"
         :roleList="flatRole"
+        :exitList="state.groups"
         @refresh="(data) => handleRefresh(data, index)"
         @delete="handleDelete"
       />
@@ -19,7 +20,7 @@
     <el-button id="CaseManagement__Detail__Permission__AddPermission" type="primary" text @click="handleAdd()">
       {{ $t('caseManagement.addPermission') }}
     </el-button>
-    <CaseManagementDetailPermissionDialog ref="dialogRef" :caseInformation="state.caseInformation" @refresh="handleRefresh" />
+    <CaseManagementDetailPermissionDialog ref="dialogRef" :caseInformation="state.caseInformation" :exitList="state.groups" @refresh="handleRefresh" />
   </el-card>
 </template>
 <script lang="ts" setup>
@@ -95,7 +96,7 @@ function getWholeFilter(filter) {
   try {
     filter.filed_condition = filter.filed_condition.filter((item) => state.caseInformation.find((c) => c.id === item.id))
   } catch (error) {
-    console.log('getWholeFilter', error)
+    console.error('getWholeFilter', error)
   } finally {
     return filter
   }
