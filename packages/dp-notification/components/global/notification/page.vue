@@ -89,7 +89,7 @@ const {
             try {
               message = JSON.parse(content.message)
             } catch (e) {
-              message = content.message
+              return content.message
             }
             description = t(message.templateId)
           } else {
