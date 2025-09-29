@@ -23,9 +23,11 @@
             })
           }}
         </div>
-        <div v-if="item.content.message"> {{ item.content.message }}</div>
-<!--        <el-alert v-if="item.content.message" :title="item.content.message"-->
-<!--                  :type="JSON.parse(item.content.message).level" :closable="false" />-->
+        <div v-if="item.content.message">
+          {{ message(item.content.message) }}
+        </div>
+        <!--        <el-alert v-if="item.content.message" :title="item.content.message"-->
+        <!--                  :type="JSON.parse(item.content.message).level" :closable="false" />-->
         {{ item.content.comment }}
         <div>{{ item.creator }}</div>
         <div>
@@ -110,6 +112,7 @@ async function handleDismiss(item: any) {
     state.list.splice(index, 1)
     emits('unreadCountChange', item)
   } catch (error) {
+    console.log(error)
   } finally {
     item.loading = false
   }
@@ -117,7 +120,7 @@ async function handleDismiss(item: any) {
 
 async function handleView(item: any) {
   notiHandleView(item, tabProvider)
-  // handleDismiss(item)
+  handleDismiss(item)
   emits('close')
 }
 
@@ -125,6 +128,18 @@ function initData(noGetData: boolean = false) {
   state.list = []
   pageParams.value.pageNum = 0
   if (!noGetData) getList()
+}
+
+function message(message) {
+  const content = JSON.parse(message)
+  if (content.showNotification && content.additionalContent) {
+    try {
+      return JSON.parse(content.additionalContent)
+    } catch (e) {
+      return message
+    }
+  }
+  return message
 }
 
 onMounted(() => {

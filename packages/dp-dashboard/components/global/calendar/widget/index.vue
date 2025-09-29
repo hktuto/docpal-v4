@@ -85,7 +85,7 @@ onDeactivated(() => {
       {{ $t('New Event') }}
     </el-button>
     <el-skeleton v-if="!hideSetting && !showPreview" :rows="5"></el-skeleton>
-    <Calendar v-else ref="CalendarRef" :options="setting" @openDetail="editEvent" @createEvent="allowCreateNewEvent"
+    <Calendar v-else ref="CalendarRef" :options="setting" @editEvent="editEvent" @createEvent="allowCreateNewEvent"
               @updateEvent="updateEvent" @cancelEvent="cancelEvent" @deleteEvent="deleteEvent" />
 
     <CalendarWidgetDialog ref="eventDialogRef" :options="setting" @reload="refresh" />
