@@ -125,7 +125,7 @@ function isValidateEmail(emailList) {
 
   emailList.forEach((item: any) => {
     if (!emailRegex.test(item) && !isInContactList(item)) {
-      ElMessage.error(t('tip.enterValidEmail') +' 【'+ item+'】')
+      ElMessage.error(t('tip.enterValidEmail') + ' 【' + item + '】')
       isValidate = false
     }
   })
@@ -177,18 +177,20 @@ async function handleSubmit() {
 }
 
 function handleDeleteRow(row: any) {
-  const index = state.minTypeShareList.findIndex((item: any) => row.id === item.id)
-  state.minTypeShareList.splice(index, 1)
-  if (state.minTypeShareList.length === 0) {
-    handleDiscard()
+  if (state.minTypeShareList.length === 1) {
+    handleDiscard(row)
   } else {
+    const index = state.minTypeShareList.findIndex((item: any) => row.id === item.id)
+    state.minTypeShareList.splice(index, 1)
     updateShareList(state.minTypeShareList)
   }
 }
 
-async function handleDiscard() {
+async function handleDiscard(row: any) {
   const action = await ElMessageBox.confirm(`${t('tip.confirmWhetherToDiscardShareQueue')}`)
   if (action !== 'confirm') return
+  const index = state.minTypeShareList.findIndex((item: any) => row.id === item.id)
+  state.minTypeShareList.splice(index, 1)
   if (!!state.interval) clearInterval(state.interval)
   updateShareList([])
   const item = createBrowseListPageParams({
