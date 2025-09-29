@@ -1,105 +1,109 @@
 <script lang="ts" setup>
-import {adminApi, clientApi, globalApi} from 'api'
+import { adminApi, clientApi, globalApi } from 'api'
 
 const platform = useAppPlatform()
-const {t} = useI18n()
+const { t } = useI18n()
 
 const { state, handleSubmit, handleDelete, handleOpen } = useDashboardSetting({
-  beforeOpen,
+  beforeOpen
 })
 
-
 type Columns = {
-  field: string,
-  title: string,
+  field: string
+  title: string
 }
 
-const allWorkflow = ref<any[]>([]);
-const workflowColumns = ref<Columns[]>([]);
-const avalibleSteps = ref<any[]>([]);
+const allWorkflow = ref<any[]>([])
+const workflowColumns = ref<Columns[]>([])
+const avalibleSteps = ref<any[]>([])
 
 async function handleWorkflowhange(newSelectedWorkflow: string) {
   state.setting.columns = []
   state.setting.steps = []
   const selectedWorkflowData = allWorkflow.value.find((item: any) => item.key === newSelectedWorkflow)
-  if(!selectedWorkflowData) return
-  // get workflow bpmn 
-  let xml;
-  if(platform.value === 'admin') {
-    const blob = await globalApi.api.getWorkflowVersionBpmnxml({
-      draftId: selectedWorkflowData.draftId,
-      versionNumber: selectedWorkflowData.versionNumber
-    },  {
-      format: 'blob'
-    })
+  if (!selectedWorkflowData) return
+  // get workflow bpmn
+  let xml
+  if (platform.value === 'admin') {
+    const blob = await globalApi.api.getWorkflowVersionBpmnxml(
+      {
+        draftId: selectedWorkflowData.draftId,
+        versionNumber: selectedWorkflowData.versionNumber
+      },
+      {
+        format: 'blob'
+      }
+    )
     xml = await blob.text()
-  }else{
+  } else {
     xml = await clientApi.api.getWorkflowVersionVersionidBpmnxml(selectedWorkflowData.versionId)
   }
-  const {json} = bpmnStringToJson(xml)
-  // default columns 
+  const { json } = bpmnStringToJson(xml)
+  // default columns
 
-  const allFormInfo = new Map();
-  const allStep:any[] = [];
-  allFormInfo.set('name',{
+  const allFormInfo = new Map()
+  const allStep: any[] = []
+  allFormInfo.set('name', {
     attr_id: 'name',
     attr_name: 'workflow_name'
   })
-  allFormInfo.set('businessKey',{
-    attr_id: 'taskInstance.businessKey',
+  // not allow Chained parameters
+  allFormInfo.set('businessKey', {
+    attr_id: 'businessKey',
     attr_name: 'businessKey'
   })
-    // step 1 get all startEvent and userTask
-    const allFormStep = [
-      ...json.definitions.process.startEvent,
-      ...json.definitions.process.userTask
-    ]
-    allFormStep.forEach(item => {
-      allStep.push(item)
-      let formInfo = item.extensionElements['flowable:formProperty']
-      if (formInfo) {
-        if(!Array.isArray(formInfo)) formInfo = [formInfo]
-        formInfo.forEach(formItem => {
-          allFormInfo.set(formItem.attr_id, formItem)
-        })
-
-      }
-    })
-    workflowColumns.value = Array.from(allFormInfo.values())
-    avalibleSteps.value = allStep
+  allFormInfo.set('createDate', {
+    attr_id: 'createDate',
+    attr_name: 'Task Start Date'
+  })
+  // allFormInfo.set('dueDate', {
+  //   attr_id: 'dueDate',
+  //   attr_name: 'Task Due Date'
+  // })
+  allFormInfo.set('startUserId', {
+    attr_id: 'startUserId',
+    attr_name: 'Task Initiator'
+  })
+  allFormInfo.set('assignee', {
+    attr_id: 'assignee',
+    attr_name: 'Task Owner'
+  })
+  // step 1 get all startEvent and userTask
+  const allFormStep = [...json.definitions.process.startEvent, ...json.definitions.process.userTask]
+  allFormStep.forEach((item) => {
+    allStep.push(item)
+    let formInfo = item.extensionElements['flowable:formProperty']
+    if (formInfo) {
+      if (!Array.isArray(formInfo)) formInfo = [formInfo]
+      formInfo.forEach((formItem) => {
+        allFormInfo.set(formItem.attr_id, formItem)
+      })
+    }
+  })
+  workflowColumns.value = Array.from(allFormInfo.values())
+  avalibleSteps.value = allStep
 }
 
-async function getWorkflow(){
-  const {data} = await globalApi.api.postWorkflowProcessList() as any
+async function getWorkflow() {
+  const { data } = (await globalApi.api.postWorkflowProcessList()) as any
   allWorkflow.value = data
 }
 
 async function beforeOpen(setting) {
   await getWorkflow()
-  if(!setting.columns) setting.columns = []
-  if(setting.selectedWorkflow) {
+  if (!setting.columns) setting.columns = []
+  if (setting.selectedWorkflow) {
     await handleWorkflowhange(setting.selectedWorkflow)
   }
-
 }
 
 defineExpose({
   handleOpen
 })
-
-
-
 </script>
 
 <template>
-  <el-dialog
-    v-model="state.visible"
-    :title="$t('dashboard.setting')"
-    class="scroll-dialog"
-    append-to-body
-    :close-on-click-modal="false"
-    @close="handleClose"
-  >
+  <el-dialog v-model="state.visible" :title="$t('dashboard.setting')" class="scroll-dialog" append-to-body :close-on-click-modal="false" @close="handleClose">
     <ElForm label-position="top">
       <ElFormItem label="Title">
         <ElInput v-model="state.setting.title" placeholder="Title" />
@@ -125,6 +129,7 @@ defineExpose({
             <div>Title</div>
             <div>Field</div>
           </div>
+          {{ state.setting.columns }}
           <div v-for="(row, index) in state.setting.columns" :key="index" class="row">
             <ElInput v-model="row.title" placeholder="Title" />
             <ElSelect v-model="row.field" multiple clearable filterable allow-create>
@@ -133,37 +138,32 @@ defineExpose({
             <ElButton type="link" text @click="state.setting.columns.splice(index, 1)">remove</ElButton>
           </div>
           <div class="add-row">
-            <ElButton type="link" text @click="state.setting.columns.push({field: '', title: ''})">
-              Add Column
-            </ElButton>
-            </div>
+            <ElButton type="link" text @click="state.setting.columns.push({ field: '', title: '' })"> Add Column </ElButton>
+          </div>
         </div>
       </ElFormItem>
     </ElForm>
     <template #footer>
       <div class="footer-grid">
         <el-button id="WorkPanel__DetailTask__Delete" type="danger" @click="handleDelete">
-          {{ $t("common_delete") }}
+          {{ $t('common_delete') }}
         </el-button>
         <el-button id="WorkPanel__DetailTask__Submit" type="primary" :loading="state.loading" @click="handleSubmit">
-          {{ $t("common_submit") }}
+          {{ $t('common_submit') }}
         </el-button>
       </div>
     </template>
   </el-dialog>
 </template>
 
-
 <style lang="scss" scoped>
-.listContainer{
-
-
+.listContainer {
   display: flex;
   flex-flow: column nowrap;
   justify-content: flex-start;
   align-items: flex-start;
   gap: var(--app-space-xs);
-  width:100%;
+  width: 100%;
   .row {
     width: 100%;
     display: grid;
@@ -171,8 +171,8 @@ defineExpose({
     grid-column-gap: var(--app-space-xs);
   }
 }
-.add-row{
-  width:100%;
+.add-row {
+  width: 100%;
   display: grid;
   place-items: center;
 }
