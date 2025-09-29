@@ -97,7 +97,6 @@ async function setDefaultFilter() {
 // #endregion
 
 function openDetail(event: CalendarEventExternal) {
-  // 查看狀態時顯示
   detailDialogRef.value?.open(event)
 }
 
@@ -105,13 +104,12 @@ function openDetail(event: CalendarEventExternal) {
 const calendarEvents = {
   onEventClick: (args: any) => {
     console.log('onEventClick', props.options, args)
-    // Cancelled event cannot be edited
-    if ('R' === args.detail.status || 'D' === args.detail.status) {
-      return
-    }
-
     // edit event
     if (props.options.editable) {
+      // Cancelled event cannot be edited
+      if ('R' === args.detail.status || 'D' === args.detail.status) {
+        return
+      }
       emits('editEvent', args)
     } else {
       // 不可編輯狀態，該點擊應該讓user選擇是否操作頁面

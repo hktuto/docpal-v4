@@ -37,3 +37,24 @@ async function initWorkflowForm(name: string) {
     state.loading = false
   }
 }
+
+async function formJsonGet(processKey: string, versionId: string) {
+  const response: any = await clientApi.api.getRelationQuery({
+    userTaskId: 'start',
+    processKey,
+    versionId
+  }).then((res: any) => res.data)
+  if (!response[0] || (response[0] && !response[0].jsonValue)) return {}
+  return JSON.parse(response[0].jsonValue)
+}
+
+async function setForm(isEdit: boolean, data: any) {
+  if (!state.formJson && '' !== state.formJson) {
+    routerProvider?.message.error('The form does not exist')
+    return
+  }
+  nextTick(() => {
+    createDialogFormRef.value.setForm(state.formJson)
+    createDialogFormRef.value.setFormData(isEdit, data)
+  })
+}
