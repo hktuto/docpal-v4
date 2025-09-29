@@ -117,7 +117,7 @@ async function handleDismiss(item: any) {
 
 async function handleView(item: any) {
   notiHandleView(item, tabProvider)
-  handleDismiss(item)
+  // handleDismiss(item)
   emits('close')
 }
 
