@@ -65,12 +65,11 @@ async function initWorkflowForm(name: string) {
 }
 
 async function formJsonGet(processKey: string, versionId: string) {
-  const response: any = await clientApi.api.getRelationQuery(
-    {
-      userTaskId: 'start',
-      processKey,
-      versionId
-    }).then((res: any) => res.data)
+  const response: any = await clientApi.api.getRelationQuery({
+    userTaskId: 'start',
+    processKey,
+    versionId
+  }).then((res: any) => res.data)
   if (!response[0] || (response[0] && !response[0].jsonValue)) return {}
   return JSON.parse(response[0].jsonValue)
 }
@@ -165,7 +164,7 @@ async function editForm(event: any) {
   await setForm(true, data)
 }
 
-function conversionMessage(event:any){
+function conversionMessage(event: any) {
   return JSON.stringify(event)
 }
 
@@ -183,9 +182,9 @@ async function cancelAndRemove(isCancel: boolean, event: any) {
     startTime: event.start,
     endTime: event.end,
     user: event.detail.relatedUsers.user,
-    isAllDay: event.detail.isAllDay,
+    isAllDay: event.detail.isAllDay
   }
-  data.additionalContent =  conversionMessage(data)
+  data.additionalContent = conversionMessage(data)
 
   const statue = isCancel ? 'cancel calendar event' : 'delete calendar event'
   await initWorkflowForm(statue)
@@ -213,7 +212,7 @@ async function submit() {
     data.eId = `${Math.random().toString(36).substring(2, 9)}-${Date.now()}`
 
     // 組裝消息推送的内容
-    data.additionalContent =  conversionMessage(data)
+    data.additionalContent = conversionMessage(data)
 
     const form = {
       processKey: state.workflowKey,

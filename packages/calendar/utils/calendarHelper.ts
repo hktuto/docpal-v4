@@ -151,7 +151,6 @@ export function isEventValid(allEvents: any[], event: any) {
   return true
 }
 
-
 export function snapDownTo15Minutes(time: Dayjs) {
   const minutes = time.minute()
   const snappedMinutes = Math.floor(minutes / 15) * 15
@@ -173,13 +172,13 @@ export function displayTimeFn(event: any, dateMode = false) {
   }
 }
 
-export const routeCalendarWorkflowMessage = function(params: any) {
+export const routeCalendarManagement = function(params: any) {
   return {
-    id: 'calendar-workflow-message-' + new Date().getTime(),
-    name: 'calendar-workflow-message-',
+    id: 'calendar-management-' + new Date().getTime(),
+    name: 'calendar-management',
     icon: null,
     label: 'Calendar Management',
-    component: 'LazyCalendarWorkflowMessage',
+    component: 'LazyCalendarManagement',
     props: {
       messageEvent: params
     }

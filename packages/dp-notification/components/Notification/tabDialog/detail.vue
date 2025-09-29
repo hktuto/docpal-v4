@@ -120,6 +120,7 @@ async function handleDismiss(item: any) {
 
 async function handleView(item: any) {
   notiHandleView(item, tabProvider)
+  // TODO：需要打開
   // handleDismiss(item)
   emits('close')
 }
