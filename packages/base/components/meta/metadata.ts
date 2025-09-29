@@ -4,7 +4,6 @@ import { adminApi, clientApi } from 'api'
 import { mounteMasterTableOptions, mounteRoleOptions } from './metadata.vform.extent'
 import dayjs from 'dayjs'
 export const useMetadata = () => {
-  const metadataMap = useState<Record<string, DocumentMetadata>>('metadataMap', () => ({}))
   const ignoreList = [
     'dc:title',
     'dc:creator',
@@ -38,7 +37,6 @@ export const useMetadata = () => {
   }
   // get document type metadata
   const getDocumentMetadata = async (type: string, isInitOption = true): Promise<any> => {
-    if (metadataMap.value[type]) return metadataMap.value[type]
     try {
       // type = 'testOy'
       const { data }: any = await clientApi.api.getTypesMetadataGenerateJsonSchemaDocpaltypename(type, {
@@ -46,9 +44,7 @@ export const useMetadata = () => {
       })
       console.log('data', data)
       const metadataSchema: any = data.properties || {}
-      metadataMap.value[type] = await initMetadataVformOptions(metadataSchema, isInitOption)
-      console.log('metadataMap.value[type]', metadataMap.value[type])
-      return metadataMap.value[type]
+      return  await initMetadataVformOptions(metadataSchema, isInitOption)
     } catch (error) {
       return null
     }
