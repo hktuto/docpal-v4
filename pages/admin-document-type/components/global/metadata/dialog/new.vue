@@ -111,7 +111,10 @@ async function handleCreate() {
           })
         )
         close()
-        emits('reload', result)
+        // wait 1 second to reload for backend delay 
+        setTimeout(() => {
+          emits('reload', result)
+        }, 1000)
       } else {
         ElMessage.error(
           t('meta.create_error', {
