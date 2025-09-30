@@ -2,12 +2,7 @@
   <div class="pageContainer--padding">
     <VxeGrid ref="tableRef" v-bind="tableConfig" v-on="tableEvent">
       <template #toolbar_buttons>
-        <ResponsiveFilter
-          ref="ResponsiveFilterRef"
-          inputKey="name"
-          @form-change="handleFilterFormChange"
-          inputPlaceHolder="workPanel_filter"
-        />
+        <ResponsiveFilter ref="ResponsiveFilterRef" inputKey="name" @form-change="handleFilterFormChange" inputPlaceHolder="workPanel_filter" />
         <el-button id="WorkPanel__CreateNewWorkPanel" type="primary" @click="handleCreate">
           {{ $t('workPanel_create') }}
         </el-button>
@@ -28,17 +23,9 @@ import { routePersonalDashboardDetail } from '~/utils/routerHelper'
 const routerProvider = inject(MenuRouterKey)
 const { t } = useI18n()
 let extraParams: any = {}
-const {
-  tableConfig,
-  tableEvent,
-  tableRef,
-  query,
-  reload,
-  cleanSelectedRows
-} = useVxeTable({
+const { tableConfig, tableEvent, tableRef, query, reload, cleanSelectedRows } = useVxeTable({
   id: 'personalDashboardManage',
-  api: (pageParams: any) =>
-    adminApi.api.postPersonalDashboard({ ...pageParams, ...extraParams }),
+  api: (pageParams: any) => adminApi.api.postPersonalDashboard({ ...pageParams, ...extraParams }),
   columns: [
     { field: 'name', title: 'workPanel_name', fixed: 'left' },
     { field: 'groupId', title: 'workPanel_accessUserGroup' },
@@ -99,18 +86,19 @@ function handleConfig(row: any) {
 }
 
 async function deleteItem(row) {
-  const action = await ElMessageBox.confirm(
-    `${t('workPanel_deleteMsg', { name: row.name })}`,
-    {
+  try {
+    const action = await ElMessageBox.confirm(`${t('workPanel_deleteMsg', { name: row.name })}`, {
       confirmButtonClass: 'el-button el-button--warning',
       dangerouslyUseHTMLString: true,
       confirmButtonText: t('common_confirmDelete')
-    }
-  )
-  if (action !== 'confirm') return
-  await adminApi.api.deletePersonalDashboardId(row.id)
-  routerProvider?.message.success(t('tip_deleteSuccessMsg', { modelName: t('adminMenu.workPanel'), name: row.name }))
-  query({})
+    })
+    if (action !== 'confirm') return
+    await adminApi.api.deletePersonalDashboardId(row.id)
+    routerProvider?.message.success(t('tip_deleteSuccessMsg', { modelName: t('adminMenu.workPanel'), name: row.name }))
+    query({})
+  } catch (error) {
+    console.log(error)
+  }
 }
 
 async function handleCreate() {
@@ -134,7 +122,10 @@ const ResponsiveFilterRef = ref()
 async function getFilter() {
   const data = [
     {
-      key: 'orderBy', label: 'tableHeader.sortBy', type: 'string', isMultiple: false,
+      key: 'orderBy',
+      label: 'tableHeader.sortBy',
+      type: 'string',
+      isMultiple: false,
       options: [
         { label: 'workPanel_accessUserGroup', value: 'groupId' },
         { label: 'workflow_createDate', value: 'createdDate' },
@@ -142,7 +133,10 @@ async function getFilter() {
       ]
     },
     {
-      key: 'isDesc', label: 'tableHeader.sortOrder', type: 'string', isMultiple: false,
+      key: 'isDesc',
+      label: 'tableHeader.sortOrder',
+      type: 'string',
+      isMultiple: false,
       options: [
         { label: 'tableHeader.asc', value: false },
         { label: 'tableHeader.desc', value: true }

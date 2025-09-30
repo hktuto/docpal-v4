@@ -56,7 +56,7 @@ function handleOpen(setting) {
 }
 
 async function handleDelete() {
-  const action = await ElMessageBox.confirm(`${t("msg_confirmWhetherToDelete")}`);
+  const action = await ElMessageBox.confirm(`${t("msg_confirmWhetherToDelete")}`).catch(action => action)
   if (action !== "confirm") return;
   emits("delete");
   state.visible = false;

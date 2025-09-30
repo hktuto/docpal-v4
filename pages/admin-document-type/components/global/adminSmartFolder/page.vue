@@ -2,12 +2,7 @@
   <div class="pageContainer--padding">
     <VxeGrid ref="tableRef" v-bind="tableConfig" v-on="tableEvent">
       <template #toolbar_buttons>
-        <ResponsiveFilter
-          ref="ResponsiveFilterRef"
-          @form-change="handleFilterFormChange"
-          inputKey="name"
-          inputPlaceHolder="doc_typeSmartFolderFilter"
-        />
+        <ResponsiveFilter ref="ResponsiveFilterRef" @form-change="handleFilterFormChange" inputKey="name" inputPlaceHolder="doc_typeSmartFolderFilter" />
         <el-button id="SmartFolderSetting__CreateNewSmartFolder" type="primary" @click="handleCreate()">
           {{ $t('doc_typeSmartFolderCreateFolder') }}
         </el-button>
@@ -97,17 +92,19 @@ function handleCreate(setting?: any) {
 }
 
 async function handleDelete(id: string) {
-  const action = await ElMessageBox.confirm(`${t('doc_typeSmartFolderDeletedMsg')}`,
-    {
+  try {
+    const action = await ElMessageBox.confirm(`${t('doc_typeSmartFolderDeletedMsg')}`, {
       confirmButtonClass: 'el-button el-button--warning',
       dangerouslyUseHTMLString: true,
       confirmButtonText: t('common_confirmDelete')
-    }
-  )
-  if (action !== 'confirm') return
-  await adminApi.api.deleteNuxeoSfolderId(id)
-  routerProvider?.message.success(t('tip_deleteSuccessMsg', { modelName: t('file_smartFolder'), name: null }))
-  query()
+    })
+    if (action !== 'confirm') return
+    await adminApi.api.deleteNuxeoSfolderId(id)
+    routerProvider?.message.success(t('tip_deleteSuccessMsg', { modelName: t('file_smartFolder'), name: null }))
+    query()
+  } catch (error) {
+    console.log(error)
+  }
 }
 
 function handleFilterFormChange(formModel: any) {

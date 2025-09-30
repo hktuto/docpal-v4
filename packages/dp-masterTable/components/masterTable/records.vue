@@ -237,14 +237,18 @@ const { tableConfig, tableEvent, tableRef, reload, query, cleanSelectedRows } = 
 })
 
 async function handleDelete(row: any) {
-  const action = await ElMessageBox.confirm(`${t('msg_confirmWhetherToDelete')}`)
-  if (action !== 'confirm') return
-  const result = await globalApi.api.deleteMasterTablesIdRecord(props.tableId, { recordId: row.id }, {})
-  if (!result) {
-    routerProvider?.message.error(t('dpTip.deleteFailed'))
-    return
+  try {
+    const action = await ElMessageBox.confirm(`${t('msg_confirmWhetherToDelete')}`)
+    if (action !== 'confirm') return
+    const result = await globalApi.api.deleteMasterTablesIdRecord(props.tableId, { recordId: row.id }, {})
+    if (!result) {
+      routerProvider?.message.error(t('dpTip.deleteFailed'))
+      return
+    }
+    query()
+  } catch (error) {
+    console.log(error)
   }
-  query()
 }
 
 const BatchDialogRef = ref()
@@ -367,22 +371,26 @@ async function initTableColumns(fields: any) {
 }
 
 async function handleDeleteSelected() {
-  const action = await ElMessageBox.confirm(t('masterTable_deleteSelectedMsg', { name: props.permission.name }), {
-    confirmButtonClass: 'el-button el-button--warning',
-    confirmButtonText: t('common_confirmDelete'),
-    dangerouslyUseHTMLString: true
-  })
-  if (action !== 'confirm') return
-  const ids = state.selectList.map((item: any) => item.id)
-  await globalApi.api.postMasterTablesBatchDelete({
-    tableId: props.tableId,
-    recordIds: ids
-  })
-  ElMessage.success(t('masterTable_deleteSelectedSuccessMsg', { name: props.permission.name }))
-  cleanSelectedRows()
-  state.extraParams = {}
-  if (ids.length === tableConfig.data.length) query()
-  else reload()
+  try {
+    const action = await ElMessageBox.confirm(t('masterTable_deleteSelectedMsg', { name: props.permission.name }), {
+      confirmButtonClass: 'el-button el-button--warning',
+      confirmButtonText: t('common_confirmDelete'),
+      dangerouslyUseHTMLString: true
+    })
+    if (action !== 'confirm') return
+    const ids = state.selectList.map((item: any) => item.id)
+    await globalApi.api.postMasterTablesBatchDelete({
+      tableId: props.tableId,
+      recordIds: ids
+    })
+    ElMessage.success(t('masterTable_deleteSelectedSuccessMsg', { name: props.permission.name }))
+    cleanSelectedRows()
+    state.extraParams = {}
+    if (ids.length === tableConfig.data.length) query()
+    else reload()
+  } catch (error) {
+    console.log(error)
+  }
 }
 
 async function getFilter() {

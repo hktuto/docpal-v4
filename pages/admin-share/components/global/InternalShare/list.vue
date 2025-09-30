@@ -78,16 +78,20 @@ function initFilter() {
 }
 
 async function deleteAction(row: any) {
-  const action = await ElMessageBox.confirm(t('tip_deleteMsg', { modelName: t('share_internalShareLink'), name: null }), {
-    confirmButtonClass: 'el-button el-button--warning',
-    confirmButtonText: t('common_confirmDelete')
-  })
-  if (action !== 'confirm') return
-  // param.push(...row.detailIds.split(','))
-  await adminApi.api.deleteInternalshare({ internalShareId: row.internalShareId })
-  routerProvider?.message.success(t('tip_deleteSuccessMsg', { modelName: t('share_internalShareLink'), name: null }))
-  tableRef.value?.reload()
-  return
+  try {
+    const action = await ElMessageBox.confirm(t('tip_deleteMsg', { modelName: t('share_internalShareLink'), name: null }), {
+      confirmButtonClass: 'el-button el-button--warning',
+      confirmButtonText: t('common_confirmDelete')
+    })
+    if (action !== 'confirm') return
+    // param.push(...row.detailIds.split(','))
+    await adminApi.api.deleteInternalshare({ internalShareId: row.internalShareId })
+    routerProvider?.message.success(t('tip_deleteSuccessMsg', { modelName: t('share_internalShareLink'), name: null }))
+    tableRef.value?.reload()
+    return
+  } catch (error) {
+    console.log(error)
+  }
 }
 async function getListApi(params: any) {
   let filter: any = undefined

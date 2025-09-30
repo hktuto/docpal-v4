@@ -172,9 +172,9 @@ async function handleDblclick(row) {
 }
 
 async function handleDelete(row) {
-  const action = await ElMessageBox.confirm(`${t('msg_confirmWhetherToDelete')}`)
-  if (action !== 'confirm') return
   try {
+    const action = await ElMessageBox.confirm(`${t('msg_confirmWhetherToDelete')}`)
+    if (action !== 'confirm') return
     state.loading = true
     await adminApi.api.deleteCaseDashboardId(row.id)
     reload()

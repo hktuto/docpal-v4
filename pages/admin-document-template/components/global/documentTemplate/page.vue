@@ -14,9 +14,9 @@ if (!routerProvider) {
 }
 
 const props = defineProps<{
-  pageNum: number,
-  pageSize: number,
-  orderBy: string,
+  pageNum: number
+  pageSize: number
+  orderBy: string
   isDesc: boolean
   filters?: any
 }>()
@@ -83,7 +83,6 @@ async function handleReplace(row: any) {
   TemplateReplaceDialogRef.value.handleOpen(row)
 }
 
-
 function officeUrl(docId: string, token: string) {
   let host = window.location.host.replace('admin.', '')
   if (!host.includes('localhost')) {
@@ -106,16 +105,20 @@ function handleEditInfo(row: any) {
 }
 
 async function handleDelete(row: any) {
-  const action = await ElMessageBox.confirm(`${t('documentTemplate_deleteMsg')}`, {
-    confirmButtonClass: 'el-button el-button--warning',
-    dangerouslyUseHTMLString: true,
-    confirmButtonText: t('common_confirmDelete')
-  })
-  if (action !== 'confirm') return
-  await adminApi.api.deleteTemplateDocumentId(row.id)
-  routerProvider?.message.success(t('tip_deleteSuccessMsg', { modelName: t('adminMenu.template'), name: null }))
+  try {
+    const action = await ElMessageBox.confirm(`${t('documentTemplate_deleteMsg')}`, {
+      confirmButtonClass: 'el-button el-button--warning',
+      dangerouslyUseHTMLString: true,
+      confirmButtonText: t('common_confirmDelete')
+    })
+    if (action !== 'confirm') return
+    await adminApi.api.deleteTemplateDocumentId(row.id)
+    routerProvider?.message.success(t('tip_deleteSuccessMsg', { modelName: t('adminMenu.template'), name: null }))
 
-  tableRef.value?.reload()
+    tableRef.value?.reload()
+  } catch (error) {
+    console.log(error)
+  }
 }
 
 async function handleDownload(row: any) {
@@ -131,13 +134,16 @@ async function handleDownload(row: any) {
     position: 'bottom-right'
   })
   try {
-    const blob = await adminApi.api.postNuxeoDocumentDownload({ idOrPath: row.documentId }, {
-      format: 'blob',
-      onDownloadProgress: (e: any) => {
-        const el = document.getElementById(id)
-        if (el) el.innerHTML = Math.round((e.loaded / e.total) * 100) + '%'
+    const blob = await adminApi.api.postNuxeoDocumentDownload(
+      { idOrPath: row.documentId },
+      {
+        format: 'blob',
+        onDownloadProgress: (e: any) => {
+          const el = document.getElementById(id)
+          if (el) el.innerHTML = Math.round((e.loaded / e.total) * 100) + '%'
+        }
       }
-    })
+    )
     await downloadBlob(blob, row.name)
   } catch (error) {
     routerProvider?.message.error(t('download_noFile') as string)
@@ -150,7 +156,7 @@ provide(DocumentTemplateProviderKey, {
   getListApi: async (params: any) => {
     let filters: any = undefined
     if (filterFormdata.value) {
-      Object.keys(filterFormdata.value).forEach(key => {
+      Object.keys(filterFormdata.value).forEach((key) => {
         if (filterFormdata.value[key]) params[key] = filterFormdata.value[key]
       })
       filters = { ...filterFormdata.value }
@@ -181,7 +187,6 @@ provide(DocumentTemplateProviderKey, {
     return { visible: true, disabled: false }
   }
 })
-
 </script>
 
 <template>
@@ -189,10 +194,7 @@ provide(DocumentTemplateProviderKey, {
     <DocumentTemplateListTable ref="tableRef" v-bind="props">
       <template #toolbar_buttons>
         <div class="actionsContainer">
-          <ResponsiveFilter ref="ResponsiveFilterRef"
-                            @form-change="handleFilterFormChange"
-                            inputKey="name"
-                            inputPlaceHolder="documentTemplate_Filter" />
+          <ResponsiveFilter ref="ResponsiveFilterRef" @form-change="handleFilterFormChange" inputKey="name" inputPlaceHolder="documentTemplate_Filter" />
           <div class="button-add">
             <el-button id="DocumentTemplate__CreateNewDocumentTemplate" type="primary" @click="handleAdd">
               {{ $t('documentTemplate_Create') }}
@@ -200,12 +202,10 @@ provide(DocumentTemplateProviderKey, {
           </div>
         </div>
       </template>
-
     </DocumentTemplateListTable>
     <TemplateAddStep1Dialog ref="TemplateAddStep1DialogRef" @update="tableRef?.reload"></TemplateAddStep1Dialog>
     <TemplateReplaceDialog ref="TemplateReplaceDialogRef" @refresh="tableRef?.reload" />
   </div>
-
 </template>
 
 <style lang="scss" scoped>
@@ -217,5 +217,4 @@ provide(DocumentTemplateProviderKey, {
 :deep(.el-input) {
   width: 250px;
 }
-
 </style>

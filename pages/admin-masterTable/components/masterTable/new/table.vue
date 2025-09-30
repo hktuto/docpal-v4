@@ -176,7 +176,7 @@ function checkDisabledUniqueAndOpenSchemaDialog(row: any, edit: boolean = false)
 }
 
 async function handleDelete(row: any) {
-  const action = await ElMessageBox.confirm(t('msg_confirmWhetherToDelete'))
+  const action = await ElMessageBox.confirm(t('msg_confirmWhetherToDelete')).catch(action => action)
   if (action !== 'confirm') return
   const index = tableConfig.data.findIndex((item: any) => item.fieldName === row.fieldName)
   tableConfig.data.splice(index, 1)

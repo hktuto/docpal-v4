@@ -12,15 +12,13 @@
           {{ $t('filePolicies_RetentionPolicyCreate') }}
         </el-button>
       </template>
-      <template #documentType="{row, index}">
+      <template #documentType="{ row, index }">
         <el-tag class="el-icon--left table-tag" v-for="item in row.triggers">{{ item.documentType }}</el-tag>
       </template>
-      <template #periodNum="{row, index}">
-        {{ row.periodNum }} {{ calDate(row.periodUnit) }}
-      </template>
+      <template #periodNum="{ row, index }"> {{ row.periodNum }} {{ calDate(row.periodUnit) }} </template>
       <template #isAuto="{ row }">
         <el-icon v-if="row.isAuto" style="--color: var(--app-primary-color)"><Select /></el-icon>
-        <el-icon v-else style="--color: #F56C6C">
+        <el-icon v-else style="--color: #f56c6c">
           <CloseBold />
         </el-icon>
       </template>
@@ -44,27 +42,21 @@ if (!routerProvider) {
 }
 const { t } = useI18n()
 let extraParams: any = {}
-const {
-  tableConfig,
-  tableEvent,
-  tableRef,
-  query,
-  reload,
-  cleanSelectedRows
-} = useVxeTable({
+const { tableConfig, tableEvent, tableRef, query, reload, cleanSelectedRows } = useVxeTable({
   id: 'a-retention',
-  api: (pageParams: any) =>
-    adminApi.api.postPolicyRetentionsPage({ ...pageParams, ...extraParams }),
+  api: (pageParams: any) => adminApi.api.postPolicyRetentionsPage({ ...pageParams, ...extraParams }),
   columns: [
     { field: 'policyName', title: 'hp.policyName', fixed: 'left' },
     {
-      field: 'documentType', title: 'docType_documentType',
+      field: 'documentType',
+      title: 'docType_documentType',
       slots: {
         default: 'documentType'
       }
     },
     {
-      field: 'periodNum', title: 'rp.period',
+      field: 'periodNum',
+      title: 'rp.period',
       slots: {
         default: 'periodNum'
       }
@@ -81,7 +73,9 @@ const {
       title: 'workflowEditor.approver'
     },
     {
-      field: 'isAuto', title: 'rp.isAuto', width: 200,
+      field: 'isAuto',
+      title: 'rp.isAuto',
+      width: 200,
       slots: {
         default: 'isAuto'
       }
@@ -168,31 +162,34 @@ function handleDblclick(row: any) {
 
 async function handleActive(row: any, isActive: 'A' | 'D') {
   try {
-    const result = await adminApi.api.patchPolicyRetentionsIdStatusStatus(row.id, isActive).then(res => res.data)
+    const result = await adminApi.api.patchPolicyRetentionsIdStatusStatus(row.id, isActive).then((res) => res.data)
     if (!!result) {
       row.status = isActive
       routerProvider?.message.success(t('dpMsg_success'))
     }
-  } catch (error) {
-
-  }
+  } catch (error) {}
 }
 
 // TODO
 async function deleteItem(id: number) {
-  const action = await ElMessageBox.confirm(`${t('filePolicies_RetentionPolicyDeletedMsg')}`,
-    {
+  try {
+    const action = await ElMessageBox.confirm(`${t('filePolicies_RetentionPolicyDeletedMsg')}`, {
       confirmButtonClass: 'el-button el-button--warning',
       dangerouslyUseHTMLString: true,
       confirmButtonText: t('common_confirmDelete')
     })
-  if (action !== 'confirm') return
-  await adminApi.api.deletePolicyRetentionsId(id)
-  query({})
-  routerProvider?.message.success(t('tip_deleteSuccessMsg', {
-    modelName: t('filePolicies_RetentionPolicy'),
-    name: null
-  }))
+    if (action !== 'confirm') return
+    await adminApi.api.deletePolicyRetentionsId(id)
+    query({})
+    routerProvider?.message.success(
+      t('tip_deleteSuccessMsg', {
+        modelName: t('filePolicies_RetentionPolicy'),
+        name: null
+      })
+    )
+  } catch (error) {
+    console.log(error)
+  }
 }
 
 function handleFilterFormChange(formModel: any) {
@@ -207,7 +204,7 @@ function handleAdd() {
 const ResponsiveFilterRef = ref()
 
 async function getFilter() {
-  let data: any = await adminApi.api.getPolicyRetentionsPageConditions().then(res => res.data)
+  let data: any = await adminApi.api.getPolicyRetentionsPageConditions().then((res) => res.data)
   data?.unshift(
     {
       key: 'orderBy',
@@ -258,7 +255,6 @@ function calDate(unit: string) {
 onMounted(() => {
   getFilter()
 })
-
 </script>
 <style lang="scss" scoped>
 :deep(.vxe-buttons--wrapper) {

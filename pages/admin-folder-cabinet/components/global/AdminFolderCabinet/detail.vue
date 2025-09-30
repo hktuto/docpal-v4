@@ -36,20 +36,20 @@ function handleAddChild(data: any, isFolder: boolean) {
   FolderCabinetAddChildDialogRef.value.handleOpen(data, data.children, isFolder)
 }
 async function handleDeleteChild(setting: any) {
-  const action = await ElMessageBox.confirm(`${t('msg_confirmWhetherToDelete')}`)
-  if (action !== 'confirm') return
-  console.log(action)
-  const noti = ElNotification({
-    title: t('dpTip_delete'),
-    icon: Loading,
-    dangerouslyUseHTMLString: true,
-    message: `<div title="${setting.label}">${setting.label}</div>`,
-    showClose: true,
-    customClass: 'loading-notification',
-    duration: 0,
-    position: 'bottom-right'
-  })
   try {
+    const action = await ElMessageBox.confirm(`${t('msg_confirmWhetherToDelete')}`)
+    if (action !== 'confirm') return
+    console.log(action)
+    const noti = ElNotification({
+      title: t('dpTip_delete'),
+      icon: Loading,
+      dangerouslyUseHTMLString: true,
+      message: `<div title="${setting.label}">${setting.label}</div>`,
+      showClose: true,
+      customClass: 'loading-notification',
+      duration: 0,
+      position: 'bottom-right'
+    })
     await adminApi.api.deleteCabinetId(setting.id)
     await getData()
     ElNotification({

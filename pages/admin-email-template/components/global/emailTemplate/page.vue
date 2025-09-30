@@ -2,12 +2,7 @@
   <div class="pageContainer--padding">
     <VxeGrid ref="tableRef" v-bind="tableConfig" v-on="tableEvent">
       <template #toolbar_buttons>
-        <ResponsiveFilter
-          ref="ResponsiveFilterRef"
-          inputKey="name"
-          @form-change="handleFilterFormChange"
-          inputPlaceHolder="emailContentTemplate_filter"
-        />
+        <ResponsiveFilter ref="ResponsiveFilterRef" inputKey="name" @form-change="handleFilterFormChange" inputPlaceHolder="emailContentTemplate_filter" />
         <div>
           <el-button id="EmailContentTemplate__EditEmailLayout" type="info" @click="handleEditEmailLayout">
             {{ $t('button.editEmailLayout') }}
@@ -35,14 +30,7 @@ if (!routerProvider) {
 }
 const { t } = useI18n()
 let extraParams: any = {}
-const {
-  tableConfig,
-  tableEvent,
-  tableRef,
-  query,
-  reload,
-  cleanSelectedRows
-} = useVxeTable({
+const { tableConfig, tableEvent, tableRef, query, reload, cleanSelectedRows } = useVxeTable({
   id: 'a-emailTemplate',
   api: (pageParams: any) => adminApi.api.postTemplateEmailTemplatePage({ ...pageParams, ...extraParams }),
   columns: [
@@ -85,28 +73,33 @@ function handleDblclick(row) {
 }
 
 function handleAdd() {
-  routerProvider?.navigateTo(routeEmailTemplateDetail({
-    label: 'new',
-    id: 'new'
-  }), false)
+  routerProvider?.navigateTo(
+    routeEmailTemplateDetail({
+      label: 'new',
+      id: 'new'
+    }),
+    false
+  )
 }
 
 interface Template {
-  id: string;
-  name: string;
+  id: string
+  name: string
 }
 
 async function handleDeleteTemplate(row: Template[]) {
-  const action = await ElMessageBox.confirm(
-    t('tip_deleteMsg', { modelName: t('Email.fields'), name: row.label }),
-    {
+  try {
+    const action = await ElMessageBox.confirm(t('tip_deleteMsg', { modelName: t('Email.fields'), name: row.label }), {
       confirmButtonClass: 'el-button el-button--warning',
       confirmButtonText: t('common_confirmDelete')
     })
-  if (action !== 'confirm') return
-  await adminApi.api.deleteTemplateEmailTemplateId(row.id)
-  routerProvider?.message.success(t('tip_deleteSuccessMsg', { modelName: t('Email.fields'), name: row.label }))
-  query({})
+    if (action !== 'confirm') return
+    await adminApi.api.deleteTemplateEmailTemplateId(row.id)
+    routerProvider?.message.success(t('tip_deleteSuccessMsg', { modelName: t('Email.fields'), name: row.label }))
+    query({})
+  } catch (error) {
+    console.log(error)
+  }
 }
 
 function handleFilterFormChange(formModel: any) {
@@ -119,7 +112,7 @@ function handleFilterFormChange(formModel: any) {
 const ResponsiveFilterRef = ref()
 
 async function getFilter() {
-  const layouts = await adminApi.api.getTemplateEmailLayoutAll().then(res => res.data)
+  const layouts = await adminApi.api.getTemplateEmailLayoutAll().then((res) => res.data)
   const filters = [
     {
       key: 'orderBy',
@@ -145,8 +138,10 @@ async function getFilter() {
       ]
     },
     {
-      key: 'emailLayoutIds', label: 'emailContentTemplate_layoutUsed', type: 'string',
-      options: layouts?.map(item => ({
+      key: 'emailLayoutIds',
+      label: 'emailContentTemplate_layoutUsed',
+      type: 'string',
+      options: layouts?.map((item) => ({
         value: item.id,
         label: item.name
       }))
@@ -173,7 +168,7 @@ onMounted(() => {
   width: 70%;
 }
 
-:deep(.vxe-buttons--wrapper ){
+:deep(.vxe-buttons--wrapper) {
   display: flex;
   justify-content: space-between;
 }
