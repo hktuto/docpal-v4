@@ -42,7 +42,7 @@ async function handleSubmit() {
       params.endDate = data.dateRange[1]
     }
     await adminApi.api.postNuxeoDocumentAclAdd(params)
-    ElMessage.success(t('tip_createdSuccessMsg', { modelName: t('accessControl_Local'), name: null }))
+    ElMessage.success(t('tip_createdMsg', { modelName: t('accessControl_Local'), name: null }))
     state.visible = false
     emits('refresh')
   } catch (error) {}
