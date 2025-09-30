@@ -166,12 +166,16 @@ async function handleRefresh() {
 }
 
 async function handleApprove(state: any, row: any) {
-  let msg = t('msg_confirmWhetherToExecuteCommand')
-  const command = state ? t('workflow_startAdhocWorkflow_approve') : t('workflow_startAdhocWorkflow_reject')
-  const action = await ElMessageBox.confirm(`${msg}: ${command}`)
-  if (action !== 'confirm') return
-  await clientApi.api.patchPolicyRetentionsIdStatusStatus(row.id, state)
-  reload()
+  try {
+    let msg = t('msg_confirmWhetherToExecuteCommand')
+    const command = state ? t('workflow_startAdhocWorkflow_approve') : t('workflow_startAdhocWorkflow_reject')
+    const action = await ElMessageBox.confirm(`${msg}: ${command}`)
+    if (action !== 'confirm') return
+    await clientApi.api.patchPolicyRetentionsIdStatusStatus(row.id, state)
+    reload()
+  } catch (error) {
+    console.log(error)
+  }
 }
 
 function handleDblclick(row: any) {
@@ -189,11 +193,15 @@ async function getEvents() {
   events.value = await clientApi.api.getPolicyRetentionsEvents().then((res) => res.data)
 }
 async function handleEvent(event: any, row: any) {
-  let msg = t('msg_confirmWhetherToExecuteCommand')
-  const action = await ElMessageBox.confirm(`${msg}: ${event.eventLabel}`)
-  if (action !== 'confirm') return
-  await clientApi.api.postPolicyRetentionsSubmitevent({ eventId: event.id, documentId: row.documentId })
-  reload()
+  try {
+    let msg = t('msg_confirmWhetherToExecuteCommand')
+    const action = await ElMessageBox.confirm(`${msg}: ${event.eventLabel}`)
+    if (action !== 'confirm') return
+    await clientApi.api.postPolicyRetentionsSubmitevent({ eventId: event.id, documentId: row.documentId })
+    reload()
+  } catch (error) {
+    console.log(error)
+  }
 }
 onMounted(() => {
   getFilter()

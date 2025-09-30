@@ -2,14 +2,8 @@
   <div class="pageContainer--padding">
     <VxeGrid ref="tableRef" v-bind="tableConfig" v-on="tableEvent">
       <template #toolbar_buttons>
-        <ResponsiveFilter
-          ref="ResponsiveFilterRef"
-          inputKey="label"
-          @form-change="handleFilterFormChange"
-          :inputPlaceHolder="$t('folder_cabinetFilterMsg')"
-        />
-        <el-button id="FolderCabinetSetting__CreateNewFolderCabinet" data-testid="folderCabinetConfig-new-button"
-                   type="primary" @click="handleInfo()">
+        <ResponsiveFilter ref="ResponsiveFilterRef" inputKey="label" @form-change="handleFilterFormChange" :inputPlaceHolder="$t('folder_cabinetFilterMsg')" />
+        <el-button id="FolderCabinetSetting__CreateNewFolderCabinet" data-testid="folderCabinetConfig-new-button" type="primary" @click="handleInfo()">
           {{ $t('folderCabinet.add') }}
         </el-button>
       </template>
@@ -41,29 +35,22 @@ function handleUpdateOrCreate({ edit, response }: any) {
   }
 }
 
-
-const {
-  tableConfig,
-  tableEvent,
-  tableRef,
-  query,
-  reload,
-  cleanSelectedRows
-} = useVxeTable({
+const { tableConfig, tableEvent, tableRef, query, reload, cleanSelectedRows } = useVxeTable({
   id: 'a-folder-cabinet',
-  api: (pageParams: any) =>
-    adminApi.api.postCabinetTemplatePage({ ...pageParams, ...extraParams }),
+  api: (pageParams: any) => adminApi.api.postCabinetTemplatePage({ ...pageParams, ...extraParams }),
   columns: [
     { field: 'label', title: 'folderCabinet.name', fixed: 'left' },
     {
-      field: 'documentPath', title: 'folderCabinet.location'
+      field: 'documentPath',
+      title: 'folderCabinet.location'
     },
     {
-      field: 'binds', title: 'folder_cabinetUserOrGroup',
+      field: 'binds',
+      title: 'folder_cabinetUserOrGroup',
       formatter({ row }: any) {
         if (!row.binds) return ''
         let list = []
-        row.binds.forEach(bind => {
+        row.binds.forEach((bind) => {
           list.push(bind.label || bind.bindId)
         })
         return list.join(', ')
@@ -125,20 +112,16 @@ function handleInfo(row?: any) {
 }
 
 async function handleDelete(row: any) {
-  const action = await ElMessageBox.confirm(
-    t('tip_deleteMsg', { modelName: t('menus_folderCabinet'), name: null }),
-    {
+  try {
+    const action = await ElMessageBox.confirm(t('tip_deleteMsg', { modelName: t('menus_folderCabinet'), name: null }), {
       confirmButtonClass: 'el-button el-button--warning',
       confirmButtonText: t('common_confirmDelete')
-    }
-  )
-  if (action !== 'confirm') return
-  try {
+    })
+    if (action !== 'confirm') return
     const result = await adminApi.api.deleteCabinetId(row.id).then((res) => res.data)
     routerProvider?.message.success(t('tip_deleteSuccessMsg', { modelName: t('menus_folderCabinet'), name: null }))
     query()
-  } catch (error) {
-  }
+  } catch (error) {}
 }
 
 function handleFilterFormChange(formModel: any) {
@@ -146,10 +129,7 @@ function handleFilterFormChange(formModel: any) {
   if (!!formModel.isDesc) formModel.isDesc = formModel.isDesc !== 'false'
   let filterParams: any = {
     label: formModel.label === '' ? undefined : formModel.label,
-    orderBy:
-      formModel.orderBy === undefined || formModel.orderBy === ''
-        ? 'createdDate'
-        : formModel.orderBy
+    orderBy: formModel.orderBy === undefined || formModel.orderBy === '' ? 'createdDate' : formModel.orderBy
   }
   filterParams.isDesc = formModel.isDesc
   extraParams = filterParams
@@ -184,8 +164,7 @@ async function initFilter() {
       }
     ]
     ResponsiveFilterRef.value.init(data)
-  } catch (error) {
-  }
+  } catch (error) {}
 }
 
 onMounted(() => {
@@ -193,7 +172,7 @@ onMounted(() => {
 })
 </script>
 <style lang="scss" scoped>
-:deep(.vxe-buttons--wrapper ){
+:deep(.vxe-buttons--wrapper) {
   width: 100%;
   justify-content: space-between;
 

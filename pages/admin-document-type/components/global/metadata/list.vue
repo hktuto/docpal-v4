@@ -3,10 +3,8 @@
     <VxeGrid ref="tableRef" v-bind="tableConfig" v-on="tableEvent">
       <template #toolbar_buttons>
         <div class="actionsButtonsContainer">
-          <ResponsiveFilter ref="ResponsiveFilterRef" @form-change="handleFilterFormChange" inputKey="metadataName"
-                            inputPlaceHolder="documentType_filter" />
+          <ResponsiveFilter ref="ResponsiveFilterRef" @form-change="handleFilterFormChange" inputKey="metadataName" inputPlaceHolder="documentType_filter" />
           <div class="btns">
-
             <el-button id="DocumentType__CreateNewDocumentType__Create" type="primary" @click="handleCreate">
               {{ t('metadata.new') }}
             </el-button>
@@ -25,7 +23,6 @@
     <MetadataDialogDuplicate ref="metadataDialogDuplicateRef" @reload="reload" />
   </div>
 </template>
-
 
 <script lang="ts" setup>
 import { adminApi } from 'api'
@@ -121,20 +118,22 @@ async function handleExport() {
     background: 'rgba(0, 0, 0, 0.7)'
   })
   console.log('export')
-  const result = await adminApi.api.postDocpaltypeSettingsMetadataV2ExportMetadataCvs({
-    pageNum: 0,
-    pageSize: 1000
-  }, {
-    format: 'blob',
-    timeout: 0
-  })
+  const result = await adminApi.api.postDocpaltypeSettingsMetadataV2ExportMetadataCvs(
+    {
+      pageNum: 0,
+      pageSize: 1000
+    },
+    {
+      format: 'blob',
+      timeout: 0
+    }
+  )
   console.log('result', result)
   downloadBlob(result, 'metadata.xlsx', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
   exportLoading.close()
 }
 
 const handleEdit = (row: any) => {
-
   // remove any additional field in row
   const editForm = {
     id: row.id,
@@ -162,22 +161,23 @@ const handleDuplicate = (row: any) => {
 }
 
 const handleRemove = async (row: any) => {
-  const action = await ElMessageBox.confirm(
-    t('tip_deleteMsg', { modelName: 'MetaData', name: row.name }),
-    {
+  try {
+    const action = await ElMessageBox.confirm(t('tip_deleteMsg', { modelName: 'MetaData', name: row.name }), {
       confirmButtonClass: 'el-button el-button--warning',
       confirmButtonText: t('common_confirmDelete')
-    }
-  )
-  console.log('action', action)
-  if (action !== 'confirm') return
+    })
+    console.log('action', action)
+    if (action !== 'confirm') return
 
-  const result = await adminApi.api.deleteDocpaltypeSettingsMetadataV2DeleteMetadataid(row.id)
-  if (result) {
-    ElMessage.success(t('metadata.remove_success'))
-    reload()
-  } else {
-    ElMessage.error(t('metadata.remove_error'))
+    const result = await adminApi.api.deleteDocpaltypeSettingsMetadataV2DeleteMetadataid(row.id)
+    if (result) {
+      ElMessage.success(t('metadata.remove_success'))
+      reload()
+    } else {
+      ElMessage.error(t('metadata.remove_error'))
+    }
+  } catch (error) {
+    console.log(error)
   }
 }
 </script>

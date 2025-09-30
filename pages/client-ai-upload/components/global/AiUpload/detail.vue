@@ -151,8 +151,6 @@ function reCalcuate() {
   }
 }
 
-
-
 function CalMax() {
   const el = document.getElementById('panesContainer')
   if (!el) return 10
@@ -238,37 +236,45 @@ function applyAllAi() {
 }
 
 async function handleDeleteFile(data) {
-  const action = await ElMessageBox.confirm(`${t('msg_confirmWhetherToDelete')}`, {
-    confirmButtonText: t('dpButtom_confirm'),
-    cancelButtonText: t('dpButtom_cancel')
-  }).catch((action) => {
-    return action
-  })
-  if (action !== 'confirm') return
-  await clientApi.api.deleteNuxeoDocumentTempfileId(data.id)
-  treeRef.value.remove(data)
+  try {
+    const action = await ElMessageBox.confirm(`${t('msg_confirmWhetherToDelete')}`, {
+      confirmButtonText: t('dpButtom_confirm'),
+      cancelButtonText: t('dpButtom_cancel')
+    }).catch((action) => {
+      return action
+    })
+    if (action !== 'confirm') return
+    await clientApi.api.deleteNuxeoDocumentTempfileId(data.id)
+    treeRef.value.remove(data)
+  } catch (error) {
+    console.log(error)
+  }
 }
 
 async function handleDiscard() {
-  const action = await ElMessageBox.confirm(`${t('msg_confirmWhetherToCancel')}`, {
-    confirmButtonText: t('dpButtom_confirm'),
-    cancelButtonText: t('common_close')
-  }).catch((action) => {
-    return action
-  })
-  if (action !== 'confirm') return
-  const formData = new FormData()
-  formData.append('userId', userId.value)
-  formData.append('uploadId', id)
-  await clientApi.instance.post(`/nuxeo/document/batchCancel`, formData, {
-    headers: {
-      'Content-Type': 'multipart/form-data'
-    }
-  })
-  const item = goAiUploadDetail()
-  routerProvider?.navigateTo(item)
-  // await clientApi.api.postNuxeoDocumentBatchcancel(formData)
-  // router.push(state.backPath)
+  try {
+    const action = await ElMessageBox.confirm(`${t('msg_confirmWhetherToCancel')}`, {
+      confirmButtonText: t('dpButtom_confirm'),
+      cancelButtonText: t('common_close')
+    }).catch((action) => {
+      return action
+    })
+    if (action !== 'confirm') return
+    const formData = new FormData()
+    formData.append('userId', userId.value)
+    formData.append('uploadId', id)
+    await clientApi.instance.post(`/nuxeo/document/batchCancel`, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    })
+    const item = goAiUploadDetail()
+    routerProvider?.navigateTo(item)
+    // await clientApi.api.postNuxeoDocumentBatchcancel(formData)
+    // router.push(state.backPath)
+  } catch (error) {
+    console.log(error)
+  }
 }
 
 function handleClose() {
@@ -422,14 +428,14 @@ onMounted(async () => {
 </script>
 
 <style lang="scss" scoped>
-.iconContainer{
-    width: 28px;
-    height: 28px;
-    position: relative;
-    img{
-        width: 100%;
-        height: 100%;
-    }
+.iconContainer {
+  width: 28px;
+  height: 28px;
+  position: relative;
+  img {
+    width: 100%;
+    height: 100%;
+  }
 }
 .pageContainer {
   height: 100%;
@@ -447,25 +453,25 @@ onMounted(async () => {
   gap: 0;
   :deep(.splitpanes__splitter) {
     width: 2px;
-      background-color: var(--app-grey-050);
-      position: relative;
+    background-color: var(--app-grey-050);
+    position: relative;
+
+    &:before {
+      content: '';
+      position: absolute;
+      left: 0;
+      transition: opacity 0.4s;
+      opacity: 0;
+      z-index: 1;
+    }
+
+    &:hover {
+      background-color: var(--primary-color);
 
       &:before {
-        content: '';
-        position: absolute;
-        left: 0;
-        transition: opacity 0.4s;
-        opacity: 0;
-        z-index: 1;
+        opacity: 1;
       }
-
-      &:hover {
-        background-color: var(--primary-color);
-
-        &:before {
-          opacity: 1;
-        }
-      }
+    }
   }
   :deep(.splitpanes--vertical > .splitpanes__splitter:before) {
     top: 50%;
@@ -483,11 +489,8 @@ onMounted(async () => {
     padding: var(--app-space-xs) calc(var(--app-space-xs) * 2);
   }
   :deep(.splitpanes.default-theme .splitpanes__pane) {
-      background-color: var(--app-grey-0000);
-    }
-
-
-
+    background-color: var(--app-grey-0000);
+  }
 }
 
 .main-left {
@@ -518,7 +521,7 @@ onMounted(async () => {
   gap: var(--app-space-xs);
   overflow: hidden;
   position: relative;
-  .fileName{
+  .fileName {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;

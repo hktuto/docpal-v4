@@ -4,35 +4,32 @@
       <div class="flex-x-between">
         <h3>{{ $t('user_info') }}</h3>
         <div class="flex-x-end" v-if="!isLdapMode">
-          <el-tooltip
-            class="box-item"
-            effect="dark"
-            :content="$t('user_editUser')"
-            placement="top"
-          >
-            <Icon id="UserList__Info__Edit" name="material-symbols:edit-square" class="normal cursor-pointer"
-                  style="width: 20px; height: 20px;"
-                  @click="handleEdit"></Icon>
+          <el-tooltip class="box-item" effect="dark" :content="$t('user_editUser')" placement="top">
+            <Icon
+              id="UserList__Info__Edit"
+              name="material-symbols:edit-square"
+              class="normal cursor-pointer"
+              style="width: 20px; height: 20px"
+              @click="handleEdit"
+            ></Icon>
           </el-tooltip>
-          <el-tooltip
-            class="box-item"
-            effect="dark"
-            :content="$t('user_editPassword')"
-            placement="top"
-          >
-            <Icon id="UserList__Info__ChangePassword" name="mynaui:lock-password-solid" class="normal cursor-pointer"
-                  style="width: 20px; height: 20px;" @click="openDialog"></Icon>
+          <el-tooltip class="box-item" effect="dark" :content="$t('user_editPassword')" placement="top">
+            <Icon
+              id="UserList__Info__ChangePassword"
+              name="mynaui:lock-password-solid"
+              class="normal cursor-pointer"
+              style="width: 20px; height: 20px"
+              @click="openDialog"
+            ></Icon>
           </el-tooltip>
-          <el-tooltip
-            class="box-item"
-            effect="dark"
-            :content="$t('user_deleteUser')"
-            placement="top"
-          >
-            <Icon id="UserList__Info__DeleteUser" name="material-symbols:delete-rounded"
-                  style="width: 20px; height: 20px;"
-                  class="normal cursor-pointer"
-                  @click="handleDelete"></Icon>
+          <el-tooltip class="box-item" effect="dark" :content="$t('user_deleteUser')" placement="top">
+            <Icon
+              id="UserList__Info__DeleteUser"
+              name="material-symbols:delete-rounded"
+              style="width: 20px; height: 20px"
+              class="normal cursor-pointer"
+              @click="handleDelete"
+            ></Icon>
           </el-tooltip>
         </div>
       </div>
@@ -56,19 +53,22 @@
     <div class="row">
       <div class="rowTitle">{{ $t('user_status') }}</div>
       <div class="rowValue">
-        <el-switch v-model="user.status"
-                   :inactive-text="t('actions.inactive')"
-                   :active-text="t('user_active')"
-                   active-value="A" inactive-value="D"
-                   :loading="user.loading" :disabled="user.loading"
-                   @change="(value) => handleSetStatus(value, user)" />
+        <el-switch
+          v-model="user.status"
+          :inactive-text="t('actions.inactive')"
+          :active-text="t('user_active')"
+          active-value="A"
+          inactive-value="D"
+          :loading="user.loading"
+          :disabled="user.loading"
+          @change="(value) => handleSetStatus(value, user)"
+        />
       </div>
     </div>
     <UserEditDialog ref="UserEditDialogRef" :user="user" @refresh="emits('refresh')"></UserEditDialog>
     <UserPasswordDialog ref="UserPasswordDialogRef" :user="user"></UserPasswordDialog>
   </el-card>
 </template>
-
 
 <script lang="ts" setup>
 import { ElMessageBox } from 'element-plus'
@@ -79,27 +79,26 @@ const { t } = useI18n()
 const userProviderDetail = inject(userProviderDetailKey)
 const routerProvider = inject(MenuRouterKey)
 const props = defineProps<{
-  user: UserDTO,
-  isLdapMode: boolean,
+  user: UserDTO
+  isLdapMode: boolean
 }>()
-const emits = defineEmits([
-  'refresh'
-])
+const emits = defineEmits(['refresh'])
 
 async function handleDelete() {
-  const action = await ElMessageBox.confirm(
-    t('userTip.confirmWhetherToDelete', { username: props.user.firstName }),
-    {
+  try {
+    const action = await ElMessageBox.confirm(t('userTip.confirmWhetherToDelete', { username: props.user.firstName }), {
       confirmButtonClass: 'el-button el-button--warning',
       confirmButtonText: t('common_confirmDelete'),
       dangerouslyUseHTMLString: true
-    }
-  )
+    })
 
-  if (action !== 'confirm') return
-  const res = await userProviderDetail?.BatchDeleteUserApi({ userIds: [props.user.userId] })
-  routerProvider?.message.success(t('tip_deleteSuccessMsg', { modelName: t('User'), name: props.user.firstName }))
-  if (!!res) userProviderDetail?.openUserList()
+    if (action !== 'confirm') return
+    const res = await userProviderDetail?.BatchDeleteUserApi({ userIds: [props.user.userId] })
+    routerProvider?.message.success(t('tip_deleteSuccessMsg', { modelName: t('User'), name: props.user.firstName }))
+    if (!!res) userProviderDetail?.openUserList()
+  } catch (error) {
+    console.log(error)
+  }
 }
 
 const UserEditDialogRef = ref()
@@ -125,7 +124,6 @@ async function handleSetStatus(status, row) {
   }
   row.loading = false
 }
-
 </script>
 
 <style lang="scss" scoped>

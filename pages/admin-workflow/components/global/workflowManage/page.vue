@@ -2,13 +2,14 @@
   <div class="pageContainer--padding">
     <VxeGrid ref="tableRef" v-bind="tableConfig" v-on="tableEvent">
       <template #toolbar_buttons>
-        <ResponsiveFilter
-          ref="ResponsiveFilterRef"
-          @form-change="handleFilterFormChange"
-        />
-        <el-button :loading="state.loading" id="ActiveWorkflowManagement__Delete" v-show="state.selectedRows.length > 0"
-                   type="danger"
-                   @click="handleDeleteSelected()">
+        <ResponsiveFilter ref="ResponsiveFilterRef" @form-change="handleFilterFormChange" />
+        <el-button
+          :loading="state.loading"
+          id="ActiveWorkflowManagement__Delete"
+          v-show="state.selectedRows.length > 0"
+          type="danger"
+          @click="handleDeleteSelected()"
+        >
           {{ $t('common_delete') }}
         </el-button>
       </template>
@@ -27,14 +28,7 @@ const state = reactive<any>({
   selectedRows: [],
   loading: false
 })
-const {
-  tableConfig,
-  tableEvent,
-  tableRef,
-  query,
-  reload,
-  cleanSelectedRows
-} = useVxeTable({
+const { tableConfig, tableEvent, tableRef, query, reload, cleanSelectedRows } = useVxeTable({
   id: 'a-workflow-manage',
   api: async (pageParams: any) => {
     state.selectedRows = []
@@ -93,37 +87,38 @@ const {
 })
 
 async function handleDelete(row: any) {
-  const action = await ElMessageBox.confirm(`${t('workflow_ManageDeleteWorkflowMsg')}`,
-    {
+  try {
+    const action = await ElMessageBox.confirm(`${t('workflow_ManageDeleteWorkflowMsg')}`, {
       confirmButtonClass: 'el-button el-button--warning',
       dangerouslyUseHTMLString: true,
       confirmButtonText: t('common_confirmDelete')
     })
-  if (action !== 'confirm') return
-  await adminApi.api.deleteWorkflowProcess({ processInstanceId: row.instanceId })
-  routerProvider?.message.success(t('tip_deleteSuccessMsg', { modelName: t('workflow_WorkflowTasks'), name: null }))
-  query({})
+    if (action !== 'confirm') return
+    await adminApi.api.deleteWorkflowProcess({ processInstanceId: row.instanceId })
+    routerProvider?.message.success(t('tip_deleteSuccessMsg', { modelName: t('workflow_WorkflowTasks'), name: null }))
+    query({})
+  } catch (error) {
+    console.log(error)
+  }
 }
 
 async function handleDeleteSelected() {
-  const action = await ElMessageBox.confirm(`${t('workflow_ManageDeleteWorkflowMsg')}`,
-    {
+  try {
+    const action = await ElMessageBox.confirm(`${t('workflow_ManageDeleteWorkflowMsg')}`, {
       confirmButtonClass: 'el-button el-button--warning',
       dangerouslyUseHTMLString: true,
       confirmButtonText: t('common_confirmDelete')
     })
-  if (action !== 'confirm') return
-  try {
+    if (action !== 'confirm') return
     state.loading = true
     const pList: any = []
-    state.selectedRows.forEach((s: any) => pList.push(adminApi.api.deleteWorkflowProcess({ processInstanceId: s.instanceId }).then(res => res.data)))
+    state.selectedRows.forEach((s: any) => pList.push(adminApi.api.deleteWorkflowProcess({ processInstanceId: s.instanceId }).then((res) => res.data)))
 
     await Promise.all(pList)
 
     routerProvider?.message.success(t('tip_deleteSuccessMsg', { modelName: t('workflow_WorkflowTasks'), name: null }))
     query({})
   } catch (error) {
-
   } finally {
     state.selectedRows = []
     state.loading = false
@@ -178,7 +173,6 @@ function getFilter() {
 onMounted(() => {
   // getFilter()
 })
-
 </script>
 <style lang="scss" scoped>
 :deep(.vxe-buttons--wrapper) {

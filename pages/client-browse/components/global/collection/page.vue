@@ -202,16 +202,20 @@ function handleTabClick(row: any) {
 }
 
 async function handleDelete(row: any) {
-  const action = await ElMessageBox.confirm(t('collection_deleteMsg', { name: row.name }), {
-    confirmButtonClass: 'el-button el-button--warning',
-    confirmButtonText: t('common_confirmDelete')
-  }).catch(() => {
-    return
-  })
-  if (action !== 'confirm') return
-  await clientApi.api.deleteNuxeoCollectionDeleteCollectionCollectionid(row.id)
-  routerProvider?.message.success(t('collection_deleteSuccessMsg', { name: row.name }))
-  reloadPage()
+  try {
+    const action = await ElMessageBox.confirm(t('collection_deleteMsg', { name: row.name }), {
+      confirmButtonClass: 'el-button el-button--warning',
+      confirmButtonText: t('common_confirmDelete')
+    }).catch(() => {
+      return
+    })
+    if (action !== 'confirm') return
+    await clientApi.api.deleteNuxeoCollectionDeleteCollectionCollectionid(row.id)
+    routerProvider?.message.success(t('collection_deleteSuccessMsg', { name: row.name }))
+    reloadPage()
+  } catch (error) {
+    console.log(error)
+  }
 }
 
 function handleDocDelete(row: any) {
