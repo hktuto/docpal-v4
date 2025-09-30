@@ -48,9 +48,9 @@ export interface UseVxeTableParams<R = any> {
     dragend?: (params: any) => void
   }
   optionalConfig?: VxeGridProps<R>
-  selectChangeHander?: (selectedRows: any[], selectedRow: any) => void
+  selectChangeHander?: (selectedRows: any[], selectedRow?: any) => void
   optionalEvent?: VxeGridListeners<R>
-  childChangeHandler?: (childRows: any[]) => void
+  childChangeHandler?: (childRows?: any[]) => void
   additionalPermission?: (params: any) => Promise<any>
   editRender?: {
     editClosed: (params: any) => any
@@ -87,7 +87,7 @@ export const useVxeTable = (params: UseVxeTableParams) => {
       return { visible: true, disabled: false }
     },
     bodyActions: actions = [],
-    selectChangeHander = () => {
+    selectChangeHander = (args: any) => {
       console.log('defauilt selectChangeHander, please implement')
     }
   } = params
@@ -202,21 +202,32 @@ export const useVxeTable = (params: UseVxeTableParams) => {
                 // if all children are disabled , set item.disabled = true
 
                 item.children.forEach((child) => {
-                  const { visible, disabled } = permissionMethod({ row, rowIndex, code: child.code, additionalData })
-                  child.visible = visible
-                  child.disabled = disabled
+                  const permission = permissionMethod({ row, rowIndex, code: child.code, additionalData })
+                  if(!permission){
+                    child.visible = true
+                    child.disabled = false
+                  }else{
+                    child.visible = permission.visible
+                    child.disabled = permission.disabled
+                  }
                 })
                 const allVisible = item.children.every((child) => child.visible)
                 const allDisabled = item.children.every((child) => child.disabled)
                 item.visible = allVisible
                 item.disabled = allDisabled
               } else {
-                const { visible, disabled } = permissionMethod({ row, rowIndex, code: item.code, additionalData })
-                item.visible = visible
-                item.disabled = disabled
+                const permission = permissionMethod({ row, rowIndex, code: item.code, additionalData })
+                if(!permission){
+                  item.visible = true
+                  item.disabled = false
+                }else{
+                  item.visible = permission.visible
+                  item.disabled = permission.disabled
+                }
               }
             })
           })
+          
           return options
         }
       },
@@ -321,18 +332,28 @@ export const useVxeTable = (params: UseVxeTableParams) => {
               // if all children are not visible , set iten.visible = false
               // if all children are disabled , set item.disabled = true
               item.children.forEach((child) => {
-                const { visible, disabled } = permissionMethod({ row, rowIndex, code: child.code, additionalData })
-                child.visible = visible
-                child.disabled = disabled
+                const permission = permissionMethod({ row, rowIndex, code: child.code, additionalData })
+                if(!permission){
+                  child.visible = true
+                  child.disabled = false
+                }else{
+                  child.visible = permission.visible
+                  child.disabled = permission.disabled
+                }
               })
               const allVisible = item.children.every((child) => child.visible)
               const allDisabled = item.children.every((child) => child.disabled)
               item.visible = allVisible
               item.disabled = allDisabled
             } else {
-              const { visible, disabled } = permissionMethod({ row, rowIndex, code: item.code, additionalData })
-              item.visible = visible
-              item.disabled = disabled
+              const permission = permissionMethod({ row, rowIndex, code: item.code, additionalData })
+              if(!permission){
+                item.visible = true
+                item.disabled = false
+              }else{
+                item.visible = permission.visible
+                item.disabled = permission.disabled
+              }
             }
             return item
           })
@@ -549,13 +570,15 @@ export const useVxeTable = (params: UseVxeTableParams) => {
         observer.disconnect()
       }
       observer = new MutationObserver(params.childChangeHandler)
-      observer.observe(tableRef.value.$el, {
+      observer.observe(tableRef.value?.$el, {
         childList: true,
         subtree: true
       })
       nextTick(() => {
         console.log('init table observer')
-        params.childChangeHandler()
+        if(params.childChangeHandler){
+          params.childChangeHandler()
+        }
       })
     }
   }

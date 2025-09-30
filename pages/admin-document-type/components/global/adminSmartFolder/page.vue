@@ -78,10 +78,14 @@ const { tableConfig, tableEvent, tableRef, query, reload } = useVxeTable({
     if (!args.row) {
       return { visible: false, disabled: false }
     }
+    return {
+      visible: true,
+      disabled: false
+    }
   }
 })
 
-function handleDblclick(row) {
+function handleDblclick(row:any) {
   routerProvider?.navigateTo(routeSmartFolderDetail(row), false)
 }
 
