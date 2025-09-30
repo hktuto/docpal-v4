@@ -356,7 +356,6 @@ export const useVxeTable = (params: UseVxeTableParams) => {
                 item.disabled = permission.disabled
               }
             }
-            console.log('item', item)
             return item
           })
         })
