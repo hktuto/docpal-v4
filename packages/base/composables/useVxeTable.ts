@@ -601,17 +601,22 @@ export const useVxeTable = (params: UseVxeTableParams) => {
   }
 }
 async function visibleMethodHelper(row: any, options: any, params: any) {
-  const permission = await params.asyncPermission({ row })
+  const permission: any = await params.asyncPermission({ row })
+  const showEvent = permission.showBlank === true || row
   options.forEach((list: any) => {
     list.forEach((item: any) => {
       if (item.children) {
         item.children.forEach((child: any) => {
+          child.visible = showEvent ? true : false
+          child.disabled = false
           if (permission[child.code]) {
             child.visible = permission[child.code].visible
             child.disabled = permission[child.code].disabled
           }
         })
       } else {
+        item.visible = showEvent ? true : false
+        item.disabled = false
         if (permission[item.code]) {
           item.visible = permission[item.code].visible
           item.disabled = permission[item.code].disabled
