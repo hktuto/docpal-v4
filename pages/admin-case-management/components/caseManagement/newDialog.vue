@@ -31,8 +31,8 @@ async function handleSubmit() {
     const data = await FormRendererRef.value.getFormData()
     state.visible = false
     const res = await adminApi.api.postCaseTypes(data).then(res => res.data)
-    ElMessage.success(t('tip_createdSuccessMsg', {
-      modelName: t('caseManagement_caseTemplate'),
+    ElMessage.success(t('tip_createdMsg', {
+      modelName: null,
       name: data.name
     }))
     FormRendererRef.value.vFormRenderRef.resetForm()

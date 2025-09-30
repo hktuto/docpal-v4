@@ -2,18 +2,14 @@
   <el-card class="viewer">
     <template #header>
       <div class="card-header">
-        <span style="font-size: 18px;">{{ $t('caseManagement_detailCaseDashboardView') }}</span>
+        <span style="font-size: 18px">{{ $t('caseManagement_detailCaseDashboardView') }}</span>
       </div>
     </template>
     <div style="height: 100%">
       <VxeGrid ref="tableRef" v-bind="tableConfig" v-on="tableEvent">
         <template #toolbar_buttons>
           <div class="actions">
-            <ResponsiveFilter
-              ref="ResponsiveFilterRef"
-              @form-change="handleFilterFormChange"
-              inputKey="q"
-            />
+            <ResponsiveFilter ref="ResponsiveFilterRef" @form-change="handleFilterFormChange" inputKey="q" />
             <el-button id="CaseManagement__Detail__CaseDashboardView__Add" type="primary" @click="handleAdd()">
               {{ $t('button.add') }}
             </el-button>
@@ -21,11 +17,7 @@
         </template>
       </VxeGrid>
 
-      <CaseManagementDetailDashboardDialog
-        ref="dialogRef"
-        v-bind="props"
-        @refresh="reload"
-      />
+      <CaseManagementDetailDashboardDialog ref="dialogRef" v-bind="props" @refresh="reload" />
     </div>
   </el-card>
 </template>
@@ -36,11 +28,11 @@ import { adminApi } from 'api'
 const routerProvider = inject(MenuRouterKey)
 const ResponsiveFilterRef = ref()
 const props = defineProps<{
-  caseDetail: any;
-  caseTypeId: string;
-  name: string;
-  currentVersion: string;
-  caseDetailId: string;
+  caseDetail: any
+  caseTypeId: string
+  name: string
+  currentVersion: string
+  caseDetailId: string
 }>()
 const pageParams = {
   pageNum: 0,
@@ -58,12 +50,13 @@ const { tableConfig, tableEvent, tableRef, reload } = useVxeTable({
     }
     if (props.currentVersion) params.versionNumber = props.currentVersion
     if (props.caseDetailId) params.caseTypeId = props.caseDetailId
-    if (!params.caseTypeId) return {
-      data: {
-        entryList: [],
-        totalSize: 0
+    if (!params.caseTypeId)
+      return {
+        data: {
+          entryList: [],
+          totalSize: 0
+        }
       }
-    }
     return await adminApi.api.postCaseDashboardPage({ ...params, ...state.extraParams })
   },
   defaultSort: [
@@ -93,8 +86,15 @@ const { tableConfig, tableEvent, tableRef, reload } = useVxeTable({
       }
     },
     {
-      field: 'userGroup',
-      title: 'caseManagement.userGroup'
+      field: 'permissions',
+      title: 'caseManagement.userGroup',
+      formatter({ cellValue }: any) {
+        if(!cellValue) return '-'
+        const permissions = cellValue.map((item: any) => {
+          return item.name
+        })
+        return permissions.join(',')
+      }
     }
     // {
     //   field: "status",
@@ -180,7 +180,6 @@ async function handleDelete(row) {
     reload()
     // await deleteCaseDashboardApi(row.id)
   } catch (error) {
-
   } finally {
     state.loading = false
   }
@@ -232,7 +231,6 @@ function getFilter() {
 onMounted(() => {
   getFilter()
 })
-
 </script>
 <style lang="scss" scoped>
 .responsive-container {

@@ -346,7 +346,9 @@ async function getFilter(conditions: any, initParams: any) {
       isMultiple: false,
       options: [
         { label: 'user_email', value: 'email' },
-        { label: 'user_groups', value: 'groupDTOList' },
+        { label: 'user_level', value: 'userLevel' },
+        { label: 'common_status', value: 'status' },
+        { label: 'user_registered', value: 'registered' },
         { label: 'user_username', value: 'username' }
       ]
     },
