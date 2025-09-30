@@ -78,7 +78,8 @@ async function onSubmit() {
       localStorage.removeItem('token')
       ElMessage.success(t('passwordPolicy.updatePasswordSuccess'))
 
-      router.push('/')
+      window.location.href = window.location.origin
+      // router.push('/')
     }
   } catch (e) {
     console.error(e)
