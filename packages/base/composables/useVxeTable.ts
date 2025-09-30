@@ -227,6 +227,7 @@ export const useVxeTable = (params: UseVxeTableParams) => {
               }
             })
           })
+          
           return options
         }
       },
@@ -331,19 +332,31 @@ export const useVxeTable = (params: UseVxeTableParams) => {
               // if all children are not visible , set iten.visible = false
               // if all children are disabled , set item.disabled = true
               item.children.forEach((child) => {
-                const { visible, disabled } = permissionMethod({ row, rowIndex, code: child.code, additionalData })
-                child.visible = visible
-                child.disabled = disabled
+                const permission = permissionMethod({ row, rowIndex, code: child.code, additionalData })
+                if(!permission){
+                  child.visible = true
+                  child.disabled = false
+                }else{
+                  child.visible = permission.visible
+                  child.disabled = permission.disabled
+                }
               })
               const allVisible = item.children.every((child) => child.visible)
               const allDisabled = item.children.every((child) => child.disabled)
               item.visible = allVisible
               item.disabled = allDisabled
             } else {
-              const { visible, disabled } = permissionMethod({ row, rowIndex, code: item.code, additionalData })
-              item.visible = visible
-              item.disabled = disabled
+              const permission = permissionMethod({ row, rowIndex, code: item.code, additionalData })
+              console.log('permission', permission)
+              if(!permission){
+                item.visible = true
+                item.disabled = false
+              }else{
+                item.visible = permission.visible
+                item.disabled = permission.disabled
+              }
             }
+            console.log('item', item)
             return item
           })
         })
