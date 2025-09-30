@@ -133,6 +133,9 @@ function clear() {
 const searchOptions = ref({})
 
 async function getOptions() {
+  searchOptions.value.conditionType = sortListWithI18n(conditionType, 'searchGroup.')
+  searchOptions.value.languages = sortListWithI18n(languages)
+
   const [docType, users, collections, tags, groupList, metadata] = await Promise.all([
     globalApi.api.getTypesActive(),
     globalApi.api.postNuxeoIdentityGetkeycloakallusers(),
@@ -143,7 +146,6 @@ async function getOptions() {
   ])
   searchOptions.value.groupList = sortListWithI18n(groupList)
   searchOptions.value.metadata = sortListWithI18n(metadata)
-  searchOptions.value.conditionType = sortListWithI18n(conditionType, 'searchGroup.')
   const tagData = tags.data?.map((item: any) => ({ label: item, value: item }))
   searchOptions.value.tags = sortListWithI18n(tagData)
   const docTypeData = docType.data?.map((item: any) => ({ label: item.name, value: item.name }))
@@ -156,7 +158,6 @@ async function getOptions() {
   searchOptions.value.collections = sortListWithI18n(collectionData)
   const userData = users.data?.map((item: any) => ({ label: item.username, value: item.userId }))
   searchOptions.value.users = sortListWithI18n(userData)
-  searchOptions.value.languages = sortListWithI18n(languages)
   searchOptions.value.mimeTypes = mimeTypes
   searchOptions.value.sizes = sizes
 }
@@ -177,8 +178,8 @@ function getSearchParams(){
 }
 
 onMounted(async () => {
-  await getOptions()
   getSearchParams()
+  await getOptions()
 })
 
 defineExpose({
