@@ -1,12 +1,12 @@
 <script lang="ts" setup>
 
-
+const NODE_ENV = useRuntimeConfig().public.NODE_ENV
 const appPlatform = useAppPlatform()
 const isAdmin = useIsAdmin()
 const isSuperAdmin = useIsSuperAdmin()
 
 const showSwitchMenu = computed(() => {
-  return isAdmin.value || isSuperAdmin.value
+  return isAdmin.value || isSuperAdmin.value || NODE_ENV === 'development' 
 })
 
 function switchPlatform(platform: string) {

@@ -1,7 +1,7 @@
 <template>
-  <el-form v-if="options && options.conditionType" :model="form" label-position="top">
+  <el-form v-if="options" :model="form" label-position="top">
     <el-form-item :label="$t('search.conditionType')">
-      <el-select-v2
+      <el-select-v2 v-if="options.conditionType"
         v-model="state.form.queryType"
         :options="options.conditionType"
         :placeholder="$t('common_selectOccupancyContent')"
@@ -19,6 +19,7 @@
     </el-form-item>
     <el-form-item v-if="isQuertType('metadata')" :label="$t('search.metadataKey')">
       <el-select-v2
+        v-if="options.metadata"
         v-model="state.form.metadataKey"
         :options="options.metadata"
         :placeholder="$t('common_selectOccupancyContent')"
@@ -40,6 +41,7 @@
     </el-form-item>
     <el-form-item v-if="!state.form.synonyms && isQuertType('keyword')" :label="$t('search.includeLanguages')">
       <el-select-v2
+        v-if="options.languages"
         v-model="state.form.includeLanguages"
         :options="options.languages"
         :placeholder="$t('common_selectOccupancyContent')"
@@ -57,6 +59,7 @@
 
     <el-form-item v-if="isQuertType('documentTypes')" :label="$t('searchGroup.documentTypes')">
       <el-select-v2
+        v-if="options.docType"
         v-model="state.form.documentTypes"
         :options="options.docType"
         :placeholder="$t('common_selectOccupancyContent')"
@@ -71,6 +74,7 @@
     </el-form-item>
     <el-form-item v-if="isQuertType('mimeTypes')" :label="$t('search.mimeTypes')">
       <el-select-v2
+        v-if="options.mimeTypes"
         v-model="state.form.mimeTypes"
         :options="options.mimeTypes"
         :placeholder="$t('common_selectOccupancyContent')"
@@ -84,6 +88,7 @@
     </el-form-item>
     <el-form-item v-if="isQuertType('creators')" :label="$t('doc_SearchCreators')">
       <el-select-v2
+        v-if="options.users"
         v-model="state.form.creators"
         :options="options.users"
         :placeholder="$t('common_selectOccupancyContent')"
@@ -97,6 +102,7 @@
     </el-form-item>
     <el-form-item v-if="isQuertType('authors')" :label="$t('searchGroup.authors')">
       <el-select-v2
+        v-if="options.users"
         v-model="state.form.authors"
         :options="options.users"
         :placeholder="$t('common_selectOccupancyContent')"
@@ -110,6 +116,7 @@
     </el-form-item>
     <el-form-item v-if="isQuertType('collections')" :label="$t('searchGroup.collections')">
       <el-select-v2
+        v-if="options.collections"
         v-model="state.form.collections"
         :options="options.collections"
         :placeholder="$t('common_selectOccupancyContent')"
@@ -123,6 +130,7 @@
     </el-form-item>
     <el-form-item v-if="isQuertType('tags')" :label="$t('searchGroup.tags')">
       <el-select-v2
+        v-if="options.tags"
         v-model="state.form.tags"
         :options="options.tags"
         :placeholder="$t('common_selectOccupancyContent')"
@@ -136,6 +144,7 @@
     </el-form-item>
     <el-form-item v-if="isQuertType('creatorGroups')" :label="$t('searchGroup.creatorGroups')">
       <el-select-v2
+        v-if="options.groupList"
         v-model="state.form.creatorGroups"
         :options="options.groupList"
         :placeholder="$t('common_selectOccupancyContent')"
@@ -149,6 +158,7 @@
     </el-form-item>
     <el-form-item v-if="isQuertType('authorGroups')" :label="$t('searchGroup.authorGroups')">
       <el-select-v2
+        v-if="options.groupList"
         v-model="state.form.authorGroups"
         :options="options.groupList"
         :placeholder="$t('common_selectOccupancyContent')"
@@ -162,6 +172,7 @@
     </el-form-item>
     <el-form-item v-if="isQuertType('size')" :label="$t('searchGroup.size')">
       <el-select-v2
+        v-if="options.sizes"
         v-model="state.form.size"
         :options="options.sizes"
         :placeholder="$t('common_selectOccupancyContent')"
