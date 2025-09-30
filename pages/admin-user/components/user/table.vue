@@ -4,8 +4,7 @@
       <header v-show="state.selectList?.length > 0" class="header-flex">
         <div class="title-select color__primary">
           <b class="el-icon--left"> {{ $t('notifications.userSelected') }}: {{ state.selectList.length }} </b>
-          <Icon id="UserList__ClearSelected" name="ic:baseline-clear" class="normal cursor-pointer"
-                @click="cleanSelectedRows"></Icon>
+          <Icon id="UserList__ClearSelected" name="ic:baseline-clear" class="normal cursor-pointer" @click="cleanSelectedRows"></Icon>
         </div>
         <div class="flex-x-end">
           <el-button id="UserList__Delete" v-if="!isLdapMode" type="danger" @click="handleDeleteSelected()">
@@ -45,7 +44,7 @@
           type="primary"
           :disabled="state.activeUsers >= state.licenseUsers || isLdapMode"
           @click="handleUserDialogShow()"
-        >{{ $t('user_newUser') }} ({{ state.activeUsers }} / {{ state.licenseUsers }})
+          >{{ $t('user_newUser') }} ({{ state.activeUsers }} / {{ state.licenseUsers }})
         </el-button>
       </header>
     </template>
@@ -150,10 +149,10 @@ const { tableConfig, tableEvent, tableRef, reload, cleanSelectedRows } = useVxeT
         }
       },
       {
-        code:"sendInvitation",
-        name:"Send Invitation",
-        action:({row}:any) => {
-          if(!row.registered){
+        code: 'sendInvitation',
+        name: 'Send Invitation',
+        action: ({ row }: any) => {
+          if (!row.registered) {
             userProvider?.sendInvitation(row)
           }
         }
@@ -169,17 +168,17 @@ const { tableConfig, tableEvent, tableRef, reload, cleanSelectedRows } = useVxeT
       }
     ]
   ],
-  permissionMethod:({row,code}) => {
-    console.log("row", row)
-    if(code === 'sendInvitation'){
+  permissionMethod: ({ row, code }) => {
+    console.log('row', row)
+    if (code === 'sendInvitation') {
       return {
         visible: row.registered === 'Pending',
         disabled: false
       }
     }
     return {
-      visible:true,
-      disabled: false,
+      visible: true,
+      disabled: false
     }
   },
   optionalConfig: {
@@ -189,18 +188,7 @@ const { tableConfig, tableEvent, tableRef, reload, cleanSelectedRows } = useVxeT
       isHover: true
     },
     tooltipConfig: {
-      contentMethod: ({
-                        items,
-                        row,
-                        rowIndex,
-                        $rowIndex,
-                        column,
-                        columnIndex,
-                        $columnIndex,
-                        type,
-                        cell,
-                        $event
-                      }: any) => {
+      contentMethod: ({ items, row, rowIndex, $rowIndex, column, columnIndex, $columnIndex, type, cell, $event }: any) => {
         const key = column.property
         if (!key || !row) return ''
         const value = row[key] ?? ''
@@ -238,31 +226,39 @@ function handleUserDialogShow() {
 }
 
 async function handleDeleteSelected() {
-  const action = await ElMessageBox.confirm(t('userTip.confirmWhetherToDeleteItems'), {
-    confirmButtonClass: 'el-button el-button--warning',
-    confirmButtonText: `${t('common_confirmDelete')}`,
-    dangerouslyUseHTMLString: true
-  })
-  if (action !== 'confirm') return
-  const params = {
-    userIds: state.selectList.map((item: any) => item.userId)
+  try {
+    const action = await ElMessageBox.confirm(t('userTip.confirmWhetherToDeleteItems'), {
+      confirmButtonClass: 'el-button el-button--warning',
+      confirmButtonText: `${t('common_confirmDelete')}`,
+      dangerouslyUseHTMLString: true
+    })
+    if (action !== 'confirm') return
+    const params = {
+      userIds: state.selectList.map((item: any) => item.userId)
+    }
+    await userProvider?.BatchDeleteUserApi(params)
+    routerProvider?.message.success(t('userTip.userSelectedDeleteMsg'))
+    reload()
+  } catch (error) {
+    console.log(error)
   }
-  await userProvider?.BatchDeleteUserApi(params)
-  routerProvider?.message.success(t('userTip.userSelectedDeleteMsg'))
-  reload()
 }
 
 async function handleDelete(row: any) {
-  const action = await ElMessageBox.confirm(t('userTip.confirmWhetherToDeleteItems'), {
-    confirmButtonClass: 'el-button el-button--warning',
-    confirmButtonText: `${t('common_confirmDelete')}`,
-    dangerouslyUseHTMLString: true
-  })
-  if (action !== 'confirm') return
-  const res = await userProvider?.BatchDeleteUserApi({ userIds: [row.userId] })
-  if (!!res) {
-    routerProvider?.message.success(t('userTip.userSelectedDeleteMsg'))
-    reload()
+  try {
+    const action = await ElMessageBox.confirm(t('userTip.confirmWhetherToDeleteItems'), {
+      confirmButtonClass: 'el-button el-button--warning',
+      confirmButtonText: `${t('common_confirmDelete')}`,
+      dangerouslyUseHTMLString: true
+    })
+    if (action !== 'confirm') return
+    const res = await userProvider?.BatchDeleteUserApi({ userIds: [row.userId] })
+    if (!!res) {
+      routerProvider?.message.success(t('userTip.userSelectedDeleteMsg'))
+      reload()
+    }
+  } catch (error) {
+    console.log(error)
   }
 }
 
@@ -402,7 +398,7 @@ defineExpose({ reload, getFilter })
   margin-bottom: 5px;
 }
 
-:deep(.headerLeftExpand ) {
+:deep(.headerLeftExpand) {
   .el-input {
     width: 200px;
   }

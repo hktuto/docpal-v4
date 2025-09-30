@@ -7,9 +7,8 @@
         inputKey="userNameOrEmail"
         :inputPlaceHolder="$t('placeHolder.userGroupName')"
       />
-      <el-button id="UserGroupList__AddNewUserGroup" class="el-icon--right button" type="primary"
-                 @click="handleGroupDialogShow()"
-      >{{ $t('user_newGroup') }}
+      <el-button id="UserGroupList__AddNewUserGroup" class="el-icon--right button" type="primary" @click="handleGroupDialogShow()"
+        >{{ $t('user_newGroup') }}
       </el-button>
     </template>
   </VxeGrid>
@@ -77,12 +76,11 @@ const { tableConfig, tableEvent, tableRef, reload, query } = useVxeTable({
         visible: row.id !== 'members' && row.id !== 'administrators',
         disabled: false
       }
-      
     }
     return {
-        visible: true,
-        disabled: false
-      }
+      visible: true,
+      disabled: false
+    }
   },
   optionalConfig: {}
 })
@@ -95,16 +93,20 @@ function handleUserDialogShow() {
 }
 
 async function handleDelete(row: any) {
-  const action = await ElMessageBox.confirm(`${t('user_userGroupDeletedMsg')}`, {
-    confirmButtonClass: 'el-button el-button--warning',
-    confirmButtonText: t('common_confirmDelete'),
-    dangerouslyUseHTMLString: true
-  })
-  if (action !== 'confirm') return
-  const res = await groupProvider?.DeleteGroupApi({ groupId: row.id })
-  if (!!res) {
-    routerProvider?.message.success(t('dpMsg_success'))
-    getGroup()
+  try {
+    const action = await ElMessageBox.confirm(`${t('user_userGroupDeletedMsg')}`, {
+      confirmButtonClass: 'el-button el-button--warning',
+      confirmButtonText: t('common_confirmDelete'),
+      dangerouslyUseHTMLString: true
+    })
+    if (action !== 'confirm') return
+    const res = await groupProvider?.DeleteGroupApi({ groupId: row.id })
+    if (!!res) {
+      routerProvider?.message.success(t('dpMsg_success'))
+      getGroup()
+    }
+  } catch (error) {
+    console.log(error)
   }
 }
 

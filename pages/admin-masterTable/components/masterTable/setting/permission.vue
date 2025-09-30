@@ -76,12 +76,12 @@ async function handlePermissionChange(boo: boolean, permission: string, row: any
 }
 
 async function handleRemove(row: any) {
-  const action = await ElMessageBox.confirm(`${t('masterTable_settingRemoveMsg', { name: row.masterTableName })}`, {
-    confirmButtonClass: 'el-button el-button--warning',
-    confirmButtonText: t('common_confirmDelete')
-  })
-  if (action !== 'confirm') return
   try {
+    const action = await ElMessageBox.confirm(`${t('masterTable_settingRemoveMsg', { name: row.masterTableName })}`, {
+      confirmButtonClass: 'el-button el-button--warning',
+      confirmButtonText: t('common_confirmDelete')
+    })
+    if (action !== 'confirm') return
     row.loading = true
     await adminApi.api.postMasterTablesAclsDelete({
       masterTableId: row.masterTableId,

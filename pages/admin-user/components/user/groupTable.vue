@@ -95,36 +95,44 @@ async function getMemberGroupList() {
 }
 
 async function handleDelete(row: any) {
-  const action = await ElMessageBox.confirm(`${t('groupTip.confirmWhetherToDeleteItem')}`, {
-    confirmButtonClass: 'el-button el-button--warning',
-    confirmButtonText: `${t('common_confirmDelete')}`
-  })
-  if (action !== 'confirm') return
-  await userProviderDetail?.BatchUserRemoveGroupsApi({
-    groupIds: [row.id],
-    userId: props.user.userId
-  })
-  reload()
+  try {
+    const action = await ElMessageBox.confirm(`${t('groupTip.confirmWhetherToDeleteItem')}`, {
+      confirmButtonClass: 'el-button el-button--warning',
+      confirmButtonText: `${t('common_confirmDelete')}`
+    })
+    if (action !== 'confirm') return
+    await userProviderDetail?.BatchUserRemoveGroupsApi({
+      groupIds: [row.id],
+      userId: props.user.userId
+    })
+    reload()
+  } catch (error) {
+    console.log(error)
+  }
 }
 
 async function handleDeleteSelected() {
-  const action = await ElMessageBox.confirm(t('groupTip.confirmWhetherToDeleteItems', { username: props.user.firstName }), {
-    confirmButtonClass: 'el-button el-button--warning',
-    confirmButtonText: t('common_confirmRemove')
-  })
-  if (action !== 'confirm') return
-  const ids = state.selectedRows.filter((item: any) => !noDeleteList.includes(item.id)).map((item: any) => item.id)
-  if (ids.length === 0) {
-    routerProvider?.message.warning(t('userTip.noValidGroups', { groupIds: noDeleteList.join(',') }))
-    return
+  try {
+    const action = await ElMessageBox.confirm(t('groupTip.confirmWhetherToDeleteItems', { username: props.user.firstName }), {
+      confirmButtonClass: 'el-button el-button--warning',
+      confirmButtonText: t('common_confirmRemove')
+    })
+    if (action !== 'confirm') return
+    const ids = state.selectedRows.filter((item: any) => !noDeleteList.includes(item.id)).map((item: any) => item.id)
+    if (ids.length === 0) {
+      routerProvider?.message.warning(t('userTip.noValidGroups', { groupIds: noDeleteList.join(',') }))
+      return
+    }
+    await userProviderDetail?.BatchUserRemoveGroupsApi({
+      groupIds: ids,
+      userId: props.user.userId
+    })
+    state.selectedRows = []
+    routerProvider?.message.success(t('user_removeGroupsSuccessMsg', { username: props.user.firstName }))
+    reload()
+  } catch (error) {
+    console.log(error)
   }
-  await userProviderDetail?.BatchUserRemoveGroupsApi({
-    groupIds: ids,
-    userId: props.user.userId
-  })
-  state.selectedRows = []
-  routerProvider?.message.success(t('user_removeGroupsSuccessMsg', { username: props.user.firstName }))
-  reload()
 }
 
 function handleFilterFormChange(formModel: any) {

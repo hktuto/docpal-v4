@@ -2,14 +2,13 @@
   <div class="pageContainer--padding">
     <VxeGrid ref="tableRef" v-bind="tableConfig" v-on="tableEvent">
       <template #toolbar_buttons>
-        <ResponsiveFilter ref="ResponsiveFilterRef" @form-change="handleFilterFormChange"
-                          inputKey="fileName" inputPlaceHolder="tip.fileOrFolderName" />
+        <ResponsiveFilter ref="ResponsiveFilterRef" @form-change="handleFilterFormChange" inputKey="fileName" inputPlaceHolder="tip.fileOrFolderName" />
       </template>
-      <template #path="{row, index}">
+      <template #path="{ row, index }">
         <path-tab-button :path="row.nuxeoPath" :displayPath="row.uploadPath" :canOpen="row.nuxeoPath" />
       </template>
       <template #status="{ row, index }">
-        <el-tag :type="getTagType(row.uploadStatus )">
+        <el-tag :type="getTagType(row.uploadStatus)">
           {{ $t(`ai.status.${row.uploadStatus}`) }}
         </el-tag>
       </template>
@@ -82,11 +81,9 @@ function handleFilterFormChange(formModel: any) {
 
 // #endregion
 
-
 const { tableConfig, tableEvent, tableRef, reload } = useVxeTable({
   id: 'client-ai-upload',
   api: async (pageParams: any) => {
-
     if (!pageParams.orderBy) {
       pageParams.orderBy = 'createdDate'
       pageParams.isDesc = true
@@ -100,7 +97,7 @@ const { tableConfig, tableEvent, tableRef, reload } = useVxeTable({
         ...extraParams.value
       }
     }
-    const { data: response } = await clientApi.api.postNuxeoDocumentQueryuploadfiledtopage(pageParams) as any
+    const { data: response } = (await clientApi.api.postNuxeoDocumentQueryuploadfiledtopage(pageParams)) as any
     return {
       data: {
         entryList: response.content,
@@ -207,23 +204,26 @@ function getTagType(status) {
   return map[status] || map[status] === '' ? map[status] : 'warning'
 }
 
-
 async function handleDelete(id: any) {
-  const action = await ElMessageBox.confirm(`${t('msg_confirmWhetherToCancel')}`, {
-    confirmButtonText: t('dpButtom_confirm'),
-    cancelButtonText: t('common_close')
-  })
-  if (action !== 'confirm') return
-  const formData = new FormData()
-  formData.append('userId', userId.value)
-  formData.append('uploadId', id)
-  console.log('formData', formData, id, userId.value)
-  await clientApi.instance.post(`/nuxeo/document/batchCancel`, formData, {
-    headers: {
-      'Content-Type': 'multipart/form-data'
-    }
-  })
-  reload()
+  try {
+    const action = await ElMessageBox.confirm(`${t('msg_confirmWhetherToCancel')}`, {
+      confirmButtonText: t('dpButtom_confirm'),
+      cancelButtonText: t('common_close')
+    })
+    if (action !== 'confirm') return
+    const formData = new FormData()
+    formData.append('userId', userId.value)
+    formData.append('uploadId', id)
+    console.log('formData', formData, id, userId.value)
+    await clientApi.instance.post(`/nuxeo/document/batchCancel`, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    })
+    reload()
+  } catch (error) {
+    console.log(error)
+  }
 }
 
 const AiUploadPreviewDialogRef = ref()
@@ -232,7 +232,6 @@ function showStructure(row) {
   AiUploadPreviewDialogRef.value.handleOpen(row)
 }
 
-
 onMounted(() => {
   getFilter()
 })
@@ -240,6 +239,6 @@ onMounted(() => {
 
 <style lang="scss" scoped>
 :deep(.el-input) {
-  width: 250px
+  width: 250px;
 }
 </style>

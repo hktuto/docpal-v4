@@ -187,16 +187,20 @@ function handleDeleteRow(row: any) {
 }
 
 async function handleDiscard(row: any) {
-  const action = await ElMessageBox.confirm(`${t('tip.confirmWhetherToDiscardShareQueue')}`)
-  if (action !== 'confirm') return
-  const index = state.minTypeShareList.findIndex((item: any) => row.id === item.id)
-  state.minTypeShareList.splice(index, 1)
-  if (!!state.interval) clearInterval(state.interval)
-  updateShareList([])
-  const item = createBrowseListPageParams({
-    idOrPath: props.backPath
-  })
-  routerProvider?.navigateTo(item)
+  try {
+    const action = await ElMessageBox.confirm(`${t('tip.confirmWhetherToDiscardShareQueue')}`)
+    if (action !== 'confirm') return
+    const index = state.minTypeShareList.findIndex((item: any) => row.id === item.id)
+    state.minTypeShareList.splice(index, 1)
+    if (!!state.interval) clearInterval(state.interval)
+    updateShareList([])
+    const item = createBrowseListPageParams({
+      idOrPath: props.backPath
+    })
+    routerProvider?.navigateTo(item)
+  } catch (error) {
+    console.log(error)
+  }
 }
 
 function handleAddMore() {

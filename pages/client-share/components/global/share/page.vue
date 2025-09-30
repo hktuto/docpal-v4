@@ -81,16 +81,20 @@ const { tableConfig, tableEvent, tableRef, query, reload, cleanSelectedRows } = 
 })
 
 async function handleDisabled(row: any) {
-  const action = await ElMessageBox.confirm(`${t('externalSharing_deleteMsg')}`, {
-    confirmButtonClass: 'el-button el-button--warning',
-    confirmButtonText: t('common_confirmDelete')
-  })
-  if (action !== 'confirm') return
-  const param = []
-  param.push(row.shareID)
-  await clientApi.api.deleteNuxeoShare(param)
-  routerProvider?.message.success(t('tip_deleteSuccessMessage', { name: t('externalSharing_sharingRequest') }))
-  query()
+  try {
+    const action = await ElMessageBox.confirm(`${t('externalSharing_deleteMsg')}`, {
+      confirmButtonClass: 'el-button el-button--warning',
+      confirmButtonText: t('common_confirmDelete')
+    })
+    if (action !== 'confirm') return
+    const param = []
+    param.push(row.shareID)
+    await clientApi.api.deleteNuxeoShare(param)
+    routerProvider?.message.success(t('tip_deleteSuccessMessage', { name: t('externalSharing_sharingRequest') }))
+    query()
+  } catch (error) {
+    console.log(error)
+  }
 }
 
 const shareInfoDialogRef = ref()

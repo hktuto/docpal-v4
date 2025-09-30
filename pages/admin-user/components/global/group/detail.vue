@@ -58,12 +58,14 @@ const state = reactive<any>({
 })
 const { t } = useI18n()
 async function handleDelete() {
-  const action = await ElMessageBox.confirm(`${t('msg_confirmWhetherToDelete')}`)
-  if (action !== 'confirm') return
-  const res = await adminApi.api.postNuxeoIdentityGroup({ groupId: id })
-  console.log(res, '??????????');
-  
-  if (!!res) openGroupList()
+  try {
+    const action = await ElMessageBox.confirm(`${t('msg_confirmWhetherToDelete')}`)
+    if (action !== 'confirm') return
+    const res = await adminApi.api.postNuxeoIdentityGroup({ groupId: id })
+    if (!!res) openGroupList()
+  } catch (error) {
+    console.log(error)
+  }
 }
 
 const GroupEditDialogRef = ref()

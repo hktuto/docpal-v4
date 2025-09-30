@@ -1,7 +1,6 @@
 <template>
   <div class="pageContainer--padding">
-    <VxeGrid ref="tableRef" v-bind="tableConfig" v-on="tableEvent">
-    </VxeGrid>
+    <VxeGrid ref="tableRef" v-bind="tableConfig" v-on="tableEvent"> </VxeGrid>
     <ExternalShareDialog ref="shareInfoDialogRef" @submit="handleSubmit"></ExternalShareDialog>
   </div>
 </template>
@@ -12,14 +11,7 @@ import { adminApi } from 'api'
 const routerProvider = inject(MenuRouterKey)
 const { t } = useI18n()
 let extraParams: any = {}
-const {
-  tableConfig,
-  tableEvent,
-  tableRef,
-  query,
-  reload,
-  cleanSelectedRows
-} = useVxeTable({
+const { tableConfig, tableEvent, tableRef, query, reload, cleanSelectedRows } = useVxeTable({
   id: 'a-external-share',
   api: async (pageParams: any) => {
     const params = {
@@ -29,7 +21,7 @@ const {
     }
     delete params.pageNum
     delete params.pageSize
-    const res = await adminApi.api.postNuxeoShareGet({ ...params, ...extraParams }).then(res => res.data)
+    const res = await adminApi.api.postNuxeoShareGet({ ...params, ...extraParams }).then((res) => res.data)
     return {
       data: {
         entryList: res.list,
@@ -83,19 +75,20 @@ const {
 })
 
 async function handleDisabled(row) {
-  const action = await ElMessageBox.confirm(
-    t('tip_deleteMsg', { modelName: t('share_externalShareLink'), name: null }),
-    {
+  try {
+    const action = await ElMessageBox.confirm(t('tip_deleteMsg', { modelName: t('share_externalShareLink'), name: null }), {
       confirmButtonClass: 'el-button el-button--warning',
       confirmButtonText: t('common_confirmDelete')
-    }
-  )
-  if (action !== 'confirm') return
-  const param = []
-  param.push(row.shareID)
-  await adminApi.api.deleteNuxeoShare(param)
-  routerProvider?.message.success(t('tip_deleteSuccessMsg', { modelName: t('share_externalShareLink'), name: null }))
-  query()
+    })
+    if (action !== 'confirm') return
+    const param = []
+    param.push(row.shareID)
+    await adminApi.api.deleteNuxeoShare(param)
+    routerProvider?.message.success(t('tip_deleteSuccessMsg', { modelName: t('share_externalShareLink'), name: null }))
+    query()
+  } catch (error) {
+    console.log(error)
+  }
 }
 
 const shareInfoDialogRef = ref()
@@ -108,7 +101,6 @@ async function handleSubmit(shareInfo) {
   await adminApi.api.patchNuxeoShare(shareInfo)
   query()
 }
-
 </script>
 <style lang="scss" scoped>
 :deep(.el-input) {

@@ -104,8 +104,8 @@ const FormRef = ref()
 const MetaFormRef = ref()
 
 function formChange({ fieldName, newValue, oldValue, formModel }) {
-  console.log(fieldName, newValue, oldValue, formModel);
-  
+  console.log(fieldName, newValue, oldValue, formModel)
+
   if (fieldName === 'documentType') handleDocTypeChange(newValue)
 }
 async function handleDocTypeChange(docType: string) {
@@ -114,7 +114,7 @@ async function handleDocTypeChange(docType: string) {
   state.dragList = metaList.reduce((prev: any, item: any) => {
     if (['boolean'].includes(item.options.validationType)) return prev
     if (item.options.validationType === 'array') {
-      if(item.options.multiple || item.options.type === 'daterange') return prev
+      if (item.options.multiple || item.options.type === 'daterange') return prev
     }
     prev.push({
       name: item.label,
@@ -307,28 +307,32 @@ const checkDuplicateLabel = (parentId: string, id: string, name: string, data: a
 }
 
 async function handleDelete() {
-  const action = await ElMessageBox.confirm(
-    t('tip_deleteMsg', {
-      modelName: t('folder_entireFolderCabinet'),
-      name: null
-    }),
-    {
-      confirmButtonClass: 'el-button el-button--warning',
-      confirmButtonText: t('common_confirmDelete')
-    }
-  )
-  if (action !== 'confirm') return
-  await adminApi.api.deleteCabinetId(state.setting.id)
-  if (props.isRoot) {
-    routerProvider?.navigateTo(routeFolderCabinetPage(), false)
-    routerProvider?.message.success(
-      t('tip_deleteSuccessMsg', {
+  try {
+    const action = await ElMessageBox.confirm(
+      t('tip_deleteMsg', {
         modelName: t('folder_entireFolderCabinet'),
         name: null
-      })
+      }),
+      {
+        confirmButtonClass: 'el-button el-button--warning',
+        confirmButtonText: t('common_confirmDelete')
+      }
     )
-  } else {
-    emits('update')
+    if (action !== 'confirm') return
+    await adminApi.api.deleteCabinetId(state.setting.id)
+    if (props.isRoot) {
+      routerProvider?.navigateTo(routeFolderCabinetPage(), false)
+      routerProvider?.message.success(
+        t('tip_deleteSuccessMsg', {
+          modelName: t('folder_entireFolderCabinet'),
+          name: null
+        })
+      )
+    } else {
+      emits('update')
+    }
+  } catch (error) {
+    console.log(error)
   }
 }
 
