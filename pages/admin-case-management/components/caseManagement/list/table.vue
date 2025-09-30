@@ -96,7 +96,7 @@ const { tableConfig, tableEvent, tableRef, reload, query } = useVxeTable({
     if (!args.row) {
       return { visible: false, disabled: false }
     }
-    return  listProvider.actionPermission
+    return  listProvider.actionPermission(args)
   },
   dblClickAction: ({ row, column, event }: any) => {
     listProvider.openLatestVersion(row)
