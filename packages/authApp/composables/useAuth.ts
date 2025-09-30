@@ -51,7 +51,7 @@ export async function verifly() {
     const isAdmin = useIsAdmin()
     const isSuperAdmin = useIsSuperAdmin()
     const hasAdmin = decodedToken.roles.includes('ROLE_ADMIN')
-    const hasSuperAdmin = decodedToken.roles.includes('ROLE_SUPER_ADMIN')
+    const hasSuperAdmin = decodedToken.roles.includes('ROLE_SUPER')
     isAdmin.value = hasAdmin
     isSuperAdmin.value = hasSuperAdmin
   }
