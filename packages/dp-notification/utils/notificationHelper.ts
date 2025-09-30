@@ -1,8 +1,23 @@
 import { clientApi } from 'api'
 
 export function notiShowView(row: any) {
-  const isCancel = ['TRASH', 'DELETE', 'CANCELD'].includes(row.operate) || (row.type === 'Upload-Request' && !row.content.processInstanceId)
-  const showView = row.content.documentId || row.content.uploadId || row.content.processInstanceId
+  if ('Workflow' === row.type && '' !== row.content?.message) {
+    try {
+      const message = JSON.parse(row.content?.message)
+      if (!!message.additionalContent) {
+        return true
+      }
+    } catch (e) {
+      return false
+    }
+    return false
+  }
+
+  const isCancel = ['TRASH', 'DELETE', 'CANCELD'].includes(row.operate) ||
+    (row.type === 'Upload-Request' && !row.content.processInstanceId)
+  const showView = row.content.documentId ||
+    row.content.uploadId ||
+    row.content.processInstanceId
   return !isCancel && showView
 }
 
@@ -38,6 +53,14 @@ export async function notiHandleView(row: any, tabProvider: any) {
       id: row.content.uploadId,
       status
     })
+    tabProvider?.openTab(newItem, true)
+  }
+
+  // workflow message
+  else if (row.content.message && 'Workflow' === row.type) {
+    const event = JSON.parse(row.content.message)
+    // TODO：You need to jump to a different page according to the type of workflow message
+    const newItem = routeCalendarManagement(JSON.parse(event.additionalContent))
     tabProvider?.openTab(newItem, true)
   }
 }

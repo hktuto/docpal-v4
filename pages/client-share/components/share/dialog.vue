@@ -1,35 +1,26 @@
 <template>
   <el-dialog v-model="dialogVisible" :title="$t('externalSharing_edit')" append-to-body>
-    <el-form ref="formRef"
-             :model="form"
-             label-width="120px"
-             label-position="top"
-             @submit.native.prevent>
-      <el-form-item :label="$t('tableHeader_emailList')" prop="emailList"
-                    :rules="[
-                              {
-                                  required: true,
-                                  message: $t('tableHeader_emailList') + $t('render.hint.fieldRequired'),
-                                  trigger: 'change'
-                              },
-                              // {
-                              //     validator: emailValidate,
-                              //     trigger: 'change'
-                              // }
-                          ]">
-        <el-input-tag
-          v-model="form.emailList"
-          clearable
-          draggable
-          :placeholder="$t('vxe.base.pleaseInput')"
-          :aria-label="$t('tip_enterAfterInput')"
-        >
+    <el-form ref="formRef" :model="form" label-width="120px" label-position="top" @submit.native.prevent>
+      <el-form-item
+        :label="$t('tableHeader_emailList')"
+        prop="emailList"
+        :rules="[
+          {
+            required: true,
+            message: $t('tableHeader_emailList') + $t('render.hint.fieldRequired'),
+            trigger: 'change'
+          }
+          // {
+          //     validator: emailValidate,
+          //     trigger: 'change'
+          // }
+        ]"
+      >
+        <el-input-tag v-model="form.emailList" clearable draggable :placeholder="$t('vxe.base.pleaseInput')" :aria-label="$t('tip_enterAfterInput')">
         </el-input-tag>
       </el-form-item>
       <el-form-item :label="$t('share_shareLink')">
-        <el-input v-model="shareLink" readonly type="text"
-                  class="cursorPointer"
-                  @click="handleCopy(shareLink)">
+        <el-input v-model="shareLink" readonly type="text" class="cursorPointer" @click="handleCopy(shareLink)">
           <template #suffix>
             <el-icon @click="handleCopy(shareLink)">
               <CopyDocument />
@@ -39,21 +30,21 @@
       </el-form-item>
       <el-row :gutter="20">
         <el-col :span="12">
-          <el-form-item :label="$t('share_password')" prop="password"
-                        :rules="[{ required: true,
-                                  message: $t('share_password') + $t('render.hint.fieldRequired')}]">
+          <el-form-item
+            :label="$t('share_password')"
+            prop="password"
+            :rules="[{ required: true, message: $t('share_password') + $t('render.hint.fieldRequired') }]"
+          >
             <el-input v-model="form.password" clearable type="text" />
           </el-form-item>
         </el-col>
         <el-col :span="12">
-          <el-form-item :label="$t('tableHeader_dueDate')" prop="dueDate"
-                        :rules="[{ required: true,
-                                  message: $t('tableHeader_dueDate') + $t('render.hint.fieldRequired')}]">
-            <el-date-picker v-model="form.dueDate"
-                            type="datetime"
-                            :default-time="defaultTime"
-                            :shortcuts="shortcuts"
-                            style="width: 100%" />
+          <el-form-item
+            :label="$t('tableHeader_dueDate')"
+            prop="dueDate"
+            :rules="[{ required: true, message: $t('tableHeader_dueDate') + $t('render.hint.fieldRequired') }]"
+          >
+            <el-date-picker v-model="form.dueDate" type="datetime" :default-time="defaultTime" :shortcuts="shortcuts" style="width: 100%" />
           </el-form-item>
         </el-col>
       </el-row>
@@ -76,7 +67,9 @@ import { Base64 } from 'js-base64'
 
 const routerProvider = inject(MenuRouterKey)
 const { diffMinute } = useTime()
-const { public: { endPoint } } = useRuntimeConfig()
+const {
+  public: { endPoint }
+} = useRuntimeConfig()
 const { t } = useI18n()
 const route = useRoute()
 const state = reactive<any>({
@@ -116,7 +109,8 @@ const emit = defineEmits(['submit'])
 // #region module: dialog
 const dialogVisible = ref(false)
 
-const emailPattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+const emailPattern =
+  /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
 
 const emailValidate = (rule: any, value: any, callback: any) => {
   value.forEach((item) => {
@@ -131,7 +125,7 @@ const emailValidate = (rule: any, value: any, callback: any) => {
 }
 
 function handleOpen(shareInfo: any) {
-  let decodePwd = Base64.decode(shareInfo.password)//解密
+  let decodePwd = Base64.decode(shareInfo.password) //解密
   state.shareId = shareInfo.shareID
   initFormatItem({ ...shareInfo, password: decodePwd })
   dialogVisible.value = true
@@ -156,7 +150,7 @@ async function handleSubmit() {
     shareId: state.shareId
   }
 
-  routerProvider?.message.success(t('share_updateExternalMsg'))
+  routerProvider?.message.success(t('tip_updateMsg', { name: t('externalSharing_sharingRequest') }))
   emit('submit', param)
   dialogVisible.value = false
 }
@@ -193,6 +187,4 @@ const { defaultTime, shortcuts, shareLink, userList } = toRefs(state)
 defineExpose({ handleOpen })
 </script>
 
-<style scoped lang="scss">
-
-</style>
+<style scoped lang="scss"></style>
