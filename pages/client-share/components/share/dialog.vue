@@ -183,7 +183,7 @@ async function handleSubmit() {
     shareId: state.shareId
   }
 
-  routerProvider?.message.success(t('tip_updateMsg', { modelName: t('externalSharing_sharingRequest'), name: null }))
+  routerProvider?.message.success(t('tip_updateMsg', { modelName: t('externalSharing_sharingRequest'),name: null }))
   emit('submit', param)
   dialogVisible.value = false
 }
