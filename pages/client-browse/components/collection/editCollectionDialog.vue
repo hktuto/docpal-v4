@@ -50,9 +50,7 @@ async function handleSubmit() {
       description: null
     }
     state.data = await clientApi.api.patchNuxeoCollection(params).then(res => res.data)
-    ElMessage.success(t('tip_updateMsg', {
-      name: data.name
-    }))
+    ElMessage.success(t('tip_updateMsg', { modelName: null, name: data.name }))
     state.visible = false
     FormRendererRef.value.vFormRenderRef.resetForm()
     emits('refresh')

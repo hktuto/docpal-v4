@@ -2,7 +2,8 @@
   <el-dialog v-model="state.visible" :title="$t('masterTable_settingAddPermission')" :close-on-click-modal="false">
     <FormRenderer ref="FormRendererRef" :form-json="formJson" />
     <template #footer>
-      <el-button id="MasterTable__Tables__Detail__Setting__Permissions__AddPermission__Submit" type="primary" :loading="state.loading" @click="handleSubmit">
+      <el-button id="MasterTable__Tables__Detail__Setting__Permissions__AddPermission__Submit" type="primary"
+                 :loading="state.loading" @click="handleSubmit">
         {{ $t('common_submit') }}
       </el-button>
     </template>
@@ -13,6 +14,7 @@ import { adminApi } from 'api'
 import type { GroupDTO, UserDTO } from 'api/src/generate/admin'
 import formJson from './addPermissionDialog.vform.json'
 import { ElMessage } from 'element-plus'
+
 const routerProvider = inject(MenuRouterKey)
 const props = defineProps<{
   exitList: any[]
@@ -40,9 +42,9 @@ async function handleSubmit() {
     state.loading = true
     await adminApi.api.postMasterTablesAclsAdd(params)
     ElMessage.success(
-      t('tip_createdSuccessMsg', {
-        modelName: t('masterTable_permissionForMaster'),
-        name: props.exitList[0]?.masterTableName
+      t('tip_createdMsg', {
+        modelName: t('masterTable_permissionForMaster', { name: props.exitList[0]?.masterTableName }),
+        name: null
       })
     )
     state.visible = false
@@ -60,7 +62,9 @@ async function handleOpen() {
   FormRendererRef.value.vFormRenderRef.resetForm()
   handleOptions()
 }
+
 const { flatRole } = useRBAC()
+
 function handleOptions() {
   const userIdRef = FormRendererRef.value.vFormRenderRef.getWidgetRef('userId')
   const options = [

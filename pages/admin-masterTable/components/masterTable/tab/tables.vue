@@ -103,23 +103,21 @@ const { tableConfig, tableEvent, tableRef, reload, query } = useVxeTable({
 
 async function handleDelete(row: any) {
   try {
-    const action = await ElMessageBox.confirm(t('masterTable_deleteMsg', { name: row.name }), {
-      confirmButtonClass: 'el-button el-button--warning',
-      dangerouslyUseHTMLString: true,
-      confirmButtonText: t('common_confirmDelete')
-    })
+    const action = await ElMessageBox.confirm(
+      t('masterTable_deleteMsg', { name: row.name }),
+      {
+        confirmButtonClass: 'el-button el-button--warning',
+        dangerouslyUseHTMLString: true,
+        confirmButtonText: t('common_confirmDelete')
+      }
+    )
     if (action !== 'confirm') return
     const result = await masterTableProvider?.DeleteMasterTablesApi(row.id)
     if (!result) {
       routerProvider?.message.error(t('dpTip.deleteFailed'))
       return
     }
-    routerProvider?.message.success(
-      t('tip_deleteSuccessMsg', {
-        modelName: t('marsterTable.type.master_table'),
-        name: row.name
-      })
-    )
+    routerProvider?.message.success(t('tip_deleteSuccessMessage', { name: row.name }))
     query()
   } catch (error) {
     console.log(error)

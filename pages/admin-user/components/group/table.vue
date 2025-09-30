@@ -7,8 +7,9 @@
         inputKey="userNameOrEmail"
         :inputPlaceHolder="$t('placeHolder.userGroupName')"
       />
-      <el-button id="UserGroupList__AddNewUserGroup" class="el-icon--right button" type="primary" @click="handleGroupDialogShow()"
-        >{{ $t('user_newGroup') }}
+      <el-button id="UserGroupList__AddNewUserGroup" class="el-icon--right button" type="primary"
+                 @click="handleGroupDialogShow()">
+        {{ $t('user_newGroup') }}
       </el-button>
     </template>
   </VxeGrid>

@@ -76,15 +76,18 @@ const { tableConfig, tableEvent, tableRef, query, reload, cleanSelectedRows } = 
 
 async function handleDisabled(row) {
   try {
-    const action = await ElMessageBox.confirm(t('tip_deleteMsg', { modelName: t('share_externalShareLink'), name: null }), {
-      confirmButtonClass: 'el-button el-button--warning',
-      confirmButtonText: t('common_confirmDelete')
-    })
+    const action = await ElMessageBox.confirm(
+      t('tip_deleteMsg', { modelName: t('share_externalShareLink'), name: null }),
+      {
+        confirmButtonClass: 'el-button el-button--warning',
+        confirmButtonText: t('common_confirmDelete')
+      }
+    )
     if (action !== 'confirm') return
     const param = []
     param.push(row.shareID)
     await adminApi.api.deleteNuxeoShare(param)
-    routerProvider?.message.success(t('tip_deleteSuccessMsg', { modelName: t('share_externalShareLink'), name: null }))
+    routerProvider?.message.success(t('tip_deleteSuccessMessage', { name: t('share_externalShareLink') }))
     query()
   } catch (error) {
     console.log(error)
