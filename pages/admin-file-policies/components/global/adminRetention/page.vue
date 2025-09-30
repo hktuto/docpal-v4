@@ -170,23 +170,23 @@ async function handleActive(row: any, isActive: 'A' | 'D') {
   } catch (error) {}
 }
 
-// TODO
 async function deleteItem(id: number) {
   try {
-    const action = await ElMessageBox.confirm(`${t('filePolicies_RetentionPolicyDeletedMsg')}`, {
-      confirmButtonClass: 'el-button el-button--warning',
-      dangerouslyUseHTMLString: true,
-      confirmButtonText: t('common_confirmDelete')
+    const action = await ElMessageBox.confirm(`${t('filePolicies_RetentionPolicyDeletedMsg')}`,
+      {
+        confirmButtonClass: 'el-button el-button--warning',
+        dangerouslyUseHTMLString: true,
+        confirmButtonText: t('common_confirmDelete')
+      }).catch(() => {
+      return
     })
     if (action !== 'confirm') return
     await adminApi.api.deletePolicyRetentionsId(id)
     query({})
-    routerProvider?.message.success(
-      t('tip_deleteSuccessMsg', {
-        modelName: t('filePolicies_RetentionPolicy'),
-        name: null
-      })
-    )
+    routerProvider?.message.success(t('tip_deleteSuccessMessage', {
+      modelName: t('filePolicies_RetentionPolicy'),
+      name: null
+    }))
   } catch (error) {
     console.log(error)
   }

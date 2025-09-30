@@ -44,6 +44,7 @@ async function handleSubmit() {
     }
     const cdata = await clientApi.api.postNuxeoCollectionCreate(params).then(res => res.data)
     ElMessage.success(t('tip_createdMsg', {
+      modelName: null,
       name: params.name
     }))
     state.visible = false

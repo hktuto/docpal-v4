@@ -61,7 +61,7 @@ async function handleSubmit() {
       params.append('fileType', formData.type)
       params.append('description', formData.description)
       const { data } = await adminApi.api.postTemplateDocument({ requestDTO: {} }, params as any) as any
-      ElMessage.success(t('tip_createdSuccessMsg', { modelName: t('adminMenu.template'), name: null }))
+      ElMessage.success(t('tip_createdMsg', { modelName: t('adminMenu.template'), name: null }))
       const templateInfo = data
       const link = createNewDocumentTemplateDetail({
         id: templateInfo.id,

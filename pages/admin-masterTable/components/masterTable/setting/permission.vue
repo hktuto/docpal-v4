@@ -80,6 +80,8 @@ async function handleRemove(row: any) {
     const action = await ElMessageBox.confirm(`${t('masterTable_settingRemoveMsg', { name: row.masterTableName })}`, {
       confirmButtonClass: 'el-button el-button--warning',
       confirmButtonText: t('common_confirmDelete')
+    }).catch(() => {
+      return
     })
     if (action !== 'confirm') return
     row.loading = true

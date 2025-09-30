@@ -44,8 +44,8 @@ async function handleSubmit() {
         ...state.setting,
         ..._data
       })
-      ElMessage.success(t('tip_updateSuccessMsg', {
-        modelName: t('adminMenu.workPanel'),
+      ElMessage.success(t('tip_updateMsg', {
+        modelName: t('workPanel_workPanel'),
         name: _data.name
       }))
       emits('refresh')
@@ -54,8 +54,8 @@ async function handleSubmit() {
         ..._data,
         styleJson: '{}'
       }).then(res => res.data)
-      ElMessage.success(t('tip_createdSuccessMsg', {
-        modelName: t('adminMenu.workPanel'),
+      ElMessage.success(t('tip_createdMsg', {
+        modelName: t('workPanel_workPanel'),
         name: _data.name
       }))
       emits('add', res)

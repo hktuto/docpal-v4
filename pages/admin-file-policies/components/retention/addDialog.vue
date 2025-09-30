@@ -32,10 +32,6 @@ const FormRendererRef = ref()
 
 async function handleSubmit() {
   try {
-    console.log('???????handleSubmit')
-    console.log(FormRendererRef.value);
-    console.log(FormRendererRef.value.getFormData());
-    
     const data = await FormRendererRef.value.getFormData()
     console.log(data)
     const params = {
@@ -44,12 +40,8 @@ async function handleSubmit() {
       actionType: data.actionType ? 'D' : 'A'
     }
     state.loading = true
-    console.log('??????????????????')
     await adminApi.api.postPolicyRetentions(params)
-    ElMessage.success(t('tip_createdSuccessMsg', {
-      modelName: t('filePolicies_RetentionPolicy'),
-      name: null
-    }))
+    ElMessage.success(t('tip_createdMsg', { modelName: t('filePolicies_RetentionPolicy'), name: null }))
     state.visible = false
     emits('update')
   } catch (error) {

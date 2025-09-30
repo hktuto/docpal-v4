@@ -47,10 +47,10 @@ async function handleSubmit() {
     if (state.edit) {
       data.id = state.setting.id
       await adminApi.api.putTemplateEmailLayout(data)
-      msg = t('tip_updateSuccessMsg', {modelName: t('emailTemplate.layout'), name: data.name})
+      msg = t('tip_updateMsg', {modelName: null, name: data.name})
     } else {
       await adminApi.api.postTemplateEmailLayout(data)
-      msg = t('tip_createdSuccessMsg', {modelName: t('emailTemplate.layout'), name: data.name})
+      msg = t('tip_createdMsg', {modelName: null, name: data.name})
     }
     ElMessage.success(msg)
     emits('refresh')

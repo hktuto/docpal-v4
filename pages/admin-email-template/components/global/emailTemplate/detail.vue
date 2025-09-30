@@ -118,7 +118,7 @@ async function save() {
           id: result.id
         })
       }
-      routerProvider?.message.success(t('tip_createdSuccessMsg', {modelName: t('Email.fields'), name: data.value.label}));
+      routerProvider?.message.success(t('tip_createdMsg', {modelName: null, name: data.value.label}));
       editInfoOpened.value = false;
       showClose.value = true;
       // TODO : add notification
@@ -136,8 +136,8 @@ async function save() {
       emailTemplateJson: JSON.stringify(json),
       emailTemplateVariable: JSON.stringify(variable),
     });
-    routerProvider?.message.success(t('tip_updateSuccessMsg', {
-      modelName: t('Email.fields'),
+    routerProvider?.message.success(t('tip_updateMsg', {
+      modelName: null,
       name: data.value.label
     }));
     editInfoOpened.value = false;

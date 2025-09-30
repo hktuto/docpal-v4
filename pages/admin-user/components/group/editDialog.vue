@@ -49,7 +49,7 @@ async function handleSubmit() {
     }
     data.groupId = props.group.id
     const res = await groupProviderDetail?.PatchGroupApi(data)
-    ElMessage.success(t('tip_updateSuccessMsg', { modelName: t('user_UserGroup'), name: null }))
+    ElMessage.success(t('tip_updateMsg', { modelName: t('user_UserGroup'), name: null }))
     state.visible = false
     FormRendererRef.value.vFormRenderRef.resetForm()
     emits('refresh', res.data)
