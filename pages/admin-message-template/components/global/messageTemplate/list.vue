@@ -1,9 +1,5 @@
 <script lang="ts" setup>
-import {
-  MessageTemplateProviderKey,
-  newMessageTemplateDetailPageRoute,
-  newMessageTemplateTemplatePageRoute
-} from '~/utils/messageTemplateHelper'
+import { MessageTemplateProviderKey, newMessageTemplateDetailPageRoute, newMessageTemplateTemplatePageRoute } from '~/utils/messageTemplateHelper'
 import { adminApi } from 'api'
 import { ElMessageBox } from 'element-plus'
 
@@ -44,17 +40,18 @@ provide(MessageTemplateProviderKey, {
   delete: async (row: any) => {
     // call delete api
     // deleteDialogRef.value?.open(row)
-    let action = await ElMessageBox.confirm(
-      t('tip_deleteMsg', { modelName: t('adminMenu.messageTemplate'), name: null }),
-      {
+    try {
+      let action = await ElMessageBox.confirm(t('tip_deleteMsg', { modelName: t('adminMenu.messageTemplate'), name: null }), {
         confirmButtonClass: 'el-button el-button--warning',
         confirmButtonText: t('common_confirmDelete')
-      }
-    )
-    if (action !== 'confirm') return
-    await adminApi.api.deleteMessageTemplateId(row.id)
-    routerProvider?.message.success(t('vxe.grid.delSuccess'))
-    itemReload()
+      })
+      if (action !== 'confirm') return
+      await adminApi.api.deleteMessageTemplateId(row.id)
+      routerProvider?.message.success(t('vxe.grid.delSuccess'))
+      itemReload()
+    } catch (error) {
+      console.log(error)
+    }
   }
 })
 
@@ -93,7 +90,6 @@ onMounted(() => {
   getFilter()
 })
 </script>
-
 
 <template>
   <div class="pageContainer">

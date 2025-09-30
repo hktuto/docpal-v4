@@ -30,17 +30,9 @@ if (!routerProvider) {
 }
 const { t } = useI18n()
 let extraParams: any = {}
-const {
-  tableConfig,
-  tableEvent,
-  tableRef,
-  query,
-  reload,
-  cleanSelectedRows
-} = useVxeTable({
+const { tableConfig, tableEvent, tableRef, query, reload, cleanSelectedRows } = useVxeTable({
   id: 'a-email-layout-template',
-  api: (pageParams: any) =>
-    adminApi.api.postTemplateEmailLayoutPage({ ...pageParams, ...extraParams }),
+  api: (pageParams: any) => adminApi.api.postTemplateEmailLayoutPage({ ...pageParams, ...extraParams }),
   columns: [
     { field: 'name', title: 'emailContentTemplate_layoutName', fixed: 'left' },
     { field: 'createdBy', title: 'emailContentTemplate_layoutCreator' },
@@ -87,16 +79,18 @@ function handleAdd() {
 }
 
 async function handleDeleteTemplate(row) {
-  const action = await ElMessageBox.confirm(
-    t('tip_deleteMsg', { modelName: t('emailTemplate.layout'), name: row.name }),
-    {
+  try {
+    const action = await ElMessageBox.confirm(t('tip_deleteMsg', { modelName: t('emailTemplate.layout'), name: row.name }), {
       confirmButtonClass: 'el-button el-button--warning',
       confirmButtonText: t('common_confirmDelete')
     })
-  if (action !== 'confirm') return
-  await adminApi.api.deleteTemplateEmailLayoutId(row.id)
-  routerProvider?.message.success(t('tip_deleteSuccessMsg', { modelName: t('emailTemplate.layout'), name: row.name }))
-  query({})
+    if (action !== 'confirm') return
+    await adminApi.api.deleteTemplateEmailLayoutId(row.id)
+    routerProvider?.message.success(t('tip_deleteSuccessMsg', { modelName: t('emailTemplate.layout'), name: row.name }))
+    query({})
+  } catch (error) {
+    console.log(error)
+  }
 }
 
 function handleFilterFormChange(formModel: any) {
@@ -104,8 +98,7 @@ function handleFilterFormChange(formModel: any) {
   reload()
 }
 
-onMounted(() => {
-})
+onMounted(() => {})
 </script>
 <style lang="scss" scoped>
 :deep(.el-input) {

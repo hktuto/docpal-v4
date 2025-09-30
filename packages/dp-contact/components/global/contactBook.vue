@@ -161,16 +161,20 @@ function handleDblclick(row: any) {
 }
 
 async function deleteItem(row: any) {
-  const action = await ElMessageBox.confirm(t('msg_confirmWhetherToDelete'))
-  if (action !== 'confirm') return
-  await globalApi.api.deleteContactgroupId(row.id)
-  routerProvider?.message.success(
-    t('tip_deleteSuccessMsg', {
-      modelName: t('contactBook.title'),
-      name: row.name
-    })
-  )
-  query({})
+  try {
+    const action = await ElMessageBox.confirm(t('msg_confirmWhetherToDelete'))
+    if (action !== 'confirm') return
+    await globalApi.api.deleteContactgroupId(row.id)
+    routerProvider?.message.success(
+      t('tip_deleteSuccessMsg', {
+        modelName: t('contactBook.title'),
+        name: row.name
+      })
+    )
+    query({})
+  } catch (error) {
+    console.log(error)
+  }
 }
 
 async function handleCreate() {

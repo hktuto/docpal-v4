@@ -91,7 +91,7 @@ const { tableConfig, tableEvent, tableRef, query, reload, cleanSelectedRows } = 
         code: 'delete',
         name: 'common_delete',
         action: async ({ row }) => {
-          const action = await ElMessageBox.confirm(`${t('msg_confirmWhetherToDelete', { tip: t('bpmn.globalRuleTip') + '，' })}`)
+          const action = await ElMessageBox.confirm(`${t('msg_confirmWhetherToDelete', { tip: t('bpmn.globalRuleTip') + '，' })}`).catch(action => action)
           if (action !== 'confirm') return
           const nodes = graphProvider?.graph.value?.getNodes()
           await deleteBpmnRule(row, nodes)
