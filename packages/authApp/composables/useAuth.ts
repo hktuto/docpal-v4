@@ -14,7 +14,6 @@ export const usePublicPageState = () => useState<string[]>('auth-public-page', (
 export const useLoginHook = () => useState<any>(() => shallowRef([]))
 export const useIsSSO = () => useState<boolean>(() => false)
 export const useIsLDAP = () => useState<boolean>(() => false)
-export const useIsSuperAdmin = () => useState<boolean>(() => true)
 export const useUserId = () => useState<string>(() => '')
 export const useUserPreference = () => useState<Record<string, any>>()
 export const useFeature = () => useState<Record<string, boolean>>('app-feature')
@@ -23,7 +22,7 @@ export const useOcrSetting = () => useState<any>('ocr-setting')
 export const useLoginState = () => useState<boolean>('auth-login-state', () => false)
 export const useUserRole = () => useState<string>(() => '')
 export const useIsAdmin = () => useState<boolean>(() => false)
-export const useOsSuperAdmin = () => useState<boolean>(() => false)
+export const useIsSuperAdmin = () => useState<boolean>(() => true)
 
 export const useAuth = () => {
   const loggedIn = useLoginState()
@@ -50,7 +49,7 @@ export async function verifly() {
   const decodedToken = parseJwt(token)
   if(decodedToken) {
     const isAdmin = useIsAdmin()
-    const isSuperAdmin = useOsSuperAdmin()
+    const isSuperAdmin = useIsSuperAdmin()
     const hasAdmin = decodedToken.roles.includes('ROLE_ADMIN')
     const hasSuperAdmin = decodedToken.roles.includes('ROLE_SUPER_ADMIN')
     isAdmin.value = hasAdmin
