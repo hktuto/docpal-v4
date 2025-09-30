@@ -81,7 +81,7 @@ async function handleInit() {
   const layoutRef = FormRendererRef.value.vFormRenderRef.getWidgetRef('layoutContent')
   const layoutContent = layoutRef.getValue()
   let action = 'confirm'
-  if (layoutContent) action = await ElMessageBox.confirm(`${t('msg_confirmWhetherToInit')}`)
+  if (layoutContent) action = await ElMessageBox.confirm(`${t('msg_confirmWhetherToInit')}`).catch(action => action)
   if (action !== 'confirm') return
   layoutRef.setValue(state.initLayout)
 }

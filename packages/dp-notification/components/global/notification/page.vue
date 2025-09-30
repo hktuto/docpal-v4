@@ -2,17 +2,9 @@
   <div class="pageContainer--padding">
     <VxeGrid ref="tableRef" v-bind="tableConfig" v-on="tableEvent">
       <template #toolbar_buttons>
-        <ResponsiveFilter v-show="!state.selectList || state.selectList?.length === 0" ref="ResponsiveFilterRef"
-                          @form-change="handleFilterFormChange"
-        />
-        <div
-          v-show="state.selectList?.length > 0"
-          class="flex-x-between"
-          style="width: 100%"
-        >
-          <div class="color__primary">
-            {{ $t('notifications.fileSelected') }}({{ state.selectList.length }})
-          </div>
+        <ResponsiveFilter v-show="!state.selectList || state.selectList?.length === 0" ref="ResponsiveFilterRef" @form-change="handleFilterFormChange" />
+        <div v-show="state.selectList?.length > 0" class="flex-x-between" style="width: 100%">
+          <div class="color__primary">{{ $t('notifications.fileSelected') }}({{ state.selectList.length }})</div>
           <div class="flex-x-end">
             <el-button text @click="cleanSelectedRows">
               {{ $t('notifications.cleanSelection') }}
@@ -40,14 +32,7 @@ let extraParams: any = {}
 const state = reactive<any>({
   selectList: []
 })
-const {
-  tableConfig,
-  tableEvent,
-  tableRef,
-  query,
-  reload,
-  cleanSelectedRows
-} = useVxeTable({
+const { tableConfig, tableEvent, tableRef, query, reload, cleanSelectedRows } = useVxeTable({
   id: 'c-share',
   api: async (pageParams: any) => {
     cleanSelectedRows()
@@ -104,9 +89,7 @@ const {
       field: 'readStatus',
       title: 'notification.read/unread',
       formatter({ row }: any) {
-        return row.readStatus === 'READED'
-          ? t('notification.read')
-          : t('notification.unread')
+        return row.readStatus === 'READED' ? t('notification.read') : t('notification.unread')
       }
     }
   ],
@@ -201,12 +184,16 @@ function updateNotificationUnreadCount() {
 }
 
 async function handleDisabled(row: any) {
-  const action = await ElMessageBox.confirm(`${t('msg_confirmWhetherToDelete')}`)
-  if (action !== 'confirm') return
-  const param: any = []
-  param.push(row.shareID)
-  await clientApi.api.deleteNuxeoShare(param)
-  query({})
+  try {
+    const action = await ElMessageBox.confirm(`${t('msg_confirmWhetherToDelete')}`)
+    if (action !== 'confirm') return
+    const param: any = []
+    param.push(row.shareID)
+    await clientApi.api.deleteNuxeoShare(param)
+    query({})
+  } catch (error) {
+    console.log(error)
+  }
 }
 
 // #region module: ResponsiveFilterRef
@@ -215,19 +202,24 @@ const ResponsiveFilterRef = ref()
 async function initCondition() {
   let defaultFilters: any = []
   try {
-    defaultFilters = await clientApi.api.getNotificationQueryNotificationFilter().then(res => res.data)
-  } catch (error) {
-  }
+    defaultFilters = await clientApi.api.getNotificationQueryNotificationFilter().then((res) => res.data)
+  } catch (error) {}
   const filters = [
     {
-      key: 'readStatus', label: 'notification.read/unread', type: 'string', isMultiple: false,
+      key: 'readStatus',
+      label: 'notification.read/unread',
+      type: 'string',
+      isMultiple: false,
       options: [
         { label: 'notification.read', value: 'READED' },
         { label: 'notification.unread', value: 'CREATE' }
       ]
     },
     {
-      key: 'orderBy', label: 'tableHeader.sortBy', type: 'string', isMultiple: false,
+      key: 'orderBy',
+      label: 'tableHeader.sortBy',
+      type: 'string',
+      isMultiple: false,
       options: [
         { label: 'workflowEditor.date', value: 'createdDate' },
         { label: 'docType_description', value: 'description' },
@@ -236,7 +228,10 @@ async function initCondition() {
       ]
     },
     {
-      key: 'isDesc', label: 'tableHeader.sortOrder', type: 'string', isMultiple: false,
+      key: 'isDesc',
+      label: 'tableHeader.sortOrder',
+      type: 'string',
+      isMultiple: false,
       options: [
         { label: 'tableHeader.asc', value: false },
         { label: 'tableHeader.desc', value: true }

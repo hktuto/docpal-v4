@@ -1,8 +1,7 @@
 <template>
   <el-card style="--icon-size: 1.2rem">
     <h3 class="title">{{ $t('easyForm.actions') }}</h3>
-    <div v-for="item in detail.formResult" :key="item.id" :class="['action', `action_${item.status}`]"
-         @dblclick="handleAdd(item)">
+    <div v-for="item in detail.formResult" :key="item.id" :class="['action', `action_${item.status}`]" @dblclick="handleAdd(item)">
       <div class="flex-x-start">
         <SvgIcon class="el-icon--left el-icon--right" :src="iconMap[item.actionType]" />
         {{ item.actionName }}
@@ -91,20 +90,19 @@ async function handleActive(row: EasyFormResult) {
       })
       .then((res) => res.data)
     emits('refresh', action)
-  } catch (error) {
-  }
+  } catch (error) {}
 }
 
 async function handleDelete(id: string) {
-  const action = await ElMessageBox.confirm(`${t('easyForm_FormActionsDeleteMsg')}`, {
-    confirmButtonClass: 'el-button el-button--warning',
-    dangerouslyUseHTMLString: true,
-    confirmButtonText: t('common_confirmDelete')
-  })
-  if (action !== 'confirm') return
-  // const index = list.value.findIndex(item => item.id === id)
-  // list.value.splice(index, 1)
   try {
+    const action = await ElMessageBox.confirm(`${t('easyForm_FormActionsDeleteMsg')}`, {
+      confirmButtonClass: 'el-button el-button--warning',
+      dangerouslyUseHTMLString: true,
+      confirmButtonText: t('common_confirmDelete')
+    })
+    if (action !== 'confirm') return
+    // const index = list.value.findIndex(item => item.id === id)
+    // list.value.splice(index, 1)
     await adminApi.api.deleteFormDesignDraftidFormresultFormresultid(props.detail.id, id)
     routerProvider?.message.success(t('tip_deleteSuccessMsg', { modelName: t('easyForm_formAction'), name: null }))
     emits('delete', id)

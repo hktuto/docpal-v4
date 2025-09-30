@@ -20,7 +20,7 @@ async function deleteSelected() {
   msg += t('msg_confirmWhetherToDelete')
   const action = await ElMessageBox.confirm(msg, {
     dangerouslyUseHTMLString: true
-  })
+  }).catch(action => action)
   if (action !== 'confirm') return
 
   const noti = ElNotification({

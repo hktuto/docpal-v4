@@ -11,11 +11,10 @@
         </header>
         <header v-show="state.selectList?.length > 0" class="header-flex">
           <div class="flex-x-start">
-            <el-button id="Trash__RestoreSelected" type="primary" @click="handleBathRestore(true,state.selectList)">
+            <el-button id="Trash__RestoreSelected" type="primary" @click="handleBathRestore(true, state.selectList)">
               {{ t('trash_actions_restore') }}
             </el-button>
-            <el-button id="Trash__PermanentlyDeleteSelected" type="danger"
-                       @click="handleBathDelete(true,state.selectList)">
+            <el-button id="Trash__PermanentlyDeleteSelected" type="danger" @click="handleBathDelete(true, state.selectList)">
               {{ t('trash_actions_delete') }}
             </el-button>
           </div>
@@ -30,11 +29,11 @@ import { clientApi } from 'api'
 
 const routerProvider = inject(MenuRouterKey)
 type TableState = {
-  ready: boolean,
-  loading: boolean,
-  extraParams: any,
-  extraParamsFilter: any,
-  selectList: any[],
+  ready: boolean
+  loading: boolean
+  extraParams: any
+  extraParamsFilter: any
+  selectList: any[]
 }
 const state = reactive<TableState>({
   ready: false,
@@ -110,7 +109,6 @@ const { tableConfig, tableEvent, tableRef, reload, query, cleanSelectedRows } = 
           return `<span class="tableRow-icon-cell"><img src="${icon}" class="browseFileIcon" /> ${cellValue}</span> `
         }
         return `<span class="tableRow-icon-cell"><img src="${icon}" class="browseFileIcon" /> ${cellValue}</span> `
-
       }
     },
     { field: 'path', title: 'document_path' },
@@ -147,10 +145,10 @@ const { tableConfig, tableEvent, tableRef, reload, query, cleanSelectedRows } = 
     ]
   ],
   permissionMethod: ({ options, column, row, rowIndex }: any) => {
-    if(!row){
-      return{
-        disabled:true,
-        visible:false
+    if (!row) {
+      return {
+        disabled: true,
+        visible: false
       }
     }
     if (state.loading) {
@@ -171,25 +169,24 @@ const { tableConfig, tableEvent, tableRef, reload, query, cleanSelectedRows } = 
 })
 
 async function handleDeleteAll() {
-  const action = await ElMessageBox.confirm(
-    t('trash_emptyTrashMsg'),
-    {
+  try {
+    const action = await ElMessageBox.confirm(t('trash_emptyTrashMsg'), {
       confirmButtonClass: 'el-button el-button--warning',
       dangerouslyUseHTMLString: true,
       confirmButtonText: t('common_confirmDelete')
-    }
-  ).catch(() => {
-    return
-  })
-  if (action !== 'confirm') return
+    })
+    if (action !== 'confirm') return
 
-  state.loading = true
-  await clientApi.api.deleteNuxeoDocumentPurge()
-  setTimeout(async () => {
-    state.loading = false
-    routerProvider?.message.success(t('trash_emptyTrashSuccessMsg'))
-    reload()
-  }, 2000)
+    state.loading = true
+    await clientApi.api.deleteNuxeoDocumentPurge()
+    setTimeout(async () => {
+      state.loading = false
+      routerProvider?.message.success(t('trash_emptyTrashSuccessMsg'))
+      reload()
+    }, 2000)
+  } catch (error) {
+    console.log(error)
+  }
 }
 
 async function handleBathRestore(status: boolean, selectList: any) {
@@ -213,9 +210,7 @@ async function handleBathRestore(status: boolean, selectList: any) {
 
   setTimeout(async () => {
     state.loading = false
-    routerProvider?.message.success(
-      selectList.length > 1 ? t('trash_restoredSelectedSuccessMsg') : t('trash_restoredSuccessMsg')
-    )
+    routerProvider?.message.success(selectList.length > 1 ? t('trash_restoredSelectedSuccessMsg') : t('trash_restoredSuccessMsg'))
     query()
   }, 1000)
   if (status) {
@@ -224,45 +219,42 @@ async function handleBathRestore(status: boolean, selectList: any) {
 }
 
 async function handleBathDelete(status: boolean, selectList: any) {
-  const action = await ElMessageBox.confirm(
-    selectList.length > 1 ? t('trash_deleteSelectedMsg') : t('trash_deleteMsg'),
-    {
+  try {
+    const action = await ElMessageBox.confirm(selectList.length > 1 ? t('trash_deleteSelectedMsg') : t('trash_deleteMsg'), {
       confirmButtonClass: 'el-button el-button--warning',
       dangerouslyUseHTMLString: true,
       confirmButtonText: t('common_confirmDelete')
+    })
+    if (action !== 'confirm') return
+
+    state.loading = true
+    let promises = []
+
+    for (const row of selectList) {
+      promises.push(deleteOne(row.id, row.name))
     }
-  ).catch(() => {
-    return
-  })
-  if (action !== 'confirm') return
+    const allResponse = await Promise.all(promises)
 
-  state.loading = true
-  let promises = []
+    const failMessage = allResponse.reduce((result, item) => {
+      if (item) result += item
+      return result
+    }, '')
+    if (failMessage.length > 0) {
+      state.loading = false
+      handleMsg(failMessage)
+      return
+    }
 
-  for (const row of selectList) {
-    promises.push(deleteOne(row.id, row.name))
-  }
-  const allResponse = await Promise.all(promises)
-
-  const failMessage = allResponse.reduce((result, item) => {
-    if (item) result += item
-    return result
-  }, '')
-  if (failMessage.length > 0) {
-    state.loading = false
-    handleMsg(failMessage)
-    return
-  }
-
-  setTimeout(async () => {
-    state.loading = false
-    routerProvider?.message.success(
-      selectList.length > 1 ? t('trash_deleteSelectedSuccessMsg') : t('trash_deleteSuccessMsg')
-    )
-    query()
-  }, 1000)
-  if (status) {
-    state.selectList = []
+    setTimeout(async () => {
+      state.loading = false
+      routerProvider?.message.success(selectList.length > 1 ? t('trash_deleteSelectedSuccessMsg') : t('trash_deleteSuccessMsg'))
+      query()
+    }, 1000)
+    if (status) {
+      state.selectList = []
+    }
+  } catch (error) {
+    console.log(error)
   }
 }
 
@@ -280,7 +272,7 @@ function handleMsg(messages: string) {
 
 async function deleteOne(idOrPath: string) {
   try {
-    await clientApi.api.deleteNuxeoDocument({ idOrPath }, { headers: { 'noErrorMessage': true } })
+    await clientApi.api.deleteNuxeoDocument({ idOrPath }, { headers: { noErrorMessage: true } })
   } catch (error) {
     console.log(error)
     return `${t('doc_typeSmartFolderSearchName')}: ${name}, ${t('upload_Status_error')}: ` + (error?.response?.data?.message || 'Server Error') + '.</br> '
@@ -289,7 +281,7 @@ async function deleteOne(idOrPath: string) {
 
 async function restore(idOrPath: string, name: string) {
   try {
-    await clientApi.api.postNuxeoDocumentRestore({ idOrPath }, { headers: { 'noErrorMessage': true } })
+    await clientApi.api.postNuxeoDocumentRestore({ idOrPath }, { headers: { noErrorMessage: true } })
     return null
   } catch (error) {
     console.log('call Api error', error)
@@ -300,8 +292,6 @@ async function restore(idOrPath: string, name: string) {
 onMounted(() => {
   state.selectList = []
 })
-
 </script>
 
-<style lang="scss" scoped>
-</style>
+<style lang="scss" scoped></style>
