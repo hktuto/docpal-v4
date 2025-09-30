@@ -464,7 +464,13 @@ const { tableConfig, tableEvent, tableRef, reload, cleanSelectedRows } = useVxeT
       docActionDelete: RbacPermission.delete,
       download: RbacPermission.download
     }
-    const result = {}
+    const result = {
+      showBlank: true,
+      docOpen: {
+        visible: !!row,
+        disabled: false
+      }
+    }
     Object.keys(permissionCodes).forEach((key) => {
       const code = permissionCodes[key]
       if (!clickItem || clickItem.path === '/') {
