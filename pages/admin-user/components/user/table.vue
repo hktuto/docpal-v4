@@ -152,7 +152,8 @@ const { tableConfig, tableEvent, tableRef, reload, cleanSelectedRows } = useVxeT
         code: 'sendInvitation',
         name: 'Send Invitation',
         action: ({ row }: any) => {
-          if (!row.registered) {
+          console.log('row', row)
+          if (row.registered === 'Pending') {
             userProvider?.sendInvitation(row)
           }
         }

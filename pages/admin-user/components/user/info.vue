@@ -47,9 +47,13 @@
       <div class="rowValue" :title="user.email">{{ user.email }}</div>
     </div>
     <div class="row">
+      <div class="rowTitle">{{ $t('user_userLevel') }}</div>
+      <div class="rowValue" :title="user.userLevel">{{ user.userLevel }}</div>
+    </div>
+    <!-- <div class="row">
       <div class="rowTitle">{{ $t('user_company') }}</div>
       <div class="rowValue" :title="user.company">{{ user.company }}</div>
-    </div>
+    </div> -->
     <div class="row">
       <div class="rowTitle">{{ $t('user_status') }}</div>
       <div class="rowValue">
