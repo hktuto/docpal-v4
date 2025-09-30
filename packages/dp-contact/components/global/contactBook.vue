@@ -129,7 +129,10 @@ const { tableConfig, tableEvent, tableRef, query, reload, cleanSelectedRows } = 
     if (platform.value === 'admin') {
       return {}
     }
-    const isDelete = await getRowPermission(row)
+    let isDelete = false
+    if (row) {
+      isDelete = await getRowPermission(row)
+    }
     return {
       contactbook_delete: {
         visible: isDelete,
