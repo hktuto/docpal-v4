@@ -48,9 +48,9 @@ export interface UseVxeTableParams<R = any> {
     dragend?: (params: any) => void
   }
   optionalConfig?: VxeGridProps<R>
-  selectChangeHander?: (selectedRows: any[], selectedRow: any) => void
+  selectChangeHander?: (selectedRows: any[], selectedRow?: any) => void
   optionalEvent?: VxeGridListeners<R>
-  childChangeHandler?: (childRows: any[]) => void
+  childChangeHandler?: (childRows?: any[]) => void
   additionalPermission?: (params: any) => Promise<any>
   editRender?: {
     editClosed: (params: any) => any
@@ -87,7 +87,7 @@ export const useVxeTable = (params: UseVxeTableParams) => {
       return { visible: true, disabled: false }
     },
     bodyActions: actions = [],
-    selectChangeHander = () => {
+    selectChangeHander = (args: any) => {
       console.log('defauilt selectChangeHander, please implement')
     }
   } = params
@@ -347,7 +347,6 @@ export const useVxeTable = (params: UseVxeTableParams) => {
               item.disabled = allDisabled
             } else {
               const permission = permissionMethod({ row, rowIndex, code: item.code, additionalData })
-              console.log('permission', permission)
               if(!permission){
                 item.visible = true
                 item.disabled = false
@@ -571,13 +570,15 @@ export const useVxeTable = (params: UseVxeTableParams) => {
         observer.disconnect()
       }
       observer = new MutationObserver(params.childChangeHandler)
-      observer.observe(tableRef.value.$el, {
+      observer.observe(tableRef.value?.$el, {
         childList: true,
         subtree: true
       })
       nextTick(() => {
         console.log('init table observer')
-        params.childChangeHandler()
+        if(params.childChangeHandler){
+          params.childChangeHandler()
+        }
       })
     }
   }
