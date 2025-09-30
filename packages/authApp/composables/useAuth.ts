@@ -10,7 +10,7 @@ import type { UserDTO } from 'api/src/generate/client'
 export const useDesktopMode = () => useState<boolean>('is-desktop')
 export const useUserState = () => useState<UserDTO | null>('auth-user')
 export const useKeyCloakState = () => useState<Keycloak | null>('keycloak-state')
-export const usePublicPageState = () => useState<string[]>('auth-public-page', () => ['/forgetPassword', '/forgetPassword/', '/resetPassword/','/resetPassword','/login/', '/login'])
+export const usePublicPageState = () => useState<string[]>('auth-public-page', () => ['/forgetPassword', '/forgetPassword/', '/resetPassword/','/resetPassword','/login/', '/login', '/initPassword/', '/initPassword'])
 export const useLoginHook = () => useState<any>(() => shallowRef([]))
 export const useIsSSO = () => useState<boolean>(() => false)
 export const useIsLDAP = () => useState<boolean>(() => false)

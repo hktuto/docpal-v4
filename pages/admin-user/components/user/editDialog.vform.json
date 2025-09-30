@@ -179,7 +179,7 @@
         "required": true,
         "requiredHint": "",
         "validation": "email",
-        "validationHint": "user_emailFormatError",
+        "validationHint": "tip.enterValidEmail",
         "customClass": "",
         "labelIconClass": null,
         "labelIconPosition": "rear",

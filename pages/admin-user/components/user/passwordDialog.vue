@@ -38,7 +38,7 @@ async function handleSubmit() {
       userId: props.user.userId
     }
     await userProviderDetail?.PatchUserPasswordApi(param)
-    ElMessage.success(t('tip_updateSuccessMsg', {
+    ElMessage.success(t('tip_updateMsg', {
       modelName: t('user_userPassword'),
       name: param.userId
     }))
