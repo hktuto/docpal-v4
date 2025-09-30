@@ -16,8 +16,22 @@
           // }
         ]"
       >
-        <el-input-tag v-model="form.emailList" clearable draggable :placeholder="$t('vxe.base.pleaseInput')" :aria-label="$t('tip_enterAfterInput')">
-        </el-input-tag>
+        <el-select
+          v-model="form.emailList"
+          ref="selectRef"
+          multiple
+          allow-create
+          clearable
+          filterable
+          default-first-option
+          :placeholder="$t('vxe.base.pleaseInput')"
+          :aria-label="$t('tip_enterAfterInput')"
+          @change="handleSelectChange"
+        >
+          <el-option v-for="item in state.contactList" :key="item.id" :label="item.name" :value="item.id" />
+        </el-select>
+        <!-- <el-input-tag v-model="form.emailList" clearable draggable :placeholder="$t('vxe.base.pleaseInput')" :aria-label="$t('tip_enterAfterInput')">
+        </el-input-tag> -->
       </el-form-item>
       <el-form-item :label="$t('share_shareLink')">
         <el-input v-model="shareLink" readonly type="text" class="cursorPointer" @click="handleCopy(shareLink)">
@@ -61,10 +75,11 @@
 </template>
 
 <script lang="ts" setup>
+import { ElMessage, ElMessageBox } from 'element-plus'
 import { CopyDocument } from '@element-plus/icons-vue'
 import type { FormInstance } from 'element-plus'
 import { Base64 } from 'js-base64'
-
+import { clientApi } from 'api'
 const routerProvider = inject(MenuRouterKey)
 const { diffMinute } = useTime()
 const {
@@ -102,7 +117,8 @@ const state = reactive<any>({
       }
     }
   ],
-  shareId: ''
+  shareId: '',
+  contactList: []
 })
 const value1 = ref()
 const emit = defineEmits(['submit'])
@@ -140,17 +156,34 @@ const form = reactive<any>({
   dueDate: ''
 })
 
+function isValidateEmail(emailList) {
+  let isValidate = true
+  const contactList = state.contactList
+  const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
+
+  emailList.forEach((item: any) => {
+    if (!emailRegex.test(item) && !isInContactList(item)) {
+      ElMessage.error(t('tip.enterValidEmail') + ' 【' + item + '】')
+      isValidate = false
+    }
+  })
+  return isValidate
+  function isInContactList(email: string) {
+    return contactList.some((item: any) => item.value === email)
+  }
+}
 async function handleSubmit() {
   const valid = await formRef.value.validate((valid, fields) => valid)
   if (!valid) return
+  if (!isValidateEmail(form.emailList)) return
   const param = {
-    emailList: form.emailList.map((item: any) => item.split('&&&&')[0]),
+    emailList: form.emailList,
     password: form.password,
     tokenLiveInMinutes: diffMinute(form.dueDate),
     shareId: state.shareId
   }
 
-  routerProvider?.message.success(t('tip_updateMsg', { modelName: t('externalSharing_sharingRequest'),name: null }))
+  routerProvider?.message.success(t('tip_updateMsg', { modelName: t('externalSharing_sharingRequest'), name: null }))
   emit('submit', param)
   dialogVisible.value = false
 }
@@ -158,7 +191,6 @@ async function handleSubmit() {
 // #endregion
 function initFormatItem(shareInfo: any) {
   form.emailList = shareInfo.emailList
-  echoEamilList()
   form.password = shareInfo.password || ''
   form.dueDate = shareInfo.expiredDate
   const origin = endPoint?.upload
@@ -171,17 +203,19 @@ function initFormatItem(shareInfo: any) {
 function handleCopy(copyContent: string) {
   copy(copyContent, t('common_copySuccess'))
 }
-
-function echoEamilList() {
-  form.emailList = form.emailList.map((item: any) => {
-    const user: any = state.userList.find((user: any) => user.email === item)
-    if (user) return user.email + '&&&&' + user.username
-    else return item
+async function getContactList() {
+  const contactList = await clientApi.api.getContactgroupList().then((res) => res.data)
+  state.contactList = contactList
+}
+const selectRef = ref()
+function handleSelectChange() {
+  selectRef.value.blur()
+  setTimeout(() => {
+    selectRef.value.focus()
   })
 }
-
 onMounted(async () => {
-  // echoEamilList()
+  getContactList()
 })
 const { defaultTime, shortcuts, shareLink, userList } = toRefs(state)
 defineExpose({ handleOpen })
