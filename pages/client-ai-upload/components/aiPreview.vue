@@ -27,12 +27,18 @@ async function getBlobFile(id: string) {
   state.loading = false
 }
 
+async function readBlobToText(blob: Blob) {
+  const text = await blob.text()
+  return text
+}
+
 function checkExtension(filename: string) {
   const ext = filename.split('.').pop()
   if (!ext) return 'notSupport'
   const collaboraList = ['doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx']
   const imgList = ['jpg', 'png', 'jpeg', 'tif', 'gif', 'webp', 'bmp', 'svg']
-  const pdfList = ['pdf', 'txt']
+  const textList = ['txt']
+  const pdfList = ['pdf']
   const videoList = ['mp4']
   if (collaboraList.includes(ext)) {
     return 'collabora'
@@ -41,7 +47,9 @@ function checkExtension(filename: string) {
   if (imgList.includes(ext)) {
     return 'image'
   }
-
+  if (textList.includes(ext)) {
+    return 'text'
+  }
   if (pdfList.includes(ext)) {
     return 'pdf'
   }
@@ -60,6 +68,9 @@ function checkExtension(filename: string) {
     <!-- <template v-else-if="fileType === 'image'">
       <ViewerPicture :images="[state.encodeUrl]" />
     </template> -->
+    <template v-else-if="fileType === 'text'">
+     <ReaderText :blob="state.blob" />
+    </template>
     <template v-else-if="fileType === 'collabora'">
       <CollaboraViewer :docId="props.doc.id" fileType="LOCAL" :readonly="true" />
     </template>
