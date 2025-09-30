@@ -52,10 +52,7 @@ async function handleSubmit() {
     state.loading = true
     await adminApi.api.postCabinetTemplatePermission(params)
     state.visible = false
-    ElMessage.success(t('tip_createdSuccessMsg', {
-      modelName: t('folder_cabinetLocalPermissionOfFolder'),
-      name: null
-    }))
+    ElMessage.success(t('tip_createdMsg', { modelName: t('folder_cabinetLocalPermissionOfFolder'), name: null }))
     emits('refresh')
   } catch (error) {
     console.log(error)
@@ -93,6 +90,7 @@ function handleOptions() {
     )
   }
 }
+
 async function init() {
   state.userList = await adminApi.api.postNuxeoIdentityUsers({}).then(res => res.data)
   state.userList.forEach((item: any) => {
@@ -105,6 +103,7 @@ async function init() {
     item.label = item.name
   })
 }
+
 onMounted(async () => {
   init()
 })

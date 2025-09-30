@@ -71,7 +71,7 @@ async function handleSubmit() {
     state.loading = false
     if (res?.errorCode) throw new Error(res.message || 'error')
     state.dialogOpened = false
-    ElMessage.success(t('tip_createdMsg', { name: t('document_uploadFilesRequest') }))
+    ElMessage.success(t('tip_createdMsg', { modelName: null, name: t('document_uploadFilesRequest') }))
     ElMessage.success(t('publicUpload_success'))
     emits('success')
   } catch (error) {

@@ -46,10 +46,10 @@ async function handleSubmit() {
     let msg
     if (state.isEdit) {
       await adminApi.api.putPolicyHolds(params)
-      msg = t('tip_updateSuccessMsg', {modelName: t('workflow_holdPolicy'), name: null})
+      msg = t('tip_updateMsg', {modelName: t('workflow_holdPolicy'), name: null})
     } else {
       await adminApi.api.postPolicyHolds(params)
-      msg = t('tip_createdSuccessMsg', {modelName: t('workflow_holdPolicy'), name: null})
+      msg = t('tip_createdMsg', {modelName: t('workflow_holdPolicy'), name: null})
     }
     ElMessage.success(msg)
     state.visible = false

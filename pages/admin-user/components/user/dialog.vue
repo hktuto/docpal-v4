@@ -42,7 +42,7 @@ async function handleSubmit() {
         groupIds: data.groupList
       })
     }
-    ElMessage.success(t('tip_createdSuccessMsg', { modelName: t('User'), name: data.userId }))
+    ElMessage.success(t('tip_createdMsg', { modelName: t('User'), name: data.userId }))
     emits('refresh')
     console.log('resetFormFormRendererRef', FormRendererRef.value.vFormRenderRef)
     FormRendererRef.value.vFormRenderRef.resetForm()

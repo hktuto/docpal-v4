@@ -75,7 +75,7 @@ async function handleDelete(row: any) {
     })
     if (action !== 'confirm') return
     const res = await adminApi.api.deleteDocpaltypeSettingsRelatedId(row.id)
-    routerProvider?.message.success(t('tip_deleteSuccessMsg', { modelName: t('docType_relatedDocument'), name: null }))
+    routerProvider?.message.success(t('tip_deleteSuccessMessage', { name: t('docType_relatedDocument') }))
     await getList()
   } catch (error) {
   } finally {

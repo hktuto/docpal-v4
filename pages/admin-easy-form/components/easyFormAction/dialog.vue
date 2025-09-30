@@ -225,7 +225,7 @@ async function handleSubmit() {
     const action = await adminApi.api
       .postFormDesignSaveFormresultAppend(params)
       .then((res) => res.data)
-    ElMessage.success(t('tip_createdSuccessMsg', { modelName: t('easyForm_formAction'), name: null }))
+    ElMessage.success(t('tip_createdMsg', { modelName: t('easyForm_formAction'), name: null }))
     emits('refresh', action)
   } catch (error) {
   } finally {
