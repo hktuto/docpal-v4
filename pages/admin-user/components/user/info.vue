@@ -90,15 +90,17 @@ const emits = defineEmits(['refresh'])
 
 async function handleDelete() {
   try {
-    const action = await ElMessageBox.confirm(t('userTip.confirmWhetherToDelete', { username: props.user.firstName }), {
-      confirmButtonClass: 'el-button el-button--warning',
-      confirmButtonText: t('common_confirmDelete'),
-      dangerouslyUseHTMLString: true
-    })
+    const action = await ElMessageBox.confirm(
+      t('userTip.confirmWhetherToDelete'),
+      {
+        confirmButtonClass: 'el-button el-button--warning',
+        confirmButtonText: t('common_confirmDelete'),
+        dangerouslyUseHTMLString: true
+      })
 
     if (action !== 'confirm') return
     const res = await userProviderDetail?.BatchDeleteUserApi({ userIds: [props.user.userId] })
-    routerProvider?.message.success(t('tip_deleteSuccessMsg', { modelName: t('User'), name: props.user.firstName }))
+    routerProvider?.message.success(t('tip_deleteSuccessMessage', {name: props.user.firstName }))
     if (!!res) userProviderDetail?.openUserList()
   } catch (error) {
     console.log(error)
