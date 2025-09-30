@@ -80,13 +80,15 @@ function handleAdd() {
 
 async function handleDeleteTemplate(row) {
   try {
-    const action = await ElMessageBox.confirm(t('tip_deleteMsg', { modelName: t('emailTemplate.layout'), name: row.name }), {
-      confirmButtonClass: 'el-button el-button--warning',
-      confirmButtonText: t('common_confirmDelete')
-    })
+    const action = await ElMessageBox.confirm(
+      t('tip_deleteMsg', { modelName: t('emailTemplate.layout'), name: row.name }),
+      {
+        confirmButtonClass: 'el-button el-button--warning',
+        confirmButtonText: t('common_confirmDelete')
+      })
     if (action !== 'confirm') return
     await adminApi.api.deleteTemplateEmailLayoutId(row.id)
-    routerProvider?.message.success(t('tip_deleteSuccessMsg', { modelName: t('emailTemplate.layout'), name: row.name }))
+    routerProvider?.message.success(t('tip_deleteSuccessMessage', { name: row.name }))
     query({})
   } catch (error) {
     console.log(error)

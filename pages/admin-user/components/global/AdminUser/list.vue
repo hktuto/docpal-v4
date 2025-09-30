@@ -23,14 +23,17 @@ function openUserDetail(data: any, openInNewTab = false) {
 }
 
 async function sendInvitation(data:any) {
+  console.log('sendInvitation', data)
   if(!data.registered) {
     throw new Error('only non-register user can be invitate')
   }
   try{
     const response = await adminApi.api.getNuxeoIdentitySendInitPasswordEmailUserid(data.userId)
-
+    console.log('response', response)
+    routerProvider?.message.success('Invitation sent successfully')
   }catch(error){
     // TODO : handle error
+    console.error(error)
   }
 
 }

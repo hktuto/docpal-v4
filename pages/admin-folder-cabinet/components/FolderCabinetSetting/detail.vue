@@ -2,14 +2,16 @@
   <div class="detail-container" v-loading="state.loading" :class="{ 'not-root': !isRoot }">
     <div style="overflow: auto; padding: 0 var(--app-space-xs)">
       <div class="flex-x-start">
-        <BrowseItemIcon class="file-icon el-icon--left" :type="state.setting.folder ? 'folder' : 'file'" :fileName="state.setting.label" />
+        <BrowseItemIcon class="file-icon el-icon--left" :type="state.setting.folder ? 'folder' : 'file'"
+                        :fileName="state.setting.label" />
         {{ state.setting.label }}
       </div>
       <FormRenderer ref="FormRendererRef" :form-json="formJson" @formChange="formChange"></FormRenderer>
       <div style="padding: 0 var(--app-space-xs)">
         <el-divider v-if="isRoot" />
         <el-form label-position="top" ref="FormRef" :model="form">
-          <el-form-item prop="labelRule" class="intro" :rules="[{ required: true, message: $t('tableHeader_labelRule') + $t('render.hint.fieldRequired') }]">
+          <el-form-item prop="labelRule" class="intro"
+                        :rules="[{ required: true, message: $t('tableHeader_labelRule') + $t('render.hint.fieldRequired') }]">
             <template #label>
               {{ $t('tableHeader_labelRule') }}
               <!-- <span
@@ -108,6 +110,7 @@ function formChange({ fieldName, newValue, oldValue, formModel }) {
 
   if (fieldName === 'documentType') handleDocTypeChange(newValue)
 }
+
 async function handleDocTypeChange(docType: string) {
   const metaList = await MetaFormRef.value.init(docType)
   state.curDocType = docType
@@ -267,12 +270,7 @@ async function handleSave() {
 
     state.loading = true
     await adminApi.api.patchCabinetTemplate(params)
-    routerProvider?.message.success(
-      t('tip_updateSuccessMsg', {
-        modelName: t('folder_folderCabinetDetails'),
-        name: null
-      })
-    )
+    routerProvider?.message.success(t('tip_updateMsg', { modelName: t('folder_folderCabinetDetails'), name: null }))
     emits('update')
     WorkflowDialogRef.value.handleCheck()
   } catch (error) {
@@ -322,12 +320,7 @@ async function handleDelete() {
     await adminApi.api.deleteCabinetId(state.setting.id)
     if (props.isRoot) {
       routerProvider?.navigateTo(routeFolderCabinetPage(), false)
-      routerProvider?.message.success(
-        t('tip_deleteSuccessMsg', {
-          modelName: t('folder_entireFolderCabinet'),
-          name: null
-        })
-      )
+      routerProvider?.message.success(t('tip_deleteSuccessMessage', { name: t('folder_entireFolderCabinet') }))
     } else {
       emits('update')
     }

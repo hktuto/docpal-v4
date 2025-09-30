@@ -42,7 +42,7 @@ async function submit() {
       return
     }
     const newItem = await createWatermarkTemplate(form.value)
-    routerProvider?.message.success(t('tip_createdSuccessMsg', { modelName: t('watermark.watermark'), name: null }))
+    routerProvider?.message.success(t('tip_createdMsg', { modelName: t('watermark.watermark'), name: null }))
     emits('submit', newItem.id)
   } catch (error) {
   } finally {

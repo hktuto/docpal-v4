@@ -104,7 +104,7 @@ async function handleDelete(id: string) {
     // const index = list.value.findIndex(item => item.id === id)
     // list.value.splice(index, 1)
     await adminApi.api.deleteFormDesignDraftidFormresultFormresultid(props.detail.id, id)
-    routerProvider?.message.success(t('tip_deleteSuccessMsg', { modelName: t('easyForm_formAction'), name: null }))
+    routerProvider?.message.success(t('tip_deleteSuccessMessage', { name: t('easyForm_formAction') }))
     emits('delete', id)
   } catch (error) {
     routerProvider?.message.success(t('dpMsg_success'))

@@ -46,14 +46,14 @@ async function handleSubmit() {
         ...state.setting,
         ..._data
       })
-      ElMessage.success(t('tip_updateSuccessMsg', {
+      ElMessage.success(t('tip_updateMsg', {
         modelName: t('dashboard.PersonalDashboard'),
         name: _data.name
       }))
       emits('refresh')
     } else {
       const res = await publicApi.api.postUserDashboard(_data)
-      ElMessage.success(t('tip_createdSuccessMsg', {modelName: t('dashboard.PersonalDashboard'), name: _data.name}))
+      ElMessage.success(t('tip_createdMsg', {modelName: t('dashboard.PersonalDashboard'), name: _data.name}))
       // router.push(`/data-dashboard/${res.id}`)
       emits('add', res.data)
     }
