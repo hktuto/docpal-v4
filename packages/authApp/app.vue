@@ -1,11 +1,14 @@
 <script lang="ts" setup>
 // Unregister all service workers in development mode
 import { clientApi } from 'api'
-
+const ready = ref(false)
 // Call the function when the app mounts
 onMounted( async() => {
   // unregisterServiceWorkers()
-  if(!window.location.pathname.startsWith('/public')) return
+  if(!window.location.pathname.startsWith('/public')) {
+    ready.value = true
+    return
+  }
 
   const { locale, availableLocales, setLocaleMessage, setLocale } = useI18n()
 
@@ -30,12 +33,15 @@ onMounted( async() => {
         ...adminJson,
         ...metaJson
     })
-
+    ready.value = true
 })
 </script>
 
 <template>
-    <NuxtPage />
+    <template v-if="ready">
+
+      <NuxtPage />
+    </template>
     <AppUpdateToast />  
 </template>
 
