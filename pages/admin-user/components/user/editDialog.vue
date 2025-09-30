@@ -29,7 +29,7 @@ async function handleSubmit() {
     const data = await FormRendererRef.value.getFormData()
     state.loading = true
     await adminApi.api.patchNuxeoIdentityUser({ ...props.user, properties: null, ...data })
-    ElMessage.success(t('tip_updateSuccessMsg', { modelName: t('user_info'), name: data.firstName }))
+    ElMessage.success(t('tip_updateMsg', { modelName: t('user_info'), name: data.firstName }))
     state.visible = false
     FormRendererRef.value.vFormRenderRef.resetForm()
     emits('refresh')

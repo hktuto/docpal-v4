@@ -49,7 +49,7 @@ async function handleSubmit() {
     await new Promise((resolve) => setTimeout(resolve, 2000))
     await uploadFiles(uploadList, state.rootDetail.idOrPath)
     state.visible = false
-    ElMessage.success(t('tip_createdMsg', { name: uploadList[0].previewName }))
+    ElMessage.success(t('tip_createdMsg', { modelName: null, name: uploadList[0].previewName }))
     emits('refresh')
   } catch (error) {
     console.log(error)

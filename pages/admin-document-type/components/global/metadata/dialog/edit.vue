@@ -139,7 +139,7 @@ async function handleUpdate() {
       }
       await adminApi.api.patchDocpaltypeSettingsMetadataV2Update(formData.value).then((res) => res.data)
 
-      ElMessage.success(t('meta.update_success', { name: formData.value.name }))
+      ElMessage.success(t('tip_updateMsg', { modelName: null, name: formData.value.name }))
       close()
     }
   } catch (error) {

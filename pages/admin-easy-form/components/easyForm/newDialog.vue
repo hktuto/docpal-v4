@@ -31,7 +31,7 @@ async function handleSubmit() {
     state.loading = true
     data.permission = 'members'
     const result = await adminApi.api.postFormDesign(data)
-    ElMessage.success(t('tip_createdSuccessMsg', { modelName: t('workflow_form'), name: null }))
+    ElMessage.success(t('tip_createdMsg', { modelName: t('workflow_form'), name: null }))
     state.visible = false
     emits('refresh')
   } catch (error) {

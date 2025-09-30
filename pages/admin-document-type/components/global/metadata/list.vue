@@ -119,14 +119,8 @@ async function handleExport() {
   })
   console.log('export')
   const result = await adminApi.api.postDocpaltypeSettingsMetadataV2ExportMetadataCvs(
-    {
-      pageNum: 0,
-      pageSize: 1000
-    },
-    {
-      format: 'blob',
-      timeout: 0
-    }
+    { pageNum: 0, pageSize: 1000 },
+    { format: 'blob', timeout: 0 }
   )
   console.log('result', result)
   downloadBlob(result, 'metadata.xlsx', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
@@ -162,16 +156,19 @@ const handleDuplicate = (row: any) => {
 
 const handleRemove = async (row: any) => {
   try {
-    const action = await ElMessageBox.confirm(t('tip_deleteMsg', { modelName: 'MetaData', name: row.name }), {
-      confirmButtonClass: 'el-button el-button--warning',
-      confirmButtonText: t('common_confirmDelete')
-    })
+    const action = await ElMessageBox.confirm(
+      t('tip_deleteMsg', { modelName: 'MetaData', name: row.name }),
+      {
+        confirmButtonClass: 'el-button el-button--warning',
+        confirmButtonText: t('common_confirmDelete')
+      }
+    )
     console.log('action', action)
     if (action !== 'confirm') return
 
     const result = await adminApi.api.deleteDocpaltypeSettingsMetadataV2DeleteMetadataid(row.id)
     if (result) {
-      ElMessage.success(t('metadata.remove_success'))
+      ElMessage.success(t('tip_deleteSuccessMessage'))
       reload()
     } else {
       ElMessage.error(t('metadata.remove_error'))
