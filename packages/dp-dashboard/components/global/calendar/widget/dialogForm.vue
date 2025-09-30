@@ -77,11 +77,7 @@ watch(() => state.tableData, () => {
 
 async function getFormData() {
   try {
-    let formData = await FormRendererRef.value
-      .getFormData()
-      .then((res: any) => {
-        return res
-      })
+    let formData = await FormRendererRef.value.getFormData().then((res: any) => res)
       .catch((error: any) => {
         console.log(error)
         return
@@ -160,7 +156,8 @@ defineExpose({ setForm, getFormData, setFormData, disableForm, enableForm })
         <template #toolbar_buttons>
           <div class="actions">
             <p>Participants</p>
-            <el-button id="Home__Dashboard__Calendar__NewEvent__AddParticipants" @click="openSelectUser" class="button-container" type="primary">
+            <el-button id="Home__Dashboard__Calendar__NewEvent__AddParticipants" @click="openSelectUser"
+                       class="button-container" type="primary">
               {{ $t('Add Participants') }}
             </el-button>
           </div>
@@ -175,10 +172,12 @@ defineExpose({ setForm, getFormData, setFormData, disableForm, enableForm })
           </el-select>
         </el-form-item>
         <template #footer>
-          <el-button id="Home__Dashboard__Calendar__NewEvent__AddParticipants__Cancel" @click="showSelectUserDialog = false">
+          <el-button id="Home__Dashboard__Calendar__NewEvent__AddParticipants__Cancel"
+                     @click="showSelectUserDialog = false">
             {{ $t('vxe.button.cancel') }}
           </el-button>
-          <el-button id="Home__Dashboard__Calendar__NewEvent__AddParticipants__Confirm" type="primary" @click="handleUserListConfirm">
+          <el-button id="Home__Dashboard__Calendar__NewEvent__AddParticipants__Confirm" type="primary"
+                     @click="handleUserListConfirm">
             {{ $t('dpButtom_confirm') }}
           </el-button>
         </template>

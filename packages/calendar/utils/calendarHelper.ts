@@ -151,7 +151,6 @@ export function isEventValid(allEvents: any[], event: any) {
   return true
 }
 
-
 export function snapDownTo15Minutes(time: Dayjs) {
   const minutes = time.minute()
   const snappedMinutes = Math.floor(minutes / 15) * 15
@@ -171,6 +170,19 @@ export function displayTimeFn(event: any, dateMode = false) {
   } else {
     return dayjs(event.start).format('YYYY-MM-DD HH:mm') + ' - ' + dayjs(event.end).format('YYYY-MM-DD HH:mm')
   }
+}
+
+export const routeCalendarManagement = function(params: any) {
+  return {
+    id: 'calendar-management-' + new Date().getTime(),
+    name: 'calendar-management',
+    icon: null,
+    label: 'Calendar Management',
+    component: 'LazyCalendarManagement',
+    props: {
+      messageEvent: params
+    }
+  } as TabItem
 }
 
 
