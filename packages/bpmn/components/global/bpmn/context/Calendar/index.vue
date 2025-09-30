@@ -98,6 +98,12 @@ function setUpListener() {
   })
 }
 
+function generateDescriptionId() {
+  if (editorProvider.readonly.value) return
+  form.value.attr_description = `${Math.random().toString(36).substring(2, 9)}-${Date.now()}`
+  updateData()
+}
+
 watch(form, () => {
   if (form.value) {
     updateData()
@@ -109,6 +115,7 @@ watch(form, () => {
 
 onMounted(async () => {
   setUpListener()
+  generateDescriptionId()
   refreshData()
 })
 </script>
@@ -119,7 +126,6 @@ onMounted(async () => {
     <div class="eventForm">
       <h4>Event</h4>
       <el-form label-position="top" :disabled="editorProvider.readonly.value">
-        <el-input disabled v-model="form.attr_description" />
         <el-input v-show="false" disabled v-model="form.attr_description" />
         <el-form-item label="Action">
           <el-select v-model="form.attr_actionType">
@@ -153,17 +159,20 @@ onMounted(async () => {
         </el-form-item>
         <el-form-item label="Start Time">
           <el-select v-model="form.attr_startTime" clearable>
-            <el-option v-for="item in dateTimeFields" :key="item.attr_id" :label="item.attr_name" :value="item.attr_id" />
+            <el-option v-for="item in dateTimeFields" :key="item.attr_id" :label="item.attr_name"
+                       :value="item.attr_id" />
           </el-select>
         </el-form-item>
         <el-form-item label="End Time">
           <el-select v-model="form.attr_endTime" clearable>
-            <el-option v-for="item in dateTimeFields" :key="item.attr_id" :label="item.attr_name" :value="item.attr_id" />
+            <el-option v-for="item in dateTimeFields" :key="item.attr_id" :label="item.attr_name"
+                       :value="item.attr_id" />
           </el-select>
         </el-form-item>
         <el-form-item label="is All Day">
           <el-select v-model="form.attr_isAllDay" clearable>
-            <el-option v-for="item in booleanFields" :key="item.attr_id" :label="item.attr_name" :value="item.attr_id" />
+            <el-option v-for="item in booleanFields" :key="item.attr_id" :label="item.attr_name"
+                       :value="item.attr_id" />
           </el-select>
         </el-form-item>
         <el-form-item v-if="form.related" label="User">
