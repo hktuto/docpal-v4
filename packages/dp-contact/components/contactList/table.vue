@@ -119,9 +119,9 @@ async function handleEditRowValid(row: any, rowIndex: number) {
   }
 }
 async function deleteItem(row: any) {
-  const action = await ElMessageBox.confirm(t('msg_confirmWhetherToDelete'))
-  if (action !== 'confirm') return
   try {
+    const action = await ElMessageBox.confirm(t('msg_confirmWhetherToDelete'))
+    if (action !== 'confirm') return
     await globalApi.api.deleteContactgroupIdContactdetailContactdetailid(props.id, row.id)
     routerProvider?.message.success(
       t('tip_deleteSuccessMsg', {

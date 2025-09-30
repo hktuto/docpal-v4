@@ -2,45 +2,41 @@
   <div class="matchingResult-container" v-loading="state.loading">
     <div class="header">
       <div class="title" :title="state.activeDoc.label">{{ state.activeDoc.label }}</div>
-      <SvgIcon :class="{'refresh-loading': state.refreshLoading}"
-               :content="refreshContent"
-               src="/icons/file/file-refresh.svg" @click="refreshCabinet"></SvgIcon>
+      <SvgIcon
+        :class="{ 'refresh-loading': state.refreshLoading }"
+        :content="refreshContent"
+        src="/icons/file/file-refresh.svg"
+        @click="refreshCabinet"
+      ></SvgIcon>
     </div>
     <div v-if="state.treeData && state.treeData.length > 0" class="matchingResult-main">
-      <el-tree ref="treeRef" :data="state.treeData" :props="state.defaultProps"
-               default-expand-all :expand-on-click-node="false"
-               @node-click="handleNodeClick">
+      <el-tree ref="treeRef" :data="state.treeData" :props="state.defaultProps" default-expand-all :expand-on-click-node="false" @node-click="handleNodeClick">
         <template #default="{ node, data }">
           <div class="tree-item">
             <div>
               <SvgIcon v-if="data.folder" src="/icons/folder-general.svg"></SvgIcon>
               <SvgIcon v-else-if="data.folder === false" src="/icons/file-general.svg"></SvgIcon>
               <span :class="getCss(data)">
-                            {{ data.label || data.title || data.name }}
-                        </span>
+                {{ data.label || data.title || data.name }}
+              </span>
             </div>
             <div style="--icon-size: 18px">
               <div v-if="showFolderError(data)" class="color__danger size12">{{ $t('msg.NoOtherFilesAllowed') }}</div>
               <div v-if="showError(data)" class="color__danger size12">{{ $t('msg.onlyOneFileAllow') }}</div>
-              <SvgIcon v-if="showAddButton(data)" src="/icons/file/newFolder.svg"
-                       @click="handleAddFile(data)"></SvgIcon>
-              <SvgIcon v-if="data.isDoc" src="/icons/menu/trash.svg"
-                       @click="handleDeleteFile(data)"></SvgIcon>
-              <SvgIcon v-if="data.isDoc" src="/icons/eye.svg" :content="$t('common_preview')"
-                       @click="handlePreview(data)"></SvgIcon>
-              <SvgIcon v-if="data.isDoc" :src="'/icons/replace.svg'" :content="$t('tip.replace')"
-                       @click="handleOpenReplaceDialog(data)" />
+              <SvgIcon v-if="showAddButton(data)" src="/icons/file/newFolder.svg" @click="handleAddFile(data)"></SvgIcon>
+              <SvgIcon v-if="data.isDoc" src="/icons/menu/trash.svg" @click="handleDeleteFile(data)"></SvgIcon>
+              <SvgIcon v-if="data.isDoc" src="/icons/eye.svg" :content="$t('common_preview')" @click="handlePreview(data)"></SvgIcon>
+              <SvgIcon v-if="data.isDoc" :src="'/icons/replace.svg'" :content="$t('tip.replace')" @click="handleOpenReplaceDialog(data)" />
             </div>
           </div>
         </template>
       </el-tree>
     </div>
-    <div class="flex-x-center"
-         v-else-if="state.cabinetTemplate && state.cabinetTemplate.children && state.cabinetTemplate.children.length > 0">
-        <span>{{ $t('fc.noDataAndInit') }}
-            <el-button type="primary" text size="small"
-                       @click="handleInitFolderCabinet()">{{ $t('fc.initFolderCabinet') }}</el-button>
-        </span>
+    <div class="flex-x-center" v-else-if="state.cabinetTemplate && state.cabinetTemplate.children && state.cabinetTemplate.children.length > 0">
+      <span
+        >{{ $t('fc.noDataAndInit') }}
+        <el-button type="primary" text size="small" @click="handleInitFolderCabinet()">{{ $t('fc.initFolderCabinet') }}</el-button>
+      </span>
     </div>
     <div class="flex-x-center" v-else>
       {{ $t('tip.cabinetNotFound') }}
@@ -65,23 +61,20 @@ const state = reactive<any>({
     label: 'label'
   },
   loading: false,
-  activeDoc: {},  // table选中项
+  activeDoc: {}, // table选中项
   templateId: '', // tab选中项
   refreshLoading: false,
 
   // next
   cabinetTemplate: {}
 })
-const emits = defineEmits([
-  'refresh'
-])
+const emits = defineEmits(['refresh'])
 const refreshContent = computed(() => {
   return t('table_modifiedDate') + '：' + formatDate(state.activeDoc.refreshDate)
 })
 
 // #region module: tree
-function handleNodeClick() {
-}
+function handleNodeClick() {}
 
 // #endregion
 
@@ -92,13 +85,13 @@ async function init(docItem: any, templateId: string) {
   state.activeDoc = docItem
   state.templateId = templateId
   try {
-    const data: any = await clientApi.api.postCabinetVerificationComplete({ id: docItem.id }).then(res => res.data)
+    const data: any = await clientApi.api.postCabinetVerificationComplete({ id: docItem.id }).then((res) => res.data)
     if (data.children && data.children.length > 0) {
       addDocToChildren(data.children, data.documentPath)
       state.treeData = data.children
     } else {
       state.treeData = []
-      state.cabinetTemplate = await clientApi.api.getCabinetTemplateId(templateId).then(res => res.data)
+      state.cabinetTemplate = await clientApi.api.getCabinetTemplateId(templateId).then((res) => res.data)
     }
   } catch (error) {
     state.treeData = []
@@ -106,10 +99,10 @@ async function init(docItem: any, templateId: string) {
   state.loading = false
 }
 
-function addDocToChildren(children: any, documentPath: any,documentId: string = '') {
+function addDocToChildren(children: any, documentPath: any, documentId: string = '') {
   if (children)
     children.forEach((item: any) => {
-      let folderId = item.documents && item.documents[0] ?item.documents[0].id : ''
+      let folderId = item.documents && item.documents[0] ? item.documents[0].id : ''
       addDocToChildren(item.children, item.documentPath, folderId)
       if (item.documents) {
         if (!item.children) item.children = []
@@ -145,8 +138,7 @@ function getCss(data: any) {
 }
 
 function showAddButton(data: any) {
-  return data.folder === false &&
-    !(!data.multiple && data.children && data.children.length > 0)
+  return data.folder === false && !(!data.multiple && data.children && data.children.length > 0)
 }
 
 // #endregion
@@ -174,18 +166,25 @@ function handleAddFile(treeItem: any) {
 // #endregion
 
 async function handleDeleteFile(data: any) {
-  const action = await ElMessageBox.confirm(`${t('msg_confirmWhetherToDelete')}`)
-  if (action !== 'confirm') return
-  await clientApi.api.deleteNuxeoDocumentTrash([{ idOrPath: data.path }])
-  refresh()
+  try {
+    const action = await ElMessageBox.confirm(`${t('msg_confirmWhetherToDelete')}`)
+    if (action !== 'confirm') return
+    await clientApi.api.deleteNuxeoDocumentTrash([{ idOrPath: data.path }])
+    refresh()
+  } catch (error) {
+    console.log(error)
+  }
 }
 
 function handlePreview(row: any) {
-  routerProvider?.navigateTo(createDetailPageParams({
-    docName: row.name,
-    idOrPath: row.id,
-    showHeaderAction: true
-  }), false)
+  routerProvider?.navigateTo(
+    createDetailPageParams({
+      docName: row.name,
+      idOrPath: row.id,
+      showHeaderAction: true
+    }),
+    false
+  )
 }
 
 const BrowseActionsReplaceDialogRef = ref()

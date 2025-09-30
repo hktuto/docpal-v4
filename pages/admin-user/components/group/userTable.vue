@@ -3,12 +3,8 @@
     <template #header>
       <div v-show="state.selectedRows.length > 0" class="flex-x-between">
         <div class="title-select color__primary flex-x-start">
-          <b class="el-icon--left ">
-            {{ $t('notifications.userSelectedByUserGroup') }}: {{ state.selectedRows.length }}
-          </b>
-          <SvgIcon id="UserGroupList__Info__ClearSelected" :src="'/icons/close.svg'"
-                   :content="$t('button.clearSelected')"
-                   @click="cleanSelectedRows" />
+          <b class="el-icon--left"> {{ $t('notifications.userSelectedByUserGroup') }}: {{ state.selectedRows.length }} </b>
+          <SvgIcon id="UserGroupList__Info__ClearSelected" :src="'/icons/close.svg'" :content="$t('button.clearSelected')" @click="cleanSelectedRows" />
         </div>
         <el-button id="UserGroupList__Info__RemoveUser" type="danger" @click="handleDeleteSelected()">
           {{ $t('Remove User') }}
@@ -16,28 +12,27 @@
       </div>
       <div v-show="state.selectedRows.length === 0" class="flex-x-between">
         <span>{{ $t('user_users') }}</span>
-        <el-button id="UserGroupList__Info__AddUsersToUserGroup" v-show="group && group.isCanModified" class="button"
-                   type="primary" @click="handleGroupAddMemberFormShow()">
+        <el-button
+          id="UserGroupList__Info__AddUsersToUserGroup"
+          v-show="group && group.isCanModified"
+          class="button"
+          type="primary"
+          @click="handleGroupAddMemberFormShow()"
+        >
           {{ $t('user_addUsersToUserGroup') }}
         </el-button>
       </div>
     </template>
-    <div style="height: 100%; overflow: hidden;position: relative;">
+    <div style="height: 100%; overflow: hidden; position: relative">
       <VxeGrid ref="tableRef" v-bind="tableConfig" v-on="tableEvent">
         <template #toolbar_buttons>
-          <ResponsiveFilter
-            ref="ResponsiveFilterRef"
-            @form-change="handleFilterFormChange"
-            inputKey="username"
-          />
+          <ResponsiveFilter ref="ResponsiveFilterRef" @form-change="handleFilterFormChange" inputKey="username" />
         </template>
       </VxeGrid>
     </div>
-    <GroupAddUserDialog ref="UserAddGroupDialogRef" :group="group"
-                        @refresh="getMemberGroupList"></GroupAddUserDialog>
+    <GroupAddUserDialog ref="UserAddGroupDialogRef" :group="group" @refresh="getMemberGroupList"></GroupAddUserDialog>
   </el-card>
 </template>
-
 
 <script lang="ts" setup>
 import { ElMessageBox } from 'element-plus'
@@ -111,49 +106,55 @@ async function getMemberGroupList() {
 }
 
 async function handleDeleteSelected() {
-  const action = await ElMessageBox.confirm(
-    `${t('user_userGroupSelectDeletedSuccessMsg')}`,
-    {
+  try {
+    const action = await ElMessageBox.confirm(`${t('user_userGroupSelectDeletedSuccessMsg')}`, {
       confirmButtonClass: 'el-button el-button--warning',
       confirmButtonText: t('common_confirmRemove'),
       dangerouslyUseHTMLString: true
-    }
-  )
-  if (action !== 'confirm') return
-  const ids = state.selectedRows.map((item: any) => item.userId)
+    })
+    if (action !== 'confirm') return
+    const ids = state.selectedRows.map((item: any) => item.userId)
 
-  await groupProviderDetail?.BatchGroupRemoveUsersApi({
-    groupId: props.group.id,
-    userIds: ids
-  })
-  routerProvider?.message.success(t('user_userGroupSelectRemovedSuccessMsg'))
-  getMemberGroupList()
-  state.selectedRows = []
+    await groupProviderDetail?.BatchGroupRemoveUsersApi({
+      groupId: props.group.id,
+      userIds: ids
+    })
+    routerProvider?.message.success(t('user_userGroupSelectRemovedSuccessMsg'))
+    getMemberGroupList()
+    state.selectedRows = []
+  } catch (error) {
+    console.log(error)
+  }
 }
 
 async function handleDelete(row: UserDTO) {
-  const action = await ElMessageBox.confirm(
-    `${t('user_userGroupRemoveMsg')}`,
-    {
+  try {
+    const action = await ElMessageBox.confirm(`${t('user_userGroupRemoveMsg')}`, {
       confirmButtonClass: 'el-button el-button--warning',
       confirmButtonText: t('common_confirmRemove'),
       dangerouslyUseHTMLString: true
-    }
-  )
-  if (action !== 'confirm') return
-  await groupProviderDetail?.BatchGroupRemoveUsersApi({
-    userIds: [row.userId],
-    groupId: props.group.id
-  })
-  routerProvider?.message.success(t('user_userGroupRemovedSuccessMsg'))
-  getMemberGroupList()
+    })
+    if (action !== 'confirm') return
+    await groupProviderDetail?.BatchGroupRemoveUsersApi({
+      userIds: [row.userId],
+      groupId: props.group.id
+    })
+    routerProvider?.message.success(t('user_userGroupRemovedSuccessMsg'))
+    getMemberGroupList()
+  } catch (error) {
+    console.log(error)
+  }
 }
 
-watch(() => props.group, async (newValue) => {
-  if (newValue) getMemberGroupList()
-}, {
-  immediate: true
-})
+watch(
+  () => props.group,
+  async (newValue) => {
+    if (newValue) getMemberGroupList()
+  },
+  {
+    immediate: true
+  }
+)
 </script>
 
 <style lang="scss" scoped>
@@ -175,5 +176,4 @@ watch(() => props.group, async (newValue) => {
 :deep(.el-input) {
   width: 200px;
 }
-
 </style>

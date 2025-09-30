@@ -2,27 +2,13 @@
   <div class="pageContainer--padding">
     <VxeGrid ref="tableRef" v-bind="tableConfig" v-on="tableEvent">
       <template #toolbar_buttons>
-        <ResponsiveFilter
-          ref="ResponsiveFilterRef"
-          @form-change="handleFilterFormChange"
-          inputKey="name"
-          inputPlaceHolder="documentType_relatedFilter"
-        />
-        <el-button
-          id="DocumentType__RelatedDocument__AddNewRelatedDocument"
-          type="primary"
-          @click="handleDialogShow()"
-        >
+        <ResponsiveFilter ref="ResponsiveFilterRef" @form-change="handleFilterFormChange" inputKey="name" inputPlaceHolder="documentType_relatedFilter" />
+        <el-button id="DocumentType__RelatedDocument__AddNewRelatedDocument" type="primary" @click="handleDialogShow()">
           {{ $t('docType_addRelatedMeta') }}
         </el-button>
       </template>
     </VxeGrid>
-    <DocTypeDialogAddRelatedType
-      ref="DialogRef"
-      :docType="docTypeDetail"
-      :name="name"
-      @refresh="getList"
-    />
+    <DocTypeDialogAddRelatedType ref="DialogRef" :docType="docTypeDetail" :name="name" @refresh="getList" />
   </div>
 </template>
 <script lang="ts" setup>
@@ -31,8 +17,8 @@ import { adminApi } from 'api'
 
 const routerProvider = inject(MenuRouterKey)
 const props = defineProps<{
-  docTypeDetail: any;
-  name: string;
+  docTypeDetail: any
+  name: string
 }>()
 const ResponsiveFilterRef = ref()
 const { t } = useI18n()
@@ -82,14 +68,12 @@ const { tableConfig, tableEvent, tableRef, query, reload } = useVxeTable({
 })
 
 async function handleDelete(row: any) {
-  const action = await ElMessageBox.confirm(
-    t('tip_deleteMsg', { modelName: t('docType_relatedDocument'), name: null }),
-    {
+  try {
+    const action = await ElMessageBox.confirm(t('tip_deleteMsg', { modelName: t('docType_relatedDocument'), name: null }), {
       confirmButtonClass: 'el-button el-button--warning',
       confirmButtonText: t('common_confirmDelete')
     })
-  if (action !== 'confirm') return
-  try {
+    if (action !== 'confirm') return
     const res = await adminApi.api.deleteDocpaltypeSettingsRelatedId(row.id)
     routerProvider?.message.success(t('tip_deleteSuccessMsg', { modelName: t('docType_relatedDocument'), name: null }))
     await getList()
@@ -112,9 +96,7 @@ function handleFilterFormChange(formModel: any) {
   const name = formModel.name
   const list = _list.filter((item: any) => {
     return (
-      !formModel.name ||
-      item.rootDocPalType.toLowerCase().includes(name.toLowerCase()) ||
-      t(item.rootDocPalType).toLowerCase().includes(name.toLowerCase())
+      !formModel.name || item.rootDocPalType.toLowerCase().includes(name.toLowerCase()) || t(item.rootDocPalType).toLowerCase().includes(name.toLowerCase())
     )
   })
   tableRef?.value?.loadData(list)
@@ -122,10 +104,8 @@ function handleFilterFormChange(formModel: any) {
 
 async function getList() {
   ResponsiveFilterRef.value.handleFilter()
-  
-  _list = await adminApi.api
-    .getDocpaltypeSettingsNameNameRelated(props.name)
-    .then((res) => res.data)
+
+  _list = await adminApi.api.getDocpaltypeSettingsNameNameRelated(props.name).then((res) => res.data)
   tableRef?.value?.loadData(_list)
 }
 

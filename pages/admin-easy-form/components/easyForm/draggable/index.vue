@@ -86,7 +86,7 @@ async function removeAt(row, idx) {
     if (key !== 'id' && row[key]) hasContent = true
   });
   if (hasContent) {
-    const action = await ElMessageBox.confirm(`${t('msg_confirmWhetherToDelete')}`)
+    const action = await ElMessageBox.confirm(`${t('msg_confirmWhetherToDelete')}`).catch(action => action)
     if (action !== 'confirm') return
   }
   props.list.splice(idx, 1);

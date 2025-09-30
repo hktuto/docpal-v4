@@ -2,14 +2,8 @@
   <VxeGrid ref="tableRef" v-bind="tableConfig" v-on="tableEvent">
     <template #toolbar_buttons>
       <div class="flex-x-between">
-        <ResponsiveFilter
-          ref="ResponsiveFilterRef"
-          @form-change="handleFilterFormChange"
-          inputKey="name"
-          inputPlaceHolder="masterTable_filter"
-        />
-        <el-button id="MasterTable__Tables__CreateNewMasterTable" class="el-icon--right button" type="primary"
-                   @click="handleAdd()">
+        <ResponsiveFilter ref="ResponsiveFilterRef" @form-change="handleFilterFormChange" inputKey="name" inputPlaceHolder="masterTable_filter" />
+        <el-button id="MasterTable__Tables__CreateNewMasterTable" class="el-icon--right button" type="primary" @click="handleAdd()">
           {{ $t('masterTable_create') }}
         </el-button>
       </div>
@@ -108,25 +102,28 @@ const { tableConfig, tableEvent, tableRef, reload, query } = useVxeTable({
 })
 
 async function handleDelete(row: any) {
-  const action = await ElMessageBox.confirm(
-    t('masterTable_deleteMsg', { name: row.name }),
-    {
+  try {
+    const action = await ElMessageBox.confirm(t('masterTable_deleteMsg', { name: row.name }), {
       confirmButtonClass: 'el-button el-button--warning',
       dangerouslyUseHTMLString: true,
       confirmButtonText: t('common_confirmDelete')
+    })
+    if (action !== 'confirm') return
+    const result = await masterTableProvider?.DeleteMasterTablesApi(row.id)
+    if (!result) {
+      routerProvider?.message.error(t('dpTip.deleteFailed'))
+      return
     }
-  )
-  if (action !== 'confirm') return
-  const result = await masterTableProvider?.DeleteMasterTablesApi(row.id)
-  if (!result) {
-    routerProvider?.message.error(t('dpTip.deleteFailed'))
-    return
+    routerProvider?.message.success(
+      t('tip_deleteSuccessMsg', {
+        modelName: t('marsterTable.type.master_table'),
+        name: row.name
+      })
+    )
+    query()
+  } catch (error) {
+    console.log(error)
   }
-  routerProvider?.message.success(t('tip_deleteSuccessMsg', {
-    modelName: t('marsterTable.type.master_table'),
-    name: row.name
-  }))
-  query()
 }
 
 async function handleActive(row, status: 'A' | 'D') {
@@ -202,7 +199,7 @@ defineExpose({ query, reload })
 
 <style lang="scss" scoped>
 .responsive-container {
-  :deep(.el-input ) {
+  :deep(.el-input) {
     width: 200px;
   }
 }

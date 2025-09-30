@@ -31,7 +31,7 @@ async function deleteItem(doc: any, deleteType?: 'folder' | 'file') {
     confirmButtonClass: 'el-button el-button--warning',
     dangerouslyUseHTMLString: true,
     confirmButtonText: t('common_confirmDelete')
-  })
+  }).catch(action => action)
   const noti = ElNotification({
     title: t('dpTip_delete'),
     icon: Loading,

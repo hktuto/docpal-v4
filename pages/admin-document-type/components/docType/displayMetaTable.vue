@@ -149,16 +149,20 @@ function handleRefresh(addMore: boolean = false) {
 }
 
 async function handleDelete(row: any) {
-  const action = await ElMessageBox.confirm(t('tip_deleteMsg', { modelName: t('docType_displayMeta'), name: null }), {
-    confirmButtonClass: 'el-button el-button--warning',
-    confirmButtonText: t('common_confirmDelete')
-  })
-  if (action !== 'confirm') return
-  const res = await adminApi.api.deleteDocpaltypeSettingsDocpalTypeV2DeleteMetadataDocpaltypeid(props.id, {
-    metadataId: row.id
-  })
-  routerProvider?.message.success(t('tip_deleteSuccessMsg', { modelName: t('docType_displayMeta'), name: null }))
-  reload()
+  try {
+    const action = await ElMessageBox.confirm(t('tip_deleteMsg', { modelName: t('docType_displayMeta'), name: null }), {
+      confirmButtonClass: 'el-button el-button--warning',
+      confirmButtonText: t('common_confirmDelete')
+    })
+    if (action !== 'confirm') return
+    const res = await adminApi.api.deleteDocpaltypeSettingsDocpalTypeV2DeleteMetadataDocpaltypeid(props.id, {
+      metadataId: row.id
+    })
+    routerProvider?.message.success(t('tip_deleteSuccessMsg', { modelName: t('docType_displayMeta'), name: null }))
+    reload()
+  } catch (error) {
+    console.log(error)
+  }
 }
 
 const MetaDisplayMetaDialogRef = ref()
