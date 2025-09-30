@@ -1,14 +1,9 @@
 <template>
-  <el-dialog v-model="state.visible"
-             :title="state.title"
-             class="scroll-dialog"
-             :close-on-click-modal="false"
-  >
+  <el-dialog v-model="state.visible" :title="state.title" class="scroll-dialog" :close-on-click-modal="false">
     <FormVariablesRenderer ref="FormVariablesRendererRef" />
     <template #footer>
       <div class="footer-grid">
-        <el-button id="MasterTable__Tables__Detail__Records__Edit__Submit" type="primary" :loading="state.loading"
-                   @click="handleSubmit">
+        <el-button id="MasterTable__Tables__Detail__Records__Edit__Submit" type="primary" :loading="state.loading" @click="handleSubmit">
           {{ t('common_submit') }}
         </el-button>
       </div>
@@ -20,15 +15,16 @@ import { adminApi, clientApi } from 'api'
 import { ElMessage } from 'element-plus'
 
 const { t } = useI18n()
-const props = withDefaults(defineProps<{
-  tableId: string,
-  ignoreList: string[],
-}>(), {
-  ignoreList: []
-})
-const emits = defineEmits([
-  'refresh', 'delete'
-])
+const props = withDefaults(
+  defineProps<{
+    tableId: string
+    ignoreList: string[]
+  }>(),
+  {
+    ignoreList: []
+  }
+)
+const emits = defineEmits(['refresh', 'delete'])
 const state = reactive({
   loading: false,
   visible: false,
@@ -72,23 +68,23 @@ async function handleSubmit() {
 
 async function turnFields(fields) {
   const typeMap: any = {
-    'varchar': 'input',
-    'json': 'json-editor',
+    varchar: 'input',
+    json: 'json-editor',
     'VARCHAR:255': 'textarea',
     'varchar:4000': 'textarea',
-    'clob': 'textarea',
-    'long': 'textarea',
-    'text': 'textarea',
-    'bigint': 'int',
-    'timestamp': 'date',
-    'bit': 'switch',
-    'decimal': 'number',
-    'Relation': 'select'
+    clob: 'textarea',
+    long: 'textarea',
+    text: 'textarea',
+    bigint: 'int',
+    timestamp: 'date',
+    bit: 'switch',
+    decimal: 'number',
+    Relation: 'select'
   }
   const resultFields: any = []
   const pList: any = []
   fields.forEach(async (item: any) => {
-    if (!props.ignoreList.find(iItem => iItem === item.columnName)) {
+    if (!props.ignoreList.find((iItem) => iItem === item.columnName)) {
       const type = typeMap[item.dataType] || 'input'
       const _item: any = {
         name: item.columnName,
@@ -99,11 +95,16 @@ async function turnFields(fields) {
       }
 
       if (item.relationTable) {
-        pList.push(getRelationOptions({
-          relationTable: item.relationTable,
-          relationField: item.relationField,
-          displayField: item.displayField
-        }, _item))
+        pList.push(
+          getRelationOptions(
+            {
+              relationTable: item.relationTable,
+              relationField: item.relationField,
+              displayField: item.displayField
+            },
+            _item
+          )
+        )
         return
       } else if (item.dataType === 'varchar') {
         _item.maxLength = item.length
@@ -126,14 +127,14 @@ async function turnFields(fields) {
   async function getRelationOptions(params, field) {
     const appPlatform = useAppPlatform()
     const api = appPlatform.value === 'admin' ? adminApi : clientApi
-    const data = await api.api.getMasterTablesRecords(params).then(res => res.data)
+    const data = await api.api.getMasterTablesRecords(params).then((res) => res.data)
     field.type = 'select'
-    field.options.optionItems = data?.map(item => ({
+    field.options.optionItems = data?.map((item) => ({
       label: item[params.displayField],
       value: item[params.relationField]
     }))
     field.options.filterable = true
-    const index = resultFields.findIndex(item => item.name === field.name)
+    const index = resultFields.findIndex((item) => item.name === field.name)
     if (index !== -1) resultFields.splice(index, 1, field)
     else resultFields.push(field)
   }
@@ -162,7 +163,4 @@ async function handleOpen(fields: any, row?: any) {
 
 defineExpose({ handleOpen })
 </script>
-<style lang="scss" scoped>
-
-</style>
-
+<style lang="scss" scoped></style>
