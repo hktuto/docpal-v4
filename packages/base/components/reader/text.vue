@@ -43,5 +43,6 @@ watch(() => props.blob, async(newBlob) => {
 .docxContainer{
     height: 100%;
     overflow: auto;
+    padding: var(--app-space-xs);
 }
 </style>
