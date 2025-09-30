@@ -61,7 +61,7 @@ async function handleSubmit() {
     template: 'Blank',
     name: ''
   }
-  ElMessage.success(t('tip_createdSuccessMsg', { modelName: t('workflow_workflow'), name: null }))
+  ElMessage.success(t('tip_createdMsg', { modelName: t('dashboard.WorkflowNewCount'), name: null }))
   state.visible = false
   emits('created', data)
 }

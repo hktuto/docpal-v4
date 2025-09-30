@@ -868,7 +868,7 @@
                 "onSubFormRowInsert": "",
                 "onSubFormRowDelete": "",
                 "onSubFormRowChange": "",
-                "label": " filePolicies_RetentionPolicyCreateEvent"
+                "label": "filePolicies_RetentionPolicyCreateEvent"
               },
               "id": "subform28175"
             }

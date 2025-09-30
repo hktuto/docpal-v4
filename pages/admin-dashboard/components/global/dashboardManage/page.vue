@@ -2,7 +2,8 @@
   <div class="pageContainer--padding">
     <VxeGrid ref="tableRef" v-bind="tableConfig" v-on="tableEvent">
       <template #toolbar_buttons>
-        <ResponsiveFilter ref="ResponsiveFilterRef" inputKey="name" @form-change="handleFilterFormChange" inputPlaceHolder="dashboard_filter" />
+        <ResponsiveFilter ref="ResponsiveFilterRef" inputKey="name" @form-change="handleFilterFormChange"
+                          inputPlaceHolder="dashboard_filter" />
         <el-button id="Dashboard__CreateNewDashboard" type="primary" @click="handleCreate">
           {{ $t('dashboard_create') }}
         </el-button>
@@ -87,19 +88,16 @@ function handleConfig(row: any) {
 
 async function deleteItem(row: any) {
   try {
-    const action = await ElMessageBox.confirm(`${t('dashboard_deleteMsg', { name: row.name })}`, {
-      confirmButtonClass: 'el-button el-button--warning',
-      dangerouslyUseHTMLString: true,
-      confirmButtonText: t('common_confirmDelete')
-    })
+    const action = await ElMessageBox.confirm(
+      `${t('dashboard_deleteMsg', { name: row.name })}`,
+      {
+        confirmButtonClass: 'el-button el-button--warning',
+        dangerouslyUseHTMLString: true,
+        confirmButtonText: t('common_confirmDelete')
+      })
     if (action !== 'confirm') return
     await publicApi.api.deleteUserDashboardId(row.id)
-    routerProvider?.message.success(
-      t('tip_deleteSuccessMsg', {
-        modelName: t('dashboard.PersonalDashboard'),
-        name: row.name
-      })
-    )
+    routerProvider?.message.success(t('tip_deleteSuccessMessage', { name: row.name }))
     query({})
   } catch (error) {
     console.log(error)
@@ -127,10 +125,7 @@ const ResponsiveFilterRef = ref()
 async function getFilter() {
   const data = [
     {
-      key: 'orderBy',
-      label: 'tableHeader.sortBy',
-      type: 'string',
-      isMultiple: false,
+      key: 'orderBy', label: 'tableHeader.sortBy', type: 'string', isMultiple: false,
       options: [
         { label: 'dashboard_accessUserGroup', value: 'access' },
         { label: 'dashboard_name', value: 'name' },
@@ -138,10 +133,7 @@ async function getFilter() {
       ]
     },
     {
-      key: 'isDesc',
-      label: 'tableHeader.sortOrder',
-      type: 'string',
-      isMultiple: false,
+      key: 'isDesc', label: 'tableHeader.sortOrder', type: 'string', isMultiple: false,
       options: [
         { label: 'tableHeader.asc', value: false },
         { label: 'tableHeader.desc', value: true }
@@ -156,7 +148,7 @@ onMounted(() => {
 })
 </script>
 <style lang="scss" scoped>
-:deep(.vxe-buttons--wrapper) {
+:deep(.vxe-buttons--wrapper ) {
   display: flex;
   justify-content: space-between;
 }

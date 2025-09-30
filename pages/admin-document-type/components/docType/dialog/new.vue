@@ -121,7 +121,7 @@ async function handleSubmit() {
     state.loading = true
 
     const result = await adminApi.api.postDocpaltypeSettingsDocpalTypeV2Create(data)
-    ElMessage.success(t('tip_createdSuccessMsg', {
+    ElMessage.success(t('tip_createdMsg', {
       modelName: t('docType_documentType'),
       name: data.name
     }))

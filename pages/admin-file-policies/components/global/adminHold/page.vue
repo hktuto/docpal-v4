@@ -2,7 +2,12 @@
   <div class="pageContainer--padding">
     <VxeGrid ref="tableRef" v-bind="tableConfig" v-on="tableEvent">
       <template #toolbar_buttons>
-        <ResponsiveFilter ref="ResponsiveFilterRef" inputKey="policyName" @form-change="handleFilterFormChange" inputPlaceHolder="holdPolicy_filter" />
+        <ResponsiveFilter
+          ref="ResponsiveFilterRef"
+          inputKey="policyName"
+          @form-change="handleFilterFormChange"
+          inputPlaceHolder="holdPolicy_filter"
+        />
         <el-button id="HoldPolicySetting__CreateNewHoldPolicy" type="primary" @click="handleAdd">
           {{ $t('holdPolicies.create') }}
         </el-button>
@@ -129,13 +134,18 @@ async function handleActive(row: any, isActive: 'A' | 'D') {
 
 async function deleteItem(id: string) {
   try {
-    const action = await ElMessageBox.confirm(t('tip_deleteMsg', { modelName: t('workflow_holdPolicy'), name: null }), {
-      confirmButtonClass: 'el-button el-button--warning',
-      confirmButtonText: t('common_confirmDelete')
+    const action = await ElMessageBox.confirm(
+      t('tip_deleteMsg', { modelName: t('workflow_holdPolicy'), name: null }),
+      {
+        confirmButtonClass: 'el-button el-button--warning',
+        confirmButtonText: t('common_confirmDelete')
+      }
+    ).catch(() => {
+      return
     })
     if (action !== 'confirm') return
     await adminApi.api.deletePolicyHoldsId(id)
-    routerProvider?.message.success(t('tip_deleteSuccessMsg', { modelName: t('workflow_holdPolicy'), name: null }))
+    routerProvider?.message.success(t('tip_deleteSuccessMessage', { name: t('workflow_holdPolicy') }))
     query()
   } catch (error) {
     console.log(error)
