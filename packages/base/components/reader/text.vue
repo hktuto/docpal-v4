@@ -17,7 +17,7 @@ const state = reactive({
 })
 const refWord = ref()
 function blobToFile(blob, fileName) {
-	return new File([blob], fileName, {type: blob.type});
+	return new File([blob], fileName, {type: 'text/plain'});
 }
 
 function fileRead (file) {
