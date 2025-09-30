@@ -100,7 +100,7 @@ const { tableConfig, tableEvent, tableRef, reload } = useVxeTable({
     if (!args.row) {
       return { visible: false, disabled: false }
     }
-    return listProvider.actionPermission
+    return listProvider.actionPermission(args)
   }
 })
 
