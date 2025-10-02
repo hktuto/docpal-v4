@@ -82,12 +82,12 @@ provide('handleOpenUploadDrawer', handleOpenUpload)
 </script>
 
 <template>
-    <div class="appFullPage" >
+    <div :class="{appFullPage: true, [isMobile ? 'mobile' : 'desktop']: true}" >
       <div class="appSidebar">
 
       <slot name="sidebar" />
       </div>
-      <div class="appMainContainer">
+      <div :class="{appMainContainer: true, [isMobile ? 'mobile' : 'desktop']: true}">
           <div class="appContent">
               <slot />
           </div>
@@ -109,7 +109,12 @@ provide('handleOpenUploadDrawer', handleOpenUpload)
     grid-template-columns: min-content 1fr;
     --panel-border-radius: 0;
     position: relative;
-
+    &.mobile{
+      grid-template-areas: "main"
+                            "sidebar";
+      grid-template-rows: 1fr min-content;
+      grid-template-columns: 1fr;
+    }
 }
 .appSidebar{
   grid-area: sidebar;
@@ -120,14 +125,15 @@ provide('handleOpenUploadDrawer', handleOpenUpload)
     -webkit-app-region: drag;
     --container-radius: var(--app-border-radius-l);
     --container-padding: 0px;
-    // background-color: var(--app-grey-1000);
-    // box-shadow: var(--app-shadow-xl);
-    // border-radius: var(--container-radius);
-    // background: var(--app-grey-1000);
     overflow: visible;
     padding: var(--app-space-s) var(--app-space-s) var(--app-space-s) 0;
-    height:100vh;
+    height:100%;
     z-index: 1;
+    &.mobile {
+      padding: 0;
+      overflow: hidden;
+      position:relative;
+    }
 
 }
 .appContent{
