@@ -6,6 +6,7 @@ const {layout, initLayout, allComponents, allComponentRef} = useTabsManager()
 const loading = ref(false);
 const hightLightPanel = useCurrentTargetPanel()
 
+
 // #region hot key to close tab
 const activeElement = useActiveElement()
 
@@ -198,18 +199,138 @@ defineExpose({
     openTab,
     openInNewTab
 })
+
+/** menu logic */
+const { t } = useI18n()
+const displayMenu = ref<any[]>([])
+
+
+const searchList = useGlobalSearchList()
+
+function createSearchItem(item:MenuItem, parentKey?:string,) {
+  const { availableLocales, messages } = useI18n()
+
+  const keyword = ['menu'];
+  availableLocales.forEach( (code) => {
+        const codeMessage = messages.value[code]
+        const label = item.label.split('.').reduce((acc, cur) => acc[cur] || "", codeMessage)
+        if(label) {
+            keyword.push(... label.toLowerCase().split(' '), label)
+        }
+        // if parentKey is not null, add parentKey to keyword
+        if(parentKey) {
+            const parentKeyLabel = parentKey.split('.').reduce((acc, cur) => acc[cur] || "", codeMessage)
+            if(parentKeyLabel) {
+                keyword.push(... parentKeyLabel.toLowerCase().split(' '), parentKeyLabel)
+            }
+        }
+    })
+    return {
+        keyword:[...new Set(keyword)],
+        label: t(item.label),
+        icon: item.icon,
+        action: () => {
+            openInCurrentTab(item)
+        }
+    }
+}
+
+function checkVisible(row: any) {
+  if(row.feature && row.feature !== 'CORE') {
+      return allowFeature(row.feature)
+  }
+  return true
+}
+function generateMenu(admin: boolean){
+  const  { menu, appMenu, adminMenu } = useAppConfig()
+    let result = []
+    
+    const _appMenu = admin ? deepCopy(adminMenu) : deepCopy(appMenu) // menu list
+    const _menu = deepCopy(menu) // menu对象映射
+    const menuSearchList:GlobalSearchItem[] = [];
+    
+    // Recursive function to process menu items and their children
+    function processMenuItem(item: any, parentLabel?: string): any | null {
+        let menuItem = JSON.parse(JSON.stringify(item));
+        
+        // If item has name, it's a real page - get full details from _menu
+        if(item.name && _menu[item.name]) {
+            // TODO : check if menu[item.name] has license
+            menuItem = JSON.parse(JSON.stringify(_menu[item.name]));
+            if(!checkVisible(menuItem)) {
+                return null; // Skip if not visible
+            }
+            // Add to search list
+            menuSearchList.push(createSearchItem(menuItem, parentLabel || ""))
+            
+            // If this item has no children, return it directly without processing children
+            if(!item.children || item.children.length === 0) {
+                return menuItem;
+            }
+        } else if(item.label) {
+            // If only has label, it's a placeholder/folder - use as-is
+            menuItem = JSON.parse(JSON.stringify(item));
+        } else {
+            return null; // Skip items without name or label
+        }
+        
+        // Process children recursively only if there are children
+        if(item.children && item.children.length > 0) {
+            const processedChildren = [];
+            for(let j = 0; j < item.children.length; j++) {
+                const child = processMenuItem(JSON.parse(JSON.stringify(item.children[j])), item.label || parentLabel);
+
+                if(child) {
+                    processedChildren.push(child);
+                }
+            }
+            if(processedChildren.length > 0) {
+                menuItem.children = processedChildren;
+            } else {
+                menuItem.children = undefined;
+            }
+        }
+        
+        return menuItem;
+    }
+    
+    // Process all top-level menu items
+    for(let i = 0; i < _appMenu.length; i++) {
+        const processedItem = processMenuItem(_appMenu[i]);
+        if(processedItem) {
+            result.push(processedItem);
+        }
+    }
+    
+    searchList.value.push({
+        label: "Menu",
+        items: menuSearchList
+    })
+    return result;
+}
+
+onMounted(() => {
+  displayMenu.value = generateMenu(appPlatform.value === 'admin')
+})
+
+watch(appPlatform, () => {
+  displayMenu.value = generateMenu(appPlatform.value === 'admin')
+})
+
 </script>
 
 <template>
 <TabWrapper>
         <template #sidebar>
-          <AppMenu class="sideMenu" :admin="appPlatform === 'admin'">
+          <AppMenu v-if="!isMobile" class="sideMenu" :displayMenu="displayMenu">
                 <template #header>
                 </template>
                 <template #footer>
                 </template>
             </AppMenu>
-            
+            <AppMenuMobile v-if="isMobile" class="sideMenu"  :displayMenu="displayMenu">
+                
+            </AppMenuMobile>
         </template>
         <template #default>
             <template  v-if="loading">
