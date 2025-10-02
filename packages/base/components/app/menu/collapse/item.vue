@@ -5,7 +5,7 @@ const props= defineProps<{
   item: MenuItem
   selected: boolean
 }>()
-const emit = defineEmits(['click'])
+const emit = defineEmits(['click', 'hover'])
 const dropOtion:any = {
     key: menuKey,
     dragData: {
@@ -35,7 +35,7 @@ onMounted(() => {
 <template>
   <div ref="elRef" :class="{menuItem:true, selected}" 
     v-tooltip="t(item.label || '')"
-  @click="emit('click', props.item)">
+  @click="emit('click', props.item)" @mouseover="emit('hover', props.item)">
   <div class="icon">
     <template v-if="selected && item.hoverIcon">
       <Icon :name="item.hoverIcon"></Icon>
@@ -69,6 +69,7 @@ onMounted(() => {
   place-items: center;
   gap: var(--app-space-xxs);
   transition: all 0.2s ease-in-out;
+  border: 1px solid rgba(255, 255, 255, 0);
   .icon{
     font-size: calc(var(--app-font-size-xl) * 0.8);
     line-height: 0;

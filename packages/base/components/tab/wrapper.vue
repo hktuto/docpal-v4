@@ -83,7 +83,10 @@ provide('handleOpenUploadDrawer', handleOpenUpload)
 
 <template>
     <div class="appFullPage" >
+      <div class="appSidebar">
+
       <slot name="sidebar" />
+      </div>
       <div class="appMainContainer">
           <div class="appContent">
               <slot />
@@ -102,11 +105,18 @@ provide('handleOpenUploadDrawer', handleOpenUpload)
     background-color: var(--app-grey-900);
     -webkit-app-region: drag;
     display: grid;
+    grid-template-areas: "sidebar main";
     grid-template-columns: min-content 1fr;
     --panel-border-radius: 0;
     position: relative;
+
+}
+.appSidebar{
+  grid-area: sidebar;
+
 }
 .appMainContainer{
+  grid-area: main;
     -webkit-app-region: drag;
     --container-radius: var(--app-border-radius-l);
     --container-padding: 0px;
@@ -118,6 +128,7 @@ provide('handleOpenUploadDrawer', handleOpenUpload)
     padding: var(--app-space-s) var(--app-space-s) var(--app-space-s) 0;
     height:100vh;
     z-index: 1;
+
 }
 .appContent{
     height: 100%;

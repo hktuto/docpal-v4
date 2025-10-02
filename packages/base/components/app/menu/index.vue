@@ -133,6 +133,11 @@ function setSelectedMenuItem() {
 
 const expandMenu = ref<MenuItem>()
 
+function handleHover(item:MenuItem) {
+  expandMenu.value = JSON.parse(JSON.stringify(item)) || []
+  console.log('expandMenu',expandMenu.value)
+}
+
 function handleSelect(item:MenuItem) {
   if(menuMode.value === 'expand' && item.children&& item.children.length > 0) {
     expandMenu.value = JSON.parse(JSON.stringify(item)) || []
@@ -181,22 +186,28 @@ onMounted(() => {
                     :menu="displayMenu"  
                     :selectedMenuItem="selectedMenuItem" 
                     @select="handleSelect" 
+                    @hover="handleHover"
                   />
                
 
             </div>
 
             <div class="menuFooter">
-              <div class="toggleIcon">
-                  <Icon class="menuToggleIcon" :name="menuMode === 'collapse' ? 'lucide:chevron-right' : 'lucide:chevron-left'" @click="toggleMenuMode" />
-                </div>
+              
                 <AuthUser menuMode="collapse" /> 
                 <slot name="footer"></slot>
             </div>
         </div>
-        <div v-if="menuMode === 'expand'" class="menuExpand">
-          <AppMenuSearch menuMode="collapse"/>
-          <AppMenuExpand :menu="expandMenu" :selectedMenuItem="selectedMenuItem"  @select="handleSelect" />
+        <div :class="{menuExpand:true, [menuMode]:true}">
+          <div class="expandMenuHeader">
+            <div class="toggleIcon">
+                  <Icon class="menuToggleIcon" :name="menuMode === 'collapse' ? 'lucide:chevron-right' : 'lucide:chevron-left'" @click="toggleMenuMode" />
+                </div>
+            <AppMenuSearch menuMode="collapse"/>
+              
+          </div>
+          
+          <AppMenuExpand v-if="expandMenu" :menu="expandMenu" :selectedMenuItem="selectedMenuItem"  @select="handleSelect" />
         </div>
         <!-- <div class="menuToggleer" @click="toggleMenuMode">
            
@@ -204,11 +215,18 @@ onMounted(() => {
     </div>
 </template> 
 
-<style scoped lang="scss">                                                    
+<style scoped lang="scss">   
+.expandMenuHeader{
+  width: 100%;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: flex-start;
+  align-items: center;
+  padding: 0;
+}                                                 
 .toggleIcon{
   padding: var(--app-space-xs);
   cursor: pointer;
-  width: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -222,12 +240,36 @@ onMounted(() => {
     justify-content: center;
     align-items: center;
     padding: var(--app-space-m) var(--app-space-s) 0 var(--app-space-s);
+    @media (max-width: 768px) {
+      padding: 0;
+    }
 }
 .menuExpand{
   height: 100%;
   overflow-y: auto;
   padding: var(--app-space-s);
   border-left: 1px solid var(--app-grey-800);
+  &.collapse{
+    position: absolute;
+    top: 0;
+    left: calc(60px + var(--app-space-s));
+    height: 100vh;
+    transform: translateX(-100vw);
+    transition: all 0.2s ease-in-out;
+    z-index: -1;
+    background: rgba(255, 255, 255, 0.4);
+    border-radius: var(--app-border-radius-m);
+    box-shadow: 10px 4px 30px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(6.3px);
+    -webkit-backdrop-filter: blur(6.3px);
+    border: 1px solid rgba(255, 255, 255, 0.31);
+    @media (max-width: 768px) {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 100%;
+    }
+  }
 }
 .appWrapper{
     height: 100%;
@@ -236,18 +278,29 @@ onMounted(() => {
     flex-flow: column nowrap;
     justify-content: flex-start;
     align-items: flex-start;
-    overflow-x: visible;
-    overflow-y: auto;
+    overflow: visible;
     transition: all 0.2s ease-in-out;
+    z-index: 2;
+    background-image: radial-gradient(72% 72% at 2% -5%, #ddf2f7 0%, #dae7f1 100%);
+    background-size: 100% 100%;
     &.collapse{
 
-      flex-flow: column nowrap;
+      flex-flow: row nowrap;
       .menuContainer{
         flex: 1 0 ;
+      }
+      @media (max-width: 768px) {
+        flex-flow: column nowrap;
+        overflow: auto;
       }
     }
     &.expand{
       flex-flow: row nowrap;
+    }
+    &:hover, &:focus-within{
+      .menuExpand{
+        transform: translateX(0);
+      }
     }
     --menu-gap: var(--app-space-xxs);
     --icon-font-size: calc(var(--app-font-size-m) * 1.2);
@@ -262,11 +315,19 @@ onMounted(() => {
 }
 .menuContainer{
   flex: 0 0 ;
-    width:100%;
-    height: 100%;
-    display: grid;
-    grid-template-rows: min-content 1fr min-content;
-    gap: var(--app-space-s);
+  width:100%;
+  height: 100%;
+  display: grid;
+  grid-template-rows: min-content 1fr min-content;
+  gap: var(--app-space-s);
+  @media (max-width: 768px) {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: flex-start;
+    align-items: center;
+    overflow: hidden;
+    width: 100vw;
+  }
 }
 .menuBody{
     width: max-content;
@@ -295,6 +356,10 @@ onMounted(() => {
     }
     scrollbar-width: thin;
     scrollbar-color: var(--app-grey-900, #222) transparent;
+    @media (max-width: 768px) {
+      flex:1 0 auto;
+      overflow: auto;
+    }
 }
 .menuFooter{
     font-size: var(--icon-font-size);

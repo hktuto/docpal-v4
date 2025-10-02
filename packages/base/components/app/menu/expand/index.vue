@@ -30,12 +30,12 @@ const selectedIndex = ref(0)
 <template>
   <div class="expandMenuContainer">
     <div class="header">
-      <Icon :name="menu.icon" />
+      <Icon v-if="menu.icon" :name="menu.icon" />
       <div class="label">
         {{ t(menu.label || '') }}
       </div>
     </div>
-    <template v-if="menu.children && menu.children.length > 0" v-for="(item,index) in menu.children" :key="item.component">
+    <template v-if="menu && menu.children && menu.children.length > 0" v-for="(item,index) in menu.children" :key="item.component">
 
       <template v-if="item.inlineComponent">
         <component :is="item.inlineComponent" :menuItem="item" :selected="selectedIndex === index"/>
@@ -50,7 +50,7 @@ const selectedIndex = ref(0)
 <style lang="scss" scoped>
 .expandMenuContainer{
   width: 100%;
-  min-width: 250px;
+  min-width: 220px;
   display: flex;
   flex-flow: column nowrap;
   justify-content: flex-start;
