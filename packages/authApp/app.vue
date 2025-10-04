@@ -37,6 +37,7 @@ onMounted( async() => {
 <template>
     <NuxtPage />
     <AppUpdateToast />  
+    <Contextmenu />
 </template>
 
 
