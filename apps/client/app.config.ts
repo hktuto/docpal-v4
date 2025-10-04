@@ -10,10 +10,10 @@ export default defineAppConfig({
       hoverIcon: 'dp-icon:browse-fill',
       children:[
         {
-          name: 'client-browse',
+          name: 'client-search'
         },
         {
-          name: 'client-search'
+          name: 'client-browse',
         },
         {
           name: 'client-collections'
@@ -24,6 +24,16 @@ export default defineAppConfig({
         {
           name: 'client-fileRequest'
         },
+    
+        {
+          name: 'client-folder-cabinet'
+        },
+        
+      ]
+    },
+    {
+      label:"",
+      children:[
         {
           name: 'client-share'
         },
@@ -33,16 +43,11 @@ export default defineAppConfig({
         {
           name: 'client-share-other'
         },
-        {
-          name: 'client-folder-cabinet'
-        },
-        {
-          name: 'client-trash'
-        },
       ]
     },
-    
-    
+    {
+      name: 'client-trash'
+    },
     // {
     //     name: "client-smartFolder"
     // },
@@ -63,15 +68,15 @@ export default defineAppConfig({
       ]
     },
     {
-      name: 'client-dashboard'
+      name: 'client-case-manage'
     },
     {
       name: 'client-master-table'
     },
-    
     {
-      name: 'client-case-manage'
+      name: 'client-dashboard'
     },
+    
     {
       name: 'client-easy-form'
     },
@@ -111,24 +116,11 @@ export default defineAppConfig({
           name: 'admin-setting'
         },
         {
-          name: 'contact-book'
-        }
-      ]
-    },
-    {
-      label: 'adminMenu.shareModule',
-      icon: 'lucide:share-2',
-      hoverIcon: 'lucide:share-2',
-      children: [
-        {
-          name: 'admin-internal-share'
+          name: 'admin-company-profile'
         },
         {
-          name: 'admin-external-share'
+          name: 'contact-book'
         }
-        // {
-        //     name: 'admin-share-list'
-        // }
       ]
     },
     {
@@ -150,12 +142,33 @@ export default defineAppConfig({
         },
         {
           name: 'admin-dam'
+        },
+        {
+          name: 'admin-watermark'
+        },
+        {
+          name: 'admin-work-panel'
         }
       ]
     },
     {
-      name: 'admin-watermark'
+      label: 'adminMenu.shareModule',
+      icon: 'lucide:share-2',
+      hoverIcon: 'lucide:share-2',
+      children: [
+        {
+          name: 'admin-internal-share'
+        },
+        {
+          name: 'admin-external-share'
+        }
+        // {
+        //     name: 'admin-share-list'
+        // }
+      ]
     },
+    
+    
     {
       label: 'adminMenu.workflow',
       icon: 'dp-icon:flow-outline',
@@ -174,18 +187,7 @@ export default defineAppConfig({
         // }
       ]
     },
-    {
-      label: 'adminMenu.dashboardManagement',
-      icon: 'carbon:dashboard',
-      children: [
-        {
-          name: 'admin-dashboard'
-        },
-        {
-          name: 'admin-work-panel'
-        }
-      ]
-    },
+    
     {
       label: 'adminMenu.templateManagement',
       icon: 'lucide:layout-template',
@@ -202,6 +204,12 @@ export default defineAppConfig({
       ]
     },
     {
+      name: 'admin-case-management'
+    },
+    {
+      name: 'admin-dashboard'
+    },
+    {
       label: 'adminMenu.policy',
       icon: 'lucide:book-lock',
       children: [
@@ -210,6 +218,21 @@ export default defineAppConfig({
         },
         {
           name: 'admin-retention-policies'
+        }
+      ]
+    },
+    {
+      label: 'adminMenu.system',
+      icon: 'lucide:server',
+      children: [
+        {
+          name: 'admin-acl'
+        },
+        {
+          name: 'admin-external-connection'
+        },
+        {
+          name: 'admin-password-policy'
         }
       ]
     },
@@ -234,30 +257,12 @@ export default defineAppConfig({
         }
       ]
     },
-    {
-      label: 'adminMenu.system',
-      icon: 'lucide:server',
-      children: [
-        {
-          name: 'admin-acl'
-        },
-        {
-          name: 'admin-external-connection'
-        },
-        {
-          name: 'admin-password-policy'
-        }
-      ]
-    },
-    {
-      name: 'admin-case-management'
-    },
+    
+    
     {
       name: 'admin-unique-id-generator'
     },
-    {
-      name: 'admin-company-profile'
-    },
+    
     {
       name: 'admin-external-storage'
     },
