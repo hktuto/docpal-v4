@@ -16,6 +16,7 @@ onClickOutside(contextmenuRef, () => {
 })
 
 const contextMenuOpenHandler = (args:TABLE_CONTEXT_PARAMS)=>{
+  console.log('contextMenuOpenHandler', args)
     actions.value = args.options
     visible.value = true
     rowData.value = args.row
