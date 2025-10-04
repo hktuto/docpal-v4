@@ -1,5 +1,4 @@
 <script setup lang="ts" >
-import { Splitpanes, Pane } from 'splitpanes'
 import { useStorage, useEventListener } from '@vueuse/core'
 import { TabManagerKey, createError, inject, computed, ref, onMounted } from '#imports'
 

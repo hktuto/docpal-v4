@@ -18,7 +18,7 @@ function openExpandMenu(e:any, item:any){
     row: item,
     column: item,
     rowIndex: 0,
-    options: item.children.map((child:any) => {
+    options: [item.children.map((child:any) => {
       return {
         name: child.label,
         visible: true,
@@ -27,7 +27,7 @@ function openExpandMenu(e:any, item:any){
           tabProvider?.openInCurrentTab(child)
         }
       }
-    }),
+    })],
     event: e
   }
   CONTEXT_MENU_OPEN_BUS.emit(evtParams)
