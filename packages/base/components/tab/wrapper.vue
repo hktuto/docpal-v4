@@ -2,6 +2,7 @@
 import { Splitpanes, Pane } from 'splitpanes'
 import { useStorage, useEventListener } from '@vueuse/core'
 import { TabManagerKey, createError, inject, computed, ref, onMounted } from '#imports'
+
 const tabProvider = inject(TabManagerKey)
 if(!tabProvider) {
     throw createError('tab manger not found')
@@ -83,7 +84,7 @@ provide('handleOpenUploadDrawer', handleOpenUpload)
 
 <template>
     <div :class="{appFullPage: true, [isMobile ? 'mobile' : 'desktop']: true}" >
-      <div class="appSidebar">
+      <div :class="{appSidebar:true, [isMobile ? 'mobile' : 'desktop']: true}">
 
       <slot name="sidebar" />
       </div>
@@ -118,6 +119,11 @@ provide('handleOpenUploadDrawer', handleOpenUpload)
 }
 .appSidebar{
   grid-area: sidebar;
+  &.mobile{
+    width: 100%;
+    position: relative;
+    overflow: hidden;
+  }
 
 }
 .appMainContainer{
