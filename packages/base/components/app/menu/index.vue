@@ -155,7 +155,7 @@ watch(() => [layout, hightLightPanel], () => {
     align-items: flex-start;
     overflow: visible;
     transition: all 0.2s ease-in-out;
-    z-index: 2;
+    z-index: 0;
     background-image: radial-gradient(72% 72% at 2% -5%, #ddf2f7 0%, #dae7f1 100%);
     background-size: 100% 100%;
     &.collapse{
@@ -170,6 +170,7 @@ watch(() => [layout, hightLightPanel], () => {
       flex-flow: row nowrap;
     }
     &:hover, &:focus-within{
+      z-index: 2;
       .menuExpand{
         transform: translateX(0);
       }
