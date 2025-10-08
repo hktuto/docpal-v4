@@ -150,7 +150,10 @@ export default defineAppConfig({
         },
         {
           name: 'admin-work-panel'
-        }
+        },
+        {
+          name: 'admin-master-table'
+        },
       ]
     },
     {
@@ -169,8 +172,6 @@ export default defineAppConfig({
         // }
       ]
     },
-    
-    
     {
       label: 'adminMenu.workflow',
       icon: 'dp-icon:flow-outline',
@@ -235,16 +236,7 @@ export default defineAppConfig({
         },
         {
           name: 'admin-password-policy'
-        }
-      ]
-    },
-    {
-      name: 'admin-master-table'
-    },
-    {
-      label: 'adminMenu.log',
-      icon: 'dp-icon:log',
-      children: [
+        },
         {
           name: 'admin-log-manage'
         },
@@ -259,6 +251,7 @@ export default defineAppConfig({
         }
       ]
     },
+    
     
     
     {
