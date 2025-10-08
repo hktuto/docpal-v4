@@ -138,17 +138,22 @@ provide('handleOpenUploadDrawer', handleOpenUpload)
       padding: 0;
       overflow: hidden;
       position:relative;
+      .appContent{
+        height: 100%;
+        overflow: hidden;
+      }
     }
 
 }
 .appContent{
-    height: 100%;
+    height: calc(100dvh - var(--app-space-s) * 2 );
     width:100%;
     position: relative;
     overflow: visible;
     z-index: 2;
     // box-shadow: var(--app-shadow-l);
     -webkit-app-region: no-drag;
+
 }
 
 </style>
