@@ -5,7 +5,7 @@ const tabProvider = inject(TabManagerKey)
 if(!tabProvider) {
     throw createError('tab manger not found')
 }
-const props = defineProps<{item :MenuItem, selectedMenuItem?:TabItem}>()
+const props = defineProps<{item :MenuItem, selectedMenuItem?:TabItem, menuMode?:'collapse' | 'expand'}>()
 const { selectedMenuItem } = toRefs(props)
 const emits = defineEmits(['contextmenu'])
 
@@ -75,19 +75,19 @@ onUnmounted(() => {
 <template>
     <div :class="{menuExpanItemContainer:true, opened, selected, children: item.children && item.children.length > 0}">
        <div ref="elRef" :id="(item.id || item.label) + 'menu' "  class="menuItem"  @click="itemClick">
-           <div class="menuIcon">
+           <div class="menuIcon" v-tooltip="t(item.label)">
                <Icon :name="item.icon"></Icon>
            </div>
-           <div class="menuLabel">
+           <div v-if="menuMode === 'expand'" class="menuLabel">
                {{ t(item.label) }}
            </div>
-           <div v-if="item.children && item.children.length > 0" class="menuIcon dropdown" >
+           <!-- <div v-if="item.children && item.children.length > 0" class="menuIcon dropdown" >
                 <Icon :name="opened ? 'lucide:chevron-up' : 'lucide:chevron-down'"  />
-           </div>
+           </div> -->
        </div>
-       <div v-show="opened" class="expendItem">
+       <div v-show="opened" :class="{expendItem:true, [menuMode]:true}">
         <!-- {{ item.children }} -->
-            <AppMenuItemExpane v-for="subItem in item.children" :key="subItem.id" :item="subItem" :selectedMenuItem="selectedMenuItem" />
+            <AppMenuItemExpane v-for="subItem in item.children" menuMode="expand" :key="subItem.id" :item="subItem" :selectedMenuItem="selectedMenuItem" />
             <!-- <AppMenuItemCollapseSubmenu v-for="subItem in item.children" :key="subItem.id" :subMenuItem="subItem" /> -->
        </div>
        <Teleport v-if="dragState.type === 'preview'" :to="dragState.container">
@@ -111,6 +111,7 @@ onUnmounted(() => {
     padding: var(--app-space-xs)  var(--app-space-xs);
     border-radius: var(--app-border-radius-s);
     color: var(--app-grey-350);
+    overflow: visible;
     .menuLabel{
         flex:1 0 auto;
         color: var(--text-color);
@@ -125,10 +126,10 @@ onUnmounted(() => {
     &:hover{
         --item-bg: linear-gradient(180deg, hsl(200, 0%,97%) 0%, hsl(200, 0%,99%) 20%);
         
-        color: var(--app-grey-100);
+        color: var(--app-success-4);
         box-shadow: var(--app-shadow-s);
         .menuIcon, .menuLabel{
-            color: var(--app-grey-100);
+            color: var(--app-success-4);
         }
     }
     .menuIcon{
@@ -150,8 +151,11 @@ onUnmounted(() => {
     width:100%;
     transition: all 0.2s ease-in-out;
     --menu-bg: transparent;
-    --text-color: var(--app-grey-550);
+    --text-color: var(--app-success-6);
     background: var(--menu-bg);
+    position: relative;
+    z-index: 2;
+    isolation: isolate;
     &.opened {
         // background: linear-gradient(180deg, hsl(200, 0%,97%) 0%, hsl(200, 0%,99%) 20%);;
         margin-bottom: var(--app-space-xs);
@@ -159,10 +163,10 @@ onUnmounted(() => {
     }
     &.selected {
         &.children{
-            --text-color: var(--app-grey-400);
+            --text-color: var(--app-accent-color);
             > .menuItem{
                 .menuLabel, .menuIcon{
-                    --text-color: var(--app-grey-400);
+                    --text-color: var(--app-accent-color);
                     
                 }
             }
@@ -183,8 +187,17 @@ onUnmounted(() => {
     }
 }
 .expendItem{
-    padding: var(--app-space-xs) 0 var(--app-space-xs) var(--app-space-s) ;
-    
+    padding: var(--app-space-xs);
+    border-radius: var(--app-border-radius-s);
+    box-shadow: var(--app-shadow-m);
+    &.collapse{
+        position: absolute;
+        left:30px;
+        top:0;
+        width:200px;
+        background: var(--app-grey-1000);
+        z-index: -1;
+    }
 }
 
 .dropPreviewFile{
