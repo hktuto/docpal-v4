@@ -4,6 +4,7 @@ export default defineAppConfig({
     {
       name: 'client-work-panel'
     },
+    // browse
     {
       name: 'client-browse',
       icon: 'dp-icon:browse-outline',
@@ -30,9 +31,10 @@ export default defineAppConfig({
         },
         
       ]
-    },
+    }, 
     {
-      label:"",
+      label:"share.share",
+      icon: 'lucide:share-2',
       children:[
         {
           name: 'client-share'
