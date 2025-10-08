@@ -15,8 +15,6 @@ const { t } = useI18n()
 const menuMode = ref<'collapse' | 'expand'>('collapse')
 
 
-
-
 const selectedMenuItem = ref<TabItem | undefined>()
 
 
@@ -54,7 +52,7 @@ watch(() => [layout, hightLightPanel], () => {
 
 <template>
     <div :class="{appWrapper:true, [menuMode]:true}">
-        <div class="menuContainer">
+        <div :class="{menuContainer:true,  [isMobile ? 'mobile' : 'desktop']: true}">
             <div class="menuHeader">
 
                 <slot name="header" />
@@ -86,7 +84,6 @@ watch(() => [layout, hightLightPanel], () => {
                   <Icon class="menuToggleIcon" :name="menuMode === 'collapse' ? 'lucide:chevron-right' : 'lucide:chevron-left'" @click="toggleMenuMode" />
                 </div>
             <AppMenuSearch menuMode="collapse"/>
-              
           </div>
           
           <AppMenuExpand v-if="expandMenu" :menu="expandMenu" :selectedMenuItem="selectedMenuItem"  @select="handleSelect" />
@@ -189,10 +186,13 @@ watch(() => [layout, hightLightPanel], () => {
 .menuContainer{
   flex: 0 0 ;
   width:100%;
-  height: 100%;
+  height: 100vh;
   display: grid;
   grid-template-rows: min-content 1fr min-content;
   gap: var(--app-space-s);
+  &.mobile{
+    height: 100%;
+  }
 
 }
 .menuBody{

@@ -22,7 +22,6 @@ export default defineAppConfig({
             hoverIcon: 'icon-park-twotone:layers',
             label: "file_collections",
             component: "LazyCollectionPage",
-            inlineComponent: "LazyCollectionMenu",
             feature: "COLLECTION",
             props: {
                 idOrPath: "/",
