@@ -189,7 +189,7 @@ export function logout() {
   
   localStorage.clear();
   logedIn.value = false
-  window.location.href = '/';
+
 }
 
 /**
