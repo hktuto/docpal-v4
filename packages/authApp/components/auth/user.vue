@@ -9,6 +9,22 @@ const { locales, locale, setLocale } = useI18n()
 const { uploadState } = useUploadAIStore()
 const isDesktop = useDesktopMode()
 const tabProvider = inject(TabManagerKey)
+const {menuMode} = defineProps<{menuMode?:'collapse' | 'expand'}>()
+
+const appPlatform = useAppPlatform()
+const isAdmin = useIsAdmin()
+const isSuperAdmin = useIsSuperAdmin()
+
+const showSwitchMenu = computed(() => {
+  return isAdmin.value || isSuperAdmin.value
+})
+
+function switchPlatform() {
+  const url = appPlatform.value === 'client' ? '/admin' : '/'
+  console.log('switchPlatform', url)
+  window.location.href = url
+}
+
 async function changeLanguage(langCode:string) {
     const perference = useUserPreference()
     perference.value.language = langCode
@@ -41,6 +57,10 @@ function openSetting(){
 
 }
 
+function getUsernameInitials(username: string) {
+    return username.split(' ').map(name => name[0]).join('')
+}
+
 function handleOpenUpload(show: boolean = false, action: 'upload' | 'ai' | '' = 'upload') {
     const ev = new CustomEvent('openUploadDrawer', { detail: action })
     document.dispatchEvent(ev)
@@ -49,34 +69,44 @@ function handleOpenUpload(show: boolean = false, action: 'upload' | 'ai' | '' = 
 </script>
 
 <template>
-    <div class="userMenuWidgetContainer">
-        <AppLogo />
-        <div v-if="user" class="username">
-            {{ user.username }}
-        </div>
-        <div class="actions">
-            <UploadStructureButton v-if="uploadState.uploadRequestList && uploadState.uploadRequestList.length > 0" @click="handleOpenUpload(true, 'upload')"></UploadStructureButton>
-            <Notification  />
-            <ElDropdown id="authUserSettingDropdown">
-                <ElButton size="small" link >
-                    <ElIcon><SvgIcon class="dropdownIcon" src="/icons/dots.svg"/></ElIcon>
-                </ElButton>
-                <template #dropdown>
-                    <ElDropdownItem @click="openSetting">{{ $t('adminMenu.setting') }}</ElDropdownItem>
-                    <!-- TODO: remove this part from prodction, or mark it avalible only for super admin -->
-                    <Language />
-                    <ElDropdownItem @click="openHelp">{{ $t('adminMenu.help') }}</ElDropdownItem>
-                    <ElDivider />
-                    <ElDropdownItem v-for="lang in locales" :key="lang.code"
-                        :disabled="lang.code === locale" @click="changeLanguage(lang.code)">
-                        {{$t(lang.code)}}
-                    </ElDropdownItem>
-                    <ElDivider />
-                    <ElDropdownItem v-if="isDesktop" @click="removeBaseUrl">Reset Desktop</ElDropdownItem>
-                    <ElDropdownItem @click="logout">{{ $t('login_loginOut')}}</ElDropdownItem>
-                </template>
-            </ElDropdown>
-        </div>
+    <div :class="{userMenuWidgetContainer:true, [menuMode]:true}">
+        <template v-if="menuMode === 'expand'">
+          <div v-if="user" class="username">
+              {{ user.username }}
+          </div>
+          <div class="actions">
+              <UploadStructureButton v-if="uploadState.uploadRequestList && uploadState.uploadRequestList.length > 0" @click="handleOpenUpload(true, 'upload')"></UploadStructureButton>
+              <Notification  />
+          </div>
+        </template>
+        <template v-else>
+          <UploadStructureButton v-if="uploadState.uploadRequestList && uploadState.uploadRequestList.length > 0" @click="handleOpenUpload(true, 'upload')"></UploadStructureButton>
+          <Notification  />
+          <ElDropdown id="authUserSettingDropdown">
+                  <ElButton size="small" link >
+                    <el-avatar size="small"> {{ getUsernameInitials(user.username) }} </el-avatar>
+                  </ElButton>
+                  <template #dropdown>
+                      <ElDropdownItem @click="openSetting">{{ $t('adminMenu.setting') }}</ElDropdownItem>
+                      <!-- TODO: remove this part from prodction, or mark it avalible only for super admin -->
+                      <Language />
+                      <ElDropdownItem @click="openHelp">{{ $t('adminMenu.help') }}</ElDropdownItem>
+                      <ElDivider />
+                      <ElDropdownItem v-for="lang in locales" :key="lang.code"
+                          :disabled="lang.code === locale" @click="changeLanguage(lang.code)">
+                          {{$t(lang.code)}}
+                      </ElDropdownItem>
+                      <ElDivider />
+                      <template v-if="showSwitchMenu">
+                        <ElDropdownItem @click="switchPlatform()">Switch to {{ appPlatform === 'admin' ? 'Client' : 'Admin' }}</ElDropdownItem>
+                        <ElDivider />
+                      </template>                      
+                      <ElDropdownItem v-if="isDesktop" @click="removeBaseUrl">Reset Desktop</ElDropdownItem>
+                      <ElDropdownItem @click="logout">{{ $t('login_loginOut')}}</ElDropdownItem>
+                  </template>
+              </ElDropdown>
+          
+        </template>
     </div>
 
 </template>
@@ -90,8 +120,10 @@ function handleOpenUpload(show: boolean = false, action: 'upload' | 'ai' | '' = 
     align-items: center;
     gap: var(--app-space-s);
     line-height: 1;
-    padding-right: var(--app-space-xs);
-
+    
+    &.collapse{
+      flex-flow: column nowrap;
+    }
 }
 .dropdownIcon{
     --icon-size: var(--app-font-size-m);

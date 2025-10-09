@@ -1,5 +1,4 @@
 
-import type { InjectionKey } from 'vue'
 import type { Graph, Node, Edge, Cell } from '@antv/x6'
 
 // create injecttion key for bpmn provider
