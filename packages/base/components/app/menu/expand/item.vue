@@ -59,7 +59,7 @@ onMounted(() => {
   justify-content: flex-start;
   align-items: center;
   gap: var(--app-space-xs);
-  color: var(--app-grey-300);
+  color: var(--app-grey-200);
   .label{
     white-space: nowrap;
     overflow: hidden;
@@ -72,7 +72,7 @@ onMounted(() => {
   }
   &:hover{
     box-shadow: var(--app-shadow-s);
-    background: var(--app-success-1);
+    background: var(--app-primary-3);
   }
 }
 </style>
