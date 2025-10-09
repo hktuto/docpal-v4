@@ -1,5 +1,6 @@
 @use 'sass:math';
 @use 'sass:map';
+@use 'sass:list';
 
 // Layer 1: RGB Source of Truth
 $app-color-rgb: (
@@ -27,16 +28,16 @@ $app-color-rgb: (
 
 // Helper function: Convert RGB tuple to hex
 @function rgb-to-hex($rgb) {
-  $r: nth($rgb, 1);
-  $g: nth($rgb, 2);
-  $b: nth($rgb, 3);
+  $r: list.nth($rgb, 1);
+  $g: list.nth($rgb, 2);
+  $b: list.nth($rgb, 3);
   
   @return rgb($r, $g, $b);
 }
 
 // Helper function: Get RGB as space-separated string for CSS custom properties
 @function rgb-to-string($rgb) {
-  @return #{nth($rgb, 1)} #{nth($rgb, 2)} #{nth($rgb, 3)};
+  @return #{list.nth($rgb, 1)} #{list.nth($rgb, 2)} #{list.nth($rgb, 3)};
 }
 
 // Layer 2: Convert RGB to Hex for UI Library compatibility
