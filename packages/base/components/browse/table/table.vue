@@ -482,7 +482,7 @@ const { tableConfig, tableEvent, tableRef, reload, cleanSelectedRows } = useVxeT
       }
       let hold = {}
       if (clickItem.hold) {
-        hold = JSON.parse(clickItem.hold)
+        hold = typeof clickItem.hold === 'string' ? JSON.parse(clickItem.hold) || {} : clickItem.hold
       }
       const visible = RbacAllowTo(code, { ...clickItem, hold }, clickItem.isFolder)
       switch (key) {
