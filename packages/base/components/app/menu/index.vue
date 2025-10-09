@@ -20,9 +20,11 @@ const selectedMenuItem = ref<TabItem | undefined>()
 
 
 const expandMenu = ref<MenuItem>()
+const showExpandMenu = ref(false)
 
 function handleHover(item:MenuItem) {
   expandMenu.value = JSON.parse(JSON.stringify(item)) || []
+  showExpandMenu.value = true
   console.log('expandMenu',expandMenu.value)
 }
 
@@ -35,6 +37,13 @@ function handleSelect(item:MenuItem) {
   }
 }
 
+function handleWrapperMouseLeave() {
+  showExpandMenu.value = false
+}
+
+function handleWrapperFocusOut() {
+  showExpandMenu.value = false
+}
 
 function toggleMenuMode() {
   menuMode.value = menuMode.value === 'collapse' ? 'expand' : 'collapse'
@@ -51,7 +60,11 @@ watch(() => [layout, hightLightPanel], () => {
 </script>
 
 <template>
-    <div :class="{appWrapper:true, [menuMode]:true}">
+    <div 
+      :class="{appWrapper:true, [menuMode]:true, showExpand: showExpandMenu}"
+      @mouseleave="handleWrapperMouseLeave"
+      @focusout="handleWrapperFocusOut"
+    >
         <div :class="{menuContainer:true,  [isMobile ? 'mobile' : 'desktop']: true}">
             <div class="menuHeader">
 
@@ -132,7 +145,7 @@ watch(() => [layout, hightLightPanel], () => {
     height: calc(100% - var(--app-space-s) * 2);
     left: calc(60px + var(--app-space-s));
     transform: translateX(-100vw);
-    transition: all 0.2s ease-in-out;
+    transition: all 0.4s ease-in-out;
     z-index: -1;
     background: rgba(255, 255, 255, 0.4);
     border-radius: var(--app-border-radius-m);
@@ -166,8 +179,11 @@ watch(() => [layout, hightLightPanel], () => {
     &.expand{
       flex-flow: row nowrap;
     }
-    &:hover, &:focus-within{
+    &.showExpand{
       z-index: 2;
+      &.expand{
+        z-index: 1;
+      }
       .menuExpand{
         transform: translateX(0);
       }
