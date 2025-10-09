@@ -5,7 +5,7 @@
             <source :src="state.src" :type="state.type" />
         </audio>
     </div>
-    <ReaderTiff v-else-if="state.type.includes('image/tiff')" v-bind="state" ></ReaderTiff>
+    <LazyReaderTiff v-else-if="state.type.includes('image/tiff')" v-bind="state" ></LazyReaderTiff>
     <h2 v-else class="noSupportContainer" >
         {{ $t('msg_thisFormatFileIsNotSupported') }}
     </h2>

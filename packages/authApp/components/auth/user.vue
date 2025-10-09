@@ -89,7 +89,7 @@ function handleOpenUpload(show: boolean = false, action: 'upload' | 'ai' | '' = 
                   <template #dropdown>
                       <ElDropdownItem @click="openSetting">{{ $t('adminMenu.setting') }}</ElDropdownItem>
                       <!-- TODO: remove this part from prodction, or mark it avalible only for super admin -->
-                      <Language />
+                      <!-- <Language /> -->
                       <ElDropdownItem @click="openHelp">{{ $t('adminMenu.help') }}</ElDropdownItem>
                       <ElDivider />
                       <ElDropdownItem v-for="lang in locales" :key="lang.code"
