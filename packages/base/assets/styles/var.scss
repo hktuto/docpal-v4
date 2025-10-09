@@ -1,26 +1,101 @@
 @use 'sass:math';
 @use 'sass:map';
+@use 'sass:list';
+@use 'sass:color';
 
-$app-color: (
-    'white': #ffffff,
-    'black': #000000,
+// Layer 1: HSL Source of Truth
+$app-color-hsl: (
+    'white': (0, 0%, 100%),
+    'black': (0, 0%, 0%),
     'primary': (
-      'base': #15d5b9,
+      'base': (173, 82%, 46%),  // #15d5b9
     ),
     'success': (
-      'base': #0077ff,
+      'base': (212, 100%, 50%),  // #0077ff
     ),
     'warning': (
-      'base': #e6a23c,
+      'base': (36, 77%, 57%),  // #e6a23c
     ),
     'danger': (
-      'base': #f56c6c,
+      'base': (0, 87%, 69%),  // #f56c6c
     ),
     'error': (
-      'base': #f56c6c,
+      'base': (0, 87%, 69%),  // #f56c6c
     ),
     'info': (
-      'base': #909399,
+      'base': (220, 4%, 58%),  // #909399
+    ),
+);
+
+// Helper function: Convert HSL tuple to RGB tuple
+@function hsl-to-rgb($hsl) {
+  $h: list.nth($hsl, 1);
+  $s: list.nth($hsl, 2);
+  $l: list.nth($hsl, 3);
+  
+  $color: hsl($h, $s, $l);
+  @return (color.red($color), color.green($color), color.blue($color));
+}
+
+// Helper function: Convert HSL tuple to hex color
+@function hsl-to-hex($hsl) {
+  $h: list.nth($hsl, 1);
+  $s: list.nth($hsl, 2);
+  $l: list.nth($hsl, 3);
+  $hsl: hsl($h, $s, $l);
+  @return hex($hsl);
+}
+
+// Helper function: Get RGB as space-separated string for CSS custom properties
+@function rgb-to-string($rgb) {
+  @return #{list.nth($rgb, 1)} #{list.nth($rgb, 2)} #{list.nth($rgb, 3)};
+}
+
+// Layer 1.5: Convert HSL to RGB for transparency support
+$app-color-rgb: (
+    'white': hsl-to-rgb(map.get($app-color-hsl, 'white')),
+    'black': hsl-to-rgb(map.get($app-color-hsl, 'black')),
+    'primary': (
+      'base': hsl-to-rgb(map.get($app-color-hsl, 'primary', 'base')),
+    ),
+    'success': (
+      'base': hsl-to-rgb(map.get($app-color-hsl, 'success', 'base')),
+    ),
+    'warning': (
+      'base': hsl-to-rgb(map.get($app-color-hsl, 'warning', 'base')),
+    ),
+    'danger': (
+      'base': hsl-to-rgb(map.get($app-color-hsl, 'danger', 'base')),
+    ),
+    'error': (
+      'base': hsl-to-rgb(map.get($app-color-hsl, 'error', 'base')),
+    ),
+    'info': (
+      'base': hsl-to-rgb(map.get($app-color-hsl, 'info', 'base')),
+    ),
+);
+
+// Layer 2: Convert HSL to Hex for UI Library compatibility
+$app-color: (
+    'white': hsl-to-hex(map.get($app-color-hsl, 'white')),
+    'black': hsl-to-hex(map.get($app-color-hsl, 'black')),
+    'primary': (
+      'base': hsl-to-hex(map.get($app-color-hsl, 'primary', 'base')),
+    ),
+    'success': (
+      'base': hsl-to-hex(map.get($app-color-hsl, 'success', 'base')),
+    ),
+    'warning': (
+      'base': hsl-to-hex(map.get($app-color-hsl, 'warning', 'base')),
+    ),
+    'danger': (
+      'base': hsl-to-hex(map.get($app-color-hsl, 'danger', 'base')),
+    ),
+    'error': (
+      'base': hsl-to-hex(map.get($app-color-hsl, 'error', 'base')),
+    ),
+    'info': (
+      'base': hsl-to-hex(map.get($app-color-hsl, 'info', 'base')),
     ),
 );
 

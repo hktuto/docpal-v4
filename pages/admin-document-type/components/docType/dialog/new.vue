@@ -122,7 +122,7 @@ async function handleSubmit() {
 
     const result = await adminApi.api.postDocpaltypeSettingsDocpalTypeV2Create(data)
     ElMessage.success(t('tip_createdMsg', {
-      modelName: t('docType_documentType'),
+      modelName: t('tip_newMsg') + t('docType_documentType'),
       name: data.name
     }))
     state.visible = false

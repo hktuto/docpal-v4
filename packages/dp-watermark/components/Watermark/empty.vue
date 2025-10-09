@@ -10,7 +10,7 @@
                     <ElInput v-model="form.name" placeholder="New Watermark label" />
                 </ElFormItem>
                 <ElFormItem>
-                    <ElButton class="button" type="primary" @click="submit">Create New Watermark</ElButton>
+                    <ElButton class="button" type="primary" @click="submit">{{$t('admin_watermark_create')}}</ElButton>
                 </ElFormItem>
             </ElForm>
         </div>

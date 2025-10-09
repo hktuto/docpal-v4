@@ -5002,7 +5002,10 @@ export interface ContactImportRequestDTO {
     operator?: string;
 }
 
+/** Import ResponseDTO */
 export interface ImportResponseDTO {
+    /** @format int32 */
+    totalRecords?: number;
     status?: string;
     message?: string;
     /** @format int32 */
@@ -5019,6 +5022,7 @@ export interface ResultImportResponseDTO {
     /** @format int32 */
     code?: number;
     message?: string;
+    /** Import ResponseDTO */
     data?: ImportResponseDTO;
     messageKey?: string;
     locale?: string;

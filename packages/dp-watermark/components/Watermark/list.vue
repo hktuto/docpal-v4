@@ -64,7 +64,7 @@ const selectedItem = computed(() => {
 
 function deleteItem(id: string) {
   emit('remove', id)
-  routerProvider?.message.success(t('tip_deleteSuccessMessage', { name: t('watermark.watermark') }))
+  routerProvider?.message.success(t('tip_deleteSuccessMessage', { name: t('tip_SelectedMsg') + t('watermark.watermark') }))
 }
 
 function createItem() {

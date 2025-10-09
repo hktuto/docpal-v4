@@ -55,7 +55,7 @@
         </template>
 
         <el-divider style="margin-bottom: 5px" />
-        <FolderCabinetSettingPermission :id="state.setting.id" :tableData="state.acls" @refresh="emits('update')" />
+        <FolderCabinetSettingPermission :id="state.setting.id" :isFolder="state.setting.folder ? 'folder' : 'file'" :tableData="state.acls" @refresh="emits('update')" />
       </div>
     </div>
     <div style="padding: var(--app-space-xs); text-align: right">
@@ -306,9 +306,10 @@ const checkDuplicateLabel = (parentId: string, id: string, name: string, data: a
 
 async function handleDelete() {
   try {
+    const msg = state.setting.folder ? t('folder_entireFolderCabinet') : t('common_file')
     const action = await ElMessageBox.confirm(
       t('tip_deleteMsg', {
-        modelName: t('folder_entireFolderCabinet'),
+        modelName: msg,
         name: null
       }),
       {
@@ -320,7 +321,7 @@ async function handleDelete() {
     await adminApi.api.deleteCabinetId(state.setting.id)
     if (props.isRoot) {
       routerProvider?.navigateTo(routeFolderCabinetPage(), false)
-      routerProvider?.message.success(t('tip_deleteSuccessMessage', { name: t('folder_entireFolderCabinet') }))
+      routerProvider?.message.success(t('tip_deleteSuccessMessage', { name: msg }))
     } else {
       emits('update')
     }

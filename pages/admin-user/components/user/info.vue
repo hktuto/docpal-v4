@@ -100,7 +100,7 @@ async function handleDelete() {
 
     if (action !== 'confirm') return
     const res = await userProviderDetail?.BatchDeleteUserApi({ userIds: [props.user.userId] })
-    routerProvider?.message.success(t('tip_deleteSuccessMessage', {name: props.user.firstName }))
+    routerProvider?.message.success(t('tip_deleteSuccessMessage', {name: t('User') }))
     if (!!res) userProviderDetail?.openUserList()
   } catch (error) {
     console.log(error)

@@ -56,7 +56,8 @@
     </el-form>
 
     <template #footer>
-      <el-button id="DocumentType__DisplayMeta__AddNewDisplayMeta__Submit" type="primary" :loading="state.loading" @click="handleSubmit()">
+      <el-button id="DocumentType__DisplayMeta__AddNewDisplayMeta__Submit" type="primary" :loading="state.loading"
+                 @click="handleSubmit()">
         {{ $t('common_submit') }}
       </el-button>
       <el-button
@@ -75,6 +76,7 @@
 import { adminApi } from 'api'
 import { ElMessage, type FormInstance } from 'element-plus'
 import { initMetadataOpts, metadataOpts } from '@/composables/useDocumentTypeOptioins'
+
 const routerProvider = inject(MenuRouterKey)
 const props = defineProps<{
   documentType: string
@@ -133,7 +135,10 @@ async function handleSubmit(addMore: boolean = false) {
     // Add or update metadata
     if (state.isEdit) {
       await adminApi.api.postDocpaltypeSettingsDocpalTypeV2UpdateMetadataDocpaltypeid(props.id, formData)
-      ElMessage.success(t('dpMsg_success'))
+      routerProvider?.message.success(t('tip_updateMsg', {
+        modelName: t('tip_SelectedMsg') + t('docType_displayMeta'),
+        name: null
+      }))
     } else {
       await adminApi.api.postDocpaltypeSettingsDocpalTypeV2AddMetadataDocpaltypeid(props.id, formData)
       ElMessage.success(t('common_addSuccess'))
@@ -146,7 +151,7 @@ async function handleSubmit(addMore: boolean = false) {
     if (addMore) {
       nextTick(() => {
         state.metadataList.push({
-          id: newMetadata.metadataId,
+          id: newMetadata.metadataId
         })
         handleOpen(state.metadataList, null)
       })

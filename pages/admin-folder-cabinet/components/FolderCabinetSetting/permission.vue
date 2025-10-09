@@ -35,7 +35,7 @@
         </el-table-column>
       </el-table>
     </div>
-    <FolderCabinetSettingPermissionAddDialog ref="AclAddDialogRef" :id="id" :exit-list="[]" @refresh="emits('refresh')" />
+    <FolderCabinetSettingPermissionAddDialog ref="AclAddDialogRef" :isFolder="props.isFolder"  :id="id" :exit-list="[]" @refresh="emits('refresh')" />
     <FolderCabinetSettingPermissionEditTimeDialog ref="AclEditTimeDialogRef" :id="id" @refresh="emits('refresh')" />
   </div>
 </template>
@@ -48,6 +48,7 @@ const routerProvider = inject(MenuRouterKey)
 const props = defineProps<{
   tableData: any
   id: string
+  isFolder: string
 }>()
 const emits = defineEmits(['refresh'])
 

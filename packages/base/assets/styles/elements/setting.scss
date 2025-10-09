@@ -1,37 +1,63 @@
 
 @forward 'element-plus/theme-chalk/src/common/var.scss' with (
+  // ==================== Colors - Use App Theme Colors ====================
   $colors: (
     'primary': (
-      'base': #17B2C0,
+      'base': var(--app-primary-color),
+    ),
+    'success': (
+      'base': var(--app-success-color),
+    ),
+    'warning': (
+      'base': var(--app-warning-color),
+    ),
+    'danger': (
+      'base': var(--app-danger-color),
+    ),
+    'error': (
+      'base': var(--app-error-color),
+    ),
+    'info': (
+      'base': var(--app-info-color),
     ),
   ),
+
+  // ==================== Component Sizes ====================
   $common-component-size: (
     'large': 40px,
     'default': 32px,
     'small': 24px,
   ),
+
+  // ==================== Border Radius ====================
   $border-radius: (
-    'base': 4px,
+    'base': var(--app-border-radius-s),
     'small': 2px,
-    'middle': 8px,
-    'round': 20px,
+    'middle': var(--app-border-radius-m),
+    'round': var(--app-border-radius-xl),
     'circle': 100%,
   ),
+
+  // ==================== Card Component ====================
   $card: (
     'border-color': var(--el-border-color-light),
     'border-radius': var(--el-border-radius-middle),
     'padding': var(--app-space-xs),
     'bg-color': var(--el-fill-color-blank),
   ),
+
+  // ==================== Font Sizes ====================
   $font-size: (
-    'extra-large': 2rem,
-    'large': 1.25rem,
-    'medium': 1.2rem,
-    'base': 0.9rem,
-    'small': 0.8rem,
-    'extra-small': 0.7rem,
+    'extra-large': var(--app-font-size-xxl),
+    'large': var(--app-font-size-xl),
+    'medium': var(--app-font-size-l),
+    'base': var(--app-font-size-m),
+    'small': var(--app-font-size-s),
+    'extra-small': var(--app-font-size-xs),
   ),
+
+  // ==================== Table Component ====================
   $table: (
-    'current-row-bg-color': var(--el-color-primary-light-7),
+    'current-row-bg-color': var(--app-primary-alpha-10),
   )
 );
