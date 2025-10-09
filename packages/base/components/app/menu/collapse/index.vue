@@ -15,7 +15,6 @@ function itemClick(item:MenuItem) {
 const selectedIndex = ref()
 
 function handleHover(item:MenuItem) {
-  console.log('handleHover', item)
   emits('hover', item)
 }
 
