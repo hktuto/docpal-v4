@@ -3,11 +3,14 @@ import type { DroppableItem } from './dragType'
 
 
 export interface MenuItem extends DroppableItem {
+    label?: string,
     icon: string, // 如果是 inlineRender 會忽略
     hoverIcon?: string, // 如果是 inlineRender 會忽略
     isList?:boolean, // 如果是 true 則直接在 menu 中渲染component, 多用於 children 裡的列表
     inlineRender?:boolean, // 如果是 true 則直接在 menu 中渲染component, 多用於 children 裡的列表
     children?: MenuItem[], 
+    component?: string,
+    inlineComponent?: string, // 
     canDrop: (args:any) => boolean,
     onDropItself?:(args:any) => void,
     // 如果 isList 是 true 時必填

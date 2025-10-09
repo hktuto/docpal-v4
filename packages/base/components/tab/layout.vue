@@ -60,19 +60,17 @@ onMounted(() => {
     --panel-border-radius: var(--app-border-radius-m);
     height: 100%;
     width: var(--panel-min-size);
-    border-radius: var(--app-border-radius-m);
-    box-shadow: var(--app-shadow-s);
+    border-radius: var(--app-border-radius-l);
     position: relative;
-    overflow: auto;
-
+    overflow: visible;
     :deep(.splitpanes__pane) {
         height:100%;
         transition: none;
-        box-shadow: var(--app-shadow-s)!important;
+        box-shadow: var(--app-shadow-m)!important;
         border-radius: var(--app-border-radius-m);
         overflow: hidden;
         &:has(.activePanel) {
-            box-shadow: var(--app-shadow-l)!important;
+            box-shadow: var(--app-shadow-xl)!important;
             z-index: 20;
         }
     }

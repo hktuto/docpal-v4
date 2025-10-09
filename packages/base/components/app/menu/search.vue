@@ -7,6 +7,8 @@ const { opened, displayList, keyword, selectedItemIndex } = useGlobalSearch(tabP
 
 const keywordRef = ref()
 
+const { menuMode } = defineProps<{ menuMode?: 'collapse' | 'expand' }>()
+
 const { t } = useI18n()
 
 const metaKey = computed(() => {
@@ -36,14 +38,15 @@ function focus() {
 
 
 <template>
-    <div class="searchInputButton" @click="opened = true">
+    <div :class="{searchInputButton:true, [menuMode]:true}" @click="opened = true">
         <div class="left">
 
         <Icon name="lucide:search"  />
-
+          <template v-if="menuMode === 'expand'">
             {{$t('quickAction.label')}}
+          </template>
         </div>
-        <div class="sub">{{ metaKey }} + k</div>
+        <div v-if="menuMode === 'expand'" class="sub">{{ metaKey }} + k</div>
     </div>
     <ElDialog v-model="opened" append-to-body modal @opened="nextTick(() => focus() )" >
         <div class="searchActionContainer">
@@ -85,6 +88,9 @@ function focus() {
     align-items: center;
     font-size: var(--app-font-size-m);
     color: var(--app-grey-400);
+    &.collapse{
+        padding: var(--app-space-xs);
+    }
     .left{
          flex: 1 0 auto;
          display: flex;
