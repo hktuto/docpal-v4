@@ -90,7 +90,7 @@
     "jszip": "^3.10.1",
     "menus": "link:@tiptap/vue-3/menus",
     "mime-types": "^2.1.35",
-    "nuxt": "^3.19.3",
+    "nuxt": "3.19.3",
     "playwright-core": "^1.50.1",
     "pptx-preview": "^1.0.5",
     "pptxjs": "^0.0.0",
