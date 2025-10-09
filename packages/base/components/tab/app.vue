@@ -338,6 +338,7 @@ watch(appPlatform, () => {
                 <LoadingBg />
             </template>
             <template v-else>
+              {{ layout }}
                 <TabLayout :layout="layout" @ready="$emit('ready')" />
                 <div class="hiddenAllComponent">
                     <template v-for="component in allComponents" :key="component.id">
