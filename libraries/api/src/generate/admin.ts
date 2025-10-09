@@ -2089,6 +2089,16 @@ export interface ResultPaginationDTOMapStringObject {
     locale?: string;
 }
 
+export interface ContactImportRequestDTO {
+    groupId?: string;
+    /** @format binary */
+    file?: File;
+    columns?: string;
+    dataMapping?: Record<string, string>;
+    replace?: boolean;
+    operator?: string;
+}
+
 /** Import ResponseDTO */
 export interface ImportResponseDTO {
     /** @format int32 */
@@ -4905,6 +4915,7 @@ export interface MailSendRequest {
     templateId?: string;
     variables?: Record<string, object>;
     files?: File[];
+    userId?: string;
     accessToken?: string;
 }
 
@@ -6072,6 +6083,54 @@ export interface ResultPaginationDTOFormDesignResponseDTO {
     locale?: string;
 }
 
+export interface BatchMailSendRequest {
+    batchTaskId?: string;
+    fromEmail: string;
+    subject?: string;
+    text?: string;
+    templateId?: string;
+    tos: string[];
+    ccs?: string[];
+    bcc?: string[];
+    variables?: Record<string, object>;
+    userId?: string;
+    accessToken?: string;
+    /** @format int64 */
+    sendInterval?: number;
+    /** @format int32 */
+    batchSize?: number;
+    /** @format int64 */
+    batchInterval?: number;
+    async?: boolean;
+}
+
+export interface BatchSendEmailResponseDTO {
+    batchTaskId?: string;
+    /** @format int32 */
+    totalCount?: number;
+    /** @format int32 */
+    successCount?: number;
+    /** @format int32 */
+    failedCount?: number;
+    status?: string;
+    /** @format date-time */
+    createdTime?: string;
+    /** @format date-time */
+    completedTime?: string;
+    errorMessages?: string[];
+    async?: boolean;
+    /** @format double */
+    progress?: number;
+}
+
+export interface ResultBatchSendEmailResponseDTO {
+    result?: boolean;
+    /** @format int32 */
+    code?: number;
+    message?: string;
+    data?: BatchSendEmailResponseDTO;
+}
+
 /** Vocabulary Entry */
 export interface VocabularyEntryRequestDTO {
     /** Entry ID */
@@ -6195,16 +6254,6 @@ export interface ExecuteSqlDTO {
     initStartDate?: number;
     /** @format int32 */
     initEndDate?: number;
-}
-
-export interface ContactImportRequestDTO {
-    groupId?: string;
-    /** @format binary */
-    file?: File;
-    columns?: string;
-    dataMapping?: Record<string, string>;
-    replace?: boolean;
-    operator?: string;
 }
 
 export interface PaginationDTOCompanyChop {
@@ -8763,6 +8812,38 @@ export interface ResultEasyFormBaseEmailDTO {
     data?: EasyFormBaseEmailDTO;
     messageKey?: string;
     locale?: string;
+}
+
+export interface DocPalEmailTemplate {
+    id?: string;
+    /** @format int64 */
+    emailLayoutId?: number;
+    emailTemplateJson?: string;
+    emailTemplateVariable?: string;
+    to?: string;
+    from?: string;
+    label?: string;
+    cc?: string;
+    bcc?: string;
+    subject?: string;
+    body?: string;
+    status?: string;
+    createdBy?: string;
+    modifiedBy?: string;
+    display?: string;
+    /** @format date-time */
+    createdDate?: string;
+    /** @format date-time */
+    modifiedDate?: string;
+    emailLayoutName?: string;
+}
+
+export interface ResultListDocPalEmailTemplate {
+    result?: boolean;
+    /** @format int32 */
+    code?: number;
+    message?: string;
+    data?: DocPalEmailTemplate[];
 }
 
 export interface ResultListDictResponseDTO {
@@ -12175,11 +12256,7 @@ export class Admin<SecurityDataType extends unknown> extends HttpClient<Security
         postRegisteredServerContactgroupIdContactdetailImport: (
             id: string,
             query: {
-                operator: string;
-                columns: string;
-                replace: boolean;
-                /** @format binary */
-                file: File;
+                requestDTO: ContactImportRequestDTO;
             },
             params: RequestParams = {},
         ) =>
@@ -16854,6 +16931,22 @@ export class Admin<SecurityDataType extends unknown> extends HttpClient<Security
         /**
          * No description
          *
+         * @tags DocPalEmailController
+         * @name PostEmailBatchSend
+         * @request POST:/api/docpal/email/batch/send
+         */
+        postEmailBatchSend: (data: BatchMailSendRequest, params: RequestParams = {}) =>
+            this.request<ResultBatchSendEmailResponseDTO, Result | (ResultObject | Result | ResultString)>({
+                path: `/docpal/email/batch/send`,
+                method: "POST",
+                body: data,
+                type: ContentType.Json,
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
          * @tags DictController
          * @name PostDictCategoryCategorycodeEntry
          * @summary Create new Vocabulary entry
@@ -17535,26 +17628,6 @@ export class Admin<SecurityDataType extends unknown> extends HttpClient<Security
                 method: "POST",
                 body: data,
                 type: ContentType.Json,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags CaseTypeController
-         * @name PostCaseTypesRepair
-         * @request POST:/api/docpal/case/types/repair
-         */
-        postCaseTypesRepair: (
-            query?: {
-                id?: string;
-            },
-            params: RequestParams = {},
-        ) =>
-            this.request<ResultObject, Result | (ResultObject | Result | ResultString)>({
-                path: `/docpal/case/types/repair`,
-                method: "POST",
-                query: query,
                 ...params,
             }),
 
@@ -19351,6 +19424,21 @@ export class Admin<SecurityDataType extends unknown> extends HttpClient<Security
                 path: `/registered-server/contactGroup/list`,
                 method: "GET",
                 query: query,
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags Document
+         * @name GetRegisteredServerContactgroupHistorical
+         * @summary Query all historical contact group without filter condition
+         * @request GET:/api/registered-server/contactGroup/historical
+         */
+        getRegisteredServerContactgroupHistorical: (params: RequestParams = {}) =>
+            this.request<ResultListContactGroupResponseDTO, Result | (ResultObject | Result | ResultString)>({
+                path: `/registered-server/contactGroup/historical`,
+                method: "GET",
                 ...params,
             }),
 
@@ -22404,6 +22492,20 @@ export class Admin<SecurityDataType extends unknown> extends HttpClient<Security
         getFormDesignDataPatchPermission: (params: RequestParams = {}) =>
             this.request<ResultBoolean, Result | (ResultObject | Result | ResultString)>({
                 path: `/docpal/form/design/data/patch/permission`,
+                method: "GET",
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags DocPalEmailController
+         * @name GetEmailTemplateList
+         * @request GET:/api/docpal/email/template/list
+         */
+        getEmailTemplateList: (params: RequestParams = {}) =>
+            this.request<ResultListDocPalEmailTemplate, Result | (ResultObject | Result | ResultString)>({
+                path: `/docpal/email/template/list`,
                 method: "GET",
                 ...params,
             }),
