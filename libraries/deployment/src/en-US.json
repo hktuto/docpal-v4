@@ -693,7 +693,8 @@
       "group": "User group",
       "masterTable": "Master table ",
       "masterTableColumn": "Master table record",
-      "user": "User"
+      "user": "User",
+      "contact": "@:adminMenu.contactBook"
     }
   },
   "dataFieldUg": {
