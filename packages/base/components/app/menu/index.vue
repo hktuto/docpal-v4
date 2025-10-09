@@ -146,8 +146,10 @@ watch(() => [layout, hightLightPanel], () => {
     transform: translateX(-500px);
     transition: all 0.4s ease-in-out;
     z-index: 2;
-    background: var(--app-accent-alpha-10);
+    
     border-radius: var(--app-border-radius-m);
+    
+    background: var(--app-primary-alpha-10);
     box-shadow: 10px 4px 30px rgba(0, 0, 0, 0.1);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(6.3px);

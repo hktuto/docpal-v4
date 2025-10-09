@@ -77,11 +77,11 @@ onMounted(() => {
   &.selected{
     background: var(--app-grey-1000) !important;
     box-shadow: var(--app-shadow-m);
-    color: var(--app-accent-color);
+    color: var(--app-primary-color);
   }
   &:hover{
 
-    color: var(--app-accent-color);
+    color: var(--app-primary-color);
     background: rgba(255, 255, 255, 0.6);
     box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
     backdrop-filter: blur(6.3px);
