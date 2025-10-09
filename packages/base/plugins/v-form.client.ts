@@ -1,13 +1,17 @@
-
-// @ts-ignore
-import VForm3 from 'v-form';
-import 'v-form/dist/designer.style.css';
 import { clientApi, adminApi } from 'api';
 import dayjs from 'dayjs';
+
 // @ts-ignore
-export default defineNuxtPlugin(nuxtApp => {
-  // Doing something with nuxtApp
+export default defineNuxtPlugin(async nuxtApp => {
+  // Dynamically import VForm3 and its styles for code-splitting
+  // @ts-expect-error - v-form doesn't have type declarations
+  const VForm3Module = await import('v-form');
+  await import('v-form/dist/designer.style.css');
+  
+  // @ts-ignore
+  const VForm3 = VForm3Module.default;
   nuxtApp.vueApp.use(VForm3);
+  
   if (window) {
     const pathname = window.location.pathname
     // @ts-ignore
