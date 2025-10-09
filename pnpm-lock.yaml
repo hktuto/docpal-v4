@@ -295,7 +295,7 @@ importers:
         specifier: ^2.1.35
         version: 2.1.35
       nuxt:
-        specifier: ^3.19.3
+        specifier: 3.19.3
         version: 3.19.3(@parcel/watcher@2.5.1)(@types/node@24.7.0)(@vue/compiler-sfc@3.5.22)(db0@0.3.4)(eslint@9.37.0(jiti@2.6.1))(ioredis@5.8.1)(magicast@0.3.5)(optionator@0.9.4)(rollup@4.52.4)(sass@1.93.2)(terser@5.44.0)(typescript@5.9.3)(vite@7.1.9(@types/node@24.7.0)(jiti@2.6.1)(sass@1.93.2)(terser@5.44.0)(yaml@2.8.1))(yaml@2.8.1)
       playwright-core:
         specifier: ^1.50.1
@@ -312,9 +312,6 @@ importers:
       sql.js:
         specifier: ^1.13.0
         version: 1.13.0
-      tiff.js:
-        specifier: ^1.0.0
-        version: 1.0.0
       tippy.js:
         specifier: ^6.3.7
         version: 6.3.7
@@ -10462,9 +10459,6 @@ packages:
 
   through@2.3.8:
     resolution: {integrity: sha512-w89qg7PI8wAdvX60bMDP+bFoD5Dvhm9oLheFp5O4a2QF0cSBGsBX4qZmadPMvVqlLJBBci+WqGGOAPvcDeNSVg==}
-
-  tiff.js@1.0.0:
-    resolution: {integrity: sha512-P+ZWp1hcpEIx/Pzuc+REh0+isGXk5kfnFEJKRPq1trMbZW49eD/QGDT8Y4KamIK2ZXU+DcYr47auaO93akVP3A==}
 
   time-stamp@1.1.0:
     resolution: {integrity: sha512-gLCeArryy2yNTRzTGKbZbloctj64jkZ57hj5zdraXue6aFgd6PmvVtEyiUU+hvU0v7q08oVv8r8ev0tRo6bvgw==}
@@ -23157,8 +23151,6 @@ snapshots:
       readable-stream: 3.6.2
 
   through@2.3.8: {}
-
-  tiff.js@1.0.0: {}
 
   time-stamp@1.1.0: {}
 

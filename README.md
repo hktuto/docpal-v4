@@ -70,8 +70,8 @@ docpal-v4/
 
 ### Prerequisites
 
-- Node.js (LTS version)
-- PNPM 8.14.3 or higher
+- Node.js 22+ (Required for Mac)
+- PNPM 8.0.0 or higher
 
 ### Installation
 
@@ -81,12 +81,29 @@ docpal-v4/
    cd docpal-v4
    ```
 
-2. Install dependencies:
+2. Ensure you're using Node.js 22+:
+   
+   If using **nvm**:
+   ```bash
+   nvm use
+   ```
+   
+   If using **nodenv** or **asdf**:
+   ```bash
+   nodenv install 22  # or: asdf install nodejs 22
+   ```
+   
+   To check your Node version:
+   ```bash
+   node --version  # Should show v22.x.x
+   ```
+
+3. Install dependencies:
    ```bash
    pnpm install
    ```
 
-3. Set up environment variables:
+4. Set up environment variables:
    ```bash
    cp env/.env.example env/.env
    ```
