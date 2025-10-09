@@ -107,7 +107,8 @@ export const responseSuccessHelper = (response: any, axiosInstance: AxiosInstanc
 
 export const responseErrorHelper = async (error: any, axiosInstance: AxiosInstance) => {
   const originalRequest = error.config
-
+  console.log('responseErrorHelper', error)
+  if(!error.response) return Promise.reject(error)
   if (error.response.status === 420) {
     console.log('token expired, clear token and redirect to login page')
     // TODO : may need to handle error message

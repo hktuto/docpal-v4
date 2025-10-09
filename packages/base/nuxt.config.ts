@@ -61,45 +61,63 @@ const config = {
     // }
   },
   nitro:{
-    routeRules:{
-      '/adminApi/api': {proxy: {to: process.env.ADMIN_PROXY+"/**"}},
-      '/public-api/report/v1/api': {proxy: {to: process.env.DASHBOARD_PROXY}},
-      '/api/**': {proxy: {to: process.env.PROXY +"/**"}},
-      '/notification/api/**': {proxy: {to: process.env.NOTIFICATION_PROXY+"/**"}},
-      '/dashboard/**': {proxy: {to:process.env.DASHBOARD_PROXY+"/**"}},
-      '/client/**': {proxy: {to:process.env.CLIENT_PROXY+"/**"}},
-    },
+    // routeRules:{
+    //   '/adminApi/api': {proxy: {to: process.env.ADMIN_PROXY+"/**"}},
+    //   '/public-api/report/v1/api': {proxy: {to: process.env.DASHBOARD_PROXY}},
+    //   '/api/**': {proxy: {to: process.env.PROXY +"/**"}},
+    //   '/notification/api/**': {proxy: {to: process.env.NOTIFICATION_PROXY+"/**"}},
+    //   '/dashboard/**': {proxy: {to:process.env.DASHBOARD_PROXY+"/**"}},
+    //   '/client/**': {proxy: {to:process.env.CLIENT_PROXY+"/**"}},
+    // },
 
       devProxy:{
         '/adminApi/api':{
           target: process.env.ADMIN_PROXY,
           changeOrigin: true,
-          prependPath: true
+          prependPath: true,
+          headers: {
+            'accept-encoding': 'identity'
+          }
         },
         '/public-api/report/v1/api':{
           target: process.env.DASHBOARD_PROXY,
           changeOrigin: true,
-          prependPath: true
+          prependPath: true,
+          headers: {
+            'accept-encoding': 'identity'
+          }
         },
         '/api':{
           target: process.env.PROXY,
           changeOrigin: true,
-          prependPath: true
+          prependPath: true,
+          headers: {
+            'accept-encoding': 'identity'
+          }
         },
         '/docpalApi':{
           target: process.env.PROXY,
           changeOrigin: true,
-          prependPath: true
+          prependPath: true,
+          headers: {
+            'accept-encoding': 'identity'
+          }
         },
         '/dashboard':{
           target: process.env.DASHBOARD_PROXY,
           changeOrigin: true,
-          prependPath: true
+          prependPath: true,
+          headers: {
+            'accept-encoding': 'identity'
+          }
         },
         '/client':{
           target: process.env.CLIENT_PROXY,
           changeOrigin: true,
-          prependPath: true
+          prependPath: true,
+          headers: {
+            'accept-encoding': 'identity'
+          }
         },
       }
       // routeRules: {
