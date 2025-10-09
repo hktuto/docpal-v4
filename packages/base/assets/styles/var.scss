@@ -1,26 +1,65 @@
 @use 'sass:math';
 @use 'sass:map';
 
-$app-color: (
-    'white': #ffffff,
-    'black': #000000,
+// Layer 1: RGB Source of Truth
+$app-color-rgb: (
+    'white': (255, 255, 255),
+    'black': (0, 0, 0),
     'primary': (
-      'base': #15d5b9,
+      'base': (21, 213, 185),  // #15d5b9
     ),
     'success': (
-      'base': #0077ff,
+      'base': (0, 119, 255),  // #0077ff
     ),
     'warning': (
-      'base': #e6a23c,
+      'base': (230, 162, 60),  // #e6a23c
     ),
     'danger': (
-      'base': #f56c6c,
+      'base': (245, 108, 108),  // #f56c6c
     ),
     'error': (
-      'base': #f56c6c,
+      'base': (245, 108, 108),  // #f56c6c
     ),
     'info': (
-      'base': #909399,
+      'base': (144, 147, 153),  // #909399
+    ),
+);
+
+// Helper function: Convert RGB tuple to hex
+@function rgb-to-hex($rgb) {
+  $r: nth($rgb, 1);
+  $g: nth($rgb, 2);
+  $b: nth($rgb, 3);
+  
+  @return rgb($r, $g, $b);
+}
+
+// Helper function: Get RGB as space-separated string for CSS custom properties
+@function rgb-to-string($rgb) {
+  @return #{nth($rgb, 1)} #{nth($rgb, 2)} #{nth($rgb, 3)};
+}
+
+// Layer 2: Convert RGB to Hex for UI Library compatibility
+$app-color: (
+    'white': rgb-to-hex(map.get($app-color-rgb, 'white')),
+    'black': rgb-to-hex(map.get($app-color-rgb, 'black')),
+    'primary': (
+      'base': rgb-to-hex(map.get($app-color-rgb, 'primary', 'base')),
+    ),
+    'success': (
+      'base': rgb-to-hex(map.get($app-color-rgb, 'success', 'base')),
+    ),
+    'warning': (
+      'base': rgb-to-hex(map.get($app-color-rgb, 'warning', 'base')),
+    ),
+    'danger': (
+      'base': rgb-to-hex(map.get($app-color-rgb, 'danger', 'base')),
+    ),
+    'error': (
+      'base': rgb-to-hex(map.get($app-color-rgb, 'error', 'base')),
+    ),
+    'info': (
+      'base': rgb-to-hex(map.get($app-color-rgb, 'info', 'base')),
     ),
 );
 
