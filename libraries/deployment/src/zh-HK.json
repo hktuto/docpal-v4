@@ -166,7 +166,6 @@
   "admin_watermarkAddImageScreenMsg": "Click to add Image",
   "admin_watermarkAddTextScreenMsg": "Click to add Text",
   "admin_watermarkName": "水印名稱",
-  "admin_watermarkSavedSuccessMsg": "水印已儲存。",
   "admin_watermarkToLandscapeScreenMsg": "Click to switch to Landscape Mode",
   "admin_watermarkVerticalScreenMsg": "Click to switch to Portrait Mode.",
   "admin_watermark_color": "顏色",
@@ -515,7 +514,7 @@
   "common_dragFileHere": "拖放到此處",
   "common_edit": "編輯",
   "common_fetchFail": "獲取數據失敗",
-  "common_file": "文件",
+  "common_file": "檔案",
   "common_filter": "過濾",
   "common_folder": "文件夾",
   "common_icon": "圖標",
@@ -690,7 +689,7 @@
     "params": "參數配置",
     "setting": "數據配置",
     "type": {
-      "group": "使用者群組",
+      "group": "用戶群組",
       "masterTable": "主表格",
       "masterTableColumn": "主表格記錄",
       "user": "使用者"
@@ -1044,6 +1043,9 @@
     "fileExtension": "檔案副檔名"
   },
   "docTemplate": {
+    "createTemplate": {
+      "error": "標題不能包含特殊符號"
+    },
     "export": {
       "configureVariables": "設定變數",
       "export": "匯出",
@@ -1962,6 +1964,7 @@
   "folder_cabinetFilterItemName": "Filter by Item Name",
   "folder_cabinetFilterMsg": "Filter by Cabinet Name",
   "folder_cabinetItemName": "項目名稱",
+  "folder_cabinetLocalPermissionOfFile": "該檔案新的本地權限",
   "folder_cabinetLocalPermissionOfFolder": "此檔案櫃的新本地權限",
   "folder_cabinetNewItemTitle": "標題",
   "folder_cabinetReportNotificationToNotBeEmpty": "Report Notification – To cannot be empty.",
@@ -2943,7 +2946,7 @@
     "inputUserFirstName": "名稱只能包含字母、數字、底線（_）或中文",
     "inputUserName": "使用者名稱必須以字母開頭，且只能包含字母、數字、底線 (_) 或連字號 (-)",
     "inputUserPassword": "請輸入至少 8 個字符，包含至少一個字母和一個數字。",
-    "inputUserPasswordMatch": "輸入的密碼不匹配",
+    "inputUserPasswordMatch": "密碼不符",
     "loadingFileFail": "載入失敗",
     "masterTable": {
       "noValidData": "沒有有效數據，至少增加一個schema"
@@ -2969,12 +2972,14 @@
     "unsubscribe": "退訂",
     "upload": "上傳"
   },
+  "tip_SelectedMsg": "所選的",
   "tip_createdMsg": "{modelName} {name} 已創建。",
   "tip_createdSuccessMsg": "新 {modelName} {name} 已成功創建",
   "tip_deleteMsg": "確定刪除選定的 {modelName} {name} 嗎?",
   "tip_deleteSuccessMessage": "{name}已刪除。",
   "tip_deleteSuccessMsg": "{modelName} {name} 已成功刪除",
   "tip_enterAfterInput": "輸入後請按 Enter 鍵",
+  "tip_newMsg": "新的",
   "tip_updateMsg": "{modelName} {name} 已更新",
   "tip_updateSuccessMsg": "{modelName} {name} 已成功更新",
   "title": {
@@ -3088,6 +3093,7 @@
     "operationFailed": "[{users}]: 操作失敗",
     "userSelectedDeleteMsg": "所選用戶已刪除。"
   },
+  "user_NewUserGroup": "新用戶群組",
   "user_SecurityProperty": "Security Property",
   "user_UserAndUserGroup": "使用者 / 使用者群組",
   "user_UserGroup": "使用者群組",
@@ -3140,7 +3146,7 @@
   "user_userIdentifer": "用戶標識符",
   "user_userIdentiferCanNotBeNull": "用戶標識符不能為空",
   "user_userLevel": "用户层级",
-  "user_userPassword": "使用者密碼",
+  "user_userPassword": "此用戶的密碼",
   "user_username": "用戶名",
   "user_usernameCanNotBeNull": "用戶名不能為空",
   "user_users": "用戶",

@@ -87,7 +87,7 @@ async function handleDisabled(row) {
     const param = []
     param.push(row.shareID)
     await adminApi.api.deleteNuxeoShare(param)
-    routerProvider?.message.success(t('tip_deleteSuccessMessage', { name: t('share_externalShareLink') }))
+    routerProvider?.message.success(t('tip_deleteSuccessMessage', { name: t('tip_SelectedMsg') + t('share_externalShareLink') }))
     query()
   } catch (error) {
     console.log(error)

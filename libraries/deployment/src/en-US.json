@@ -166,7 +166,6 @@
   "admin_watermarkAddImageScreenMsg": "Click to add Image",
   "admin_watermarkAddTextScreenMsg": "Click to add Text",
   "admin_watermarkName": "Watermark Name",
-  "admin_watermarkSavedSuccessMsg": "Watermark has been saved.",
   "admin_watermarkToLandscapeScreenMsg": "Click to switch to Landscape Mode.",
   "admin_watermarkVerticalScreenMsg": "Click to switch to Portrait Mode.",
   "admin_watermark_color": "Color",
@@ -482,7 +481,7 @@
   "collection_name": "Collection Name",
   "collection_remove": "Remove File / Folder Path",
   "collections_add": "Add To Collections",
-  "collections_caption": " Search a collection or Create new ",
+  "collections_caption": "Search a collection or Create new ",
   "collections_edit": "Edit Collection Info",
   "collections_new": "Create New Collection",
   "collections_remove": "Remove Collection from Document",
@@ -1044,6 +1043,9 @@
     "fileExtension": "File Type"
   },
   "docTemplate": {
+    "createTemplate": {
+      "error": "Titles cannot contain special characters"
+    },
     "export": {
       "configureVariables": "Configure Variables",
       "export": "Export",
@@ -1323,7 +1325,7 @@
   "documentType_createdLetterOrUnderscoreNameMsg": "Document Type Name must start with a letter or underscore.",
   "documentType_delete": "Delete Display Meta",
   "documentType_duplicate": "Duplicate Document Type",
-  "documentType_duplicateAddSuccessMsg": "Selected document type has been duplicated.",
+  "documentType_duplicateAddSuccessMsg": "Selected Document type has been duplicated.",
   "documentType_edit": "Edit Display Meta",
   "documentType_filter": "Filter by Document Type Name",
   "documentType_inactivate": "Inactivate Document Type",
@@ -1963,14 +1965,15 @@
   "folder_cabinetFilterItemName": "Filter by Item Name",
   "folder_cabinetFilterMsg": "Filter by Cabinet Name",
   "folder_cabinetItemName": "Item Name",
-  "folder_cabinetLocalPermissionOfFolder": "The new local permission of this folder",
+  "folder_cabinetLocalPermissionOfFile": "New local permission of this file",
+  "folder_cabinetLocalPermissionOfFolder": "The new local permission of this folder cabinet",
   "folder_cabinetNewItemTitle": "Title",
   "folder_cabinetReportNotificationToNotBeEmpty": "Report Notification – To cannot be empty.",
   "folder_cabinetStatus": "Status",
   "folder_cabinetSystemReminderToNotBeEmpty": "System Reminder – To cannot be empty.",
   "folder_cabinetUserOrGroup": "Assigned @:tableHeader.user_role_group",
-  "folder_entireFolderCabinet": "Entire folder cabinet",
-  "folder_folderCabinetDetails": "folder cabinet details",
+  "folder_entireFolderCabinet": "Entire Folder cabinet",
+  "folder_folderCabinetDetails": "folder details",
   "folder_folderUnder": "folder under",
   "form_costModelFill_caseId": "Case ID",
   "form_display": "Display",
@@ -2944,7 +2947,7 @@
     "inputUserFirstName": "Name can only contain letters, numbers, underscores (_), or Chinese characters",
     "inputUserName": "Usernames must start with a letter and may only contain letters, numbers, underscores (_), or hyphens (-)",
     "inputUserPassword": "Please enter at least 8 characters, including at least one letter and one number.",
-    "inputUserPasswordMatch": "Passwords you entered do not match",
+    "inputUserPasswordMatch": "Invalid password",
     "loadingFileFail": "Failed to load",
     "masterTable": {
       "noValidData": "No valid data, add at least a schema"
@@ -2970,12 +2973,14 @@
     "unsubscribe": "Unsubscribe",
     "upload": "Upload"
   },
+  "tip_SelectedMsg": "Selected ",
   "tip_createdMsg": "{modelName} {name} has been created.",
   "tip_createdSuccessMsg": "The new {modelName} {name} has been created successfully.",
   "tip_deleteMsg": "Confirm to delete selected {modelName} {name}?",
   "tip_deleteSuccessMessage": "{name} has been deleted.",
   "tip_deleteSuccessMsg": "The {modelName} {name} has been deleted successfully.",
   "tip_enterAfterInput": "Please click the Enter key after input",
+  "tip_newMsg": "New ",
   "tip_updateMsg": "{modelName} {name} has been updated.",
   "tip_updateSuccessMsg": "The {modelName} {name} has been updated successfully.",
   "title": {
@@ -3089,6 +3094,7 @@
     "operationFailed": "[{users}]: Operation Failed",
     "userSelectedDeleteMsg": "Selected users have been deleted."
   },
+  "user_NewUserGroup": "New User Group",
   "user_SecurityProperty": "Security Property",
   "user_UserAndUserGroup": "User / User Group",
   "user_UserGroup": "User Group",
@@ -3141,7 +3147,7 @@
   "user_userIdentifer": "User Identifer",
   "user_userIdentiferCanNotBeNull": "User Identifer Can Not Be Null",
   "user_userLevel": "User Level",
-  "user_userPassword": "password of the user",
+  "user_userPassword": "Password of this user",
   "user_username": "Username",
   "user_usernameCanNotBeNull": "Username Can Not Be Null",
   "user_users": "Users",

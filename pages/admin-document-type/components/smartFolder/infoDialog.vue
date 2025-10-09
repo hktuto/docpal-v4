@@ -47,7 +47,7 @@ async function handleSubmit() {
       ..._data
     })
     if (Object.keys(state.setting).length === 0) {
-      msg = t('tip_createdMsg', { modelName: t('file_smartFolder'), name: null })
+      msg = t('tip_createdMsg', { modelName: t('tip_newMsg') + t('file_smartFolder'), name: null })
     } else {
       msg = t('tip_updateMsg', { modelName: t('file_smartFolder'), name: null })
     }

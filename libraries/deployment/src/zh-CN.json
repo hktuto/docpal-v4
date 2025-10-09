@@ -166,7 +166,6 @@
   "admin_watermarkAddImageScreenMsg": "Click to add Image",
   "admin_watermarkAddTextScreenMsg": "Click to add Text",
   "admin_watermarkName": "水印名稱",
-  "admin_watermarkSavedSuccessMsg": "水印已保存。",
   "admin_watermarkToLandscapeScreenMsg": "Click to switch to Landscape Mode.",
   "admin_watermarkVerticalScreenMsg": "Click to switch to Portrait Mode.",
   "admin_watermark_color": "颜色",
@@ -515,7 +514,7 @@
   "common_dragFileHere": "拖放到此处",
   "common_edit": "编辑",
   "common_fetchFail": "获取数据失败",
-  "common_file": "文件",
+  "common_file": "档案",
   "common_filter": "过滤",
   "common_folder": "文件夹",
   "common_icon": "图标",
@@ -1044,6 +1043,9 @@
     "fileExtension": "文件扩展名"
   },
   "docTemplate": {
+    "createTemplate": {
+      "error": "标题不能包含特殊符号"
+    },
     "export": {
       "configureVariables": "配置变量",
       "export": "导出",
@@ -1963,6 +1965,7 @@
   "folder_cabinetFilterItemName": "Filter by Item Name",
   "folder_cabinetFilterMsg": "Filter by Cabinet Name",
   "folder_cabinetItemName": "项目名称",
+  "folder_cabinetLocalPermissionOfFile": "该档案的新本地权限",
   "folder_cabinetLocalPermissionOfFolder": "该档案柜的新本地权限",
   "folder_cabinetNewItemTitle": "标题",
   "folder_cabinetReportNotificationToNotBeEmpty": "Report Notification – To cannot be empty.",
@@ -2944,7 +2947,7 @@
     "inputUserFirstName": "名称只能包含字母、数字、下划线（_）或中文",
     "inputUserName": "用户名必须以字母开头，且只能包含字母、数字、下划线 (_) 或连字符 (-)",
     "inputUserPassword": "请输入至少 8 个字符，包含至少一个字母和一个数字。",
-    "inputUserPasswordMatch": "输入的密码不匹配",
+    "inputUserPasswordMatch": "密码不符",
     "loadingFileFail": "加载失败",
     "masterTable": {
       "noValidData": "没有有效数据，至少添加一个schema"
@@ -2970,12 +2973,14 @@
     "unsubscribe": "退订",
     "upload": "上传"
   },
+  "tip_SelectedMsg": "所选的",
   "tip_createdMsg": "{modelName} {name} 已创建。",
   "tip_createdSuccessMsg": "新 {modelName} {name} 已成功创建",
   "tip_deleteMsg": "确定要删除所选 {modelName} {name} 吗？",
   "tip_deleteSuccessMessage": "{name}已删除。",
   "tip_deleteSuccessMsg": "{modelName} {name} 已成功删除",
   "tip_enterAfterInput": "输入后请点击回车键",
+  "tip_newMsg": "新的",
   "tip_updateMsg": "{modelName} {name} 已更新",
   "tip_updateSuccessMsg": "{modelName} {name} 已成功更新",
   "title": {
@@ -3089,6 +3094,7 @@
     "operationFailed": "[{users}]: 操作失败",
     "userSelectedDeleteMsg": "所选用户已删除。"
   },
+  "user_NewUserGroup": "新用户组",
   "user_SecurityProperty": "Security Property",
   "user_UserAndUserGroup": "用户 / 用户组",
   "user_UserGroup": "用户组",
@@ -3141,7 +3147,7 @@
   "user_userIdentifer": "用户标识符",
   "user_userIdentiferCanNotBeNull": "用户标识符不能为空",
   "user_userLevel": "用戶層級",
-  "user_userPassword": "用户密码",
+  "user_userPassword": "该用户的密码",
   "user_username": "用户名",
   "user_usernameCanNotBeNull": "用户名不能为空",
   "user_users": "用户",
