@@ -331,6 +331,7 @@ watch(appPlatform, () => {
             <AppMenuMobile v-if="isMobile" class="sideMenu"  :displayMenu="displayMenu">
                 
             </AppMenuMobile>
+            <slot name="sidebar"></slot>
         </template>
         <template #default>
             <template  v-if="loading">
