@@ -140,17 +140,17 @@ watch(() => [layout, hightLightPanel], () => {
   padding: var(--app-space-s);
   border-left: 1px solid var(--app-grey-800);
   &.collapse{
-    position: absolute;
+    position: fixed;
     top: var(--app-space-m);
     height: calc(100% - var(--app-space-m) * 2);
     left: calc(60px + var(--app-space-xs));
-    transform: translateX(-100vw);
+    transform: translateX(-500px);
     transition: all 0.4s ease-in-out;
-    z-index: -1;
+    z-index: 2;
     background: var(--app-accent-alpha-10);
     border-radius: var(--app-border-radius-m);
     box-shadow: 10px 4px 30px rgba(0, 0, 0, 0.1);
-    backdrop-filter: blur(6.3px);
+    backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(6.3px);
     border: 1px solid rgba(255, 255, 255, 0.31);
 
@@ -166,8 +166,6 @@ watch(() => [layout, hightLightPanel], () => {
     overflow: visible;
     transition: all 0.2s ease-in-out;
     z-index: 0;
-    background-image: radial-gradient(72% 72% at 2% -5%, #ddf2f7 0%, #dae7f1 100%);
-    background-size: 100% 100%;
     &.collapse{
 
       flex-flow: row nowrap;
