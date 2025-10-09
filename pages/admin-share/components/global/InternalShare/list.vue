@@ -86,7 +86,7 @@ async function deleteAction(row: any) {
     if (action !== 'confirm') return
     // param.push(...row.detailIds.split(','))
     await adminApi.api.deleteInternalshare({ internalShareId: row.internalShareId })
-    routerProvider?.message.success(t('tip_deleteSuccessMsg', { modelName: t('share_internalShareLink'), name: null }))
+    routerProvider?.message.success(t('tip_deleteSuccessMessage', { name: t('tip_SelectedMsg') +  t('share_internalShareLink') }))
     tableRef.value?.reload()
     return
   } catch (error) {

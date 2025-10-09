@@ -46,7 +46,7 @@ async function handleSubmit() {
         rootDocPalType: data?.documentType,
         id: state.setting.id
       })
-      msg = t('tip_updateMsg', {modelName: t('docType_relatedDocument'), name: null})
+      msg = t('tip_updateMsg', {modelName: t('tip_newMsg') + t('docType_relatedDocument'), name: null})
     } else {
       // return
       // props.docType.name

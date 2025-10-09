@@ -80,8 +80,8 @@ async function handleSubmit() {
       response
     })
     let msg = state.isEdit
-      ? t('tip_updateMsg', { modelName: t('menus_folderCabinet'), name: null })
-      : t('tip_createdMsg', { modelName: t('menus_folderCabinet'), name: null })
+      ? t('tip_updateMsg', { modelName: t('tip_SelectedMsg') + t('menus_folderCabinet'), name: null })
+      : t('tip_createdMsg', { modelName: t('tip_newMsg') + t('menus_folderCabinet'), name: null })
     ElMessage.success(msg)
   } catch (error) {
     console.log(error)
