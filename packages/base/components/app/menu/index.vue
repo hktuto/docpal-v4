@@ -141,13 +141,13 @@ watch(() => [layout, hightLightPanel], () => {
   border-left: 1px solid var(--app-grey-800);
   &.collapse{
     position: absolute;
-    top: var(--app-space-s);
-    height: calc(100% - var(--app-space-s) * 2);
-    left: calc(60px + var(--app-space-s));
+    top: var(--app-space-m);
+    height: calc(100% - var(--app-space-m) * 2);
+    left: calc(60px + var(--app-space-xs));
     transform: translateX(-100vw);
     transition: all 0.4s ease-in-out;
     z-index: -1;
-    background: rgba(255, 255, 255, 0.4);
+    background: var(--app-accent-alpha-10);
     border-radius: var(--app-border-radius-m);
     box-shadow: 10px 4px 30px rgba(0, 0, 0, 0.1);
     backdrop-filter: blur(6.3px);

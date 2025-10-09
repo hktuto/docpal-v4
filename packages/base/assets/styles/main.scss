@@ -9,9 +9,22 @@
 $types: primary, success, warning, danger, error, info;
 
 :root {
-  --app-main-color: #{map.get($app-color, 'primary', 'base')};
+  // Layer 3: Export RGB values as CSS custom properties for transparency support
+  --app-main-color-rgb: #{rgb-to-string(map.get($app-color-rgb, 'primary', 'base'))};
+  --app-main-color: rgb(var(--app-main-color-rgb));
+  --app-main-alpha-10: rgb(var(--app-main-color-rgb) / 0.1);
+  --app-main-alpha-30: rgb(var(--app-main-color-rgb) / 0.3);
+  --app-main-alpha-50: rgb(var(--app-main-color-rgb) / 0.5);
+  --app-main-alpha-70: rgb(var(--app-main-color-rgb) / 0.7);
+  --app-main-alpha-90: rgb(var(--app-main-color-rgb) / 0.9);
 
-  --app-accent-color: #{map.get($app-color, 'success', 'base')};
+  --app-accent-color-rgb: #{rgb-to-string(map.get($app-color-rgb, 'success', 'base'))};
+  --app-accent-color: rgb(var(--app-accent-color-rgb));
+  --app-accent-alpha-10: rgb(var(--app-accent-color-rgb) / 0.1);
+  --app-accent-alpha-30: rgb(var(--app-accent-color-rgb) / 0.3);
+  --app-accent-alpha-50: rgb(var(--app-accent-color-rgb) / 0.5);
+  --app-accent-alpha-70: rgb(var(--app-accent-color-rgb) / 0.7);
+  --app-accent-alpha-90: rgb(var(--app-accent-color-rgb) / 0.9);
 
   // calendar
   --sx-color-primary: var(--app-accent-color) !important;
@@ -34,7 +47,16 @@ $types: primary, success, warning, danger, error, info;
   }
 
   @each $type in $types {
-    --app-#{$type}-color: #{map.get($app-color, $type, 'base')};
+    // Export RGB values for transparency
+    --app-#{$type}-color-rgb: #{rgb-to-string(map.get($app-color-rgb, $type, 'base'))};
+    --app-#{$type}-color: rgb(var(--app-#{$type}-color-rgb));
+
+    // Predefined transparency levels: 10%, 30%, 50%, 70%, 90%
+    --app-#{$type}-alpha-10: rgb(var(--app-#{$type}-color-rgb) / 0.1);
+    --app-#{$type}-alpha-30: rgb(var(--app-#{$type}-color-rgb) / 0.3);
+    --app-#{$type}-alpha-50: rgb(var(--app-#{$type}-color-rgb) / 0.5);
+    --app-#{$type}-alpha-70: rgb(var(--app-#{$type}-color-rgb) / 0.7);
+    --app-#{$type}-alpha-90: rgb(var(--app-#{$type}-color-rgb) / 0.9);
 
     @for $i from 1 through 3 {
       // generate color in 5 levels mix with white
@@ -64,9 +86,9 @@ $types: primary, success, warning, danger, error, info;
   --app-font-family: 'Roboto', sans-serif;
 
   // set ap size base on rem;
-  --app-border-radius-s: 0.25rem;
-  --app-border-radius-m: 0.5rem;
-  --app-border-radius-l: 1rem;
+  --app-border-radius-s: 0.4rem;
+  --app-border-radius-m: 0.6rem;
+  --app-border-radius-l: 1.2rem;
   --app-border-radius-xl: 2rem;
   --app-border-radius-xxl: 4rem;
   --app-border-radius-max: 10e5px;
@@ -259,9 +281,7 @@ $colors:
     }
   }
 }
-.el-select-group__title {
-  // font-size: 1.5rem;
-}
+
 .dp-tabs--auto {
   height: 100%;
   overflow: hidden;
