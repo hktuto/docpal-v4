@@ -179,18 +179,17 @@ export function logout() {
   const userState = useUserState()
   const isSuperAdmin = sessionStorage.getItem('superAdmin')
   if (isSuperAdmin) {
-    sessionStorage.removeItem('superAdmin')
-    localStorage.removeItem('access_token')
-    localStorage.removeItem('refresh_token')
-    window.location.reload()
+
   } else {
     keyCloakState.value?.logout()
-    localStorage.removeItem('access_token')
-    localStorage.removeItem('refresh_token')
 
     userState.value = null
   }
+  // clean up local storage
+  
+  localStorage.clear();
   logedIn.value = false
+  window.location.href = '/';
 }
 
 /**
