@@ -1,44 +1,41 @@
 export default defineAppConfig({
-  // appMenu:[
-  //     {
-  //         name:'client-browse'
-  //     },
-  //     {
-  //         name:'client-search'
-  //     },
-  //     {
-  //         name:'client-master-table'
-  //     },
-  //     {
-  //         name:'client-folder-cabinet'
-  //     }
-  // ],
+
   appMenu: [
     {
       name: 'client-work-panel'
     },
+    // browse
     {
-      name: 'client-browse'
-    },
-    {
-      name: 'client-search'
-    },
-    {
-      label: 'file_uploads',
-      icon: 'uil:upload',
-      children: [
+      name: 'client-browse',
+      icon: 'dp-icon:browse-outline',
+      hoverIcon: 'dp-icon:browse-fill',
+      children:[
+        {
+          name: 'client-search'
+        },
+        {
+          name: 'client-browse',
+        },
+        {
+          name: 'client-collections'
+        },
         {
           name: 'client-ai-upload'
         },
         {
           name: 'client-fileRequest'
-        }
+        },
+    
+        {
+          name: 'client-folder-cabinet'
+        },
+        
       ]
-    },
+    }, 
     {
-      label: 'file_share_module',
-      icon: 'meteor-icons:share',
-      children: [
+      label:"share.share",
+      icon: 'lucide:share-2',
+      children:[
         {
           name: 'client-share'
         },
@@ -47,23 +44,21 @@ export default defineAppConfig({
         },
         {
           name: 'client-share-other'
-        }
+        },
       ]
     },
     {
-      name: 'client-collections'
+      name: 'client-trash'
     },
     // {
     //     name: "client-smartFolder"
     // },
-    {
-      name: 'client-folder-cabinet'
-    },
+    
     {
       name: 'client-workflow'
     },
     {
-      label: 'retention_policies',
+      name: 'client-retention',
       icon: 'ic:outline-lock-clock',
       children: [
         {
@@ -75,17 +70,15 @@ export default defineAppConfig({
       ]
     },
     {
-      name: 'client-dashboard'
+      name: 'client-case-manage'
     },
     {
       name: 'client-master-table'
     },
     {
-      name: 'client-trash'
+      name: 'client-dashboard'
     },
-    {
-      name: 'client-case-manage'
-    },
+    
     {
       name: 'client-easy-form'
     },
@@ -104,7 +97,7 @@ export default defineAppConfig({
       name: '',
       icon: 'tabler:align-box-right-bottom',
       hoverIcon: 'tabler:align-box-right-bottom-filled',
-      label: 'User Management',
+      label: 'User',
       children: [
         {
           name: 'admin-user'
@@ -125,24 +118,11 @@ export default defineAppConfig({
           name: 'admin-setting'
         },
         {
-          name: 'contact-book'
-        }
-      ]
-    },
-    {
-      label: 'adminMenu.shareModule',
-      icon: 'lucide:share-2',
-      hoverIcon: 'lucide:share-2',
-      children: [
-        {
-          name: 'admin-internal-share'
+          name: 'admin-company-profile'
         },
         {
-          name: 'admin-external-share'
+          name: 'contact-book'
         }
-        // {
-        //     name: 'admin-share-list'
-        // }
       ]
     },
     {
@@ -164,11 +144,33 @@ export default defineAppConfig({
         },
         {
           name: 'admin-dam'
-        }
+        },
+        {
+          name: 'admin-watermark'
+        },
+        {
+          name: 'admin-work-panel'
+        },
+        {
+          name: 'admin-master-table'
+        },
       ]
     },
     {
-      name: 'admin-watermark'
+      label: 'adminMenu.shareModule',
+      icon: 'lucide:share-2',
+      hoverIcon: 'lucide:share-2',
+      children: [
+        {
+          name: 'admin-internal-share'
+        },
+        {
+          name: 'admin-external-share'
+        }
+        // {
+        //     name: 'admin-share-list'
+        // }
+      ]
     },
     {
       label: 'adminMenu.workflow',
@@ -188,18 +190,7 @@ export default defineAppConfig({
         // }
       ]
     },
-    {
-      label: 'adminMenu.dashboardManagement',
-      icon: 'carbon:dashboard',
-      children: [
-        {
-          name: 'admin-dashboard'
-        },
-        {
-          name: 'admin-work-panel'
-        }
-      ]
-    },
+    
     {
       label: 'adminMenu.templateManagement',
       icon: 'lucide:layout-template',
@@ -216,6 +207,12 @@ export default defineAppConfig({
       ]
     },
     {
+      name: 'admin-case-management'
+    },
+    {
+      name: 'admin-dashboard'
+    },
+    {
       label: 'adminMenu.policy',
       icon: 'lucide:book-lock',
       children: [
@@ -224,27 +221,6 @@ export default defineAppConfig({
         },
         {
           name: 'admin-retention-policies'
-        }
-      ]
-    },
-    {
-      name: 'admin-master-table'
-    },
-    {
-      label: 'adminMenu.log',
-      icon: 'dp-icon:log',
-      children: [
-        {
-          name: 'admin-log-manage'
-        },
-        {
-          name: 'admin-audit'
-        },
-        {
-          name: 'admin-message-queue'
-        },
-        {
-          name: 'admin-mail-config'
         }
       ]
     },
@@ -260,18 +236,28 @@ export default defineAppConfig({
         },
         {
           name: 'admin-password-policy'
+        },
+        {
+          name: 'admin-log-manage'
+        },
+        {
+          name: 'admin-audit'
+        },
+        {
+          name: 'admin-message-queue'
+        },
+        {
+          name: 'admin-mail-config'
         }
       ]
     },
-    {
-      name: 'admin-case-management'
-    },
+    
+    
+    
     {
       name: 'admin-unique-id-generator'
     },
-    {
-      name: 'admin-company-profile'
-    },
+    
     {
       name: 'admin-external-storage'
     },

@@ -126,6 +126,6 @@ onBeforeUnmount(() => {
 
 <style lang="scss" scoped>
 .actionIcons {
-  --icon-size: var(--app-font-size-m);
+  --icon-size: var(--app-font-size-xl);
 }
 </style>

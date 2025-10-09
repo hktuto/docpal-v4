@@ -107,15 +107,7 @@ const prefixClass = computed(() => {
     <div :class="{tabContainer:true, activePanel: hightLightPanel === panel.id}">
         
         <TabHeaderList :panel="panel">
-            <template #prefix>
-                
-                <div v-if="index === 0 " >
-                    <div class="menuToggleInHeaderContainer">
 
-                        <AppMenuToggle />
-                    </div>
-                </div>
-            </template>
         </TabHeaderList>
         
         <div ref="elRef" :data-tab-id="panel.id"  :class="{

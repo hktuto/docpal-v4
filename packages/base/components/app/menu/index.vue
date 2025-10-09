@@ -1,8 +1,8 @@
 <script setup lang="ts" generic="T extends MenuItem">
-const  { menu, appMenu, adminMenu } = useAppConfig()
+
 const mode = ref<'collapse' | 'expand'>('collapse')
 const props = defineProps<{
-    admin?: boolean
+    displayMenu?: any[]
 }>()
 const layout = useTabLayout()
 const hightLightPanel = useCurrentTargetPanel()
@@ -11,218 +11,223 @@ if(!tabProvider) {
     throw createError('tab manger not found on menu')
 }
 const { t } = useI18n()
-const displayMenu = ref<any[]>([])
 
-function createSearchItem(item:MenuItem, parentKey?:string) {
-    const { availableLocales, messages } = useI18n()
-  const keyword = ['menu'];
-  availableLocales.forEach( (code) => {
-        const codeMessage = messages.value[code]
-        const label = item.label.split('.').reduce((acc, cur) => acc[cur] || "", codeMessage)
-        if(label) {
-            keyword.push(... label.toLowerCase().split(' '), label)
-        }
-        // if parentKey is not null, add parentKey to keyword
-        if(parentKey) {
-            const parentKeyLabel = parentKey.split('.').reduce((acc, cur) => acc[cur] || "", codeMessage)
-            if(parentKeyLabel) {
-                keyword.push(... parentKeyLabel.toLowerCase().split(' '), parentKeyLabel)
-            }
-        }
-    })
-    return {
-        keyword:[...new Set(keyword)],
-        label: t(item.label),
-        icon: item.icon,
-        action: () => {
-            tabProvider?.openInCurrentTab(item)
-        }
-    }
-}
-const searchList = useGlobalSearchList()
-function generateMenu(){
-    let result = []
-    
-    const _appMenu = props.admin ? deepCopy(adminMenu) : deepCopy(appMenu) // menu list
-    const _menu = deepCopy(menu) // menu对象映射
-    const menuSearchList:GlobalSearchItem[] = [];
-    
-    for(let i = 0; i < _appMenu.length; i++) {
-        let item = _appMenu[i];
-        let menuItem = item;
-        
-        // step 1 check if item has name, if so get it from menu
-        if((item.name && _menu[item.name])) {
-            // TODO : check if menu[item.name] has license
-            menuItem = _menu[item.name];
-            if(checkVisible(menuItem)) {
-                result.push(menuItem)
-                menuSearchList.push( createSearchItem(_menu[item.name]) )
-            }
-            continue;
-        }
-        let hasVisibleChildren = false;
-        if(item.children) {
-            for(let j = 0; j < item.children.length; j++) {
-                if(item.children[j].name && _menu[item.children[j].name] && checkVisible(_menu[item.children[j].name])) {
-                    item.children[j] = _menu[item.children[j].name];
-                    menuSearchList.push(createSearchItem(item.children[j], item.label  || "" ))
-                    hasVisibleChildren = true
-                }else{
-                    item.children.splice(j, 1);
-                    j--;
-                }
-            }
-            if(item.children.length === 0) {
-                item.children = undefined
-            }
-        }
-        if(hasVisibleChildren && checkVisible(menuItem)) {
-            result.push(menuItem)
-        }
-    }
-    searchList.value.push({
-        label: "Menu",
-        items: menuSearchList
-    })
-    displayMenu.value = result;
-}
-function checkVisible(row: any) {
-    if(row.feature && row.feature !== 'CORE') {
-        return allowFeature(row.feature)
-    }
-    return true
-}
-const selectedMenuItem = ref<TabItem>()
+const menuMode = ref<'collapse' | 'expand'>('collapse')
 
-function setSelectedMenuItem() {
-    const panelIndex = layout.value.findIndex(panel => panel.id === hightLightPanel.value)
-    if(panelIndex !== -1) {
-        const selected = layout.value[panelIndex].tabs[layout.value[panelIndex].showingTabIndex || 0]
-        if(selected) {
-            selectedMenuItem.value = selected
-        }
-    }
+
+const selectedMenuItem = ref<TabItem | undefined>()
+
+
+
+const expandMenu = ref<MenuItem>()
+
+function handleHover(item:MenuItem) {
+  expandMenu.value = JSON.parse(JSON.stringify(item)) || []
+  console.log('expandMenu',expandMenu.value)
 }
 
+function handleSelect(item:MenuItem) {
+  if(menuMode.value === 'expand' && item.children&& item.children.length > 0) {
+    expandMenu.value = JSON.parse(JSON.stringify(item)) || []
+  }
+  if(item.component) {
+    tabProvider?.openInCurrentTab(item)
+  }
+}
+
+
+function toggleMenuMode() {
+  menuMode.value = menuMode.value === 'collapse' ? 'expand' : 'collapse'
+}
 
 watch(() => [layout, hightLightPanel], () => {
     // get hightLightPanel
-    setSelectedMenuItem()
+    setSelectedMenuItem(selectedMenuItem, expandMenu)
 },{
     deep:true,
-    immediate: true
 })
 
-onMounted(() => {
-    // const menuState = localStorage.getItem('app-menu-mode')
-    // if(menuState === 'expand'){
-    //     mode.value = 'expand'
-    // }
-    generateMenu()
-})
 
 </script>
 
 <template>
-    <div class="appWrapper">
-        <div class="menuContainer">
+    <div :class="{appWrapper:true, [menuMode]:true}">
+        <div :class="{menuContainer:true,  [isMobile ? 'mobile' : 'desktop']: true}">
             <div class="menuHeader">
+
                 <slot name="header" />
-                <!-- <AppMenuToggle /> -->
+                <AppLogo :menuMode="menuMode" />
             </div>
             <div class="menuBody">
-                <AppMenuSearch />
-    
-                <AppMenuItemExpane 
-                    v-for="(item, index) in displayMenu" 
-                    :key="index" 
-                    :item="item" 
-                    :selectedMenuItem="selectedMenuItem"  />
+
+                
+                <AppMenuCollapse 
+                    :menuMode="menuMode" 
+                    :menu="displayMenu"  
+                    :selectedMenuItem="selectedMenuItem" 
+                    @select="handleSelect" 
+                    @hover="handleHover"
+                  />
+               
+
             </div>
 
             <div class="menuFooter">
+              
+                <AuthUser menuMode="collapse" /> 
                 <slot name="footer"></slot>
             </div>
         </div>
+        <div :class="{menuExpand:true, [menuMode]:true}">
+          <div class="expandMenuHeader">
+            <div class="toggleIcon">
+                  <Icon class="menuToggleIcon" :name="menuMode === 'collapse' ? 'lucide:chevron-right' : 'lucide:chevron-left'" @click="toggleMenuMode" />
+                </div>
+            <AppMenuSearch menuMode="collapse"/>
+          </div>
+          
+          <AppMenuExpand v-if="expandMenu" :menu="expandMenu" :selectedMenuItem="selectedMenuItem"  @select="handleSelect" />
+        </div>
         <!-- <div class="menuToggleer" @click="toggleMenuMode">
-            <Icon class="menuToggleIcon" :name="mode === 'collapse' ? 'lucide:chevron-right' : 'lucide:chevron-left'" />
+           
         </div> -->
     </div>
 </template> 
 
-<style scoped lang="scss">                                                    
-.levelTwoMenuContainer{
-    padding: var(--app-space-s);
-    border-left: 1px solid var(--app-grey-800);
-    height: 100%;
-    min-width: 220px;
-    margin-left: var(--app-space-xs);
-    display: flex;
-    flex-flow: column nowrap;
-    justify-content: flex-start;
-    align-items: flex-start;
-    gap:0;
-    > * {
-        width:100%;
-        flex: 0 0 auto;
-    }
-    .subMenuItem + .subMenuItem {
-        border-top: 1px solid var(--app-grey-800);
-    }
+<style scoped lang="scss">   
+.expandMenuHeader{
+  width: 100%;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: flex-start;
+  align-items: center;
+  padding: 0;
+}                                                 
+.toggleIcon{
+  padding: var(--app-space-xs);
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: var(--app-font-size-xl);
 }
-.menuToggleIcon{
-    font-size: var(--toggler-width);
-    color: var(--app-grey-100);
-}
-.menuExpaneBody{
-    width: 220px;
-}
+
+
 .menuHeader{
     display: flex;
     flex-flow: row wrap;
-    justify-content: flex-start;
+    justify-content: center;
     align-items: center;
+    padding: var(--app-space-m) var(--app-space-s) 0 var(--app-space-s);
+
+}
+.menuExpand{
+  height: 100%;
+  overflow-y: auto;
+  padding: var(--app-space-s);
+  border-left: 1px solid var(--app-grey-800);
+  &.collapse{
+    position: absolute;
+    top: var(--app-space-s);
+    height: calc(100% - var(--app-space-s) * 2);
+    left: calc(60px + var(--app-space-s));
+    transform: translateX(-100vw);
+    transition: all 0.2s ease-in-out;
+    z-index: -1;
+    background: rgba(255, 255, 255, 0.4);
+    border-radius: var(--app-border-radius-m);
+    box-shadow: 10px 4px 30px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(6.3px);
+    -webkit-backdrop-filter: blur(6.3px);
+    border: 1px solid rgba(255, 255, 255, 0.31);
+
+  }
 }
 .appWrapper{
     height: 100%;
     width: 100%;
     display: flex;
-    flex-flow: row nowrap;
+    flex-flow: column nowrap;
     justify-content: flex-start;
     align-items: flex-start;
+    overflow: visible;
+    transition: all 0.2s ease-in-out;
+    z-index: 0;
+    background-image: radial-gradient(72% 72% at 2% -5%, #ddf2f7 0%, #dae7f1 100%);
+    background-size: 100% 100%;
+    &.collapse{
+
+      flex-flow: row nowrap;
+      .menuContainer{
+        flex: 1 0 ;
+      }
+
+    }
+    &.expand{
+      flex-flow: row nowrap;
+    }
+    &:hover, &:focus-within{
+      z-index: 2;
+      .menuExpand{
+        transform: translateX(0);
+      }
+    }
     --menu-gap: var(--app-space-xxs);
     --icon-font-size: calc(var(--app-font-size-m) * 1.2);
     --menu-item-padding: var(--app-space-xs);
     --menu-item-radius: var(--app-border-radius-m);
     --menu-item-normal-bg: rgba(0,0,0,0);
     --menu-item-active-bg: var(--app-grey-1000);
-    --menu-item-normal-color: var(--app-grey-100);
+    --menu-item-normal-color: var(--app-success-4);
     --menu-item-hover-color: var(--app-accent-color);
     --menu-item-active-color: var(--app-main-color);
     position: relative;
 }
 .menuContainer{
-    width:100%;
+  flex: 0 0 ;
+  width:100%;
+  height: 100vh;
+  display: grid;
+  grid-template-rows: min-content 1fr min-content;
+  gap: var(--app-space-s);
+  &.mobile{
     height: 100%;
-    display: grid;
-    grid-template-rows: min-content 1fr min-content;
-    gap: var(--app-space-s);
+  }
+
 }
 .menuBody{
-    width: 100%;
+    width: max-content;
     display: flex;
     flex-flow: column nowrap;
     justify-content: flex-start;
     align-items: flex-start;
-    gap: var(--app-space-s);
+    gap: var(--app-space-xs);
     font-size: var(--icon-font-size);
     position: relative;
-    overflow: auto;
-    padding-block: var(--app-space-s);
+    overflow-y: auto;
+    padding: var(--app-space-s);
+
+    font-size: var(--app-font-size-l);
+    /* Custom scrollbar for .menuBody */
+    &::-webkit-scrollbar {
+        width: 5px;
+        background: none;
+    }
+    &::-webkit-scrollbar-thumb {
+        background: var(--app-grey-900, #222);
+        border-radius: 4px;
+    }
+    &::-webkit-scrollbar-track {
+        background: none;
+    }
+    scrollbar-width: thin;
+    scrollbar-color: var(--app-grey-900, #222) transparent;
+
 }
 .menuFooter{
     font-size: var(--icon-font-size);
-
+    padding: var(--app-space-s);
+    overflow-x: hidden;
 }
 </style>
+
