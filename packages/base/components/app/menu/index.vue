@@ -20,10 +20,11 @@ const selectedMenuItem = ref<TabItem | undefined>()
 
 
 const expandMenu = ref<MenuItem>()
+const showExpandMenu = ref(false)
 
 function handleHover(item:MenuItem) {
   expandMenu.value = JSON.parse(JSON.stringify(item)) || []
-  console.log('expandMenu',expandMenu.value)
+  showExpandMenu.value = true
 }
 
 function handleSelect(item:MenuItem) {
@@ -35,6 +36,13 @@ function handleSelect(item:MenuItem) {
   }
 }
 
+function handleWrapperMouseLeave() {
+  showExpandMenu.value = false
+}
+
+function handleWrapperFocusOut() {
+  showExpandMenu.value = false
+}
 
 function toggleMenuMode() {
   menuMode.value = menuMode.value === 'collapse' ? 'expand' : 'collapse'
@@ -51,7 +59,11 @@ watch(() => [layout, hightLightPanel], () => {
 </script>
 
 <template>
-    <div :class="{appWrapper:true, [menuMode]:true}">
+    <div 
+      :class="{appWrapper:true, [menuMode]:true, showExpand: showExpandMenu}"
+      @mouseleave="handleWrapperMouseLeave"
+      @focusout="handleWrapperFocusOut"
+    >
         <div :class="{menuContainer:true,  [isMobile ? 'mobile' : 'desktop']: true}">
             <div class="menuHeader">
 
@@ -127,17 +139,19 @@ watch(() => [layout, hightLightPanel], () => {
   padding: var(--app-space-s);
   border-left: 1px solid var(--app-grey-800);
   &.collapse{
-    position: absolute;
-    top: var(--app-space-s);
-    height: calc(100% - var(--app-space-s) * 2);
-    left: calc(60px + var(--app-space-s));
-    transform: translateX(-100vw);
-    transition: all 0.2s ease-in-out;
-    z-index: -1;
-    background: rgba(255, 255, 255, 0.4);
+    position: fixed;
+    top: var(--app-space-m);
+    height: calc(100% - var(--app-space-m) * 2);
+    left: calc(60px + var(--app-space-xs));
+    transform: translateX(-500px);
+    transition: all 0.4s ease-in-out;
+    z-index: 2;
+    
     border-radius: var(--app-border-radius-m);
+    
+    background: var(--app-primary-alpha-10);
     box-shadow: 10px 4px 30px rgba(0, 0, 0, 0.1);
-    backdrop-filter: blur(6.3px);
+    backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(6.3px);
     border: 1px solid rgba(255, 255, 255, 0.31);
 
@@ -153,8 +167,6 @@ watch(() => [layout, hightLightPanel], () => {
     overflow: visible;
     transition: all 0.2s ease-in-out;
     z-index: 0;
-    background-image: radial-gradient(72% 72% at 2% -5%, #ddf2f7 0%, #dae7f1 100%);
-    background-size: 100% 100%;
     &.collapse{
 
       flex-flow: row nowrap;
@@ -166,8 +178,11 @@ watch(() => [layout, hightLightPanel], () => {
     &.expand{
       flex-flow: row nowrap;
     }
-    &:hover, &:focus-within{
+    &.showExpand{
       z-index: 2;
+      &.expand{
+        z-index: 1;
+      }
       .menuExpand{
         transform: translateX(0);
       }

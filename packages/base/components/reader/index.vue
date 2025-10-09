@@ -3,25 +3,25 @@
         <div v-if="id">{{$t('file.NoExist')}}</div>
     </template>
     <template v-else-if="state.fileType === 'application/pdf' && state.url" >
-        <ReaderPdf v-bind="props" :no-annotation="!!annotations" ></ReaderPdf>
+        <LazyReaderPdf v-bind="props" :no-annotation="!!annotations" ></LazyReaderPdf>
     </template>
     <template v-else-if="state.fileType === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' && state.url" >
-        <ReaderExcel :src="state.url"></ReaderExcel>
+        <LazyReaderExcel :src="state.url"></LazyReaderExcel>
     </template>
     <template v-else-if="state.fileType === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'">
-        <ReaderDocx v-bind="props"></ReaderDocx>
+        <LazyReaderDocx v-bind="props"></LazyReaderDocx>
     </template>
     <template v-else-if="state.fileType === 'application/vnd.ms-powerpoint' || state.fileType === 'application/vnd.openxmlformats-officedocument.presentationml.presentation'">
-        <ReaderPpt :blob="blob" />
+        <LazyReaderPpt :blob="blob" />
     </template>
     <template v-else-if="state.fileType === 'image/tiff' && state.url" >
-        <ReaderTiff v-bind="props" ></ReaderTiff>
+        <LazyReaderTiff v-bind="props" ></LazyReaderTiff>
     </template>
     <template v-else-if="state.fileType === 'text/csv'" >
-        <ReaderCsv v-bind="props"></ReaderCsv>
+        <LazyReaderCsv v-bind="props"></LazyReaderCsv>
     </template>
      <template v-else-if="state.fileType.includes('text/')" >
-        <ReaderText v-bind="props"></ReaderText>
+        <LazyReaderText v-bind="props"></LazyReaderText>
     </template>
     <audio v-else-if="state.fileType === 'audio/mpeg'" controls>
         <source :src="state.url" :type="state.fileType" />
@@ -29,7 +29,7 @@
     <video v-else-if="state.fileType === 'video/mp4'" controls style="width: 100%">
         <source :src="state.url" :type="state.fileType" />
     </video>
-    <ViewerPicture v-else-if="state.fileType.includes('image/')" :images="[state.url]"></ViewerPicture>
+    <LazyViewerPicture v-else-if="state.fileType.includes('image/')" :images="[state.url]"></LazyViewerPicture>
     <template v-else>
         <h2 class="noSupportContainer">
             {{ $t('msg_thisFormatFileIsNotSupported') }}

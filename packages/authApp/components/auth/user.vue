@@ -81,30 +81,30 @@ function handleOpenUpload(show: boolean = false, action: 'upload' | 'ai' | '' = 
         </template>
         <template v-else>
           <UploadStructureButton v-if="uploadState.uploadRequestList && uploadState.uploadRequestList.length > 0" @click="handleOpenUpload(true, 'upload')"></UploadStructureButton>
-          <Notification  />
+          <Notification v-if="appPlatform !== 'admin'"  />
           <ElDropdown id="authUserSettingDropdown">
-                  <ElButton size="small" link >
-                    <el-avatar size="small"> {{ getUsernameInitials(user.username) }} </el-avatar>
-                  </ElButton>
-                  <template #dropdown>
-                      <ElDropdownItem @click="openSetting">{{ $t('adminMenu.setting') }}</ElDropdownItem>
-                      <!-- TODO: remove this part from prodction, or mark it avalible only for super admin -->
-                      <Language />
-                      <ElDropdownItem @click="openHelp">{{ $t('adminMenu.help') }}</ElDropdownItem>
+                <ElButton size="small" link >
+                  <el-avatar size="small"> {{ getUsernameInitials(user.username) }} </el-avatar>
+                </ElButton>
+                <template #dropdown>
+                    <ElDropdownItem @click="openSetting">{{ $t('adminMenu.setting') }}</ElDropdownItem>
+                    <!-- TODO: remove this part from prodction, or mark it avalible only for super admin -->
+                    <!-- <Language /> -->
+                    <ElDropdownItem @click="openHelp">{{ $t('adminMenu.help') }}</ElDropdownItem>
+                    <ElDivider />
+                    <ElDropdownItem v-for="lang in locales" :key="lang.code"
+                        :disabled="lang.code === locale" @click="changeLanguage(lang.code)">
+                        {{$t(lang.code)}}
+                    </ElDropdownItem>
+                    <ElDivider />
+                    <template v-if="showSwitchMenu">
+                      <ElDropdownItem @click="switchPlatform()">Switch to {{ appPlatform === 'admin' ? 'Client' : 'Admin' }}</ElDropdownItem>
                       <ElDivider />
-                      <ElDropdownItem v-for="lang in locales" :key="lang.code"
-                          :disabled="lang.code === locale" @click="changeLanguage(lang.code)">
-                          {{$t(lang.code)}}
-                      </ElDropdownItem>
-                      <ElDivider />
-                      <template v-if="showSwitchMenu">
-                        <ElDropdownItem @click="switchPlatform()">Switch to {{ appPlatform === 'admin' ? 'Client' : 'Admin' }}</ElDropdownItem>
-                        <ElDivider />
-                      </template>                      
-                      <ElDropdownItem v-if="isDesktop" @click="removeBaseUrl">Reset Desktop</ElDropdownItem>
-                      <ElDropdownItem @click="logout">{{ $t('login_loginOut')}}</ElDropdownItem>
-                  </template>
-              </ElDropdown>
+                    </template>                      
+                    <ElDropdownItem v-if="isDesktop" @click="removeBaseUrl">Reset Desktop</ElDropdownItem>
+                    <ElDropdownItem @click="logout">{{ $t('login_loginOut')}}</ElDropdownItem>
+                </template>
+            </ElDropdown>
           
         </template>
     </div>

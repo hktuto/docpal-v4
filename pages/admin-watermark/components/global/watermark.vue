@@ -36,6 +36,10 @@ async function getList(dummy: boolean = false) {
 
 async function deleteItem(id: string) {
   await removeWatermarkTemplate(id)
+  routerProvider?.message.success(t('tip_deleteSuccessMessage',{
+    modelName: t('tip_SelectedMsg') + t('watermark.watermark'),
+    name: null
+  }))
   await getList()
   if (list.value.length > 0) {
     routerProvider?.updateProps({
@@ -65,7 +69,10 @@ async function save() {
   const data = await watermarkDetail.value.save()
   if (!data) return
   await updateWatermarkTemplateDetail(data.update)
-  routerProvider?.message.success(t('admin_watermarkSavedSuccessMsg'))
+  routerProvider?.message.success(t('tip_updateMsg',{
+    modelName: t('watermark.watermark'),
+    name: null
+  }))
   setTimeout(() => {
     loading.value = false
   }, 100)

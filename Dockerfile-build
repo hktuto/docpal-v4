@@ -5,15 +5,22 @@
 # RUN npm i -g pnpm
 
 
-FROM electronuserland/builder:20-wine AS base
+FROM electronuserland/builder:22-wine AS base
 
-# 更新并安装必要工具
+# 更新并安装必要工具和 canvas 依赖
 RUN apt-get update && \
     apt-get install -y \
         ca-certificates \
         curl \
         bash \          
         git \
+        build-essential \
+        libcairo2-dev \
+        libpango1.0-dev \
+        libjpeg-dev \
+        libgif-dev \
+        librsvg2-dev \
+        pkg-config \
         && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*

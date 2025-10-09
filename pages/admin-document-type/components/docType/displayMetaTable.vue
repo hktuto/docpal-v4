@@ -158,7 +158,7 @@ async function handleDelete(row: any) {
     const res = await adminApi.api.deleteDocpaltypeSettingsDocpalTypeV2DeleteMetadataDocpaltypeid(props.id, {
       metadataId: row.id
     })
-    routerProvider?.message.success(t('tip_deleteSuccessMsg', { modelName: t('docType_displayMeta'), name: null }))
+    routerProvider?.message.success(t('tip_deleteSuccessMessage', { name: t('tip_SelectedMsg') + t('docType_displayMeta')}))
     reload()
   } catch (error) {
     console.log(error)

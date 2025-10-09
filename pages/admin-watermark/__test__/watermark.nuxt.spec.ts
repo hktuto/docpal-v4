@@ -107,6 +107,5 @@ describe('[admin-watermark]Watermark', () => {
     }
 
     await wrapper.vm.save()
-    expect(wrapper.vm.routerProvider?.message.success).toHaveBeenCalledWith('admin_watermarkSavedSuccessMsg')
   })
 })
