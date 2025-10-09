@@ -39,7 +39,7 @@ export async function notiHandleView(row: any, tabProvider: any) {
     if (row.content.commentId) {
       params.commentId = row.content.commentId
     }
-    if (row.content.processDefinitionId.includes('adhocApproval')) {
+    if (row?.content?.processDefinitionId?.includes('adhocApproval')) {
       params.showInfo = true
     }
     const newItem = createBrowseListPageParams({
