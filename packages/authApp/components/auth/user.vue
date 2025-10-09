@@ -81,7 +81,7 @@ function handleOpenUpload(show: boolean = false, action: 'upload' | 'ai' | '' = 
         </template>
         <template v-else>
           <UploadStructureButton v-if="uploadState.uploadRequestList && uploadState.uploadRequestList.length > 0" @click="handleOpenUpload(true, 'upload')"></UploadStructureButton>
-          <Notification  />
+          <Notification v-if="appPlatform !== 'admin'"  />
           <ElDropdown id="authUserSettingDropdown">
                   <ElButton size="small" link >
                     <el-avatar size="small"> {{ getUsernameInitials(user.username) }} </el-avatar>
