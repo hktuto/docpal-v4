@@ -108,7 +108,6 @@ const { t } = useI18n();
 onMounted(async () => {
   await getLocale();
   // emits("ready");
-  getTabsFromServer();
 });
 </script>
 
