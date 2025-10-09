@@ -36,6 +36,7 @@ async function getTabsFromServer() {
   // storageTabs = null
   try {
     if (storageTabs) {
+      console.log("storageTabs", storageTabs);
       const newLayout = JSON.parse(storageTabs);
       // check and set layout
       newLayout.forEach((item:any) => {
@@ -72,7 +73,7 @@ async function getTabsFromServer() {
         tabs: [defaultTab.value],
       },
     ]);
-    console.log("getTabsFromServer", error);
+    console.log("set default tab", error);
   }finally {
 
     inited.value = true;
