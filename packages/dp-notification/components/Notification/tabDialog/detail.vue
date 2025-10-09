@@ -24,19 +24,17 @@
           }}
         </div>
         <div v-if="item.content.message">
-          {{ message(item.content.message) }}
+          {{ handleMessage(item.content.message) }}
         </div>
         <!--        <el-alert v-if="item.content.message" :title="item.content.message"-->
         <!--                  :type="JSON.parse(item.content.message).level" :closable="false" />-->
         {{ item.content.comment }}
         <div>{{ item.creator }}</div>
         <div>
-          <el-button :loading="item.loading" :test-id="`notification-dismiss-button-${item.id}`" type="info"
-                     @click="handleDismiss(item)">
+          <el-button :loading="item.loading" :test-id="`notification-dismiss-button-${item.id}`" type="info" @click="handleDismiss(item)">
             {{ $t('button.dismiss') }}
           </el-button>
-          <el-button v-if="notiShowView(item)" :test-id="`notification-view-button-${item.id}`" type="primary"
-                     @click="handleView(item)">
+          <el-button v-if="notiShowView(item)" :test-id="`notification-view-button-${item.id}`" type="primary" @click="handleView(item)">
             {{ $t('button.view') }}
           </el-button>
         </div>
@@ -130,16 +128,16 @@ function initData(noGetData: boolean = false) {
   if (!noGetData) getList()
 }
 
-function message(message) {
-  const content = JSON.parse(message)
-  if (content.showNotification && content.additionalContent) {
-    try {
+function handleMessage(message: any) {
+  try {
+    const content = JSON.parse(message)
+    if (content.showNotification && content.additionalContent) {
       return JSON.parse(content.additionalContent)
-    } catch (e) {
-      return message
     }
+    return message
+  } catch (e) {
+    return message
   }
-  return message
 }
 
 onMounted(() => {
