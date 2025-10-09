@@ -25,7 +25,6 @@ const showExpandMenu = ref(false)
 function handleHover(item:MenuItem) {
   expandMenu.value = JSON.parse(JSON.stringify(item)) || []
   showExpandMenu.value = true
-  console.log('expandMenu',expandMenu.value)
 }
 
 function handleSelect(item:MenuItem) {
