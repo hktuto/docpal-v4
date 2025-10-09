@@ -15,7 +15,6 @@ import { rowKey } from 'element-plus/es/components/table-v2/src/common.mjs';
 import { clientApi } from 'api';
 import { emitBus, EventType } from 'eventbus';
 import { Loading } from '@element-plus/icons-vue';
-import { AppWrapper } from '#components';
 
 const { createUploadRequest } = useUploadAIStore();
 
