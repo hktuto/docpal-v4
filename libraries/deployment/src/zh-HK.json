@@ -693,7 +693,8 @@
       "group": "使用者群組",
       "masterTable": "主表格",
       "masterTableColumn": "主表格記錄",
-      "user": "使用者"
+      "user": "使用者",
+      "contact": "@:adminMenu.contactBook"
     }
   },
   "dataFieldUg": {
