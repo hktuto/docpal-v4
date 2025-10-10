@@ -14,7 +14,9 @@
   --app-primary-s: 82%;
   --app-primary-l: 42%;
 
-  /* Success Color (Green) - #00b960 */
+  --app-accent-color: #0077ff;
+  /* Success Color (Blue) - #0077ff */
+  // 119, 93%, 42%
   --app-success-h: 119;
   --app-success-s: 93%;
   --app-success-l: 42%;
@@ -151,7 +153,7 @@
 
   /* ==================== Legacy Support (Aliases) ==================== */
   --app-main-color: var(--app-primary-color);
-  --app-accent-color: var(--app-success-color);
+  // --app-accent-color: var(--app-success-color);
   --sx-color-primary: var(--app-accent-color) !important;
 
   /* ==================== Element Plus Theme Integration ==================== */
