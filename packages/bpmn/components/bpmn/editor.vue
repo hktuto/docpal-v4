@@ -256,7 +256,7 @@ const getGraphValue = computed(() => {
 async function openForm(node: Node) {
   try {
     const formProperty = node.data?.data?.extensionElements?.['flowable:formProperty']
-    if(!formProperty) {
+    if(!formProperty && node.id !== 'end') {
       ElMessage.warning('Empty Form Property')
       return
     }
