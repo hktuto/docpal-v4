@@ -149,6 +149,7 @@
     "tableColumnSetting": "Table Column",
     "template": "Document Template",
     "templateManagement": "Template Management",
+    "theme": "App Apperence",
     "uniqueIdGenerator": "Unique Id Generator",
     "vocabulary": "Vocabulary",
     "watermark": "Watermark Setting",
@@ -689,11 +690,11 @@
     "params": "Parameter configuration",
     "setting": "Data configuration",
     "type": {
+      "contact": "@:adminMenu.contactBook",
       "group": "User group",
       "masterTable": "Master table ",
       "masterTableColumn": "Master table record",
-      "user": "User",
-      "contact": "@:adminMenu.contactBook"
+      "user": "User"
     }
   },
   "dataFieldUg": {

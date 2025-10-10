@@ -149,6 +149,7 @@
     "tableColumnSetting": "表格設定",
     "template": "檔案範本",
     "templateManagement": "範本管理",
+    "theme": "程式外觀",
     "uniqueIdGenerator": "Unique Id Generator",
     "vocabulary": "詞彙表",
     "watermark": "水印設定",
@@ -689,11 +690,11 @@
     "params": "參數配置",
     "setting": "數據配置",
     "type": {
+      "contact": "@:adminMenu.contactBook",
       "group": "用戶群組",
       "masterTable": "主表格",
       "masterTableColumn": "主表格記錄",
-      "user": "使用者",
-      "contact": "@:adminMenu.contactBook"
+      "user": "使用者"
     }
   },
   "dataFieldUg": {
