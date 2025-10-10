@@ -3850,7 +3850,7 @@
     "watermark": "Watermark"
   },
   "watermarkSetting_updateWatermark": "Update Watermark Template",
-  "watermark_template_warning": "Change Template will override all current setting",
+  "watermark_template_warning": "Changing the watermark template will override all your current settings. Do you want to proceed?",
   "workPanel_accessUserGroup": "Access by User Group",
   "workPanel_content": "Edit Work Panel Content",
   "workPanel_create": "Create New Work Panel",
