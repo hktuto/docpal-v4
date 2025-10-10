@@ -43,7 +43,7 @@ const props = defineProps<{
       try {
         await clientApi.api.postNuxeoRestoreversion({
           idOrPath: props.doc.id,
-          increment: "MAJOR"
+          versionNum: props.doc.version
         }).then(res => res.data)
         const newItem = createDetailPageParams({
           idOrPath: props.doc.id,
