@@ -49,7 +49,7 @@ const { tableConfig, tableEvent, tableRef, query, reload, cleanSelectedRows } = 
       title: 'tableHeader_type'
     },
     {
-      title: 'tableHeader_actions',
+      title: 'dpTable_permission',
       field: 'logicalPath',
       slots: {
         default: 'logicalPath'
