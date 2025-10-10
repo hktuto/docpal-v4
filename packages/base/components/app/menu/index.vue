@@ -79,6 +79,7 @@ watch(() => [layout, hightLightPanel], () => {
                     :selectedMenuItem="selectedMenuItem" 
                     @select="handleSelect" 
                     @hover="handleHover"
+                    @mouseOut="handleWrapperMouseLeave"
                   />
                
 
@@ -167,6 +168,7 @@ watch(() => [layout, hightLightPanel], () => {
     overflow: visible;
     transition: all 0.2s ease-in-out;
     z-index: 0;
+    --menu-color: var(--app-primary-6);
     &.collapse{
 
       flex-flow: row nowrap;

@@ -55,7 +55,7 @@ const selectedIndex = ref(0)
   flex-flow: column nowrap;
   justify-content: flex-start;
   align-items: flex-start;
-  gap: 0;
+  gap: var(--app-space-xs);
 }
 .header{
   width: 100%;
