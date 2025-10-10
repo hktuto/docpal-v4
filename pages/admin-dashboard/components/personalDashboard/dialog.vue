@@ -55,7 +55,7 @@ async function handleSubmit() {
         styleJson: '{}'
       }).then(res => res.data)
       ElMessage.success(t('tip_createdMsg', {
-        modelName: t('workPanel_workPanel'),
+        modelName: t('tip_newMsg') + t('workPanel_workPanel'),
         name: _data.name
       }))
       emits('add', res)
