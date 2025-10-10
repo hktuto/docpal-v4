@@ -21,13 +21,13 @@ import { ElMessage } from 'element-plus'
 const props = defineProps<{
   id: string;
   exitList: any;
+  isFolder: string;
 }>()
 const { t } = useI18n()
 const emits = defineEmits(['refresh'])
 const state = reactive<any>({
   loading: false,
   visible: false,
-
   userList: [],
   groupList: []
 })
@@ -52,6 +52,7 @@ async function handleSubmit() {
     state.loading = true
     await adminApi.api.postCabinetTemplatePermission(params)
     state.visible = false
+    const modelName =  props.isFolder === 'folder' ? t('folder_cabinetLocalPermissionOfFolder') : t('folder_cabinetLocalPermissionOfFile')
     ElMessage.success(t('tip_createdMsg', { modelName: t('folder_cabinetLocalPermissionOfFolder'), name: null }))
     emits('refresh')
   } catch (error) {

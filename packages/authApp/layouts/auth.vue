@@ -29,12 +29,14 @@ async function getTabsFromServer() {
   // check if new tab
   console.log("getTabsFromServer", inited.value);
   if(inited.value) return
-  let storageTabs = localStorage.getItem('docpal-app-tab');
+  const tabStorageKey = appPlatform.value + '-app-tab'
+  let storageTabs = localStorage.getItem(tabStorageKey);
 
   sessionStorage.removeItem('temp-path')
   // storageTabs = null
   try {
     if (storageTabs) {
+      console.log("storageTabs", storageTabs);
       const newLayout = JSON.parse(storageTabs);
       // check and set layout
       newLayout.forEach((item:any) => {
@@ -45,7 +47,6 @@ async function getTabsFromServer() {
       })
       // TODO : check if storageTabs is array, and handle restore other tabs
       tabAppRef.value?.setLayout(newLayout);
-      console.log("set layout", newLayout);
     } else {
       // init a basic layout
       tabAppRef.value?.setHightLightPanel("dummy-tab-container");
@@ -63,7 +64,6 @@ async function getTabsFromServer() {
       console.log("set default tab");
     }
   } catch (error) {
-    console.log("error", error)
     tabAppRef.value?.setLayout([
       {
         id: "dummy-tab-container",
@@ -73,7 +73,7 @@ async function getTabsFromServer() {
         tabs: [defaultTab.value],
       },
     ]);
-    console.log("getTabsFromServer", error);
+    console.log("set default tab", error);
   }finally {
 
     inited.value = true;
@@ -88,10 +88,12 @@ async function getTabsFromServer() {
 }
 
 function saveHighlightPanel(panelID: string) {
-  localStorage.setItem("docpal-tab-hightLightPanel", panelID);
+  const tabStorageKey = appPlatform.value + '-app-hightLightPanel'
+  localStorage.setItem(tabStorageKey, panelID);
 }
 
 async function saveTabsToLocalStorage(layout: TabPanel[]) {
+  const tabStorageKey = appPlatform.value + '-app-tab'
   const saveData = JSON.parse(JSON.stringify(layout));
   // loop all panel and tabs to reset all initized to false
   saveData.forEach((panel: any) => {
@@ -100,13 +102,12 @@ async function saveTabsToLocalStorage(layout: TabPanel[]) {
       tab.initized = false;
     });
   });
-  localStorage.setItem('docpal-app-tab', JSON.stringify(saveData));
+  localStorage.setItem(tabStorageKey, JSON.stringify(saveData));
 }
 const { t } = useI18n();
 onMounted(async () => {
   await getLocale();
   // emits("ready");
-  // getTabsFromServer();
 });
 </script>
 
@@ -140,11 +141,3 @@ onMounted(async () => {
   </AuthState>
 </template>
 
-<style lang="scss" >
-.appFullPage{
-  --app-bg: radial-gradient(72% 72% at 2% -5%, #ddf2f7 0%, #dae7f1 100%);
-  /* --app-bg: #fff; */
-  --app-accent-color: #0077ff;
-  --menu-color: var(--app-success-6);
-}
-</style>
