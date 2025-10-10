@@ -48,11 +48,10 @@ function init(nodeData: any) {
   getRole()
   const permission = deepCopy(getExtentionProperties(nodeData.data.casePlanModel, 'docpal:attributes'))
   const filter = deepCopy(getExtentionProperties(nodeData.data.casePlanModel, 'docpal:data_filter'))
-
   state.caseInformation = getExtentionProperties(nodeData.data.casePlanModel, 'docpal:form')
   if (!state.caseInformation) state.caseInformation = []
   permission.forEach((item) => {
-    let index = state.groups.findIndex((g) => g.group === item.group || g.role === item.role)
+    let index = state.groups.findIndex((g) => (g.group && g.group === item.group) || (g.role && g.role === item.role))
     if (index === -1) {
       state.groups.push({
         group: item.group,
@@ -63,7 +62,7 @@ function init(nodeData: any) {
     state.groups[index].permission = getWholePermissionField(item)
   })
   filter.forEach((item) => {
-    let index = state.groups.findIndex((g) => g.group === item.group || g.role === item.role)
+    let index = state.groups.findIndex((g) => (g.group && g.group === item.group) || (g.role && g.role === item.role))
     if (index === -1) {
       state.groups.push({
         group: item.group,
@@ -110,7 +109,7 @@ function handleSave(attributes, filters) {
 }
 
 function handleDelete(data) {
-  const index = state.groups.findIndex((item) => item.group === data.group || item.role === data.role)
+  const index = state.groups.findIndex((item) => (item.group && item.group === data.group) || (item.role && item.role === data.role))
   state.groups.splice(index, 1)
   const _data = [...state.groups]
 
@@ -134,7 +133,7 @@ function handleRefresh(data, index) {
     state.groups[index] = data
   } else {
     console.log('new data', deepCopy(data))
-    state.groups = deepCopy([...state.groups, data])
+    state.groups.push(data)
   }
   const _data = [...state.groups]
   handleSave(
