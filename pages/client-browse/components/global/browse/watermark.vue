@@ -215,7 +215,7 @@ onMounted(() => {
                 </el-dropdown-menu>
               </template>
             </ElDropdown>
-            <ElButton type="danger" @click="cancel">Cancel</ElButton>
+            <ElButton @click="cancel">Cancel</ElButton>
             <ElButton type="primary"  @click="preview">Confirm</ElButton>
           </div>
         </template>
