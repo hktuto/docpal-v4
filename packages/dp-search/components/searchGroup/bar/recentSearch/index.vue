@@ -38,5 +38,6 @@ defineExpose({
 <style lang="scss">
 .search-bar2-meta-popper {
   height: 50vh;
+  padding: var(--app-space-s) 0 var(--app-space-s) var(--app-space-s)!important;
 }
 </style>
