@@ -89,6 +89,9 @@ async function handleSave() {
     state.loading = false
   }
 }
+const { searchOptions, searchOptionsLoading } = useSearchOptions()
+provide('searchOptions', searchOptions)
+provide('searchOptionsLoading', searchOptionsLoading)
 
 onMounted(() => {
   state.loading = false
