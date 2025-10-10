@@ -1,11 +1,12 @@
 <template>
-  <div class="list">
+  <div class="list" v-loading="searchOptionsLoading">
     <div
       v-infinite-scroll="getList"
       :infinite-scroll-disabled="state.scrollNoMore || state.loading"
       infinite-scroll-distance="3"
       :infinite-scroll-immediate="false"
       class="list-scroll"
+      v-if="!searchOptionsLoading"
     >
       <el-card v-for="(item, index) in state.list" :key="index" @dblclick="handleSearch(item)">
         <template v-for="(q, qIndex) in item.searchRequest.query" :key="'q' + qIndex">
@@ -40,6 +41,9 @@ const state = reactive<any>({
   loading: false
 })
 const emits = defineEmits(['search'])
+
+const searchOptions = inject('searchOptions')
+const searchOptionsLoading = inject('searchOptionsLoading')
 const pageParams = reactive({
   pageNum: -1,
   pageSize: 10
@@ -63,11 +67,14 @@ function displayValueMap(type: string, value: any) {
         })
         .join(', ')
     case 'collections':
-      return value.join(', ')
+      if(!searchOptions.value.collections) return value
+      return value.map((v: string) => {
+        return searchOptions.value.collections.find((item: any) => item.value === v)?.label
+      }).join(', ')
     default:
-      if(Array.isArray(value)) {
+      if (Array.isArray(value)) {
         return value.join(', ')
-      } else if(typeof value === 'object') {
+      } else if (typeof value === 'object') {
         return `[${value.key}: ${value.value}]`
       }
       return value
@@ -79,7 +86,6 @@ async function getList() {
     pageParams.pageNum++
     state.loading = true
     const { data: res } = (await clientApi.api.postLogsRecentSearchPageV2(pageParams)) as any
-    console.log(res)
     state.list.push(...res.entryList)
     state.scrollNoMore = state.list.length >= res.totalSize
   } catch (error) {
@@ -93,6 +99,7 @@ async function initList() {
   pageParams.pageNum = -1
   await getList()
 }
+
 onMounted(() => {
   initList()
 })
@@ -106,7 +113,7 @@ defineExpose({
   overflow: hidden;
 }
 .list-scroll {
-  height:  calc(100% - 1rem);
+  height: calc(100% - 1rem);
   overflow: auto;
 }
 .el-card {
@@ -135,6 +142,6 @@ defineExpose({
   text-wrap: auto;
   height: auto;
   min-height: 1.2rem;
-  padding: var(--app-space-xs)!important;
+  padding: var(--app-space-xs) !important;
 }
 </style>

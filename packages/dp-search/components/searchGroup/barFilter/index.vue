@@ -130,38 +130,6 @@ function clear() {
   filters.value.query = []
   handleAddFilter()
 }
-const searchOptions = ref({})
-
-async function getOptions() {
-  searchOptions.value.conditionType = sortListWithI18n(conditionType, 'searchGroup.')
-  searchOptions.value.languages = sortListWithI18n(languages)
-
-  const [docType, users, collections, tags, groupList, metadata] = await Promise.all([
-    globalApi.api.getTypesActive(),
-    globalApi.api.postNuxeoIdentityGetkeycloakallusers(),
-    globalApi.api.getNuxeoCollection(),
-    globalApi.api.postNuxeoTagsGetalltags(),
-    getGroupList(),
-    getMetadataOptions()
-  ])
-  searchOptions.value.groupList = sortListWithI18n(groupList)
-  searchOptions.value.metadata = sortListWithI18n(metadata)
-  const tagData = tags.data?.map((item: any) => ({ label: item, value: item }))
-  searchOptions.value.tags = sortListWithI18n(tagData)
-  const docTypeData = docType.data?.map((item: any) => ({ label: item.name, value: item.name }))
-  searchOptions.value.docType = sortListWithI18n(docTypeData)
-  const appPlatform = useAppPlatform()
-  const collectionData = collections?.data?.entryList?.map((item: any) => ({
-    label: appPlatform.value === 'admin' && item.createdBy ? item.createdBy + ' - ' + item.name : item.name,
-    value: item.id
-  }))
-  searchOptions.value.collections = sortListWithI18n(collectionData)
-  const userData = users.data?.map((item: any) => ({ label: item.username, value: item.userId }))
-  searchOptions.value.users = sortListWithI18n(userData)
-  searchOptions.value.mimeTypes = mimeTypes
-  searchOptions.value.sizes = sizes
-}
-provide('searchOptions', searchOptions)
 
 function getSearchParams(){
   const searchParams = sessionStorage.getItem('searchParams')
@@ -179,7 +147,6 @@ function getSearchParams(){
 
 onMounted(async () => {
   getSearchParams()
-  await getOptions()
 })
 
 defineExpose({
