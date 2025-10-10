@@ -5,7 +5,7 @@ const props= defineProps<{
   item: MenuItem
   selected: boolean
 }>()
-const emit = defineEmits(['click', 'hover'])
+const emit = defineEmits(['click', 'hover', 'mouseOut'])
 const dropOtion:any = {
     key: menuKey,
     dragData: {
@@ -23,6 +23,14 @@ if(props.item.onDropItself) {
 const { dragState ,setupDrag } = useDragable(dropOtion)
 const elRef = ref()
 const { t } = useI18n()
+
+function mouseOver() {
+  if(!props.item.children || props.item.children.length === 0) {
+    emit('mouseOut')
+    return;
+  }
+  emit('hover', props.item)
+}
 onMounted(() => {
     if(!elRef) return
     if(props.item.component && props.item.component !== '') {
@@ -35,7 +43,7 @@ onMounted(() => {
 <template>
   <div ref="elRef" :class="{menuItem:true, selected}" 
     v-tooltip="t(item.label || '')"
-  @click="emit('click', props.item)" @mouseover="emit('hover', props.item)">
+  @click="emit('click', props.item)" @mouseover="mouseOver">
   <div class="icon">
     <template v-if="selected && item.hoverIcon">
       <Icon :name="item.hoverIcon"></Icon>
