@@ -42,7 +42,8 @@ export async function verifly() {
 
   const logedIn = useLoginState()
   const isDesktopMode = useDesktopMode()
-  await Promise.all([getUser(), getFeature(), getUserPreference(), getOCRSetting()])
+  const { initializeTheme } = useStyle()
+  await Promise.all([getUser(), getFeature(), getUserPreference(), getOCRSetting(), initializeTheme()])
   isDesktopMode.value = !(!window || !window.navigator || !window.navigator.userAgent || !window.navigator.userAgent.toLowerCase().includes('electron'))
   logedIn.value = true
   const token = localStorage.getItem('access_token') || ''

@@ -14,6 +14,7 @@ const {menuMode} = defineProps<{menuMode?:'collapse' | 'expand'}>()
 const appPlatform = useAppPlatform()
 const isAdmin = useIsAdmin()
 const isSuperAdmin = useIsSuperAdmin()
+const appThemeEditorRef = ref<InstanceType<typeof AppThemeEditor>>()
 
 const showSwitchMenu = computed(() => {
   return isAdmin.value || isSuperAdmin.value
@@ -82,12 +83,14 @@ function handleOpenUpload(show: boolean = false, action: 'upload' | 'ai' | '' = 
         <template v-else>
           <UploadStructureButton v-if="uploadState.uploadRequestList && uploadState.uploadRequestList.length > 0" @click="handleOpenUpload(true, 'upload')"></UploadStructureButton>
           <Notification v-if="appPlatform !== 'admin'"  />
+          <AppThemeEditor ref="appThemeEditorRef" />
           <ElDropdown id="authUserSettingDropdown">
                 <ElButton size="small" link >
                   <el-avatar size="small"> {{ getUsernameInitials(user.username) }} </el-avatar>
                 </ElButton>
                 <template #dropdown>
                     <ElDropdownItem @click="openSetting">{{ $t('adminMenu.setting') }}</ElDropdownItem>
+                    <ElDropdownItem @click="appThemeEditorRef?.open()">{{ $t('adminMenu.theme') }}</ElDropdownItem>
                     <!-- TODO: remove this part from prodction, or mark it avalible only for super admin -->
                     <!-- <Language /> -->
                     <ElDropdownItem @click="openHelp">{{ $t('adminMenu.help') }}</ElDropdownItem>
