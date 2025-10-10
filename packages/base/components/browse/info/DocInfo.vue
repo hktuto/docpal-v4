@@ -1,6 +1,6 @@
 <template>
   <div class="docInfoContainer">
-    <el-card>
+    <el-card shadow="never">
       <div class="infoSection">
         <div class="infoTitle">{{ $t('info_type') }}</div>
         <div class="infoContent" v-if="info.type">
@@ -49,11 +49,11 @@
       <BrowseInfoTag :doc="doc" @update="$emit('update', true)" />
       <BrowseInfoCollection v-if="doc.isCollectionMember" :doc="doc" @update="$emit('update', true)" />
     </el-card>
-    <el-card v-if="!doc.isFolder && allowFeature('WORKFLOW_ADHOC')">
+    <el-card v-if="!doc.isFolder && allowFeature('WORKFLOW_ADHOC')" shadow="never">
       <BrowseInfoWorkflowSection :doc="doc"></BrowseInfoWorkflowSection>
     </el-card>
     <!-- <el-divider /> -->
-    <el-card>
+    <el-card shadow="never">
       <BrowseInfoAcl :doc="doc" />
     </el-card>
   </div>
