@@ -3479,6 +3479,91 @@ export interface ResultDocumentTypeProfileSetting {
     locale?: string;
 }
 
+export interface AdhocApprovalDTO {
+    /** @format int64 */
+    id?: number;
+    documentId?: string;
+    documentPath?: string;
+    documentStartVersion?: string;
+    documentApprovalVersion?: string;
+    /** @format int32 */
+    documentStatus?: number;
+    taskId?: string;
+    taskName?: string;
+    businessKey?: string;
+    processInstanceId?: string;
+    /** @format int32 */
+    processInstanceStatus?: number;
+    user_creator_id?: string;
+    /** @format date-time */
+    startTime?: string;
+    approvedBy?: string;
+    user_approver_id?: string;
+    /** @format date-time */
+    approvedDate?: string;
+    /** @format int32 */
+    pageNum?: number;
+    /** @format int32 */
+    pageSize?: number;
+    orderBy?: string;
+    isDesc?: boolean;
+    isComplete?: boolean;
+    participant?: string;
+    /**
+     * Page Index
+     * @deprecated
+     * @format int32
+     */
+    pageIndex?: number;
+}
+
+export interface AdhocApproval {
+    /** @format int64 */
+    id?: number;
+    documentId?: string;
+    documentPath?: string;
+    documentStartVersion?: string;
+    documentApprovalVersion?: string;
+    /** @format int32 */
+    documentStatus?: number;
+    taskId?: string;
+    taskName?: string;
+    processInstanceId?: string;
+    businessKey?: string;
+    /** @format int32 */
+    processInstanceStatus?: number;
+    user_creator_id?: string;
+    /** @format date-time */
+    startTime?: string;
+    approvedBy?: string;
+    user_approver_id?: string;
+    /** @format date-time */
+    approvedDate?: string;
+}
+
+export interface PaginationDTOAdhocApproval {
+    entryList?: AdhocApproval[];
+    /** @format int32 */
+    totalSize?: number;
+    /** @format int32 */
+    currentPageSize?: number;
+    /** @format int32 */
+    pageNum?: number;
+    /** @format int32 */
+    pageCount?: number;
+    isNextPageAvailable?: boolean;
+}
+
+export interface ResultPaginationDTOAdhocApproval {
+    result?: boolean;
+    /** @format int32 */
+    code?: number;
+    message?: string;
+    data?: PaginationDTOAdhocApproval;
+    messageKey?: string;
+    locale?: string;
+}
+
 /** Form Property */
 export interface FormPropertyDTO {
     /** Property Key */
@@ -7355,30 +7440,6 @@ export interface ResultListBpmnDynamicFormDTO {
     data?: BpmnDynamicFormDTO[];
     messageKey?: string;
     locale?: string;
-}
-
-export interface AdhocApproval {
-    /** @format int64 */
-    id?: number;
-    documentId?: string;
-    documentPath?: string;
-    documentStartVersion?: string;
-    documentApprovalVersion?: string;
-    /** @format int32 */
-    documentStatus?: number;
-    taskId?: string;
-    taskName?: string;
-    processInstanceId?: string;
-    businessKey?: string;
-    /** @format int32 */
-    processInstanceStatus?: number;
-    user_creator_id?: string;
-    /** @format date-time */
-    startTime?: string;
-    approvedBy?: string;
-    user_approver_id?: string;
-    /** @format date-time */
-    approvedDate?: string;
 }
 
 export interface AdhocApprovalResp {
@@ -14385,6 +14446,22 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
         postWorkflowSavedocumenttypeprofile: (data: DocumentTypeProfileSettingRequest, params: RequestParams = {}) =>
             this.request<ResultDocumentTypeProfileSetting, ResultString | (ResultString | Result)>({
                 path: `/docpal/workflow/saveDocumentTypeProfile`,
+                method: "POST",
+                body: data,
+                type: ContentType.Json,
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags Workflow
+         * @name PostWorkflowQueryadhocapprovalpage
+         * @request POST:/api/docpal/workflow/queryAdhocApprovalPage
+         */
+        postWorkflowQueryadhocapprovalpage: (data: AdhocApprovalDTO, params: RequestParams = {}) =>
+            this.request<ResultPaginationDTOAdhocApproval, ResultString | (ResultString | Result)>({
+                path: `/docpal/workflow/queryAdhocApprovalPage`,
                 method: "POST",
                 body: data,
                 type: ContentType.Json,
@@ -21851,6 +21928,24 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
         getCaseTypesCasetypeidDeployVersion: (caseTypeId: string, params: RequestParams = {}) =>
             this.request<ResultCaseModelDraft, ResultString | (ResultString | Result)>({
                 path: `/docpal/case/types/${caseTypeId}/deploy/version`,
+                method: "GET",
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags CaseTypeController
+         * @name GetCaseTypesVersionCmmnversionidPermissionsUserid
+         * @request GET:/api/docpal/case/types/version/{cmmnVersionId}/permissions/{userId}
+         */
+        getCaseTypesVersionCmmnversionidPermissionsUserid: (
+            cmmnVersionId: string,
+            userId: string,
+            params: RequestParams = {},
+        ) =>
+            this.request<ResultMapStringString, ResultString | (ResultString | Result)>({
+                path: `/docpal/case/types/version/${cmmnVersionId}/permissions/${userId}`,
                 method: "GET",
                 ...params,
             }),
