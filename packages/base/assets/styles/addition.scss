@@ -10,6 +10,15 @@ h1, h2, h3, h4, h5, h6 {
 .vxe-toolbar {
   gap: var(--app-space-xs);
 }
+// // vxe table context menu
+// .vxe-table--context-menu-wrapper{
+//   border-radius: var(--app-border-radius-m);
+//   box-shadow: var(--app-shadow-s) !important;
+// }
+// .vxe-context-menu--link .vxe-context-menu--link-prefix, .vxe-context-menu--link .vxe-context-menu--link-suffix{
+//   min-width: 0 !important;
+// }
+
 
 .pageContainer--padding {
   height: 100%;
@@ -24,7 +33,7 @@ h1, h2, h3, h4, h5, h6 {
 
 
 // vxe table context menu
-.contextMenuContainer {
+.contextMenuContainer, .vxe-table--context-menu-wrapper {
   position: fixed;
   top: 0;
   left: 0;

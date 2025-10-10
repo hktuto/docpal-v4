@@ -40,7 +40,7 @@
 
   /* ==================== Grey Scale ==================== */
   --app-grey-hue: 200;
-  --app-grey-saturation: 15%;
+  --app-grey-saturation: 25%;
 
   --app-custom-font: 'Roboto';
   
@@ -67,7 +67,7 @@
   /* Darker variations: decrease lightness */
   --app-primary-4: hsl(var(--app-primary-h), var(--app-primary-s), calc(var(--app-primary-l) * 0.75));
   --app-primary-5: hsl(var(--app-primary-h), var(--app-primary-s), calc(var(--app-primary-l) * 0.50));
-  --app-primary-6: hsl(var(--app-primary-h), var(--app-primary-s), calc(var(--app-primary-l) * 0.25));
+  --app-primary-6: hsl(var(--app-primary-h), var(--app-primary-s), calc(var(--app-primary-l) * 0.35));
 
   /* Success */
   --app-success-color: hsl(var(--app-success-h), var(--app-success-s), var(--app-success-l));
@@ -283,7 +283,12 @@
   --el-border-radius-base: var(--app-border-radius-m);
 
   // override vxe ui
+  --vxe-ui-font-family: var(--app-font-family) !important;
   --vxe-ui-layout-background-color: var(--app-grey-950) !important;
+  --vxe-ui-table-header-font-color: var(--app-text-color-regular) !important;
+  --vxe-ui-font-color: var(--app-text-color-regular) !important;
+  --vxe-ui-base-popup-border-color: var(--app-grey-900) !important;
+  --vxe-ui-table-menu-background-color: var(--app-paper) !important;
 
   // generate white and black color
   --app-paper: #fff;
