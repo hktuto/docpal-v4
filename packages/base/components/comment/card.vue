@@ -2,7 +2,7 @@
   <div class="commentCard-container">
     <div :id="`comment_${commentInfo.id}`" class="commentCard">
       <div class="commentCard_avatars"> {{ getInitials(commentInfo.author) }}</div>
-      <div class="commentCard_name ellipsis"> {{ commentInfo.author }}</div>
+      <div class="commentCard_name ellipsis"> {{ commentInfo.authorFullName }}</div>
       <div class="commentCard_date"> {{ formatDate(commentInfo.creationDate) }}</div>
       <div class="commentCard_text">
         <span v-if="commentInfo.to" class="commentCard_text_to">
