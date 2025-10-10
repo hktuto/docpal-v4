@@ -3849,7 +3849,7 @@
     "watermark": "水印"
   },
   "watermarkSetting_updateWatermark": "更新水印範本",
-  "watermark_template_warning": "更改範本將覆蓋所有目前設定",
+  "watermark_template_warning": "更改水印範本將覆蓋您目前的所有設定。是否繼續？",
   "workPanel_accessUserGroup": "Access by User Group",
   "workPanel_content": "Edit Work Panel Content",
   "workPanel_create": "Create New Work Panel",
