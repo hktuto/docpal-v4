@@ -105,7 +105,7 @@
     "browse": "Browse Setting",
     "bulkImportConfig": "Bulk Import",
     "calendarSetting": "Calendar Setting",
-    "caseManagement": "Case management",
+    "caseManagement": "Case",
     "companyProfile": "Company Profile",
     "contactBook": "Contact Book",
     "dashboard": "Dashboard",
@@ -231,7 +231,7 @@
     "uploadClick": "Click here to see detail.",
     "uploadCompleteAndAIFail": "AI parsing failed, please click to proceed",
     "uploadText": "Upload",
-    "uploadcomplete": "Upload Complete",
+    "uploadcomplete": "Upload Completed",
     "waitForAi": "Wait for AI preprocess"
   },
   "aiChatQuestion": {
@@ -410,7 +410,7 @@
     "name": "Case Name",
     "prefix": "Case ID - Prefix",
     "startNumber": "Case ID – Starting Number",
-    "title": "Case management",
+    "title": "Case",
     "userGroup": "User Group"
   },
   "caseManagement_ImportFromWorkflow": "Import from Workflow",
@@ -3030,7 +3030,7 @@
   "uniQueIdGenerator_variableName": "Variable Name",
   "uniQueIdGenerator_variableValue": "Default Value",
   "upload": {
-    "complete": "Upload Complete",
+    "complete": "Upload Completed",
     "upload": "Upload"
   },
   "uploadFromDocpal": {
@@ -3566,7 +3566,7 @@
       "goto": "Go to",
       "gotoTitle": "Number",
       "homePage": "Home",
-      "homePageTitle": "Home page",
+      "homePageTitle": "Home",
       "nextJump": "Jump next page",
       "nextJumpTitle": "Jump next page",
       "nextPage": "next page",
