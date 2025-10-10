@@ -192,7 +192,7 @@ watch(() => [layout, hightLightPanel], () => {
     --menu-item-padding: var(--app-space-xs);
     --menu-item-radius: var(--app-border-radius-m);
     --menu-item-normal-bg: rgba(0,0,0,0);
-    --menu-item-active-bg: var(--app-grey-1000);
+    --menu-item-active-bg: var(--app-grey-950);
     --menu-item-normal-color: var(--app-success-4);
     --menu-item-hover-color: var(--app-accent-color);
     --menu-item-active-color: var(--app-main-color);

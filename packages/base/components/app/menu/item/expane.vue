@@ -110,7 +110,7 @@ onUnmounted(() => {
     background: var(--item-bg);
     padding: var(--app-space-xs)  var(--app-space-xs);
     border-radius: var(--app-border-radius-s);
-    color: var(--app-grey-350);
+    color: var(--app-grey-400);
     overflow: visible;
     .menuLabel{
         flex:1 0 auto;
@@ -171,7 +171,7 @@ onUnmounted(() => {
                 }
             }
         }
-        --menu-bg: var(--app-grey-1000);
+        --menu-bg: var(--app-grey-950);
         border-radius: var(--app-border-radius-s);
         > .menuItem{
             .menuLabel, .menuIcon{
@@ -181,7 +181,7 @@ onUnmounted(() => {
         }
         .menuItem {
             &:hover{
-                background: var(--app-grey-950);
+                background: var(--app-grey-900);
             }
         }
     }
@@ -195,7 +195,7 @@ onUnmounted(() => {
         left:30px;
         top:0;
         width:200px;
-        background: var(--app-grey-1000);
+        background: var(--app-grey-950);
         z-index: -1;
     }
 }
@@ -203,7 +203,7 @@ onUnmounted(() => {
 .dropPreviewFile{
     padding: var(--app-space-xs);
     border-radius: var(--app-border-radius-s);
-    background: var(--app-grey-1000);
+    background: var(--app-grey-950);
     color: var(--app-main-color);
 }
 </style>

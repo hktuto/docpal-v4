@@ -155,7 +155,6 @@ defineExpose({ getList })
     overflow: auto;
 
     &__title {
-      font-family: Roboto;
       font-style: normal;
       font-weight: normal;
       font-size: var(--app-font-size-m);

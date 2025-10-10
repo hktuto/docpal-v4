@@ -146,13 +146,13 @@ onMounted(async () => {
 .config-status-monitor {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  background-color: var(--app-grey-950);
+  background-color: var(--app-grey-900);
   border-radius: var(--el-border-radius-base);
   padding: var(--app-space-xs);
   gap: var(--app-space-xs);
 
   &-item {
-    background-color: var(--app-grey-850);
+    background-color: var(--app-grey-800);
     padding: var(--app-space-xs);
     border-radius: var(--el-border-radius-base);
 

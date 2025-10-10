@@ -355,7 +355,7 @@ defineExpose({ getData, setData, init })
     cursor: pointer;
   }
   &--disabled {
-    background-color: var(--app-grey-450);
+    background-color: var(--app-grey-9500);
     padding-right: var(--app-space-s);
   }
 }

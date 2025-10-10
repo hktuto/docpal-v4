@@ -453,7 +453,7 @@ onMounted(async () => {
   gap: 0;
   :deep(.splitpanes__splitter) {
     width: 2px;
-    background-color: var(--app-grey-050);
+    background-color: var(--app-grey-950);
     position: relative;
 
     &:before {
@@ -485,7 +485,7 @@ onMounted(async () => {
     width: 100%;
   }
   :deep(.upload-footer) {
-    border-top: 1px solid var(--app-grey-050);
+    border-top: 1px solid var(--app-grey-950);
     padding: var(--app-space-xs) calc(var(--app-space-xs) * 2);
   }
   :deep(.splitpanes.default-theme .splitpanes__pane) {
@@ -540,7 +540,7 @@ onMounted(async () => {
 
 .disabled-line {
   text-decoration: line-through;
-  color: var(--app-grey-500);
+  color: var(--app-grey-9500);
 }
 
 :deep(.formContainer) {

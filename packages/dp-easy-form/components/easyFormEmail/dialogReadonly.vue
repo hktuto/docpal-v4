@@ -76,7 +76,7 @@ defineExpose({handleOpen});
 .email-body {
   padding: var(--app-space-xs);
   width: 100%;
-  border: 1px solid var(--app-grey-425);
+  border: 1px solid var(--app-grey-400);
   border-radius: var(--app-border-radius-s);
 }
 </style>

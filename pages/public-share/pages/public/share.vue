@@ -104,7 +104,7 @@ main {
   white-space: nowrap;
   color: var(--primary-color);
   padding: 1rem calc(var(--app-space-xs) * 3);
-  background: var(--app-grey-725);
+  background: var(--app-grey-700);
   margin: unset;
 }
 

@@ -117,7 +117,7 @@ function handleEdit(data: any) {
 <style scoped>
 .header {
   font-size: 0.8rem;
-  color: var(--app-grey-500);
+  color: var(--app-grey-9500);
 }
 
 .list-group-item, .header {
@@ -141,7 +141,7 @@ function handleEdit(data: any) {
   padding: calc(var(--app-space-xs) / 2) calc(var(--app-space-xs) / 2);
 
   + .list-group-item {
-    border-top: 1px solid var(--app-grey-875);
+    border-top: 1px solid var(--app-grey-900);
   }
 
   &:nth-child(odd) {
@@ -149,7 +149,7 @@ function handleEdit(data: any) {
   }
 
   &:last-child {
-    border-bottom: 1px solid var(--app-grey-875);
+    border-bottom: 1px solid var(--app-grey-900);
   }
 }
 

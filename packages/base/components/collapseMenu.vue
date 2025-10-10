@@ -71,7 +71,7 @@ watch(opened,(bool) => {
   right: 0;
   z-index: 2;
   padding: var(--app-space-s);
-  background: var(--app-grey-1000);
+  background: var(--app-grey-950);
   border-radius: 4px;
   box-shadow: 0 0 5px rgba(0,0,0,0.3);
   transform: translateX(100vw);

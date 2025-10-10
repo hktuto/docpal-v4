@@ -471,7 +471,7 @@ defineExpose({
     gap: var(--app-space-xs);
     font-size: var(--app-font-size-l);
     padding: var(--app-space-xs);
-    background: var(--app-grey-1000);
+    background: var(--app-grey-950);
   }
   &:hover,
   &:focus-within {

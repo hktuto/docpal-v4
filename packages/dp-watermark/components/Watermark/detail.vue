@@ -544,7 +544,7 @@ defineExpose({
             border-radius: 4px;
             padding: 8px;
             box-shadow: 0 0 4px rgba(0, 0, 0, 0.1);
-            background: var(--app-grey-1000);
+            background: var(--app-grey-950);
         }
     }
 }

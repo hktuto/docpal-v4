@@ -60,6 +60,6 @@ function updateCondition(newCondition:any) {
     width: 100%;
     padding: var(--app-space-s);
     border-radius: var(--app-border-radius-m);
-    border: 1px solid var(--app-grey-825);
+    border: 1px solid var(--app-grey-800);
 }
 </style>

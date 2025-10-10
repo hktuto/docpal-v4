@@ -193,7 +193,7 @@ const textMessage = defineModel<string>('textMessage')
   display: grid;
   grid-template-columns:1fr min-content;
   gap: var(--app-space-s);
-  background: var(--app-grey-1000);
+  background: var(--app-grey-950);
 }
 
 .preview {
@@ -201,7 +201,7 @@ const textMessage = defineModel<string>('textMessage')
   flex-flow: row wrap;
   gap: var(--app-space-s);
   padding: var(--app-space-s);
-  background: var(--app-grey-950) !important;
+  background: var(--app-grey-900) !important;
   overflow: auto;
   min-width: 300px;
 }

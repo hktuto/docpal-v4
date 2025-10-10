@@ -174,7 +174,7 @@ function setFieldsList(item: any) {
 .indentItem {
   width: var(--app-space-s);
   height: 100px;
-  border-left: 1px solid var(--app-grey-825);
+  border-left: 1px solid var(--app-grey-800);
 }
 
 .collapseTitleContainer {

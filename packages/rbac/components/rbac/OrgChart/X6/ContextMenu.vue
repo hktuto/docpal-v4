@@ -55,7 +55,7 @@ defineEmits<{
   color: #ff4d4f;
 }
 .menu-item.inactivate {
-  color: var(--app-grey-475);
+  color: var(--app-grey-9500);
 }
 
 .menu-item.delete:hover {

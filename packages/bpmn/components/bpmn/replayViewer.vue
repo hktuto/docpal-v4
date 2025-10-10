@@ -268,7 +268,7 @@ defineExpose({
     position: relative;
     .stepContent{
         padding: calc(var(--app-space-xs) / 2 ) var(--app-space-xs);
-        background: var(--app-grey-850);
+        background: var(--app-grey-800);
         width: 100%;
         border-radius: var(--app-space-xs);
         &.system{
@@ -390,7 +390,7 @@ defineExpose({
     flex-flow: row nowrap;
     padding-right: var(--app-space-xs);
     padding-bottom: var(--app-space-xs);
-    border-bottom: 1px solid var(--app-grey-850);
+    border-bottom: 1px solid var(--app-grey-800);
 }
 .playPause{
     flex: 1 0 auto;
@@ -411,7 +411,7 @@ defineExpose({
     cursor: pointer;
     .mode{
         --icon-size: 22px;
-        background: var(--app-grey-850);
+        background: var(--app-grey-800);
         padding: 4px;
         &.selected{
             color: var(--app-main-color);

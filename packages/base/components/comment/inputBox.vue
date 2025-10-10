@@ -114,9 +114,9 @@ watch(
 <style lang="scss" scoped>
 .commentInputBox {
   border-radius: 5px;
-  background-color: var(--app-grey-950);
+  background-color: var(--app-grey-900);
   padding: var(--app-space-xs);
-  color: var(--app-grey-050);
+  color: var(--app-grey-950);
 
   :deep(.el-textarea__inner) {
     border: unset;

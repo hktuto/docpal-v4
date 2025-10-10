@@ -377,7 +377,7 @@ function handleSearchBlur() {
   --icon-size: 1.14rem;
   height: calc(var(--icon-size) + 16px);
   width: 1px;
-  background: var(--app-grey-950);
+  background: var(--app-grey-900);
 
   &.collapse {
     width: 100%;
@@ -428,7 +428,7 @@ function handleSearchBlur() {
   min-width: 120px;
 
   &::placeholder {
-    color: var(--app-grey-500);
+    color: var(--app-grey-9500);
   }
 }
 

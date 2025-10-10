@@ -32,7 +32,7 @@ const modelValue = defineModel<boolean>({required:true})
     position:absolute;
     z-index: 9;
     display: none;
-    background: var(--app-grey-1000);
+    background: var(--app-grey-950);
     &.opend{
         display: block;
     }

@@ -158,7 +158,7 @@ defineExpose({ init })
 
 <style lang="scss" scoped>
 .permissionCard {
-  background: var(--app-grey-950);
+  background: var(--app-grey-900);
   padding: var(--app-space-xs);
   color: var(--app-grey-300);
   border-radius: calc(var(--app-space-xs) / 3);

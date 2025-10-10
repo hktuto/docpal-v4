@@ -173,7 +173,7 @@ onMounted(() => {
 .workflowContextMenuContainer{
     position: fixed;
     z-index: 10;
-    background-color: var(--app-grey-1000);
+    background-color: var(--app-grey-950);
     border-radius: 4px;
     box-shadow: 0px 4px 10px 0px rgba(0, 0, 0, 0.3);
     padding-block: 8px;

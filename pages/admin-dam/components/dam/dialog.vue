@@ -257,7 +257,7 @@ defineExpose({handleOpen})
 }
 
 .title {
-  color: var(--app-grey-050);
+  color: var(--app-grey-950);
   font-weight: bold;
 }
 </style>

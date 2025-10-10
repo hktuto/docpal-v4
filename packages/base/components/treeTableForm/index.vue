@@ -21,7 +21,7 @@
                 ref="tableRef"
                 :data="state.tableData"
                 v-bind="_options"
-                :header-cell-style="{'background': 'var(--app-grey-825)'}"
+                :header-cell-style="{'background': 'var(--app-grey-800)'}"
                 @row-contextmenu="handleRightClick"
                 @selection-change="handleSelectionChange"
                 @row-click="handleRowClick"

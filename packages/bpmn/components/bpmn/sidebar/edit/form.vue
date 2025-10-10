@@ -281,7 +281,7 @@ watch(
   transition: all 0.2s ease-in-out;
 
   &.opened {
-    background: var(--app-grey-975);
+    background: var(--app-grey-950);
   }
 
   .header {
@@ -300,12 +300,12 @@ watch(
   .body {
     width: 100%;
     padding: var(--app-space-xs);
-    border-top: 1px solid var(--app-grey-950);
+    border-top: 1px solid var(--app-grey-900);
   }
 }
 
 .formFieldItem + .formFieldItem {
-  border-top: 1px solid var(--app-grey-950);
+  border-top: 1px solid var(--app-grey-900);
 }
 
 .actions {
@@ -324,7 +324,7 @@ watch(
   margin-block: var(--app-font-size-xs);
   gap: var(--app-space-xs);
   padding-block: var(--app-space-xs);
-  border-top: 1px solid var(--app-grey-850);
+  border-top: 1px solid var(--app-grey-800);
 
   > * {
     width: 100%;

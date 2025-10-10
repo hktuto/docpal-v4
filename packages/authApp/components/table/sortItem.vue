@@ -38,7 +38,7 @@ const handleSubmit = () => {
       background: var(--app-grey-9000);
     }
     & + & {
-      border-top: 1px solid var(--app-grey-950);
+      border-top: 1px solid var(--app-grey-900);
     }
     .handle{
       grid-area: handle;

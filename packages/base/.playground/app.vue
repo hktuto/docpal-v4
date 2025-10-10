@@ -14,8 +14,8 @@
     --menu-item-padding: var(--app-space-xxs);
     --menu-item-radius: var(--app-border-radius-s);
     --menu-item-normal-bg: rgba(0,0,0,0);
-    --menu-item-hover-bg: var(--app-grey-950);
-    --menu-item-active-bg: var(--app-grey-1000);
+    --menu-item-hover-bg: var(--app-grey-900);
+    --menu-item-active-bg: var(--app-grey-950);
     --menu-item-normal-color: var(--app-grey-400);
     --menu-item-hover-color: var(--app-grey-100);
     --menu-item-active-color: var(--app-main-color);

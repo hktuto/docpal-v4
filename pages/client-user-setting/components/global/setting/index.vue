@@ -278,7 +278,7 @@ onMounted(() => {
   position: absolute;
   bottom: 0;
   width: 100%;
-  background: #fff;
+  background: var(--app-grey-950);
   z-index: 10;
   padding-bottom: 12px;
   box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.03);

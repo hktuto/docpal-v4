@@ -183,7 +183,7 @@ onMounted(() => {
 }
 
 :deep(.completed-row) {
-  background-color: var(--app-grey-850);
+  background-color: var(--app-grey-800);
   // color: var(--app-grey-900)
 }
 </style>

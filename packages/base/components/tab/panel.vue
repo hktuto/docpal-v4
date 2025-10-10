@@ -134,7 +134,7 @@ const prefixClass = computed(() => {
     overflow: hidden;
     opacity: 1;
     --tab-item-border-color: rgba(255,255,255,0);
-    background: var(--app-grey-1000);
+    background: var(--app-grey-950);
     
     &.activePanel{
         :deep(.tabItem.showing) {

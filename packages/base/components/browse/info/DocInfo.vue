@@ -131,7 +131,7 @@ function getFileExtension(mimeType) {
 .tagList {
   .tag {
     display: inline-block;
-    background: var(--app-grey-950);
+    background: var(--app-grey-900);
     padding: 4px 12px;
     border-radius: 2px;
     margin: 0 4px 4px 0;

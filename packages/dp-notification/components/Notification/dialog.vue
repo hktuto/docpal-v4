@@ -369,7 +369,7 @@ defineExpose({ handleOpen, initData });
     }
   }
   .infinite-list-item + .infinite-list-item {
-    border-top: 1px solid var(--app-grey-050);
+    border-top: 1px solid var(--app-grey-950);
   }
   .el-checkbox {
     display: flex;

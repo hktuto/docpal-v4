@@ -174,7 +174,7 @@ onMounted(() => {
   gap: var(--app-space-s);
   .contactList--left {
     padding-right: var(--app-space-s);
-    border-right: 1px solid var(--app-grey-850);
+    border-right: 1px solid var(--app-grey-800);
     overflow-y: auto;
   }
 }

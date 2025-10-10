@@ -32,7 +32,7 @@ defineExpose({
 <style lang="scss" scoped>
 .headerContainer {
   width: auto;
-  background: var(--app-grey-975);
+  background: var(--app-grey-950);
   padding-inline: var(--app-space-s);
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   z-index: 2;

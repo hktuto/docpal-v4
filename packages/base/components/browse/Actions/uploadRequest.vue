@@ -89,8 +89,8 @@ async function handleSubmit() {
   font-size: var(--icon-size, 18px);
   width: var(--icon-bg-size, 32px);
   height: var(--icon-bg-size, 32px);
-  color: var(--icon-color, --app-grey-950) !important;
-  background-color: var(--icon-bg-color, var(--app-grey-950));
+  color: var(--icon-color, --app-grey-900) !important;
+  background-color: var(--icon-bg-color, var(--app-grey-900));
   border-radius: 50%;
   display: grid;
   place-items: center;

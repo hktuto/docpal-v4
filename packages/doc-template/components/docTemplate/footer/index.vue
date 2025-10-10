@@ -46,7 +46,7 @@ const { editor, options } = editorProvider
   justify-content: space-around;
   align-items: center;
   padding: var(--app-space-s);
-  background: var(--app-grey-975);
+  background: var(--app-grey-950);
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 .space{

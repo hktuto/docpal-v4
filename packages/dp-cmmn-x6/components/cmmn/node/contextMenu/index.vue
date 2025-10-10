@@ -69,8 +69,8 @@ useEventListener(window, 'cmmn-node-contextMenu-close', () => {
 <style scoped lang="scss">
 .contextMenuContainer{
     border-radius: 0.5rem;
-    background: var(--app-grey-1000);
-    border: 1px solid var(--app-grey-825);
+    background: var(--app-grey-950);
+    border: 1px solid var(--app-grey-800);
     box-shadow: 0 2px 5px rgba(0,0,0,.2);
     position: fixed;
     top:var(--y);
