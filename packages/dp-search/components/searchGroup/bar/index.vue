@@ -10,7 +10,6 @@
       <template v-else>
         {{ $t('file_search') }}
       </template>
-      
     </div>
     <div v-if="!['recordDetailAgg', 'recordDetail'].includes(mode)" class="flex-x-start search-group-bar__action">
       <SvgIcon id="Search__Filter" v-if="mode !== 'agg'" src="/icons/tools/filter.svg" class="mr-2" @click="handleMode('agg')" @search="handleSearch"></SvgIcon>
@@ -46,7 +45,7 @@
   </div>
 </template>
 <script lang="ts" setup>
-import { clientApi } from 'api'
+import { clientApi, globalApi } from 'api'
 import { ElMessage } from 'element-plus'
 const { t } = useI18n()
 const mode = ref<'filter' | 'agg' | 'record' | 'recordDetail'>('filter')
@@ -55,12 +54,16 @@ const emits = defineEmits(['search', 'aggSearch', 'searchLog'])
 const filterRef = ref()
 const aggRef = ref()
 let isHistory = false // 控制是否触发form change事件
+const recentRef = ref()
 async function handleSearch() {
   if (isHistory) return
   const params = await filterRef.value.getData()
   if (!params.docId && params.query.length === 0) return
   aggRef.value.clear()
   emits('search', params)
+  setTimeout(() => {
+    recentRef.value.initList()
+  }, 2000)
   // mode.value = 'search'
 }
 function handleMode(_mode: string = 'filter') {
@@ -118,6 +121,10 @@ function handleEditRecord(record: any) {
 function setQuery(query: any) {
   filterRef.value.initForm(query)
 }
+const { searchOptions, searchOptionsLoading } = useSearchOptions()
+provide('searchOptions', searchOptions)
+provide('searchOptionsLoading', searchOptionsLoading)
+
 onMounted(() => {
   mode.value = 'filter'
 })
