@@ -300,11 +300,12 @@ function handleRecordChange(value: any) {
   form.value.filed_condition = []
   if (value === 'some') handleAdd()
 }
-
+let time = 1
 function handleAdd() {
   if (!form.value.filed_condition) form.value.filed_condition = []
+  const id = new Date().getTime() + time++
   form.value.filed_condition.push({
-    id: '',
+    id: id,
     condition: '',
     __cdata: '',
     type: '',

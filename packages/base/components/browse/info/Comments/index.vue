@@ -88,30 +88,38 @@ async function getUserList() {
   const userList = await clientApi.api.postNuxeoIdentityUsers().then((res) => res.data)
   state.userList = userList
     .sort((a, b) => a.username.localeCompare(b.username))
-    .map((item) => ({
-      label: item.userId,
-      value: item.userId
-    }))
+    .map((item) => {
+      const fullName = item.firstName || item.lastName ? item.firstName + ' ' + item.lastName : item.userName
+      return {
+        label: fullName,
+        value: item.userId
+      }
+    })
   state.userListWithoutMe = state.userList.filter((item) => item.value !== userId.value)
 }
-function getUserName(userId: string) {
-  const user = state.userList.find((item) => item.value === userId)
-  if (!user) return userId
-  return user.label
+function getUserName(_userId: string) {
+  const regex = /(?<=@\{)[\w-]+(?=\})/g
+  const matches = _userId.match(regex)
+  const name = matches ? matches[0] : _userId.replace('@', '')
+  const user = state.userList.find((item) => item.value === name)
+  return user ? user.label : _userId
 }
 async function getCommentList(params) {
   const data = (await clientApi.api.postNuxeoComments(params).then((res) => res.data)) as any
-  const regex = /@\w+\s/g
+  const regex = /@\{([^}]+)\}/g
   try {
     data.forEach((item) => {
+      item.authorFullName = getUserName(item.author)
       let matches = item.text.match(regex)
       if (matches && matches.length > 0) {
         item.text = item.text.replace(regex, (match, p1) => {
-          return '<span class="commentCard_mention">' + getUserName(match) + ' </span>'
+          return '<span class="commentCard_mention">@' + getUserName(match) + ' </span>'
         })
       }
     })
-  } catch (error) {}
+  } catch (error) {
+    console.error(error)
+  }
   return data
 }
 function handleScroll(commentId?: string) {
