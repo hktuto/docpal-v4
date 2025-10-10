@@ -23,10 +23,10 @@
     </el-select>
     <div class="footer">
       <el-button
-        :id="`Browse__Info__AddToCollections__${selected ? !selected.path ? 'CreatNewCollection' : 'Confirm' : 'Select' }`"
+        :id="`Browse__Info__AddToCollections__${selected ? !selected.id ? 'CreatNewCollection' : 'Confirm' : 'Select' }`"
         type="primary" @click="handleConfirm" :disabled="!selected">
         {{
-          selected ? !selected.path ? $t('collections_new') : $t('dpButtom_confirm') : $t('designer.widgetLabel.select')
+          selected ? !selected.id ? $t('collections_new') : $t('dpButtom_confirm') : $t('designer.widgetLabel.select')
         }}
       </el-button>
     </div>
@@ -56,14 +56,13 @@ const myCollection = computed(() => {
 })
 
 const handleConfirm = async () => {
-  const flag = await handleAddCollection()
-  if (!selected.value || !flag) {
+  const collection = await handleGetCollection()
+  if (!selected.value || !collection) {
     return
   }
-
   const param = {
     documents: [{idOrPath: props.doc.id}],
-    collection: {idOrPath: selected.value.id},
+    collection: {idOrPath: collection.id},
   }
   clientApi.api.postNuxeoCollectionAdd(param).then((res) => {
     selected.value = ''
@@ -72,20 +71,17 @@ const handleConfirm = async () => {
   })
 }
 
-
-const handleAddCollection = async () => {
-  let flag = 0
+const handleGetCollection = async () => {
   const index = myCollection.value.findIndex((item) =>
-    item.path === selected.value.path
+    item.id === selected.value.id
   )
   if (index !== -1) {
-    return 1
+    return myCollection.value[index]
   }
   const newCollection = await clientApi.api.postNuxeoCollectionCreate({name: selected.value}).then(res => res.data)
-  selected.value = newCollection
-  flag = 1
   getCollection()
-  return flag
+  allCollection.value.push(newCollection)
+  return newCollection
 }
 
 async function querySearchAsync(queryString, cb) {
