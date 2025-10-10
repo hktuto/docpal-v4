@@ -215,8 +215,8 @@ onMounted(() => {
                 </el-dropdown-menu>
               </template>
             </ElDropdown>
-            <ElButton @click="cancel">Cancel</ElButton>
-            <ElButton @click="preview">Confirm</ElButton>
+            <ElButton type="danger" @click="cancel">Cancel</ElButton>
+            <ElButton type="primary"  @click="preview">Confirm</ElButton>
           </div>
         </template>
       </WatermarkDetail>
