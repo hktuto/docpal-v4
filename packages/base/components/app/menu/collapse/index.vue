@@ -7,7 +7,7 @@ if(!tabProvider) {
 }
 const props = defineProps<{menu :MenuItem[], selectedMenuItem?:TabItem, menuMode?:'collapse' | 'expand'}>()
 const { selectedMenuItem } = toRefs(props)
-const emits = defineEmits(['select', 'hover'])
+const emits = defineEmits(['select', 'hover','mouseOut'])
 
 function itemClick(item:MenuItem) {
   emits('select', item)
@@ -47,13 +47,13 @@ watch(selectedMenuItem, (newSelectedMenuItem) => {
   <div class="menuListContainer">
     <template v-if="menuMode === 'collapse'">
       <template v-for="(item,index) in menu" :key="index">
-        <AppMenuCollapseItem @click="itemClick(item)" v-tooltip="$t(item.label)" :selected="selectedIndex === index" :item="item" @hover="handleHover(item)" />
+        <AppMenuCollapseItem @click="itemClick(item)" v-tooltip="$t(item.label)" :selected="selectedIndex === index" :item="item" @hover="handleHover(item)" @mouseOut="$emit('mouseOut')" />
 
       </template>
     </template>
     <template v-else>
       <template v-for="(item,index) in menu" :key="index">
-        <AppMenuCollapseItem @click="itemClick(item)" v-tooltip="$t(item.label)"  :selected="selectedIndex === index" :item="item" @hover="handleHover(item)" />
+        <AppMenuCollapseItem @click="itemClick(item)" v-tooltip="$t(item.label)"  :selected="selectedIndex === index" :item="item" @hover="handleHover(item)" @mouseOut="$emit('mouseOut')" />
       </template>
     </template>
   </div>
