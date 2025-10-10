@@ -1,6 +1,5 @@
 <script lang="ts" setup>
 import type { Node } from '@antv/x6'
-import { adminApi } from 'api'
 
 const { node } = defineProps<{
   node: Node
@@ -10,6 +9,7 @@ const editorProvider = inject(EDITOR_PROVIDER)
 if (!graphProvider || !editorProvider) {
   throw createError('graph provider not found')
 }
+const { bpmnGlobalRules } = editorProvider.BpmnRule
 const { setting } = useCalendarStore()
 const actionTypeOptions = ['Create', 'Update', 'Cancel', 'Remove']
 
@@ -52,30 +52,20 @@ function updateData() {
   })
 }
 
-const allFields = computed(() => {
-  if (!graphProvider?.allFormField.value) return []
+const stringFields = computed(() => {
+  if (!bpmnGlobalRules.value || bpmnGlobalRules.value.length === 0) return []
 
-  const allField = Object.fromEntries(Object.entries(graphProvider.allFormField.value).filter(([key, value]) => value.attr_type === 'string'))
-
-  return Object.keys(allField).map((key: string) => {
-    return graphProvider.allFormField.value[key]
-  })
+  return bpmnGlobalRules.value.filter((item: any) => item.validationRule.type === 'text')
 })
 
 const booleanFields = computed(() => {
-  if (!graphProvider?.allFormField.value) return []
-  const allField = Object.fromEntries(Object.entries(graphProvider.allFormField.value).filter(([key, value]) => value.attr_type === 'boolean'))
-  return Object.keys(allField).map((key: string) => {
-    return graphProvider.allFormField.value[key]
-  })
+  if (!bpmnGlobalRules.value || bpmnGlobalRules.value.length === 0) return []
+  return bpmnGlobalRules.value.filter((item: any) => item.validationRule.type === 'boolean')
 })
 
 const dateTimeFields = computed(() => {
-  if (!graphProvider?.allFormField.value) return []
-  const allField = Object.fromEntries(Object.entries(graphProvider.allFormField.value).filter(([key, value]) => value.attr_type === 'date'))
-  return Object.keys(allField).map((key: string) => {
-    return graphProvider.allFormField.value[key]
-  })
+  if (!bpmnGlobalRules.value || bpmnGlobalRules.value.length === 0) return []
+  return bpmnGlobalRules.value.filter((item: any) => item.validationRule.type === 'date')
 })
 
 function addNewReminder() {
@@ -134,50 +124,47 @@ onMounted(async () => {
         </el-form-item>
         <el-form-item v-if="'Create' !== form.attr_actionType" label="Event Id">
           <el-select v-model="form.attr_eventId" clearable>
-            <el-option v-for="item in allFields" :key="item.attr_id" :label="item.attr_name" :value="item.attr_id" />
+            <el-option v-for="item in stringFields" :key="item.id" :label="item.name" :value="item.id" />
           </el-select>
         </el-form-item>
         <el-form-item label="Event Name">
           <el-select v-model="form.attr_eventName" clearable>
-            <el-option v-for="item in allFields" :key="item.attr_id" :label="item.attr_name" :value="item.attr_id" />
+            <el-option v-for="item in stringFields" :key="item.id" :label="item.name" :value="item.id" />
           </el-select>
         </el-form-item>
         <el-form-item label="Event Description">
           <el-select v-model="form.attr_eventDescription" clearable>
-            <el-option v-for="item in allFields" :key="item.attr_id" :label="item.attr_name" :value="item.attr_id" />
+            <el-option v-for="item in stringFields" :key="item.id" :label="item.name" :value="item.id" />
           </el-select>
         </el-form-item>
         <el-form-item label="Event Category">
           <el-select v-model="form.attr_category" clearable>
-            <el-option v-for="item in allFields" :key="item.attr_id" :label="item.attr_name" :value="item.attr_id" />
+            <el-option v-for="item in stringFields" :key="item.id" :label="item.name" :value="item.id" />
           </el-select>
         </el-form-item>
         <el-form-item label="Event Location">
           <el-select v-model="form.attr_location" clearable>
-            <el-option v-for="item in allFields" :key="item.attr_id" :label="item.attr_name" :value="item.attr_id" />
+            <el-option v-for="item in stringFields" :key="item.id" :label="item.name" :value="item.id" />
           </el-select>
         </el-form-item>
         <el-form-item label="Start Time">
           <el-select v-model="form.attr_startTime" clearable>
-            <el-option v-for="item in dateTimeFields" :key="item.attr_id" :label="item.attr_name"
-                       :value="item.attr_id" />
+            <el-option v-for="item in dateTimeFields" :key="item.id" :label="item.name" :value="item.id" />
           </el-select>
         </el-form-item>
         <el-form-item label="End Time">
           <el-select v-model="form.attr_endTime" clearable>
-            <el-option v-for="item in dateTimeFields" :key="item.attr_id" :label="item.attr_name"
-                       :value="item.attr_id" />
+            <el-option v-for="item in dateTimeFields" :key="item.id" :label="item.name" :value="item.id" />
           </el-select>
         </el-form-item>
         <el-form-item label="is All Day">
           <el-select v-model="form.attr_isAllDay" clearable>
-            <el-option v-for="item in booleanFields" :key="item.attr_id" :label="item.attr_name"
-                       :value="item.attr_id" />
+            <el-option v-for="item in booleanFields" :key="item.id" :label="item.name" :value="item.id" />
           </el-select>
         </el-form-item>
         <el-form-item v-if="form.related" label="User">
           <el-select v-model="form.related.attr_user" clearable>
-            <el-option v-for="item in allFields" :key="item.attr_id" :label="item.attr_name" :value="item.attr_id" />
+            <el-option v-for="item in stringFields" :key="item.id" :label="item.name" :value="item.id" />
           </el-select>
         </el-form-item>
         <div class="reminderListContainer">

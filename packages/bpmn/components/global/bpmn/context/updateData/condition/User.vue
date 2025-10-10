@@ -1,15 +1,16 @@
 <script lang="ts" setup>
 import { adminApi } from 'api'
 const condition = defineModel<any>('condition', {required: true})
-const {disabled} = defineProps<{    
+const {disabled} = defineProps<{
     disabled:boolean
 }>()
 
 const graphProvider = inject(BPMN_PROVIDER)
-if(!graphProvider){
-    throw new Error('Missing provider')
+const editorProvider = inject(EDITOR_PROVIDER)
+if (!graphProvider || !editorProvider) {
+  throw new Error('Missing provider')
 }
-
+const { bpmnGlobalRules } = editorProvider.BpmnRule
 const userList = ref<any[]>([])
 
 async function getUserList(){
@@ -18,10 +19,10 @@ async function getUserList(){
     userList.value = data
 }
 
-const allFields = computed(() => {
-    return Object.keys(graphProvider.allFormField.value).map((key:string) => {
-    return graphProvider.allFormField.value[key]
-  })
+const stringFields = computed(() => {
+  if (!bpmnGlobalRules.value || bpmnGlobalRules.value.length === 0) return []
+
+  return bpmnGlobalRules.value.filter((item: any) => item.validationRule.type === 'text')
 })
 
 onMounted(() => {
@@ -33,7 +34,7 @@ onMounted(() => {
 <template>
     <ElFormItem label="Form Info">
         <ElSelect v-model="condition.attr_updateFieldName" placeholder="Form Info" :disabled="disabled">
-            <ElOption v-for="item in allFields" :key="item.attr_id" :label="item.attr_name" :value="item.attr_id" />
+          <el-option v-for="item in stringFields" :key="item.id" :label="item.name" :value="item.id" />
         </ElSelect>
     </ElFormItem>
     <ElFormItem label="User Group">

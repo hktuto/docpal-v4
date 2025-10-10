@@ -18,20 +18,12 @@ const editorProvider = inject(EDITOR_PROVIDER)
 if (!graphProvider || !editorProvider) {
   throw createError('graph provider not found')
 }
+const { bpmnGlobalRules } = editorProvider.BpmnRule
 
-const defaultFieldOptions = computed(() => {
-  if (!graphProvider.allFormField.value) return []
+const stringFields = computed(() => {
+  if (!bpmnGlobalRules.value || bpmnGlobalRules.value.length === 0) return []
 
-  const allField = Object.fromEntries(
-    Object.entries(graphProvider.allFormField.value).filter(([key, value]) => value.attr_type === 'string')
-  )
-
-  return Object.keys(allField).map((key) => {
-    return {
-      label: graphProvider.allFormField.value[key].attr_name,
-      value: graphProvider.allFormField.value[key].attr_id
-    }
-  })
+  return bpmnGlobalRules.value.filter((item: any) => item.validationRule.type === 'text')
 })
 
 const state = reactive({
@@ -351,8 +343,8 @@ watch(() => node, async () => {
         <div style="display: flex; align-items: center; gap: 4px;">
           <span>{{ t('Response Variable Name') }}</span>
           <el-popover width="300" title="Info"
-                      content="When setting this property, the result body is allowed to be obtained using interpolation syntax through the key of the property in the subsequent process."
-          >
+                      content="When setting this property, the result body is allowed to be obtained using interpolation
+                       syntax through the key of the property in the subsequent process.">
             <template #reference>
               <el-icon style="cursor: pointer; color: #909399;">
                 <QuestionFilled />
@@ -364,8 +356,7 @@ watch(() => node, async () => {
       <el-select v-model="state.responseBodyName" placeholder="please select your zone" clearable
                  :disabled="editorProvider.readonly.value" placement="top"
                  @change="(val:any) => fieldMappingUpdate(val, 'responseVariableName')">
-        <el-option v-for="item in defaultFieldOptions" :key="item.value" :value="item.value"
-                   :label="item.label" />
+        <el-option v-for="item in stringFields" :key="item.id" :label="item.name" :value="item.id" />
       </el-select>
     </el-form-item>
 

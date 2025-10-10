@@ -12,13 +12,11 @@ const editorProvider = inject(EDITOR_PROVIDER)
 if (!editorProvider) {
   throw createError('editor provider not found')
 }
+const { bpmnGlobalRules } = editorProvider.BpmnRule
 
 function filterOption(item: any) {
   // Search the option for the corresponding data type
-  const type = item.attr_metaDataType
-  const filteredList = Object.fromEntries(
-    Object.entries(props.allField).filter(([key, value]) => value.attr_type === type)
-  )
+  let filteredList = bpmnGlobalRules.value.filter((item: any) => item.validationRule.type === 'text')
 
   // Retrieve the used and currently selected option
   const set: any = []
@@ -31,12 +29,16 @@ function filterOption(item: any) {
       })
     }
   })
-
   // Exclude used options
-  set.forEach((property: string) => {
-    delete filteredList[property]
+  return filteredList.filter(item => {
+    let includeItem = true;
+    set.forEach((name) => {
+      if (item.id === name) {
+        includeItem = false;
+      }
+    });
+    return includeItem;
   })
-  return filteredList
 }
 
 function fileFieldOption(item: any) {
@@ -52,13 +54,16 @@ function fileFieldOption(item: any) {
   })
 
   if (props.allField) {
-    const filteredData = Object.fromEntries(
-      Object.entries(props.allField).filter(([key, value]) => value.attr_type === 'string')
-    )
-    set.forEach((property: string) => {
-      delete filteredData[property]
+    const filteredData =  bpmnGlobalRules.value.filter((item: any) => item.validationRule.type === 'text')
+    return filteredData.filter(item => {
+      let includeItem = true;
+      set.forEach((name) => {
+        if (item.id === name) {
+          includeItem = false;
+        }
+      });
+      return includeItem;
     })
-    return filteredData
   }
   return {}
 }
@@ -137,7 +142,7 @@ function setFieldsList(item: any) {
             <div class="content">
               <ElForm label-position="top" @sumit.stop :disabled="!item.check">
                 <div>
-                  Folder name rule:
+                  {{$t('Folder name rule')}}:
                   <template v-for="(i, index) in getLabelList(item.rule)" :key="index">
                     <el-tag v-if="i.metadata">{{ $t(i.metadata) }}</el-tag>
                     <template v-if="index !== getLabelList(item.rule).length - 1"> -</template>
@@ -147,8 +152,8 @@ function setFieldsList(item: any) {
                             :label="metaField.attr_metadata">
                   <ElSelect v-model="metaField.attr_formProperty" :disabled="editorProvider.readonly.value" clearable
                             @change="handleUpdateField(item)">
-                    <ElOption v-for="option in filterOption(metaField)" :key="option.attr_id" :label="option.attr_name"
-                              :value="option.attr_id" />
+                    <ElOption v-for="option in filterOption(metaField)" :key="option.id" :label="option.name"
+                              :value="option.id" />
                   </ElSelect>
                 </ElFormItem>
 
@@ -158,7 +163,7 @@ function setFieldsList(item: any) {
                   <ElSelect v-model="item.field[item.field.length - 1].attr_formProperty" clearable
                             :disabled="editorProvider.readonly.value" @change="handleUpdateField(item)">
                     <ElOption v-for="option in fileFieldOption(item.field[item.field.length - 1])"
-                              :key="option.attr_id" :label="option.attr_name" :value="option.attr_id" />
+                              :key="option.id" :label="option.name" :value="option.id" />
                   </ElSelect>
                 </ElFormItem>
               </ElForm>

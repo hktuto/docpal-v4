@@ -8,9 +8,12 @@ const { node } = defineProps<{
   node: Node
 }>()
 const graphProvider = inject(BPMN_PROVIDER)
-if (!graphProvider) {
-  throw createError('graph provider not found')
+const editorProvider = inject(EDITOR_PROVIDER)
+if (!graphProvider || !editorProvider) {
+  throw createError('provider not found')
 }
+const { bpmnGlobalRules } = editorProvider.BpmnRule
+
 graphProvider?.graph.value?.on('history:change', async () => {
   initForm()
 })
@@ -21,30 +24,24 @@ const state = reactive({
   fields: []
 })
 
-const allFieldOptions = computed(() => {
-  if (!graphProvider.allFormField.value) return []
-  const allField = Object.fromEntries(
-    Object.entries(graphProvider.allFormField.value).filter(([key, value]) => value.attr_type === 'string')
-  )
+const stringFields = computed(() => {
+  if (!bpmnGlobalRules.value || bpmnGlobalRules.value.length === 0) return []
 
-  return Object.keys(allField).map((key) => {
+  return bpmnGlobalRules.value.filter((item: any) => item.validationRule.type === 'text').map((item: any) => {
     return {
-      label: graphProvider.allFormField.value[key].attr_name,
-      value: '${variables:get(' + graphProvider.allFormField.value[key].attr_id + ')}'
+      id: '${variables:get(' + item.id + ')}',
+      name: item.name
     }
   })
 })
 
 const fileFieldOptions = computed(() => {
-  if (!graphProvider.allFormField.value) return []
-  const allField = Object.fromEntries(
-    Object.entries(graphProvider.allFormField.value).filter(([key, value]) => value.attr_type === 'string')
-  )
+  if (!bpmnGlobalRules.value || bpmnGlobalRules.value.length === 0) return []
 
-  return Object.keys(allField).map((key) => {
+  return bpmnGlobalRules.value.filter((item: any) => item.validationRule.type === 'text').map((item: any) => {
     return {
-      label: graphProvider.allFormField.value[key].attr_name,
-      value: graphProvider.allFormField.value[key].attr_id
+      id: '${variables:get(' + item.id + ')}',
+      name: item.name
     }
   })
 })
@@ -119,6 +116,7 @@ const handelFileOnChange = useDebounceFn(
       ...fields.map((f: any) => {
         return {
           attr_name: f.name,
+          fields_type: f.type,
           ['flowable:expression']: { __cdata: '' }
         }
       })
@@ -153,11 +151,9 @@ watch(() => node, async () => {
     <BpmnSidebarEditLabel :node="node" />
     <el-form label-width="auto" label-position="top">
       <el-form-item :label="t('Save Filled PDF to')">
-        <!-- 獲取文件的數據的創建位置 -->
-        <el-select v-model="state.fileField" placeholder="please select your zone"
+        <el-select v-model="state.fileField" :placeholder="t('common_selectedIsRequiredMsg')"
                    @change="(val:any) => fieldMappingUpdate(val, 'fileField')">
-          <el-option v-for="fieldItem in fileFieldOptions" :key="fieldItem.value" :label="fieldItem.label"
-                     :value="fieldItem.value" />
+          <el-option v-for="item in fileFieldOptions" :key="item.id" :label="item.name" :value="item.id" />
         </el-select>
       </el-form-item>
       <el-form-item :label="t('PDF form Example')">
@@ -180,13 +176,12 @@ watch(() => node, async () => {
 
     <div v-loading="loading">
       {{ $t('Field Mapping') }}
-      <el-form label-width="auto" label-position="top">
-        <el-form-item v-for="(item, index) in displayFieldList" :key="item.attr_name" :label="item.attr_name">
-          <el-select v-model="item['flowable:expression'].__cdata" placeholder="please select your zone"
+      <el-form label-width="auto" label-position="top" v-for="(item, index) in displayFieldList">
+        <el-form-item :key="item.attr_name" :label="item.attr_name">
+          <el-select v-model="item['flowable:expression'].__cdata" :placeholder="t('common_selectOccupancyContent')"
                      @change="(val:any) => fieldMappingUpdate(val, item.attr_name)" clearable>
-            <el-option v-for="fieldItem in allFieldOptions" :key="fieldItem.value"
-                       :label="fieldItem.value.replace('${variables:get(', '').replace(')}', '')"
-                       :value="fieldItem.value" />
+            <el-option v-for="fieldItem in stringFields" :key="fieldItem.id" :value="fieldItem.id"
+                       :label="fieldItem.name.replace('${variables:get(', '').replace(')}', '')" />
           </el-select>
         </el-form-item>
       </el-form>

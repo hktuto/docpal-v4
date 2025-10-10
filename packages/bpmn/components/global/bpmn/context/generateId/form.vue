@@ -5,18 +5,19 @@ const { disabled } = defineProps<{
   disabled: boolean
 }>()
 const graphProvider = inject(BPMN_PROVIDER)
-if (!graphProvider) {
+const editorProvider = inject(EDITOR_PROVIDER)
+if (!graphProvider || !editorProvider) {
   throw new Error('Missing provider')
 }
+const { bpmnGlobalRules } = editorProvider.BpmnRule
 const emits = defineEmits(['remove'])
-const allFields = computed(() => {
-  return Object.keys(graphProvider.allFormField.value).map((key: string) => {
-    return graphProvider.allFormField.value[key]
-  })
+
+const stringFields = computed(() => {
+  if (!bpmnGlobalRules.value || bpmnGlobalRules.value.length === 0) return []
+
+  return bpmnGlobalRules.value.filter((item: any) => item.validationRule.type === 'text')
 })
-function getTypeFields(type = 'string') {
-  return allFields.value.filter((item) => item.attr_type === type)
-}
+
 const generateIdTemplateList = ref([])
 function remove() {
   emits('remove')
@@ -49,8 +50,21 @@ async function getGenerateIdTemplateList() {
     return variables
   }
 }
-onMounted(() => {
-  getGenerateIdTemplateList()
+
+watch(condition,(newCondition, oldCondition) => {
+  if(newCondition && newCondition.templateId && (!!oldCondition && oldCondition.templateId !== newCondition.templateId)){
+    handleIdTemplateChange(newCondition.templateId)
+  }
+},{
+  immediate:true,
+  deep:true
+})
+
+onMounted(async () => {
+  await getGenerateIdTemplateList()
+  if(!!condition.value.templateId){
+    handleIdTemplateChange(condition.value.templateId)
+  }
 })
 </script>
 
@@ -63,14 +77,15 @@ onMounted(() => {
     </ElFormItem>
     <ElFormItem label="Form Info">
       <ElSelect v-model="condition.workflowInfo" placeholder="Form Info" :disabled="disabled" filterable>
-        <ElOption v-for="item in getTypeFields('string')" :key="item.attr_id" :label="item.attr_name" :value="item.attr_id" />
+        <ElOption v-for="item in stringFields" :key="item.id" :label="item.name" :value="item.id" />
       </ElSelect>
     </ElFormItem>
-    <template v-if="condition.variables.length > 0">
+
+    <template v-if="!!condition && !!condition.variables && condition.variables.length > 0">
       <el-divider content-position="left">{{ $t('caseManagement.idTemplateVariables') }}</el-divider>
       <ElFormItem v-for="item in condition.variables" :key="item.label" :label="item.label">
         <ElSelect v-model="item.value" :placeholder="item.label" :disabled="disabled" filterable>
-          <ElOption v-for="item in allFields" :key="item.attr_id" :label="item.attr_name" :value="item.attr_id" />
+          <ElOption v-for="item in stringFields" :key="item.id" :label="item.name" :value="item.id" />
         </ElSelect>
       </ElFormItem>
     </template>
