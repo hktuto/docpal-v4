@@ -24,9 +24,7 @@ graphProvider?.graph.value?.on('history:change', async () => {
 const allFieldOptions = computed(() => {
   if (!graphProvider.allFormField.value) return []
 
-  const allField = Object.fromEntries(
-    Object.entries(graphProvider.allFormField.value).filter(([key, value]) => value.attr_type === 'string')
-  )
+  const allField = Object.fromEntries(Object.entries(graphProvider.allFormField.value).filter(([key, value]) => value.attr_type === 'string'))
 
   return Object.keys(allField).map((key) => {
     return {
@@ -38,9 +36,9 @@ const allFieldOptions = computed(() => {
 
 function setEmailTemplateId(value: string) {
   const newItem = {
-    'attr_name': 'notificationType',
+    attr_name: 'notificationType',
     'flowable:string': {
-      '__cdata': value
+      __cdata: value
     }
   }
   const nodeData = node.getData()
@@ -52,21 +50,21 @@ function setEmailTemplateId(value: string) {
   newData.data.extensionElements['flowable:field'] = [newItem]
   newData.data.extensionElements['flowable:field'].push(
     {
-      'attr_name': 'tos',
+      attr_name: 'tos',
       'flowable:expression': {
-        '__cdata': ''
+        __cdata: ''
       }
     },
     {
-      'attr_name': 'ccs',
+      attr_name: 'ccs',
       'flowable:expression': {
-        '__cdata': ''
+        __cdata: ''
       }
     },
     {
-      'attr_name': 'bcc',
+      attr_name: 'bcc',
       'flowable:expression': {
-        '__cdata': ''
+        __cdata: ''
       }
     }
   )
@@ -75,23 +73,22 @@ function setEmailTemplateId(value: string) {
   if (varList || JSON.parse(varList)) {
     const varListJson = JSON.parse(varList)
     varListJson.unshift('tos', 'ccs', 'bcc')
-    const variable = varListJson.filter((j: any) => !j.includes(',')).map((item: any) => {
-      return {
-        'attr_name': item,
-        'flowable:expression': {
-          '__cdata': ''
+    const variable = varListJson
+      .filter((j: any) => !j.includes(','))
+      .map((item: any) => {
+        return {
+          attr_name: item,
+          'flowable:expression': {
+            __cdata: ''
+          }
         }
-      }
-    })
-    newData.data.extensionElements['flowable:field'] = [
-      newItem,
-      ...variable
-    ]
+      })
+    newData.data.extensionElements['flowable:field'] = [newItem, ...variable]
   }
 
-  templateVariables.value = nodeData.data.extensionElements['flowable:field'].filter((item: any) =>
-    item.attr_name !== 'notificationType' && item.attr_name !== 'hostUrl' && item.attr_name !== 'processInstanceId'
-    && !(item.attr_name.includes(','))
+  templateVariables.value = nodeData.data.extensionElements['flowable:field'].filter(
+    (item: any) =>
+      item.attr_name !== 'notificationType' && item.attr_name !== 'hostUrl' && item.attr_name !== 'processInstanceId' && !item.attr_name.includes(',')
   )
   node.setData(newData, { overwrite: true, deep: true, silent: false })
 }
@@ -125,19 +122,23 @@ function generateFieldList() {
   const nodeData = node.getData()
   if (!nodeData.data.extensionElements || !nodeData.data.extensionElements['flowable:field']) templateVariables.value = []
 
-  templateVariables.value = nodeData.data.extensionElements['flowable:field'].filter((item: any) =>
-    item.attr_name !== 'notificationType' && item.attr_name !== 'hostUrl' && item.attr_name !== 'processInstanceId'
-    && !(item.attr_name.includes(','))
+  templateVariables.value = nodeData.data.extensionElements['flowable:field'].filter(
+    (item: any) =>
+      item.attr_name !== 'notificationType' && item.attr_name !== 'hostUrl' && item.attr_name !== 'processInstanceId' && !item.attr_name.includes(',')
   )
 }
 
-watch(() => node, async () => {
-  console.log('watch node from email', node)
-  await initForm()
-}, {
-  immediate: true,
-  deep: true
-})
+watch(
+  () => node,
+  async () => {
+    console.log('watch node from email', node)
+    await initForm()
+  },
+  {
+    immediate: true,
+    deep: true
+  }
+)
 </script>
 
 <template>
@@ -145,17 +146,27 @@ watch(() => node, async () => {
     <BpmnSidebarEditLabel :node="node" />
     <ElForm label-position="top" label-width="80px">
       <ElFormItem label="Email template">
-        <ElSelect v-model="emailTemplateId" placeholder="Select email template" class="fullwidth"
-                  @change="setEmailTemplateId" :disabled="editorProvider.readonly.value" filterable>
+        <ElSelect
+          v-model="emailTemplateId"
+          placeholder="Select email template"
+          class="fullwidth"
+          @change="setEmailTemplateId"
+          :disabled="editorProvider.readonly.value"
+          filterable
+        >
           <ElOption v-for="item in allEmailTemplates" :key="item.id" :label="item.label" :value="item.id"></ElOption>
         </ElSelect>
       </ElFormItem>
       <ElFormItem v-for="item in templateVariables" :key="item.attr_name" :label="item.attr_name">
-        <ElSelect v-model="item['flowable:expression'].__cdata" placeholder="Select form field" class="fullwidth"
-                  :disabled="editorProvider.readonly.value" clearable
-                  @change="(val:any) => fieldMappingUpdate(item.attr_name, val)">
-          <ElOption v-for="item in allFieldOptions" :key="item.value" :label="item.label"
-                    :value="item.value"></ElOption>
+        <ElSelect
+          v-model="item['flowable:expression'].__cdata"
+          placeholder="Select form field"
+          class="fullwidth"
+          :disabled="editorProvider.readonly.value"
+          clearable
+          @change="(val: any) => fieldMappingUpdate(item.attr_name, val)"
+        >
+          <ElOption v-for="item in allFieldOptions" :key="item.value" :label="item.label" :value="item.value"></ElOption>
         </ElSelect>
       </ElFormItem>
     </ElForm>
