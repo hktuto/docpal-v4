@@ -72,7 +72,7 @@ onMounted(() => {
   }
   &:hover{
     box-shadow: var(--app-shadow-s);
-    background: var(--app-primary-3);
+    background: var(--app-primary-alpha-30);
   }
 }
 </style>
