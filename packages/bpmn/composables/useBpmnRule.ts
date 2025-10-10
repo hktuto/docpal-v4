@@ -158,6 +158,9 @@ export const useBpmnRule = ({ versionDraftId, version, taskName, draftId, workfl
     }
   }
   function getTaskFieldRules(taskFields: any[]) {
+    if(!taskFields) {
+      return JSON.parse(JSON.stringify(bpmnGlobalRules.value))
+    }
     return taskFields.map((item: any) => {
       const rule = bpmnGlobalRules.value.find((rule: any) => rule.id === item.attr_id)
       return {
