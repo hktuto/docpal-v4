@@ -10,6 +10,7 @@ const allEmailTemplates = ref<any>([])
 const templateVariables = ref<any>([])
 const emailTemplateId = ref('')
 
+const contactBookFieldList = ref<any>([])
 const graphProvider = inject(BPMN_PROVIDER)
 const editorProvider = inject(EDITOR_PROVIDER)
 if (!graphProvider || !editorProvider) {
@@ -93,7 +94,9 @@ function setEmailTemplateId(value: string) {
   node.setData(newData, { overwrite: true, deep: true, silent: false })
 }
 
-function fieldMappingUpdate(name: string, newVal: string) {
+function fieldMappingUpdate(name: string, newVal: string[]) {
+  console.log('fieldMappingUpdate', name, newVal)
+  const newValArray = newVal.join(',')
   graphProvider?.graph.value?.startBatch('update-email-data')
   const nodeData = node.getData()
   const newData = {
@@ -102,7 +105,7 @@ function fieldMappingUpdate(name: string, newVal: string) {
   }
 
   const index = newData.data.extensionElements['flowable:field'].findIndex((f: any) => f.attr_name === name)
-  newData.data.extensionElements['flowable:field'][index]['flowable:expression'].__cdata = newVal || ''
+  newData.data.extensionElements['flowable:field'][index]['flowable:expression'].__cdata = newValArray || ''
   node.setData(newData, { overwrite: true, deep: true, silent: false })
 
   graphProvider?.graph.value?.stopBatch('update-email-data')
@@ -127,7 +130,13 @@ function generateFieldList() {
       item.attr_name !== 'notificationType' && item.attr_name !== 'hostUrl' && item.attr_name !== 'processInstanceId' && !item.attr_name.includes(',')
   )
 }
-
+async function getContactBookFieldList() {
+  const response = await adminApi.api.getContactgroupList()
+  contactBookFieldList.value = response.data
+}
+onMounted(async () => {
+  await getContactBookFieldList()
+})
 watch(
   () => node,
   async () => {
@@ -159,14 +168,20 @@ watch(
       </ElFormItem>
       <ElFormItem v-for="item in templateVariables" :key="item.attr_name" :label="item.attr_name">
         <ElSelect
-          v-model="item['flowable:expression'].__cdata"
+          v-model="item.value"
           placeholder="Select form field"
           class="fullwidth"
           :disabled="editorProvider.readonly.value"
           clearable
-          @change="(val: any) => fieldMappingUpdate(item.attr_name, val)"
+          multiple
+          @change="(val: any) => fieldMappingUpdate(item.attr_name, item.value)"
         >
-          <ElOption v-for="item in allFieldOptions" :key="item.value" :label="item.label" :value="item.value"></ElOption>
+          <ElOptionGroup label="Form Fields">
+            <ElOption v-for="item in allFieldOptions" :key="item.value" :label="item.label" :value="item.value"></ElOption>
+          </ElOptionGroup>
+          <ElOptionGroup :label="$t('adminMenu.contactBook')">
+            <ElOption v-for="item in contactBookFieldList" :key="item.value" :label="item.name" :value="item.id"></ElOption>
+          </ElOptionGroup>
         </ElSelect>
       </ElFormItem>
     </ElForm>
