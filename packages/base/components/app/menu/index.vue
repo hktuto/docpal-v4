@@ -33,6 +33,7 @@ function handleSelect(item:MenuItem) {
   }
   if(item.component) {
     tabProvider?.openInCurrentTab(item)
+    handleWrapperMouseLeave()
   }
 }
 
@@ -144,10 +145,11 @@ watch(() => [layout, hightLightPanel], () => {
     top: var(--app-space-m);
     height: calc(100% - var(--app-space-m) * 2);
     left: calc(60px + var(--app-space-xs));
-    transform: translateX(-500px);
+    transform: translateX(-50px);
     transition: all 0.4s ease-in-out;
     z-index: 2;
-    
+    opacity: 0;
+    pointer-events: none;
     border-radius: var(--app-border-radius-m);
     
     background: var(--app-primary-alpha-10);
@@ -187,6 +189,8 @@ watch(() => [layout, hightLightPanel], () => {
       }
       .menuExpand{
         transform: translateX(0);
+        opacity: 1;
+        pointer-events: auto;
       }
     }
     --menu-gap: var(--app-space-xxs);
