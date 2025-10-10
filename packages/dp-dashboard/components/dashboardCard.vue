@@ -76,12 +76,12 @@ defineExpose({
   overflow: hidden;
   container-type: inline-size;
   border-radius: 6px;
-  border: 1px solid var(--app-grey-750);
+  border: 1px solid var(--app-grey-900);
 }
 :deep(.el-card__header) {
   margin: 0;
   --icon-size: 1.2rem;
-  --icon-color: var(--app-grey-525);
+  --icon-color: var(--app-grey-700);
   padding: var(--app-space-s) var(--app-space-s) 0 var(--app-space-s) !important;
   display: flex;
   justify-content: space-between;
@@ -141,7 +141,7 @@ defineExpose({
 :deep(.iconify) {
   width: 1.2rem;
   height: 1.2rem;
-  background-color: var(--app-grey-525);
+  background-color: var(--app-grey-9500);
 }
 :deep(.iconify.icon-right) {
   margin-right: var(--app-space-xxs);

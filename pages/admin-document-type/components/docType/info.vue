@@ -27,7 +27,7 @@ const props = defineProps<{
   column-gap: 0.5rem;
   line-height: 2rem;
   div:first-of-type {
-    color: var(--app-grey-500);
+    color: var(--app-grey-9500);
   }
 }
 </style>

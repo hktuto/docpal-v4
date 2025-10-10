@@ -83,12 +83,11 @@ watch(
     justify-content: space-between;
 
     .title {
-      font-family: Roboto;
       font-style: normal;
       font-weight: normal;
       font-size: 1.125rem;
       line-height: 1.375rem;
-      color: var(--app-grey-500);
+      color: var(--app-grey-9500);
     }
   }
 }
@@ -104,7 +103,7 @@ watch(
 .tag {
   border-radius: 4px;
   margin: calc(var(--app-space-xs) / 3) calc(var(--app-space-xs) / 2);
-  background: var(--app-grey-950);
+  background: var(--app-grey-900);
   display: flex;
   flex-flow: row nowrap;
   justify-content: flex-start;

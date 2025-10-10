@@ -1,6 +1,11 @@
 
 // menu list items
 
+// default font color
+h1, h2, h3, h4, h5, h6 {
+  color: var(--app-grey-200);
+}
+
 // vxe addition style
 .vxe-toolbar {
   gap: var(--app-space-xs);
@@ -24,11 +29,11 @@
   top: 0;
   left: 0;
   height: auto;
-  background: var(--app-grey-1000);
+  background: var(--app-paper);
   z-index: 8888 !important;
   padding: var(--app-space-xs) !important;
   border-radius: var(--app-border-radius-s);
-  border: 1px solid var(--app-grey-900) !important;
+  border: 1px solid var(--app-grey-950) !important;
   transform: translateY(100vw);
   box-shadow: none !important;
   opacity: 0;

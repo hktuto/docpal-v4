@@ -65,7 +65,7 @@ watch(
 
 .description {
   line-height: 32px;
-  color: var(--app-grey-500);
+  color: var(--app-grey-9500);
 }
 
 .el-input {

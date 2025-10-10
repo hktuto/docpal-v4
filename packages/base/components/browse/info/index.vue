@@ -147,7 +147,7 @@ watch(
   padding-inline: var(--app-space-s);
 }
 .infoPreviewContainer {
-  background: var(--app-grey-950);
+  background: var(--app-grey-900);
   padding: var(--app-space-xs);
 }
 .infoHeaderSection {

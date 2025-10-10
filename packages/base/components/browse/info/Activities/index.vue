@@ -91,12 +91,11 @@ watch(
     justify-content: space-between;
     margin-bottom: 0.625rem;
     .title {
-      font-family: Roboto;
       font-style: normal;
       font-weight: normal;
       font-size: 1.125rem;
       line-height: 1.375rem;
-      color: var(--app-grey-500);
+      color: var(--app-grey-9500);
     }
   }
   .activitiesDetail {
@@ -114,7 +113,6 @@ watch(
       gap: calc(var(--app-space-xs) / 2);
       justify-content: flex-start;
       align-items: flex-start;
-      font-family: Roboto;
       font-style: normal;
       font-weight: bold;
       color: #ffffff;
@@ -126,7 +124,7 @@ watch(
         line-height: 0.5625rem;
       }
       .userOrAction {
-        background: var(--app-grey-950);
+        background: var(--app-grey-900);
         border-radius: var(--el-border-radius-base);
         padding: var(--app-space-xs) var(--app-space-s);
         font-size: .8rem;

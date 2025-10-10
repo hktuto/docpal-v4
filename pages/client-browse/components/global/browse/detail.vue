@@ -331,12 +331,12 @@ useEventListener(window, 'resize', calMinWidth)
 
 :deep(.noSupportContainer) {
     font-size: var(--icon-size);
-    background: var(--app-grey-150);
+    background: var(--app-grey-200);
     padding: 8px;
     border-radius: 50%;
     display: grid;
     place-items: center;
-    color: var(--app-grey-950);
+    color: var(--app-grey-900);
     cursor: pointer;
     &:hover {
       background: var(--app-grey-200);

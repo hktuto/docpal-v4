@@ -25,7 +25,7 @@ if (!row) row = props.data.userTasks[0]
 
 <style lang="scss" scoped>
 .el-card {
-    background-color: var(--app-grey-1000) !important;
+    background-color: var(--app-grey-950) !important;
     height: 200px;
     display: grid;
     :deep(.el-card__body) {

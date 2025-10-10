@@ -69,7 +69,7 @@ const displayFooter = computed(() => {
 .templateHeader{
     width: 100%;
     padding: var(--app-space-s);
-    background: var(--app-grey-1000);
+    background: var(--app-grey-950);
     font-size: var(--app-font-size-l);
     font-weight: bold;
 }
@@ -99,7 +99,7 @@ const displayFooter = computed(() => {
     width: 100%;
     padding: var(--app-space-s);
     border-radius: var(--app-border-radius-m) var(--app-border-radius-m) 0 var(--app-border-radius-m);
-    background: var(--app-grey-1000);
+    background: var(--app-grey-950);
     position: relative;
     // add triangle to bottom right corner
 
@@ -112,13 +112,13 @@ const displayFooter = computed(() => {
         height: 0;
         border-style: solid;
         border-width: 0 var(--app-space-s) var(--app-space-s) 0;
-        border-color: transparent var(--app-grey-1000) transparent transparent;
+        border-color: transparent var(--app-grey-950) transparent transparent;
     }
 }
 .confirmMessage{
     width:100%;
     padding: var(--app-space-s);
-    background: var(--app-grey-1000);
+    background: var(--app-grey-950);
     border-radius: var(--app-border-radius-m);
     text-align: center;
     color: blue;

@@ -105,7 +105,7 @@ function replyBoxShow() {
     height: 2.2rem;
     border-radius: 50%;
     background-color: var(--app-primary-color);
-    color: var(--app-grey-025);
+    color: var(--app-grey-950);
     line-height: 2.2rem;
     text-align: center;
     align-self: center;
@@ -113,12 +113,11 @@ function replyBoxShow() {
 
   &_text {
     grid-area: 3 / 2 / 4 / 4;
-    font-family: Roboto;
     font-style: normal;
     font-weight: normal;
     // font-size: 0.75rem;
     line-height: 1.5rem;
-    color: var(--app-grey-050);
+    color: var(--app-grey-950);
 
     & > span {
       white-space: break-spaces;
@@ -126,7 +125,7 @@ function replyBoxShow() {
     }
 
     &_to {
-      color: var(--app-grey-725);
+      color: var(--app-grey-700);
     }
   }
 
@@ -210,11 +209,11 @@ function replyBoxShow() {
 
 .commentCard_text {
   user-select: text;
-  color: var(--app-grey-050);
+  color: var(--app-grey-950);
 }
 
 .highlight-comments {
-  background: var(--app-grey-725);
+  background: var(--app-grey-700);
   color: #fff;
   border-radius: 8px;
 }

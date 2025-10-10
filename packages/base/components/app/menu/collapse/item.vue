@@ -75,7 +75,7 @@ onMounted(() => {
     line-height: 0;
   }
   &.selected{
-    background: var(--app-grey-1000) !important;
+    background: var(--app-grey-950) !important;
     box-shadow: var(--app-shadow-m);
     color: var(--app-primary-color);
   }

@@ -1,26 +1,5 @@
 
 @forward 'element-plus/theme-chalk/src/common/var.scss' with (
-  // ==================== Colors - Use App Theme Colors ====================
-  $colors: (
-    'primary': (
-      'base': var(--app-primary-color),
-    ),
-    'success': (
-      'base': var(--app-success-color),
-    ),
-    'warning': (
-      'base': var(--app-warning-color),
-    ),
-    'danger': (
-      'base': var(--app-danger-color),
-    ),
-    'error': (
-      'base': var(--app-error-color),
-    ),
-    'info': (
-      'base': var(--app-info-color),
-    ),
-  ),
 
   // ==================== Component Sizes ====================
   $common-component-size: (

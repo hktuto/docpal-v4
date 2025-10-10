@@ -38,7 +38,7 @@ const emit = defineEmits(['delete'])
   padding: 8px;
   max-width: 200px;
   box-shadow: 0 0 4px rgba(0, 0, 0, 0.1);
-  background: var(--app-grey-1000);
+  background: var(--app-grey-950);
 
   :deep(.el-input-number)
      {

@@ -139,7 +139,7 @@ watch(() => [workflowInfos],() => {
         grid-template-areas: "case icon workflow";
     }
     & + .row{
-        border-top : 1px solid var(--app-grey-850);
+        border-top : 1px solid var(--app-grey-800);
     }
 }
 .workflow{

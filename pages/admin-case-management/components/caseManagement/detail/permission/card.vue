@@ -88,7 +88,7 @@ function getI18n(value: string) {
 <style lang="scss" scoped>
 .permissionCard {
   height: 100%;
-  background: var(--app-grey-850);
+  background: var(--app-grey-800);
   padding: var(--app-space-xs);
   color: #fff;
   border-radius: 5px;
@@ -106,7 +106,7 @@ function getI18n(value: string) {
   }
 }
 .fieldList {
-  border-top: 1px solid var(--app-grey-825);
+  border-top: 1px solid var(--app-grey-800);
   padding-block : calc( var(--app-space-xs) / 2);
   &.hidden{
     border-top: none;

@@ -307,17 +307,17 @@ function dragEnd() {
     /* 背景颜色 */
     background-size: calc((100% - 20px) / 12) calc(var(--grid-row-height) + var(--grid-row-margin));
     /* 网格大小 */
-    background-image: linear-gradient(to right, var(--app-grey-1000) var(--b-gap), transparent var(--b-gap)),
-      linear-gradient(to bottom, var(--app-grey-1000) var(--b-gap), transparent var(--b-gap));
+    background-image: linear-gradient(to right, var(--app-grey-950) var(--b-gap), transparent var(--b-gap)),
+      linear-gradient(to bottom, var(--app-grey-950) var(--b-gap), transparent var(--b-gap));
   }
 }
 
 .splitpanes.default-theme .splitpanes__pane {
-  background-color: var(--app-grey-1000);
+  background-color: var(--app-grey-950);
 }
 
 .dashboard-item-widget {
-  border: 1px solid var(--app-grey-825);
+  border: 1px solid var(--app-grey-800);
   display: flex;
   align-items: center;
   height: 32px;

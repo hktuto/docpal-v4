@@ -142,7 +142,7 @@ onMounted(async () => {
   grid-template-rows: min-content 1fr;
 
   .header {
-    background-color: var(--app-grey-850);
+    background-color: var(--app-grey-800);
     padding: var(--app-space-s);
     border-radius: 3px;
   }

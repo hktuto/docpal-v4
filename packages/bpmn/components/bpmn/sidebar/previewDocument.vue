@@ -123,11 +123,11 @@ watch(form, () => {
     .listItem{
         width: 100%;
         padding: var(--app-space-s);
-        border: 1px solid var(--app-grey-850);
+        border: 1px solid var(--app-grey-800);
         border-radius: var(--app-border-radius-m);
     }
     .actions{
-        border-top: 1px solid var(--app-grey-850);
+        border-top: 1px solid var(--app-grey-800);
         padding-block: var(--app-space-s);
         display: flex;
         justify-content: center;

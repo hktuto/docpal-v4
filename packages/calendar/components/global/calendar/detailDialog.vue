@@ -174,7 +174,7 @@ defineExpose({
     width:100%;
     height: 100%;
     padding: var(--app-space-s);
-    background: var(--app-grey-950);
+    background: var(--app-grey-900);
     cursor: pointer;
     border-radius: var(--app-border-radius-m);
     margin-bottom: var(--app-space-s);

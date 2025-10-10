@@ -78,7 +78,7 @@ function newTab() {
 
 <style lang="scss" scoped>
 .tabWrapper + .tabWrapper{
-    border-left: 1px solid var(--app-grey-850);
+    border-left: 1px solid var(--app-grey-800);
 }
 .tabHeaderContainer{
     
@@ -88,13 +88,13 @@ function newTab() {
     overflow-y:hidden ;
     isolation: isolate;
     position: relative;
-    background: var(--app-grey-950);
+    background: var(--app-grey-900);
     justify-content: flex-start;
     align-items: center;
     &:after {
         content: '';
         height: 1px;
-        background: var(--app-grey-850);
+        background: var(--app-grey-800);
         width:100%;
         display: block;
         z-index: -1;

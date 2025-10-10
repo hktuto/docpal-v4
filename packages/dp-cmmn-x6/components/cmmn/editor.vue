@@ -57,7 +57,7 @@ function init(cmmnString:string,x6Json?: any, isReadOnly = false, version?: stri
             }
         },
         background: {
-            color: 'var(--app-grey-1000)',
+            color: 'var(--app-grey-950)',
         },
         autoResize: true,
         panning: {
@@ -280,10 +280,10 @@ defineExpose({ getGraphJson, init, centerGraph, save, graph })
         bottom:0;
         left:0;
         right:0;
-        background-color: var(--app-grey-1000);
+        background-color: var(--app-grey-950);
         width:100%;
         padding: calc(var(--app-space-xs) * 2);
-        border-top: 1px solid var(--app-grey-850);
+        border-top: 1px solid var(--app-grey-800);
         
     }
     
@@ -292,7 +292,7 @@ defineExpose({ getGraphJson, init, centerGraph, save, graph })
     background-color: transparent !important;
 }
 .main-right{
-    background-color: var(--app-grey-1000);
+    background-color: var(--app-grey-950);
     z-index:2;
 }
 .editorPanelContainer{
@@ -305,7 +305,7 @@ defineExpose({ getGraphJson, init, centerGraph, save, graph })
     }
 }
 :deep(.splitpanes.default-theme .splitpanes__pane){
-  background-color: var(--app-grey-1000);
+  background-color: var(--app-grey-950);
 }
 :deep(.splitpanes__splitter){
         z-index: 2;

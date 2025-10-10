@@ -102,7 +102,7 @@ watch(opened, (newVal) => {
   font-size: var(--app-font-size-s);
   cursor: pointer;
   &:hover{
-    background: var(--app-grey-975);
+    background: var(--app-grey-950);
   }
 }
 </style>

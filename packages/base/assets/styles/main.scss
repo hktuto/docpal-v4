@@ -2,7 +2,9 @@
 @use './flex.scss';
 @use './vueTagInput.css';
 @use './addition.scss';
+@use './elements/index.scss';
 
+// key variables
 :root {
   /* ==================== Color System - HSL Components ==================== */
   /* Users can change these values dynamically to customize theme colors */
@@ -11,30 +13,42 @@
   --app-primary-h: 173;
   --app-primary-s: 82%;
   --app-primary-l: 42%;
-  
+
   /* Success Color (Blue) - #0077ff */
   --app-success-h: 212;
   --app-success-s: 100%;
   --app-success-l: 50%;
-  
+
   /* Warning Color (Orange) - #e6a23c */
   --app-warning-h: 36;
   --app-warning-s: 77%;
   --app-warning-l: 57%;
-  
+
   /* Danger/Error Color (Red) - #f56c6c */
   --app-danger-h: 0;
   --app-danger-s: 87%;
   --app-danger-l: 69%;
-  
+
   --app-error-h: 0;
   --app-error-s: 87%;
   --app-error-l: 69%;
-  
+
   /* Info Color (Grey) - #909399 */
   --app-info-h: 220;
   --app-info-s: 4%;
   --app-info-l: 58%;
+
+  /* ==================== Grey Scale ==================== */
+  --app-grey-hue: 200;
+  --app-grey-saturation: 15%;
+
+  --app-custom-font: 'Roboto';
+  
+}
+
+:root {
+
+  
 
   /* ==================== Base Colors ==================== */
   /* Primary */
@@ -189,53 +203,87 @@
   --el-color-info-light-8: var(--app-info-alpha-30) !important;
   --el-color-info-light-9: var(--app-info-alpha-10) !important;
   --el-color-info-dark-2: var(--app-info-4) !important;
-
-  /* ==================== Grey Scale ==================== */
-  --app-grey-hue: 200;
-  --app-grey-saturation: 15%;
+  
+  --el-font-family: var(--app-font-family) !important;
+  
+  
   --app-bg: radial-gradient(72% 72% at 2% -5%, #ddf2f7 0%, #dae7f1 100%);
 
-  /* Grey levels - each level increases by 2.5% lightness */
-  --app-grey-025: hsl(var(--app-grey-hue), var(--app-grey-saturation), 2.5%);
-  --app-grey-050: hsl(var(--app-grey-hue), var(--app-grey-saturation), 5%);
-  --app-grey-075: hsl(var(--app-grey-hue), var(--app-grey-saturation), 7.5%);
+  /* Simplified Grey Scale - 11 levels for better consistency */
+  --app-grey-50: hsl(var(--app-grey-hue), var(--app-grey-saturation), 5%);
   --app-grey-100: hsl(var(--app-grey-hue), var(--app-grey-saturation), 10%);
-  --app-grey-125: hsl(var(--app-grey-hue), var(--app-grey-saturation), 12.5%);
-  --app-grey-150: hsl(var(--app-grey-hue), var(--app-grey-saturation), 15%);
-  --app-grey-175: hsl(var(--app-grey-hue), var(--app-grey-saturation), 17.5%);
   --app-grey-200: hsl(var(--app-grey-hue), var(--app-grey-saturation), 20%);
-  --app-grey-225: hsl(var(--app-grey-hue), var(--app-grey-saturation), 22.5%);
-  --app-grey-250: hsl(var(--app-grey-hue), var(--app-grey-saturation), 25%);
-  --app-grey-275: hsl(var(--app-grey-hue), var(--app-grey-saturation), 27.5%);
   --app-grey-300: hsl(var(--app-grey-hue), var(--app-grey-saturation), 30%);
-  --app-grey-325: hsl(var(--app-grey-hue), var(--app-grey-saturation), 32.5%);
-  --app-grey-350: hsl(var(--app-grey-hue), var(--app-grey-saturation), 35%);
-  --app-grey-375: hsl(var(--app-grey-hue), var(--app-grey-saturation), 37.5%);
   --app-grey-400: hsl(var(--app-grey-hue), var(--app-grey-saturation), 40%);
-  --app-grey-425: hsl(var(--app-grey-hue), var(--app-grey-saturation), 42.5%);
-  --app-grey-450: hsl(var(--app-grey-hue), var(--app-grey-saturation), 45%);
-  --app-grey-475: hsl(var(--app-grey-hue), var(--app-grey-saturation), 47.5%);
   --app-grey-500: hsl(var(--app-grey-hue), var(--app-grey-saturation), 50%);
-  --app-grey-525: hsl(var(--app-grey-hue), var(--app-grey-saturation), 52.5%);
-  --app-grey-550: hsl(var(--app-grey-hue), var(--app-grey-saturation), 55%);
-  --app-grey-575: hsl(var(--app-grey-hue), var(--app-grey-saturation), 57.5%);
   --app-grey-600: hsl(var(--app-grey-hue), var(--app-grey-saturation), 60%);
-  --app-grey-625: hsl(var(--app-grey-hue), var(--app-grey-saturation), 62.5%);
-  --app-grey-650: hsl(var(--app-grey-hue), var(--app-grey-saturation), 65%);
-  --app-grey-675: hsl(var(--app-grey-hue), var(--app-grey-saturation), 67.5%);
   --app-grey-700: hsl(var(--app-grey-hue), var(--app-grey-saturation), 70%);
-  --app-grey-725: hsl(var(--app-grey-hue), var(--app-grey-saturation), 72.5%);
-  --app-grey-750: hsl(var(--app-grey-hue), var(--app-grey-saturation), 75%);
-  --app-grey-775: hsl(var(--app-grey-hue), var(--app-grey-saturation), 77.5%);
   --app-grey-800: hsl(var(--app-grey-hue), var(--app-grey-saturation), 80%);
-  --app-grey-825: hsl(var(--app-grey-hue), var(--app-grey-saturation), 82.5%);
-  --app-grey-850: hsl(var(--app-grey-hue), var(--app-grey-saturation), 85%);
-  --app-grey-875: hsl(var(--app-grey-hue), var(--app-grey-saturation), 87.5%);
   --app-grey-900: hsl(var(--app-grey-hue), var(--app-grey-saturation), 90%);
-  --app-grey-925: hsl(var(--app-grey-hue), var(--app-grey-saturation), 92.5%);
-  --app-grey-950: hsl(var(--app-grey-hue), var(--app-grey-saturation), 95%);
-  --app-grey-975: hsl(var(--app-grey-hue), var(--app-grey-saturation), 97.5%);
-  --app-grey-1000: hsl(var(--app-grey-hue), var(--app-grey-saturation), 100%);
+  --app-grey-950: hsl(var(--app-grey-hue), var(--app-grey-saturation), 97%);
+
+  --app-font-family: var(--app-custom-font), "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "微软雅黑", Arial, sans-serif;
+
+  
+
+  /* ==================== Semantic Colors ==================== */
+  /* Text colors - aligned with Element Plus naming */
+  --app-text-color-primary: var(--app-grey-100);      /* Main content text */
+  --app-text-color-regular: var(--app-grey-200);      /* Regular body text */
+  --app-text-color-secondary: var(--app-grey-400);    /* Secondary/helper text */
+  --app-text-color-placeholder: var(--app-grey-500);  /* Placeholder text */
+  --app-text-color-disabled: var(--app-grey-600);     /* Disabled state text */
+
+  /* Border colors */
+  --app-border-color: var(--app-grey-800);            /* Default border */
+  --app-border-color-light: var(--app-grey-900);      /* Light border */
+  --app-border-color-lighter: var(--app-grey-950);    /* Lighter border */
+  --app-border-color-dark: var(--app-grey-700);       /* Dark border */
+  --app-border-color-darker: var(--app-grey-600);     /* Darker border */
+
+  /* Background colors */
+  --app-bg-color: var(--app-paper);                   /* Main background */
+  --app-bg-color-page: var(--app-grey-950);           /* Page background */
+  --app-bg-color-overlay: var(--app-paper);        /* Overlay background */
+
+  /* Fill colors - for subtle backgrounds */
+  --app-fill-color: var(--app-grey-950);              /* Default fill */
+  --app-fill-color-light: var(--app-grey-900);        /* Light fill */
+  --app-fill-color-lighter: hsl(var(--app-grey-hue), var(--app-grey-saturation), 97.5%); /* Lighter fill */
+  --app-fill-color-dark: var(--app-grey-900);         /* Dark fill */
+  --app-fill-color-darker: var(--app-grey-800);       /* Darker fill */
+  --app-fill-color-blank: var(--app-paper);           /* Blank fill */
+
+  /* ==================== Element Plus Semantic Integration ==================== */
+  /* Map app semantic colors to Element Plus variables */
+  --el-text-color-primary: var(--app-text-color-primary) !important;
+  --el-text-color-regular: var(--app-text-color-regular) !important;
+  --el-text-color-secondary: var(--app-text-color-secondary) !important;
+  --el-text-color-placeholder: var(--app-text-color-placeholder) !important;
+  --el-text-color-disabled: var(--app-text-color-disabled) !important;
+
+  --el-border-color: var(--app-border-color) !important;
+  --el-border-color-light: var(--app-border-color-light) !important;
+  --el-border-color-lighter: var(--app-border-color-lighter) !important;
+  --el-border-color-dark: var(--app-border-color-dark) !important;
+  --el-border-color-darker: var(--app-border-color-darker) !important;
+
+  --el-bg-color: var(--app-bg-color) !important;
+  --el-bg-color-page: var(--app-bg-color-page) !important;
+  --el-bg-color-overlay: var(--app-bg-color-overlay) !important;
+
+  --el-fill-color: var(--app-fill-color) !important;
+  --el-fill-color-light: var(--app-fill-color-light) !important;
+  --el-fill-color-lighter: var(--app-fill-color-lighter) !important;
+  --el-fill-color-dark: var(--app-fill-color-dark) !important;
+  --el-fill-color-darker: var(--app-fill-color-darker) !important;
+  --el-fill-color-blank: var(--app-fill-color-blank) !important;
+
+  // override element
+  --el-border-radius-base: var(--app-border-radius-m);
+
+  // override vxe ui
+  --vxe-ui-layout-background-color: var(--app-grey-950) !important;
 
   // generate white and black color
   --app-paper: #fff;
@@ -251,7 +299,8 @@
   --app-font-size-xxl: 2rem;
   --app-line-height: 1.2;
   --app-font-weight: 400;
-  --app-font-family: 'Roboto', sans-serif;
+  
+  
 
   // set ap size base on rem;
   --app-border-radius-s: 0.4rem;
@@ -276,62 +325,52 @@
   --app-shadow-l: 0 1px 15px -3px rgba(0, 0, 0, 0.2), 0 2px 6px -2px rgba(0, 0, 0, 0.1);
   --app-shadow-xl: 0 2px 25px -5px rgba(0, 0, 0, 0.4), 0 3px 10px -5px rgba(0, 0, 0, 0.1), 0 2px 6px -2px rgba(0, 0, 0, 0.05);
 
-  // override element
-  --el-border-radius-base: var(--app-border-radius-m);
 
-  --glass-style: {
-    background: var(--app-primary-alpha-10);
-    box-shadow: 10px 4px 30px rgba(0, 0, 0, 0.1);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(6.3px);
-    border: 1px solid rgba(255, 255, 255, 0.31);
-  }
+
+
 }
 
 html.dark {
   --app-bg: radial-gradient(72% 72% at 2% -5%, #2d3234 0%, #2f3737 51%, #3f3f3f 100%);
+  --app-paper: #141414;
+  --app-text-color: #fff;
 
-  /* Dark mode: Invert grey scale lightness */
-  --app-grey-025: hsl(var(--app-grey-hue), var(--app-grey-saturation), 97.5%);
-  --app-grey-050: hsl(var(--app-grey-hue), var(--app-grey-saturation), 95%);
-  --app-grey-075: hsl(var(--app-grey-hue), var(--app-grey-saturation), 92.5%);
+  /* Dark mode: Invert simplified grey scale lightness */
+  --app-grey-50: hsl(var(--app-grey-hue), var(--app-grey-saturation), 95%);
   --app-grey-100: hsl(var(--app-grey-hue), var(--app-grey-saturation), 90%);
-  --app-grey-125: hsl(var(--app-grey-hue), var(--app-grey-saturation), 87.5%);
-  --app-grey-150: hsl(var(--app-grey-hue), var(--app-grey-saturation), 85%);
-  --app-grey-175: hsl(var(--app-grey-hue), var(--app-grey-saturation), 82.5%);
   --app-grey-200: hsl(var(--app-grey-hue), var(--app-grey-saturation), 80%);
-  --app-grey-225: hsl(var(--app-grey-hue), var(--app-grey-saturation), 77.5%);
-  --app-grey-250: hsl(var(--app-grey-hue), var(--app-grey-saturation), 75%);
-  --app-grey-275: hsl(var(--app-grey-hue), var(--app-grey-saturation), 72.5%);
   --app-grey-300: hsl(var(--app-grey-hue), var(--app-grey-saturation), 70%);
-  --app-grey-325: hsl(var(--app-grey-hue), var(--app-grey-saturation), 67.5%);
-  --app-grey-350: hsl(var(--app-grey-hue), var(--app-grey-saturation), 65%);
-  --app-grey-375: hsl(var(--app-grey-hue), var(--app-grey-saturation), 62.5%);
   --app-grey-400: hsl(var(--app-grey-hue), var(--app-grey-saturation), 60%);
-  --app-grey-425: hsl(var(--app-grey-hue), var(--app-grey-saturation), 57.5%);
-  --app-grey-450: hsl(var(--app-grey-hue), var(--app-grey-saturation), 55%);
-  --app-grey-475: hsl(var(--app-grey-hue), var(--app-grey-saturation), 52.5%);
   --app-grey-500: hsl(var(--app-grey-hue), var(--app-grey-saturation), 50%);
-  --app-grey-525: hsl(var(--app-grey-hue), var(--app-grey-saturation), 47.5%);
-  --app-grey-550: hsl(var(--app-grey-hue), var(--app-grey-saturation), 45%);
-  --app-grey-575: hsl(var(--app-grey-hue), var(--app-grey-saturation), 42.5%);
   --app-grey-600: hsl(var(--app-grey-hue), var(--app-grey-saturation), 40%);
-  --app-grey-625: hsl(var(--app-grey-hue), var(--app-grey-saturation), 37.5%);
-  --app-grey-650: hsl(var(--app-grey-hue), var(--app-grey-saturation), 35%);
-  --app-grey-675: hsl(var(--app-grey-hue), var(--app-grey-saturation), 32.5%);
   --app-grey-700: hsl(var(--app-grey-hue), var(--app-grey-saturation), 30%);
-  --app-grey-725: hsl(var(--app-grey-hue), var(--app-grey-saturation), 27.5%);
-  --app-grey-750: hsl(var(--app-grey-hue), var(--app-grey-saturation), 25%);
-  --app-grey-775: hsl(var(--app-grey-hue), var(--app-grey-saturation), 22.5%);
   --app-grey-800: hsl(var(--app-grey-hue), var(--app-grey-saturation), 20%);
-  --app-grey-825: hsl(var(--app-grey-hue), var(--app-grey-saturation), 17.5%);
-  --app-grey-850: hsl(var(--app-grey-hue), var(--app-grey-saturation), 15%);
-  --app-grey-875: hsl(var(--app-grey-hue), var(--app-grey-saturation), 12.5%);
   --app-grey-900: hsl(var(--app-grey-hue), var(--app-grey-saturation), 10%);
-  --app-grey-925: hsl(var(--app-grey-hue), var(--app-grey-saturation), 7.5%);
   --app-grey-950: hsl(var(--app-grey-hue), var(--app-grey-saturation), 5%);
-  --app-grey-975: hsl(var(--app-grey-hue), var(--app-grey-saturation), 2.5%);
-  --app-grey-1000: hsl(var(--app-grey-hue), var(--app-grey-saturation), 0%);
+
+  /* Dark mode: Update semantic colors to use inverted greys */
+  --app-text-color-primary: var(--app-grey-50);       /* Lightest text in dark mode */
+  --app-text-color-regular: var(--app-grey-100);      /* Regular text */
+  --app-text-color-secondary: var(--app-grey-300);    /* Secondary text */
+  --app-text-color-placeholder: var(--app-grey-500);  /* Placeholder text */
+  --app-text-color-disabled: var(--app-grey-600);     /* Disabled text */
+
+  --app-border-color: var(--app-grey-800);            /* Default border */
+  --app-border-color-light: var(--app-grey-900);      /* Light border */
+  --app-border-color-lighter: var(--app-grey-950);    /* Lighter border */
+  --app-border-color-dark: var(--app-grey-700);       /* Dark border */
+  --app-border-color-darker: var(--app-grey-600);     /* Darker border */
+
+  --app-bg-color: var(--app-paper);                   /* Main background */
+  --app-bg-color-page: var(--app-grey-950);           /* Page background */
+  --app-bg-color-overlay: var(--app-grey-900);        /* Overlay background */
+
+  --app-fill-color: var(--app-grey-950);              /* Default fill */
+  --app-fill-color-light: hsl(var(--app-grey-hue), var(--app-grey-saturation), 2.5%); /* Light fill */
+  --app-fill-color-lighter: hsl(var(--app-grey-hue), var(--app-grey-saturation), 1.5%); /* Lighter fill */
+  --app-fill-color-dark: var(--app-grey-900);         /* Dark fill */
+  --app-fill-color-darker: var(--app-grey-800);       /* Darker fill */
+  --app-fill-color-blank: var(--app-paper);           /* Blank fill */
 }
 
 html,

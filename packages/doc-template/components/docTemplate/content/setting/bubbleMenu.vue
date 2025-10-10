@@ -77,16 +77,16 @@ function handleTableCellsMergeOrSplit(state: boolean) {
   flex-flow: row nowrap;
   justify-content: flex-start;
   align-items: center;
-  border: 1px solid var(--app-grey-950);
+  border: 1px solid var(--app-grey-900);
   gap: var(--app-space-xxs);
-  background: var(--app-grey-1000);
+  background: var(--app-grey-950);
   padding: var(--app-space-xs);
   border-radius: var(--app-border-radius-s);
 }
 
 button {
   border: none;
-  background: var(--app-grey-950);
+  background: var(--app-grey-900);
   padding: var(--app-space-xs);
   border-radius: var(--app-border-radius-s);
 

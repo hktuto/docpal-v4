@@ -65,7 +65,7 @@ defineExpose({
 }
 .previewContainer{
     overflow: hidden;
-    background: var(--app-grey-050);
+    background: var(--app-grey-950);
     padding: var(--app-space-xs);
 }
 .imgContainer{

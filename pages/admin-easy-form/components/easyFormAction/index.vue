@@ -118,7 +118,7 @@ async function handleDelete(id: string) {
   justify-content: space-between;
   // gap: var(--app-space-xs);
   padding: var(--app-space-xs);
-  background-color: var(--app-grey-875);
+  background-color: var(--app-grey-900);
   margin-bottom: var(--app-space-xs);
   border-radius: 4px;
 }

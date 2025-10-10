@@ -41,7 +41,7 @@ function itemClickHandler(){
     cursor: pointer;
     .label{
         font-size: var(--app-font-size-s);
-        color: var(--app-grey-500);
+        color: var(--app-grey-9500);
     }
 }
 .childrenContainer{

@@ -149,7 +149,7 @@ async function handleSetStatus(status, row) {
   gap: var(--app-space-xs);
   align-items: center;
   padding: 0.25rem 0;
-  color: var(--app-grey-500);
+  color: var(--app-grey-9500);
 
   .rowTitle {
     text-overflow: ellipsis;

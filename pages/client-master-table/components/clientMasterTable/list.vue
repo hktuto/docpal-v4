@@ -60,13 +60,13 @@ defineExpose({ setActive })
 
   &:hover {
     background-color: var(--app-primary-color);
-    color: var(--app-grey-950);
+    color: var(--app-grey-900);
     opacity: 0.8;
   }
 
   &.cur {
     background-color: var(--app-primary-color);
-    color: var(--app-grey-950);
+    color: var(--app-grey-900);
   }
 }
 </style>

@@ -66,8 +66,8 @@ onMounted(() => {
     :deep(.splitpanes__pane) {
         height:100%;
         transition: none;
-        box-shadow: var(--app-shadow-m)!important;
-        border-radius: var(--app-border-radius-m);
+        // box-shadow: var(--app-shadow-m)!important;
+        // border-radius: var(--app-border-radius-m);
         overflow: hidden;
         &:has(.activePanel) {
             box-shadow: var(--app-shadow-xl)!important;

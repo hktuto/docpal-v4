@@ -56,7 +56,7 @@ function handleClick() {
   position: relative;
   z-index: 2;
   pointer-events: all;
-  background: var(--app-grey-1000);
+  background: var(--app-grey-950);
   border-radius: var(--app-border-radius-m);
   padding: var(--app-space-s);
   display: flex;
@@ -72,6 +72,6 @@ function handleClick() {
   }
 }
 .rbac-node-2 {
-  background: var(--app-grey-475);
+  background: var(--app-grey-9500);
 }
 </style>

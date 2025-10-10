@@ -218,7 +218,7 @@ const canDelete = computed(() => {
     padding: var(--app-space-xs) var(--app-space-s);
     border-radius: var(--item-radius);
     color: var(--app-grey-200);
-    background: var(--app-grey-950);
+    background: var(--app-grey-900);
 }
 .tabItem{
     --item-radius: calc(var(--container-radius) - var(--container-padding) );
@@ -235,7 +235,7 @@ const canDelete = computed(() => {
     position: relative;
     max-width: 100%;
     min-width: 60px;
-    background: var(--app-grey-950);
+    background: var(--app-grey-900);
     &.is-dragging {
         opacity: 0.4;
     }
@@ -255,7 +255,7 @@ const canDelete = computed(() => {
         }
     }
     &.showing{
-        background: var(--app-grey-1000);
+        background: var(--app-grey-950);
         color: var(--app-grey-100);
     }
     &.is-dragging-over {

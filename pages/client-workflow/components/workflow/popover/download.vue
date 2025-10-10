@@ -132,21 +132,21 @@ defineExpose({handleOpen})
     .list-group {
       overflow: auto;
       padding: var(--app-space-xs);
-      border: 1px solid var(--app-grey-850);
-      background: var(--app-grey-875);
+      border: 1px solid var(--app-grey-800);
+      background: var(--app-grey-900);
 
       .item {
         color: var(--app-grey-400);
 
         &.sortable-chosen {
           background: var(--app-grey-700);
-          color: var(--app-grey-050) !important;
+          color: var(--app-grey-950) !important;
         }
       }
     }
 
     #first {
-      background: var(--app-grey-875);
+      background: var(--app-grey-900);
 
       .list-group-item {
         font-weight: 500;
@@ -154,7 +154,7 @@ defineExpose({handleOpen})
 
         &.sortable-chosen {
           background: var(--app-primary-color);
-          color: var(--app-grey-050) !important;
+          color: var(--app-grey-950) !important;
         }
       }
 

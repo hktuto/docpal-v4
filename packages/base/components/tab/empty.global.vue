@@ -63,7 +63,7 @@ function itemClick(item:MenuItem) {
 }
 .menuItem{
     padding: var(--app-space-xs);
-    background: var(--app-grey-1000);
+    background: var(--app-grey-950);
     color: var(--app-grey-300);
     border: 1px solid var(--app-grey-800);
     border-radius: var(--app-border-radius-s);

@@ -131,10 +131,10 @@ function switchDetail(id: string) {
     cursor: default;
   }
   &:hover {
-    --bg: var(--app-grey-675);
+    --bg: var(--app-grey-700);
   }
   &.selected {
-    --bg: var(--app-grey-500);
+    --bg: var(--app-grey-9500);
   }
 }
 

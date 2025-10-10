@@ -29,7 +29,7 @@ const { toolbar } = defineProps<{
     align-items: center;
     gap: var(--app-space-xs);
     font-size: var(--app-font-size-s);
-    background: var(--app-grey-950);
+    background: var(--app-grey-900);
     padding: var(--app-font-size-s) var(--app-space-xs);
 
 }

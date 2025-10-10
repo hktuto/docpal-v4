@@ -124,7 +124,7 @@ onMounted(() => {
   display: grid;
   grid-template-columns: min-content 1fr;
   gap: var(--app-space-s);
-  background: var(--app-grey-1000);
+  background: var(--app-grey-950);
 }
 
 .infoContainer {
@@ -138,7 +138,7 @@ onMounted(() => {
 .section {
   padding: var(--app-space-s);
   border-radius: var(--app-border-radius-m);
-  background: var(--app-grey-1000);
+  background: var(--app-grey-950);
 }
 
 .label {
@@ -186,6 +186,6 @@ onMounted(() => {
   display: flex;
   flex-flow: row wrap;
   gap: var(--app-space-s);
-  background: var(--app-grey-950) !important;
+  background: var(--app-grey-900) !important;
 }
 </style>

@@ -80,7 +80,7 @@ function focus() {
 .searchInputButton{
     width:100%;
     border-radius: var(--app-border-radius-m);
-    background: var(--app-grey-1000);
+    background: var(--app-grey-950);
     cursor: pointer;
     padding: var(--app-space-s);
     display: flex;
@@ -104,7 +104,7 @@ function focus() {
     }
     .sub{
         font-size: var(--app-font-size-xs);
-        color: var(--app-grey-500);
+        color: var(--app-grey-9500);
         padding: var(--app-space-xxs);
         border: 1px solid var(--app-grey-800);
         border-radius: var(--app-border-radius-s);
@@ -140,7 +140,7 @@ function focus() {
 }
 .searchListItem{
     padding: var(--app-space-xs);
-    background: var(--app-grey-1000);
+    background: var(--app-grey-950);
     transition: all 0.2s ease-in-out;
     &.seleted{
         background: var(--app-grey-900);

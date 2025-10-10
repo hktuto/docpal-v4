@@ -388,7 +388,7 @@ watch(appPlatform, () => {
     top:0;
     width: 100%;
     height: 100%;
-    background: var(--app-grey-975);
+    background: var(--app-grey-950);
     z-index: 1000;
     display: flex;
     justify-content: flex-start;
@@ -412,7 +412,7 @@ watch(appPlatform, () => {
         &:after {
             content: '';
             height: 1px;
-            background: var(--app-grey-850);
+            background: var(--app-grey-800);
             width:100%;
             display: block;
             z-index: -1;
@@ -426,7 +426,7 @@ watch(appPlatform, () => {
         height: 100%;
         position: relative;
         overflow: hidden;
-        background: var(--app-grey-1000);
+        background: var(--app-grey-950);
     }
 }
 </style>

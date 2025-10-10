@@ -73,7 +73,7 @@ async function ruleChange(newField: any) {
   transition: all 0.2s ease-in-out;
 }
 .formFieldItem + .formFieldItem {
-  border-top: 1px solid var(--app-grey-950);
+  border-top: 1px solid var(--app-grey-900);
 }
 .iconify {
   cursor: pointer;

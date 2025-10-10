@@ -90,7 +90,7 @@ function handleReplyDelete (item, parentItem) {
     height: 100%;
     overflow: auto;
     .replyListBox {
-        background-color: var(--app-grey-950);
+        background-color: var(--app-grey-900);
         padding: 0 var(--app-space-xs);
         border-radius: var(--app-border-radius-s);
     }
