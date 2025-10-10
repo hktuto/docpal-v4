@@ -14,6 +14,7 @@ const editorProvider = inject(EDITOR_PROVIDER)
 if (!graphProvider || !editorProvider) {
   throw createError('graph provider not found')
 }
+const { bpmnGlobalRules } = editorProvider.BpmnRule
 const formRef = ref()
 const rules = reactive({
   userField: [{
@@ -45,6 +46,17 @@ const state = reactive({
     showNotification: true,
     notiStatus: 'SUCCESS'
   }
+})
+
+const stringFields = computed(() => {
+  if (!bpmnGlobalRules.value || bpmnGlobalRules.value.length === 0) return []
+
+  return bpmnGlobalRules.value.filter((item: any) => item.validationRule.type === 'text').map((item: any) => {
+    return {
+      id: '${variables:get(' + item.id + ')}',
+      name: item.name
+    }
+  })
 })
 
 const defaultFieldOptions = computed(() => {
@@ -153,7 +165,7 @@ watch(() => node, async () => {
       <el-form-item :label="t('User Field')" prop="userField">
         <el-select v-model="state.userField" placeholder="Select" :disabled="editorProvider.readonly.value"
                    @change="(val:any) => fieldMappingUpdate(val, 'notificationUserFromVariables')">
-          <el-option v-for="item in defaultFieldOptions" :key="item.value" :value="item.value" :label="item.label" />
+          <el-option v-for="item in stringFields" :key="item.id" :label="item.name" :value="item.id" />
         </el-select>
       </el-form-item>
       <el-form-item :label="t('Message')" prop="message">
@@ -172,7 +184,6 @@ watch(() => node, async () => {
         @blur="handleJsonFormat"
       />
 
-      <!--  ------------------- -->
       <el-form-item :label="t('Level')">
         <el-select v-model="state.messageObject.level" @change="handelMessageObject">
           <el-option v-for="item in levelList" :key="item.value" :value="item.value" :label="item.label" />

@@ -5,9 +5,11 @@ const { disabled } = defineProps<{
 }>()
 
 const graphProvider = inject(BPMN_PROVIDER)
-if (!graphProvider) {
+const editorProvider = inject(EDITOR_PROVIDER)
+if (!graphProvider || !editorProvider) {
   throw new Error('Missing provider')
 }
+const { bpmnGlobalRules } = editorProvider.BpmnRule
 const infoType = ref('other')
 const functionOptionsMap = {
   boolean: ['Set_Value', 'Toggle'],
@@ -23,13 +25,17 @@ function functionChange(newFn) {
 }
 
 const allFields = computed(() => {
-  return Object.keys(graphProvider.allFormField.value).map((key: string) => {
-    return graphProvider.allFormField.value[key]
-  })
+  // return Object.keys(graphProvider.allFormField.value).map((key: string) => {
+  //   return graphProvider.allFormField.value[key]
+  // })
+  if (!bpmnGlobalRules.value || bpmnGlobalRules.value.length === 0) return []
+
+  return bpmnGlobalRules.value
 })
+
 function handleInfoChange(info: any, isChange: boolean) {
-  const infoItem = allFields.value.find((item) => item.attr_id === info)
-  infoType.value = ['boolean', 'long'].includes(infoItem.attr_type) ? infoItem.attr_type : 'other'
+  const infoItem = allFields.value.find((item) => item.id === info)
+  infoType.value = ['boolean', 'number'].includes(infoItem.validationRule.type) ? infoItem.validationRule.type : 'other'
   if (isChange) condition.value.attr_function = 'Set_Value'
 }
 watch(
@@ -44,10 +50,9 @@ watch(
 </script>
 
 <template>
-  <!-- TODO: 現在的Field包含了其他數據類型(select,Date)，當Form Info選擇新的數據類型，value：沒有對應數據類型所需要的組件  -->
   <ElFormItem label="Form Info">
     <ElSelect v-model="condition.attr_updateFieldName" placeholder="Form Info" :disabled="disabled">
-      <ElOption v-for="item in allFields" :key="item.attr_id" :label="item.attr_name" :value="item.attr_id" />
+      <ElOption v-for="item in allFields" :key="item.id" :label="item.name" :value="item.id" />
     </ElSelect>
   </ElFormItem>
   <ElFormItem label="Function">

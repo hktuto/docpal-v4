@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import type { Node } from '@antv/x6'
+
 const { node } = defineProps<{
   node: Node
 }>()
@@ -9,6 +10,7 @@ if (!graphProvider || !editorProvider) {
   throw createError('graph provider not found')
 }
 const condition = ref({})
+
 function refreshData() {
   const nodeData = node.getData()
   condition.value = nodeData.data.extensionElements['flowable:field'].reduce((prev, item) => {
@@ -18,11 +20,12 @@ function refreshData() {
       let _variablesCData = item['flowable:expression']['__cdata']
       try {
         _variablesCData = JSON.parse(_variablesCData)
-        console.log({_variablesCData})
       } catch (error) {
         _variablesCData = {}
       }
-      if (!_variablesCData) return
+      if (!_variablesCData || '' === _variablesCData.CurrentYear) {
+        return prev
+      }
       const pattern = /(?<=get\()(.+?)(?=\))/g
       prev[item.attr_name] = Object.keys(_variablesCData).map((key) => {
         const value = _variablesCData[key]
@@ -36,6 +39,7 @@ function refreshData() {
     return prev
   }, {})
 }
+
 function updateCondition() {
   const nodeData = node.getData()
   const newData = {
@@ -50,11 +54,12 @@ function updateCondition() {
     }
   }
   node.setData(newData, { overwrite: true, deep: true })
+
   function getCondition() {
     return Object.keys(condition.value).map((key) => {
       const value = condition.value[key]
       let __cdata = ''
-      if(key === 'variables') {
+      if (key === 'variables') {
         const data = value.reduce((prev, item) => {
           prev[item.label] = item.value ? '${variables:get(' + item.value + ')}' : ''
           return prev
