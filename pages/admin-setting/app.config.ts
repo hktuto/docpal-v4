@@ -16,7 +16,8 @@ export default defineAppConfig({
     'admin-profile-setting': {
       id: 'admin-profile-setting',
       name: 'admin-profile-setting',
-      icon: 'lucide:user',
+      icon: 'dp-icon:user',
+      hoverIcon: 'dp-icon:user',
       label: 'user.setting.userProfile',
       component: 'SettingUserSetting',
       props: {}
