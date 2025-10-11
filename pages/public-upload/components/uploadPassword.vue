@@ -5,7 +5,7 @@
     </div>
     <FormRenderer ref="FormRendererRef" :form-json="formJson" />
     <div class="footer">
-      <el-button @click="handleSubmit">{{ $t('submit') }}</el-button>
+      <el-button type="primary" @click="handleSubmit">{{ $t('submit') }}</el-button>
     </div>
   </el-card>
 </template>
