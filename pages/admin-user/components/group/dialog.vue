@@ -41,7 +41,7 @@ async function handleSubmit() {
     data.groupName = data.groupName.trim()
     state.loading = true
     await groupProvider?.CreateGroupApi(data)
-    ElMessage.success(t('tip_createdMsg', { modelName: null, name: t('user_NewUserGroup') }))
+    ElMessage.success(t('tip_createdMsg', {name:  t('user_NewUserGroup') }))
     state.visible = false
     FormRendererRef.value.vFormRenderRef.resetForm()
     emits('refresh')
