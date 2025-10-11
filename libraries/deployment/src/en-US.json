@@ -1958,7 +1958,7 @@
   "folder_cabinetDetailLocalPermissionRemoveMsg": "Are you sure you want to remove the selected local permission from this folder cabinet?",
   "folder_cabinetDetailLocalPermissionRemoveSuccessMsg": "The selected local permission has been removed from this folder cabinet successfully.",
   "folder_cabinetDetailNewFile": "New File",
-  "folder_cabinetDetailNewFileOrFolder": "Create New File Or Folder",
+  "folder_cabinetDetailNewFileOrFolder": "Create New File or Folder",
   "folder_cabinetDetailNewFolderAllow": "Allow Adding Other Files Outside the Rules",
   "folder_cabinetDetailNewFolderName": "Folder Name",
   "folder_cabinetDetailNewFolderTitle": "Create New Folder under {fileName}",
