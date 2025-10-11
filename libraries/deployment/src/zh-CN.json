@@ -2011,8 +2011,8 @@
     "isHoldAuto": "启用自动保全政策",
     "isHoldReasonReq": "需要理由",
     "isRemoveAuto": "启用自动移除保全政策",
-    "pendingAddApproval": "[添加]等待审批",
-    "pendingRemoveApproval": "[移除]等待审批",
+    "pendingAddApproval": "等待审批",
+    "pendingRemoveApproval": "等待审批",
     "policyName": "政策名称",
     "removeHold": "移除保留政策",
     "requireReason": "需要理由"

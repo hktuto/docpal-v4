@@ -2011,8 +2011,8 @@
     "isHoldAuto": "Enable Auto Hold Application",
     "isHoldReasonReq": "Require Reason",
     "isRemoveAuto": "Enable Auto Hold Removal",
-    "pendingAddApproval": "[ADD]Waiting for approval",
-    "pendingRemoveApproval": "[REMOVE]Waiting for approval",
+    "pendingAddApproval": "Waiting for approval",
+    "pendingRemoveApproval": "Waiting for approval",
     "policyName": "Retention Policy Name",
     "removeHold": "Remove Hold Policy",
     "requireReason": "Require Reason"
