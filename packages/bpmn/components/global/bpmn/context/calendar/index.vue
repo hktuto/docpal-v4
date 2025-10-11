@@ -157,7 +157,7 @@ onMounted(async () => {
             <el-option v-for="item in dateTimeFields" :key="item.id" :label="item.name" :value="item.id" />
           </el-select>
         </el-form-item>
-        <el-form-item label="is All Day">
+        <el-form-item label="Is All Day">
           <el-select v-model="form.attr_isAllDay" clearable>
             <el-option v-for="item in booleanFields" :key="item.id" :label="item.name" :value="item.id" />
           </el-select>

@@ -207,8 +207,6 @@ async function submit() {
     if (!data) {
       return
     }
-
-    // TODO: 後端需要加參數 eId， 該值用於在通知頁面獲取eventId
     data.eId = `${Math.random().toString(36).substring(2, 9)}-${Date.now()}`
 
     // 組裝消息推送的内容

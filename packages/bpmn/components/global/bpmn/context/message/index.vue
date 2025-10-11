@@ -1,9 +1,5 @@
 <script setup lang="ts">
 import type { Node } from '@antv/x6'
-import { linter } from '@codemirror/lint'
-import { Codemirror } from 'vue-codemirror'
-import { json, jsonParseLinter } from '@codemirror/lang-json'
-import { oneDark } from '@codemirror/theme-one-dark'
 
 const { t } = useI18n()
 const { node } = defineProps<{
@@ -21,11 +17,6 @@ const rules = reactive({
     required: true,
     message: t('render.hint.fieldRequired', { name: t('userField') }),
     trigger: 'change'
-  }],
-  message: [{
-    required: true,
-    message: t('render.hint.fieldRequired', { name: t('message') }),
-    trigger: 'change'
   }]
 })
 const levelList = ref([
@@ -35,13 +26,18 @@ const levelList = ref([
   { label: 'Warning', value: 'warning' },
   { label: 'Error', value: 'error' }])
 
+const typeList = ref([
+  { label: 'Calendar Event', value: 'calendar' },
+  { label: 'Common Event', value: 'common' }
+])
+
 const state = reactive({
   userField: '',
   message: '',
   messageObject: {
     templateId: 'notification.workflow.custom',
-    level: '',
-    // isShowDefaultMessage: true,
+    level: 'success',
+    eventType: 'common',
     additionalContent: '',
     showNotification: true,
     notiStatus: 'SUCCESS'
@@ -57,26 +53,6 @@ const stringFields = computed(() => {
       name: item.name
     }
   })
-})
-
-const defaultFieldOptions = computed(() => {
-  if (!graphProvider.allFormField.value) return []
-
-  const allField = Object.fromEntries(
-    Object.entries(graphProvider.allFormField.value).filter(([key, value]) => value.attr_type === 'string')
-  )
-
-  return Object.keys(allField).map((key) => {
-    return {
-      label: graphProvider.allFormField.value[key].attr_name,
-      value: '${variables:get(' + graphProvider.allFormField.value[key].attr_id + ')}'
-    }
-  })
-})
-
-const codeMirror = reactive({
-  extensions: [json(), linter(jsonParseLinter()), oneDark],
-  errorMessage: ''
 })
 
 async function initForm() {
@@ -95,25 +71,12 @@ async function initForm() {
         break
     }
   })
-}
 
-function handleJsonFormat() {
-  if (!checkJsonFormat()) {
-    state.message = JSON.stringify(JSON.parse(state.message), null, 2)
-    codeMirror.errorMessage = ''
-    fieldMappingUpdate(state.message, 'message')
-  }
-}
-
-function checkJsonFormat() {
-  try {
-    JSON.parse(state.message)
-    codeMirror.errorMessage = ''
-    return false
-  } catch (e) {
-    codeMirror.errorMessage = 'Unable to format JSON: ' + e.message
-    return true
-  }
+  // message Field to Level and Type and Content
+  const messageObj = JSON.parse(state.message)
+  state.messageObject.level = messageObj.level
+  state.messageObject.eventType = messageObj.eventType
+  state.messageObject.additionalContent = messageObj.additionalContent
 }
 
 function fieldMappingUpdate(newVal: any | string, name: string) {
@@ -136,12 +99,6 @@ function fieldMappingUpdate(newVal: any | string, name: string) {
   graphProvider?.graph.value?.stopBatch('update-send-notification-data')
 }
 
-function handleUpdateAdditionalContent(item: string) {
-  state.messageObject.additionalContent = item
-  state.message = JSON.stringify(state.messageObject)
-  fieldMappingUpdate(state.message, 'message')
-}
-
 function handelMessageObject() {
   state.message = JSON.stringify(state.messageObject)
   fieldMappingUpdate(state.message, 'message')
@@ -161,39 +118,33 @@ watch(() => node, async () => {
 <template>
   <div>
     <BpmnSidebarEditLabel :node="node" />
-    <el-form ref="formRef" label-width="auto" :model="state" label-position="top" :rules="rules">
+    <el-form ref="formRef" label-width="auto" :model="state" label-position="top" :rules="rules"
+             :disabled="editorProvider.readonly.value">
       <el-form-item :label="t('User Field')" prop="userField">
-        <el-select v-model="state.userField" placeholder="Select" :disabled="editorProvider.readonly.value"
+        <el-select v-model="state.userField" :placeholder="t('common_selectOccupancyContent')"
                    @change="(val:any) => fieldMappingUpdate(val, 'notificationUserFromVariables')">
           <el-option v-for="item in stringFields" :key="item.id" :label="item.name" :value="item.id" />
         </el-select>
       </el-form-item>
-      <el-form-item :label="t('Message')" prop="message">
-        <el-input v-model="state.message" v-show="false" disabled />
-      </el-form-item>
-      <div v-if="codeMirror.errorMessage" class="error">{{ codeMirror.errorMessage }}</div>
-      <codemirror
-        v-model="state.message"
-        :style="{top: '-16px' ,width: '300px', height: '20vh' }"
-        :autofocus="true"
-        :indent-with-tab="true"
-        :tab-size="2"
-        :extensions="codeMirror.extensions"
-        :disabled="editorProvider.readonly.value"
-        @change="checkJsonFormat"
-        @blur="handleJsonFormat"
-      />
+      <!--      <el-input v-model="state.message" disabled :autosize="{ minRows: 10, maxRows: 12 }" type="textarea"/>-->
 
-      <el-form-item :label="t('Level')">
+      <el-form-item :label="t('Message Level')">
         <el-select v-model="state.messageObject.level" @change="handelMessageObject">
           <el-option v-for="item in levelList" :key="item.value" :value="item.value" :label="item.label" />
         </el-select>
       </el-form-item>
 
-      <!--      <el-form-item :label="t('Show Default Message')">-->
-      <!--        <el-switch v-model="state.messageObject.isShowDefaultMessage" active-text="Open" inactive-text="Off" />-->
-      <!--      </el-form-item>-->
-      <!--      <BpmnContextMessageAdditionalContent @update="handleUpdateAdditionalContent" />-->
+      <el-form-item :label="t('Event Type')">
+        <el-select v-model="state.messageObject.eventType" @change="handelMessageObject">
+          <el-option v-for="item in typeList" :key="item.value" :value="item.value" :label="item.label" />
+        </el-select>
+      </el-form-item>
+
+      <el-form-item :label="t('Message Content')">
+        <el-select v-model="state.messageObject.additionalContent" @change="handelMessageObject">
+          <el-option v-for="item in stringFields" :key="item.id" :label="item.name" :value="item.id" />
+        </el-select>
+      </el-form-item>
     </el-form>
   </div>
 </template>
