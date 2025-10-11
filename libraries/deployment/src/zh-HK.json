@@ -1459,7 +1459,6 @@
   "dpTable_unique": "唯一",
   "dpTable_validityPeriod": "有效期",
   "dpTip": {
-    "noRollbackReminder": "<br>此操作無法撤銷。",
     "choose": "請選擇{name}",
     "configurePermission": "權限校驗失敗，請聯絡管理員配置",
     "copyPathSuccess": "路徑已複製到剪貼簿",
@@ -1485,6 +1484,7 @@
     "loading": "載入中...",
     "newFolderDuplicateName": "系統偵測到重複的資料夾名稱，請重新填寫資料夾名稱",
     "noMore": "沒有更多數據了",
+    "noRollbackReminder": "<br>此操作無法撤銷。",
     "noValidName": "系統偵測到未產生有效名稱",
     "pleaseSelectApprovalStatus": "請選擇審核狀態",
     "resetWarning": "提交後，所有選定使用者的群組將被重置",
@@ -2579,6 +2579,7 @@
     "isAuto": "自動保留",
     "notFound": "找不到保留政策",
     "period": "時期",
+    "periodUnit": "日期單位",
     "recentNow": "即時"
   },
   "search": {

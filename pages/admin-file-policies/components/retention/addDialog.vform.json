@@ -160,7 +160,7 @@
               "formItemFlag": true,
               "options": {
                 "name": "periodUnit",
-                "label": "periodUnit",
+                "label": "rp.periodUnit",
                 "labelAlign": "",
                 "defaultValue": "Y",
                 "placeholder": "",
@@ -392,124 +392,7 @@
                 "automaticDropdown": false,
                 "multiple": false,
                 "multipleLimit": 0,
-                "optionItems": [
-                  {
-                    "label": "administrator",
-                    "value": "administrator"
-                  },
-                  {
-                    "label": "ashlee_sauer",
-                    "value": "ashlee_sauer"
-                  },
-                  {
-                    "label": "huang",
-                    "value": "huang"
-                  },
-                  {
-                    "label": "jack_li",
-                    "value": "jack_li"
-                  },
-                  {
-                    "label": "jack_li1",
-                    "value": "jack_li1"
-                  },
-                  {
-                    "label": "jack_li3",
-                    "value": "jack_li3"
-                  },
-                  {
-                    "label": "jack_li5",
-                    "value": "jack_li5"
-                  },
-                  {
-                    "label": "jack10",
-                    "value": "jack10"
-                  },
-                  {
-                    "label": "jack6",
-                    "value": "jack6"
-                  },
-                  {
-                    "label": "jack7",
-                    "value": "jack7"
-                  },
-                  {
-                    "label": "jack8",
-                    "value": "jack8"
-                  },
-                  {
-                    "label": "jack9",
-                    "value": "jack9"
-                  },
-                  {
-                    "label": "johnson",
-                    "value": "johnson"
-                  },
-                  {
-                    "label": "joshua",
-                    "value": "joshua"
-                  },
-                  {
-                    "label": "lyle",
-                    "value": "lyle"
-                  },
-                  {
-                    "label": "lyletest",
-                    "value": "lyletest"
-                  },
-                  {
-                    "label": "moonlit",
-                    "value": "moonlit"
-                  },
-                  {
-                    "label": "nine",
-                    "value": "nine"
-                  },
-                  {
-                    "label": "nineadmin",
-                    "value": "nineadmin"
-                  },
-                  {
-                    "label": "ninerabbit",
-                    "value": "ninerabbit"
-                  },
-                  {
-                    "label": "ooyy",
-                    "value": "ooyy"
-                  },
-                  {
-                    "label": "ooyy111",
-                    "value": "ooyy111"
-                  },
-                  {
-                    "label": "ooyycdbd",
-                    "value": "ooyycdbd"
-                  },
-                  {
-                    "label": "sean-admin",
-                    "value": "sean-admin"
-                  },
-                  {
-                    "label": "shixuan",
-                    "value": "shixuan"
-                  },
-                  {
-                    "label": "test_one",
-                    "value": "test_one"
-                  },
-                  {
-                    "label": "teststatu",
-                    "value": "teststatu"
-                  },
-                  {
-                    "label": "testuser",
-                    "value": "testuser"
-                  },
-                  {
-                    "label": "will_du",
-                    "value": "will_du"
-                  }
-                ],
+                "optionItems": [],
                 "required": false,
                 "requiredHint": "",
                 "validation": "",
