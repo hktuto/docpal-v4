@@ -113,7 +113,4 @@ const svgRoundClass = computed(() => {
   top: 0;
   left: 0;
 }
-.dp-svg-icon +.dp-svg-icon {
-  margin-left: var(--app-space-xxs);
-}
 </style>
