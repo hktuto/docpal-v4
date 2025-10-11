@@ -3,28 +3,15 @@
     <div class="topArea">
       <div class="flex-x-center">
         {{ state.name }}
-        <el-tooltip class="box-item" effect="dark" :content="$t('user_editGroup')">
-          <Icon
-            id="UserGroupList__Info__EditUserGroup"
-            v-show="isCanModified"
-            name="material-symbols:edit-square"
-            class="normal cursor-pointer"
-            style="width: 20px; height: 20px"
-            @click="handleEdit"
-          >
-          </Icon>
-        </el-tooltip>
+        <SvgIcon class="el-icon--right" id="UserGroupList__Info__EditUserGroup" :content="$t('user_editGroup')" src="/icons/edit.svg" @click="handleEdit" />
       </div>
-      <el-tooltip class="box-item" effect="dark" :content="$t('user_deleteGroup')" placement="top">
-        <Icon
-          id="UserGroupList__Info__DeleteUserGroup"
-          v-show="isCanModified"
-          name="material-symbols:delete-rounded"
-          class="normal cursor-pointer"
-          style="width: 20px; height: 20px"
-          @click="handleDelete"
-        ></Icon>
-      </el-tooltip>
+      <SvgIcon
+        class="el-icon--right"
+        id="UserGroupList__Info__DeleteUserGroup"
+        :content="$t('user_deleteGroup')"
+        src="/icons/delete.svg"
+        @click="handleDelete"
+      />
     </div>
     <GroupUserTable class="group" :group="{ id, name, isCanModified }"></GroupUserTable>
     <GroupEditDialog
