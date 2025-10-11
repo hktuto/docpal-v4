@@ -13,10 +13,10 @@
       <el-tree ref="treeRef" :data="state.treeData" :props="state.defaultProps" default-expand-all :expand-on-click-node="false" @node-click="handleNodeClick">
         <template #default="{ node, data }">
           <div class="tree-item">
-            <div>
+            <div class="ellipsis">
               <SvgIcon v-if="data.folder" src="/icons/folder-general.svg"></SvgIcon>
               <SvgIcon v-else-if="data.folder === false" src="/icons/file-general.svg"></SvgIcon>
-              <span :class="getCss(data)">
+              <span :class="getCss(data)" :title="data.label || data.title || data.name">
                 {{ data.label || data.title || data.name }}
               </span>
             </div>
@@ -277,5 +277,10 @@ defineExpose({ init })
 }
 .color__danger {
   color: var(--app-error-color);
+}
+.ellipsis {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 </style>
