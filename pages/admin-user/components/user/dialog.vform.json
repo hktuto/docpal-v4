@@ -299,7 +299,6 @@
       },
       "id": "select64143"
     },
-    
     {
       "key": 61809,
       "type": "select",
@@ -348,6 +347,38 @@
             "kcGroupId": "Bedfordshire Dept",
             "value": "BedfordshireDept",
             "label": "Bedfordshire Dept"
+          },
+          {
+            "id": "Benny_Case_-_Head_of_Sales",
+            "name": "Benny_Case - Head of Sales",
+            "isCanModified": true,
+            "kcGroupId": "Benny_Case - Head of Sales",
+            "value": "Benny_Case_-_Head_of_Sales",
+            "label": "Benny_Case - Head of Sales"
+          },
+          {
+            "id": "Benny_Case_-_Presales_Team_Member",
+            "name": "Benny_Case - Presales Team Member",
+            "isCanModified": true,
+            "kcGroupId": "Benny_Case - Presales Team Member",
+            "value": "Benny_Case_-_Presales_Team_Member",
+            "label": "Benny_Case - Presales Team Member"
+          },
+          {
+            "id": "Benny_Case_-_Sales_Team_Member",
+            "name": "Benny_Case - Sales Team Member",
+            "isCanModified": true,
+            "kcGroupId": "Benny_Case - Sales Team Member",
+            "value": "Benny_Case_-_Sales_Team_Member",
+            "label": "Benny_Case - Sales Team Member"
+          },
+          {
+            "id": "Benny_Folder_-_SalesTeam",
+            "name": "Benny_Folder - SalesTeam",
+            "isCanModified": true,
+            "kcGroupId": "Benny_Folder - SalesTeam",
+            "value": "Benny_Folder_-_SalesTeam",
+            "label": "Benny_Folder - SalesTeam"
           },
           {
             "id": "BOOK",
@@ -430,12 +461,36 @@
             "label": "Market Group"
           },
           {
+            "id": "members",
+            "name": "Members Group",
+            "isCanModified": true,
+            "kcGroupId": "Members Group",
+            "value": "members",
+            "label": "Members Group"
+          },
+          {
+            "id": "safsa",
+            "name": "safsa",
+            "isCanModified": true,
+            "kcGroupId": "safsa",
+            "value": "safsa",
+            "label": "safsa"
+          },
+          {
             "id": "Sales_Group",
             "name": "Sales Group",
             "isCanModified": true,
             "kcGroupId": "Sales Group",
             "value": "Sales_Group",
             "label": "Sales Group"
+          },
+          {
+            "id": "steve",
+            "name": "steve",
+            "isCanModified": true,
+            "kcGroupId": "steve",
+            "value": "steve",
+            "label": "steve"
           },
           {
             "id": "Test-Group",
@@ -484,8 +539,8 @@
         "labelIconPosition": "rear",
         "labelTooltip": null,
         "switchWidth": 40,
-        "activeText": "",
-        "inactiveText": "",
+        "activeText": "actions.activate",
+        "inactiveText": "actions.inactive",
         "activeColor": null,
         "inactiveColor": null,
         "onCreated": "",
