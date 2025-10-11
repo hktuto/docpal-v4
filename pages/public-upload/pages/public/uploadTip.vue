@@ -3,7 +3,7 @@
     <LoadingBg></LoadingBg>
     <div class="loadState-container">
       <div>
-        <img src="/logoWithName.png" />
+        <!-- <img src="/logoWithName.png" /> -->
         <h1>{{ $t(`dpTip_${tip}`) }}</h1>
       </div>
     </div>
