@@ -2734,7 +2734,7 @@
     "shareQueue": "分享队列"
   },
   "shareQueue": {
-    "recipientEmail": "收件人电子邮件"
+    "recipientEmail": "收件人"
   },
   "shareWithMe_endDate": "共享结束日期",
   "shareWithMe_startDate": "共享开始日期",

@@ -2733,7 +2733,7 @@
     "shareQueue": "分享隊列"
   },
   "shareQueue": {
-    "recipientEmail": "收件者電子郵件"
+    "recipientEmail": "收件者"
   },
   "shareWithMe_endDate": "共享結束日期",
   "shareWithMe_startDate": "共享開始日期",
