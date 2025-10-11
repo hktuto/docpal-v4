@@ -1459,6 +1459,7 @@
   "dpTable_unique": "Unique",
   "dpTable_validityPeriod": "Validity Period",
   "dpTip": {
+    "noRollbackReminder": "<br>This action cannot be undone.",
     "choose": "Please choose {name}",
     "configurePermission": "Permission verification failed, please contact the administrator to configure",
     "copyPathSuccess": "Path copied to clipboard",
@@ -3138,7 +3139,7 @@
   "user_userGroupDeletedMsg": "Confirm to delete the selected user groups?<br>This action cannot be undone.",
   "user_userGroupIdentifer": "User Group Identifier",
   "user_userGroupName": "User Group Name",
-  "user_userGroupRemoveMsg": "Confirm to remove selected user?",
+  "user_userGroupRemoveMsg": "Confirm to remove selected user?@:dpTip.noRollbackReminder",
   "user_userGroupRemoveUser": "Remove User",
   "user_userGroupRemovedSuccessMsg": "Selected user has been removed.",
   "user_userGroupSelectDeletedSuccessMsg": "Are you sure you want to remove the selected user from this user group?",

@@ -1459,6 +1459,7 @@
   "dpTable_unique": "唯一",
   "dpTable_validityPeriod": "有效期",
   "dpTip": {
+    "noRollbackReminder": "<br>此操作無法撤銷。",
     "choose": "請選擇{name}",
     "configurePermission": "權限校驗失敗，請聯絡管理員配置",
     "copyPathSuccess": "路徑已複製到剪貼簿",
@@ -3137,7 +3138,7 @@
   "user_userGroupDeletedMsg": "確定刪除選定的用戶群組？<br>此操作無法撤銷。",
   "user_userGroupIdentifer": "用戶群組識別碼",
   "user_userGroupName": "用戶群組名稱",
-  "user_userGroupRemoveMsg": "確定移除所選用戶？",
+  "user_userGroupRemoveMsg": "確定移除所選用戶？@:dpTip.noRollbackReminder",
   "user_userGroupRemoveUser": "移除使用者",
   "user_userGroupRemovedSuccessMsg": "所選用戶已刪除。",
   "user_userGroupSelectDeletedSuccessMsg": "Are you sure you want to remove the selected user from this user group?",
