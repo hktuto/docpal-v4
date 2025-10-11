@@ -1379,7 +1379,7 @@
   "dpDocument_fileType": "档案类型",
   "dpEmail": {
     "content": "内容",
-    "recipient": "收件人电子邮箱地址"
+    "recipient": "收件人"
   },
   "dpForm_confrimPassword": "确认密码",
   "dpForm_datePicker": "选择日期",
