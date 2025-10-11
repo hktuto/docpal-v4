@@ -1928,7 +1928,7 @@
   "file_versionPreview": "版本預覽",
   "folderCabinet": {
     "add": "創建立新資料夾櫃",
-    "addFile": "資料夾模板",
+    "addFile": "新增文件",
     "addFolder": "新建資料夾",
     "allowFilesTip": "允許在規則之外新增其他檔案",
     "create": "創建文件櫃",

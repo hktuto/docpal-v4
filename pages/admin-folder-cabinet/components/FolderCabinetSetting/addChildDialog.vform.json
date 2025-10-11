@@ -38,7 +38,7 @@
       "formItemFlag": true,
       "options": {
         "name": "label",
-        "label": "folder_cabinetDetailNewFolderName",
+        "label": "dpTable_name",
         "labelAlign": "",
         "type": "text",
         "defaultValue": "",
@@ -191,7 +191,7 @@
       "formItemFlag": true,
       "options": {
         "name": "multiple",
-        "label": "multiple",
+        "label": "folderCabinet.multiple",
         "labelAlign": "",
         "defaultValue": true,
         "columnWidth": "200px",
@@ -229,13 +229,14 @@
     "functions": "",
     "layoutType": "PC",
     "jsonVersion": 3,
+    "isCreateDynamicCode": true,
     "onFormCreated": "",
     "onFormMounted": "",
     "onFormDataChange": "",
     "dhList": [],
+    "onFormValidate": "",
     "saveRemoteOptions": "never",
     "labelFormUniqueName": true,
-    "onFormValidate": "",
     "dataSources": []
   }
 }

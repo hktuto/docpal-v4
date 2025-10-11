@@ -1929,7 +1929,7 @@
   "file_versionPreview": "版本预览",
   "folderCabinet": {
     "add": "创建新文件夹",
-    "addFile": "文件夹模版",
+    "addFile": "添加文件",
     "addFolder": "新建文件夹",
     "allowFilesTip": "允许在规则之外添加其他文件",
     "create": "创建文件柜",
