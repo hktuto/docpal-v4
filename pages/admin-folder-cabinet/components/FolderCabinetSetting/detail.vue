@@ -43,7 +43,6 @@
               <div class="grid-content ep-bg-purple" />
               <h3>{{ $t('folderCabinet.multiple') }}</h3>
               <el-switch v-model="form.multiple" class="mb-2" active-text="Yes" inactive-text="No" />
-              <div>{{ $t('folderCabinet.multipleTip') }}</div>
             </el-col>
             <el-col :span="12">
               <div class="grid-content ep-bg-purple" />
