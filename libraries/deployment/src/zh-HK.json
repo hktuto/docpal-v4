@@ -1379,7 +1379,7 @@
   "dpDocument_fileType": "檔案類型",
   "dpEmail": {
     "content": "內容",
-    "recipient": "收件者電子郵箱地址"
+    "recipient": "收件者"
   },
   "dpForm_confrimPassword": "確認密碼",
   "dpForm_datePicker": "選擇日期",

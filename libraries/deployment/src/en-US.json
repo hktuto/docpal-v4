@@ -1379,7 +1379,7 @@
   "dpDocument_fileType": "Document Type",
   "dpEmail": {
     "content": "Content",
-    "recipient": "Recipient Email Address"
+    "recipient": "Recipient"
   },
   "dpForm_confrimPassword": "Confirm Password",
   "dpForm_datePicker": "Select Date",
@@ -2463,7 +2463,7 @@
   },
   "placeholder_datePicker": "Select Date",
   "profiles": "Profiles",
-  "publicUpload_requestFileUpload": "File Upload Request",
+  "publicUpload_requestFileUpload": "Upload Request",
   "publicUpload_success": "Request email has been sent",
   "quickAction": {
     "label": "Quick Actions"
