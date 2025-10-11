@@ -4,7 +4,7 @@
       <div class="title" :title="state.activeDoc.label">{{ state.activeDoc.label }}</div>
       <SvgIcon
         :class="{ 'refresh-loading': state.refreshLoading }"
-        :content="refreshContent"
+        :content="$t('common_refresh')"
         src="/icons/file/file-refresh.svg"
         @click="refreshCabinet"
       ></SvgIcon>
@@ -66,11 +66,12 @@ const state = reactive<any>({
   refreshLoading: false,
 
   // next
-  cabinetTemplate: {}
+  cabinetTemplate: {},
+  lastModifiedDate: ''
 })
 const emits = defineEmits(['refresh'])
 const refreshContent = computed(() => {
-  return t('table_modifiedDate') + '：' + formatDate(state.activeDoc.refreshDate)
+  return t('table_modifiedDate') + '：' + formatDate(state.lastModifiedDate)
 })
 
 // #region module: tree
@@ -86,6 +87,7 @@ async function init(docItem: any, templateId: string) {
   state.templateId = templateId
   try {
     const data: any = await clientApi.api.postCabinetVerificationComplete({ id: docItem.id }).then((res) => res.data)
+    state.lastModifiedDate = data.modifiedDate
     if (data.children && data.children.length > 0) {
       addDocToChildren(data.children, data.documentPath)
       state.treeData = data.children
