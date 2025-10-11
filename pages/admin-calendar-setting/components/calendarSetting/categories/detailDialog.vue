@@ -28,30 +28,43 @@ const limitSeat = ref(false)
 // TODO 在創建時會默認加載以下的workflow
 const defWorkflow = ref()
 
-function generateDefWorkflow(name: string) {
+async function generateDefWorkflow(name: string) {
   const date = Date.now()
-  const defWorkflow = [
-    {
-      'key': `test_new_event_form_1757554075071_${date}`,
-      'name': `${name} - Create Calendar Event`,
-      'type': 'test_new_event_form_1757554075071'
-    },
-    {
-      'key': `test_update_event_form_1757558021415_${date}`,
-      'name': `${name} - Update Calendar Event`,
-      'type': 'test_update_event_form_1757558021415'
-    },
-    {
-      'key': `test_remove_event_form_1757561803395_${date}`,
-      'name': `${name} - Delete Calendar Event`,
-      'type': 'test_remove_event_form_1757561803395'
-    },
-    {
-      'key': `test_cancel_event_form_1757561126341_${date}`,
-      'name': `${name} - Cancel Calendar Event`,
-      'type': 'test_cancel_event_form_1757561126341'
+  const defWorkflow: any = []
+
+  // TODO: 通過篩選名稱包含 "Def Calendar Event" 的字段獲取workflow信息，後續需要後端配置一個默認的系統workflow組以便區分
+  const params = {
+    isDesc: true,
+    name: 'Def Calendar Event By',
+    orderBy: 'modifiedDate'
+  }
+
+  try {
+    const { entryList } = await adminApi.api.postWorkflowProcessDefinitionDraftPage(params).then(r => r.data)
+
+    const eventActions: any = {
+      'Def Calendar Event By Create': 'Create',
+      'Def Calendar Event By Update': 'Update',
+      'Def Calendar Event By Cancel': 'Cancel',
+      'Def Calendar Event By Delete': 'Delete'
     }
-  ]
+    entryList.forEach((entryItem: any) => {
+      const action = eventActions[entryItem.name]
+      if (action) {
+        const defWorkflowItem = {
+          key: `${entryItem.key}_${date}`,
+          name: `${name} - ${action} Calendar Event`,
+          type: entryItem.key
+        }
+        defWorkflow.pust(defWorkflowItem)
+      }
+    })
+  } catch (e) {
+    throw new Error(e)
+  }
+  if (defWorkflow.length < 4) {
+    throw new Error('Missing default workflow')
+  }
   return defWorkflow
 }
 

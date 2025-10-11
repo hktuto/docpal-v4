@@ -151,7 +151,7 @@ defineExpose({ setForm, getFormData, setFormData, disableForm, enableForm })
 
 <template>
   <FormRenderer ref="FormRendererRef" :form-json="formJson">
-    <template v-slot:user>
+    <template v-slot:eventUser>
       <VxeGrid ref="tableRef" v-bind="tableConfig" v-on="tableEvent" style="height: 300px">
         <template #toolbar_buttons>
           <div class="actions">

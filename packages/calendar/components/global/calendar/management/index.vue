@@ -1,12 +1,12 @@
 <script setup lang="ts">
 const { t } = useI18n()
-import CalendarManagementCalendar from '../management/calendar.vue'
+import CalendarManagementDetail from '../management/detail.vue'
 import CalendarManagementTable from '../management/table.vue'
 
 const isCalendarView = ref<boolean>(true)
 
 const currentView = computed(() => {
-  return isCalendarView.value ? CalendarManagementCalendar : CalendarManagementTable
+  return isCalendarView.value ? CalendarManagementDetail : CalendarManagementTable
 })
 
 function toggleView(view: string) {
