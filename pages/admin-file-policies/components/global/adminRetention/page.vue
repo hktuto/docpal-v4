@@ -205,6 +205,11 @@ const ResponsiveFilterRef = ref()
 
 async function getFilter() {
   let data: any = await adminApi.api.getPolicyRetentionsPageConditions().then((res) => res.data)
+  data.forEach((item: any) => {
+    if (item.label === 'Approval') {
+      item.label = t('role.approver')
+    }
+  })
   data?.unshift(
     {
       key: 'orderBy',
