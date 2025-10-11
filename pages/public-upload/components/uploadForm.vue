@@ -3,8 +3,8 @@
     <div class="flex-x-start">
       <img src="/logoWithName.png" style="width: 80%" class="logo" />
     </div>
-    <div>{{ $t("dpTable_message") }}</div>
-    <div v-html="fileRequestDetail.config.message"></div>
+    <div class="message dpTitle">{{ $t("dpTable_message") }}</div>
+    <div class="message-content" v-html="fileRequestDetail.config.message"></div>
     <FileInputBlob ref="FileInputBlobRef" v-bind="fileOptions"></FileInputBlob>
     <div class="footer">
       <el-button @click="handleSubmit">{{ $t("submit") }}</el-button>
@@ -69,5 +69,12 @@ function handleSubmit() {
 :deep(.el-upload-list) {
   max-height: 30vh;
   overflow: auto;
+}
+.message {
+  
+}
+.message-content {
+  margin-top: var(--app-space-xs);
+  margin-bottom: var(--app-space-s);
 }
 </style>

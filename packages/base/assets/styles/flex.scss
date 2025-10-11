@@ -98,3 +98,7 @@ $alignItemsList: flex-start , flex-end , center , baseline , stretch;
     --el-dialog-width : 80% !important;
   }
 }
+.dpTitle {
+  font-weight: var(--app-font-weight-title);
+  font-size: var(--app-font-size-l);
+}
