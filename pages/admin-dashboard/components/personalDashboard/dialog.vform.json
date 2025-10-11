@@ -7,7 +7,7 @@
       "formItemFlag": true,
       "options": {
         "name": "name",
-        "label": "dashboard_name",
+        "label": "workPanel_name",
         "labelAlign": "",
         "type": "text",
         "defaultValue": "",
