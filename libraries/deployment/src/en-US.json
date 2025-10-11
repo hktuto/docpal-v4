@@ -1455,7 +1455,7 @@
   "dpTable_tags": "Tags",
   "dpTable_time": "Time",
   "dpTable_to": "To",
-  "dpTable_triggleMeta": "Meta Triggering Retention",
+  "dpTable_triggleMeta": "Metadata",
   "dpTable_unique": "Unique",
   "dpTable_validityPeriod": "Validity Period",
   "dpTip": {
@@ -1874,7 +1874,7 @@
   "filePolicies_RetentionPolicyActivate": "Activate Policy",
   "filePolicies_RetentionPolicyApproved": "Approved",
   "filePolicies_RetentionPolicyCreate": "Create New Retention Policy",
-  "filePolicies_RetentionPolicyCreateDocumentType": "Document Type",
+  "filePolicies_RetentionPolicyCreateDocumentType": "Retention Trigger Condition",
   "filePolicies_RetentionPolicyCreateEvent": "Retention Event",
   "filePolicies_RetentionPolicyDelayDaysOnlyRequiredMsg": "Delay Days contain integer only.",
   "filePolicies_RetentionPolicyDelete": "Delete Policy",

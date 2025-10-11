@@ -1455,7 +1455,7 @@
   "dpTable_tags": "标签",
   "dpTable_time": "时间",
   "dpTable_to": "到",
-  "dpTable_triggleMeta": "触发属性",
+  "dpTable_triggleMeta": "Metadata",
   "dpTable_unique": "唯一",
   "dpTable_validityPeriod": "有效期",
   "dpTip": {
@@ -1874,7 +1874,7 @@
   "filePolicies_RetentionPolicyActivate": "Activate Policy",
   "filePolicies_RetentionPolicyApproved": "Approved",
   "filePolicies_RetentionPolicyCreate": "Create New Retention Policy",
-  "filePolicies_RetentionPolicyCreateDocumentType": "Document Type",
+  "filePolicies_RetentionPolicyCreateDocumentType": "保留触发条件",
   "filePolicies_RetentionPolicyCreateEvent": "Retention Event",
   "filePolicies_RetentionPolicyDelayDaysOnlyRequiredMsg": "Delay Days contain integer only.",
   "filePolicies_RetentionPolicyDelete": "Delete Policy",
