@@ -4,33 +4,9 @@
       <div class="flex-x-between">
         <h3>{{ $t('user_info') }}</h3>
         <div class="flex-x-end" v-if="!isLdapMode">
-          <el-tooltip class="box-item" effect="dark" :content="$t('user_editUser')" placement="top">
-            <Icon
-              id="UserList__Info__Edit"
-              name="material-symbols:edit-square"
-              class="normal cursor-pointer"
-              style="width: 20px; height: 20px"
-              @click="handleEdit"
-            ></Icon>
-          </el-tooltip>
-          <el-tooltip class="box-item" effect="dark" :content="$t('user_editPassword')" placement="top">
-            <Icon
-              id="UserList__Info__ChangePassword"
-              name="mynaui:lock-password-solid"
-              class="normal cursor-pointer"
-              style="width: 20px; height: 20px"
-              @click="openDialog"
-            ></Icon>
-          </el-tooltip>
-          <el-tooltip class="box-item" effect="dark" :content="$t('user_deleteUser')" placement="top">
-            <Icon
-              id="UserList__Info__DeleteUser"
-              name="material-symbols:delete-rounded"
-              style="width: 20px; height: 20px"
-              class="normal cursor-pointer"
-              @click="handleDelete"
-            ></Icon>
-          </el-tooltip>
+          <SvgIcon id="UserList__Info__Edit" :content="$t('user_editUser')" src="/icons/edit.svg" @click="handleEdit" />
+          <SvgIcon id="UserList__Info__ChangePassword" icon="ion:key-outline" :content="$t('user_editPassword')" @click="openDialog" />
+          <SvgIcon id="UserList__Info__DeleteUser" :content="$t('user_deleteUser')" src="/icons/delete.svg" @click="handleDelete" />
         </div>
       </div>
     </template>
@@ -90,17 +66,15 @@ const emits = defineEmits(['refresh'])
 
 async function handleDelete() {
   try {
-    const action = await ElMessageBox.confirm(
-      t('userTip.confirmWhetherToDelete'),
-      {
-        confirmButtonClass: 'el-button el-button--warning',
-        confirmButtonText: t('common_confirmDelete'),
-        dangerouslyUseHTMLString: true
-      })
+    const action = await ElMessageBox.confirm(t('userTip.confirmWhetherToDelete'), {
+      confirmButtonClass: 'el-button el-button--warning',
+      confirmButtonText: t('common_confirmDelete'),
+      dangerouslyUseHTMLString: true
+    })
 
     if (action !== 'confirm') return
     const res = await userProviderDetail?.BatchDeleteUserApi({ userIds: [props.user.userId] })
-    routerProvider?.message.success(t('tip_deleteSuccessMessage', {name: t('User') }))
+    routerProvider?.message.success(t('tip_deleteSuccessMessage', { name: t('User') }))
     if (!!res) userProviderDetail?.openUserList()
   } catch (error) {
     console.log(error)
