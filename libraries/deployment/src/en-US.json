@@ -2442,7 +2442,7 @@
   "pending_completed": "Completed",
   "pending_upload": "Pending Upload",
   "permission": {
-    "Everything": "Everything",
+    "Everything": "Manage",
     "Read": "Read",
     "ReadWrite": "Write",
     "create": "Create",
@@ -2450,7 +2450,7 @@
     "delete": "Delete",
     "edit": "Edit",
     "enable": "Enable",
-    "everything": "Everything",
+    "everything": "Manage",
     "manage": "Manage",
     "print": "Print",
     "read": "Read ",

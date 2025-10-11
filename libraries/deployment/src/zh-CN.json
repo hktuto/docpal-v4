@@ -2442,7 +2442,7 @@
   "pending_completed": "已完成",
   "pending_upload": "等待上传",
   "permission": {
-    "Everything": "所有",
+    "Everything": "管理",
     "Read": "读取",
     "ReadWrite": "读写",
     "create": "创建",
@@ -2450,7 +2450,7 @@
     "delete": "删除",
     "edit": "编辑",
     "enable": "激活",
-    "everything": "所有",
+    "everything": "管理",
     "manage": "管理",
     "print": "打印",
     "read": "读取",
