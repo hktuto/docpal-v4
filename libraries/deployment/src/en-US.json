@@ -1459,7 +1459,6 @@
   "dpTable_unique": "Unique",
   "dpTable_validityPeriod": "Validity Period",
   "dpTip": {
-    "noRollbackReminder": "<br>This action cannot be undone.",
     "choose": "Please choose {name}",
     "configurePermission": "Permission verification failed, please contact the administrator to configure",
     "copyPathSuccess": "Path copied to clipboard",
@@ -1485,6 +1484,7 @@
     "loading": "Loading...",
     "newFolderDuplicateName": "The system detected a duplicate folder name, please refill the folder name",
     "noMore": "No more",
+    "noRollbackReminder": "<br>This action cannot be undone.",
     "noValidName": "The system detected that no valid name was generated",
     "pleaseSelectApprovalStatus": "Please select approval status",
     "resetWarning": "After submission, the groups of all selected users will be reset",
@@ -2580,6 +2580,7 @@
     "isAuto": "Auto Retention",
     "notFound": "No retention policy found",
     "period": "Retention Period",
+    "periodUnit": "Period Unit",
     "recentNow": "Retain Now"
   },
   "search": {

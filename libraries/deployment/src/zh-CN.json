@@ -1459,7 +1459,6 @@
   "dpTable_unique": "唯一",
   "dpTable_validityPeriod": "有效期",
   "dpTip": {
-    "noRollbackReminder": "<br>此操作无法撤消。",
     "choose": "请选择{name}",
     "configurePermission": "权限校验失败，请联系管理员配置",
     "copyPathSuccess": "路径已复制到剪贴板",
@@ -1485,6 +1484,7 @@
     "loading": "加载中...",
     "newFolderDuplicateName": "系统检测到重复的资料夹名称，请重新填写资料夹名称",
     "noMore": "没有更多数据了",
+    "noRollbackReminder": "<br>此操作无法撤消。",
     "noValidName": "系统检测到未生成有效名称",
     "pleaseSelectApprovalStatus": "请选择审批状态",
     "resetWarning": "提交后，所有选定用户的群组将被重置",
@@ -2580,6 +2580,7 @@
     "isAuto": "自动保留",
     "notFound": "找不到保留政策",
     "period": "时期",
+    "periodUnit": "日期单位",
     "recentNow": "即时"
   },
   "search": {
