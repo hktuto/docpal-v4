@@ -16,7 +16,7 @@
             </div>
           </template>
         </el-table-column>
-        <el-table-column v-for="item in ['read', 'write', 'manage', 'print']" :key="item" :label="$t(`permission.${item}`)" header-align="center">
+        <el-table-column v-for="item in ['read', 'write', 'manage', 'print']" :key="item" :label="$t(`permission.${item}`)" header-align="left">
           <template #default="{ row }">
             <el-switch v-model="row[item]" :loading="row.loading" @change="(value: any) => handlePermissionChange(value, item, row)"></el-switch>
           </template>
