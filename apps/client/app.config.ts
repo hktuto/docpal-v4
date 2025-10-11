@@ -210,7 +210,17 @@ export default defineAppConfig({
       name: 'admin-case-management'
     },
     {
-      name: 'admin-dashboard'
+      label: 'admin-dashboard',
+      icon: 'carbon:dashboard',
+      hoverIcon: 'carbon:dashboard',
+      children: [
+        {
+          name: 'admin-dashboard'
+        },
+        {
+          name: 'admin-work-panel'
+        }
+      ]
     },
     {
       label: 'adminMenu.policy',
