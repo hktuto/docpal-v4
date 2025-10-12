@@ -30,42 +30,39 @@ const defWorkflow = ref()
 
 async function generateDefWorkflow(name: string) {
   const date = Date.now()
-  const defWorkflow: any = []
+  const defWorkflowList: any = []
 
-  // TODO: 通過篩選名稱包含 "Def Calendar Event" 的字段獲取workflow信息，後續需要後端配置一個默認的系統workflow組以便區分
+  // TODO: 通過篩選名稱包含 "Def Calendar Event By" 的字段獲取workflow信息，後續需要後端配置一個默認的系統workflow組以便區分
   const params = {
     isDesc: true,
     name: 'Def Calendar Event By',
     orderBy: 'modifiedDate'
   }
 
-  try {
-    const { entryList } = await adminApi.api.postWorkflowProcessDefinitionDraftPage(params).then(r => r.data)
+  const {entryList} = await adminApi.api.postWorkflowProcessDefinitionDraftPage(params).then((r) => r.data)
 
-    const eventActions: any = {
-      'Def Calendar Event By Create': 'Create',
-      'Def Calendar Event By Update': 'Update',
-      'Def Calendar Event By Cancel': 'Cancel',
-      'Def Calendar Event By Delete': 'Delete'
-    }
-    entryList.forEach((entryItem: any) => {
-      const action = eventActions[entryItem.name]
-      if (action) {
-        const defWorkflowItem = {
-          key: `${entryItem.key}_${date}`,
-          name: `${name} - ${action} Calendar Event`,
-          type: entryItem.key
-        }
-        defWorkflow.pust(defWorkflowItem)
-      }
-    })
-  } catch (e) {
-    throw new Error(e)
+  const eventActions: any = {
+    'Def Calendar Event By Create': 'Create',
+    'Def Calendar Event By Update': 'Update',
+    'Def Calendar Event By Cancel': 'Cancel',
+    'Def Calendar Event By Delete': 'Delete'
   }
-  if (defWorkflow.length < 4) {
+  entryList.forEach((entryItem: any) => {
+    const action = eventActions[entryItem.name]
+    if (action) {
+      const defWorkflowItem = {
+        key: `${entryItem.key}_${date}`,
+        name: `${name} - ${action} Calendar Event`,
+        type: entryItem.key
+      }
+      defWorkflowList.push(defWorkflowItem)
+    }
+  })
+
+  if (defWorkflowList.length < 4) {
     throw new Error('Missing default workflow')
   }
-  return defWorkflow
+  return defWorkflowList
 }
 
 async function init() {
@@ -127,16 +124,11 @@ function fillList(list: any) {
   const newList = []
   list.forEach((itemKey: string) => {
     if (userOptions.value.find((ui: any) => ui.value.includes(itemKey))) {
-      newList.push(`user_${itemKey}`
-      )
+      newList.push(`user_${itemKey}`)
     } else if (roleOptions.value.find((ui: any) => ui.value.includes(itemKey))) {
-      newList.push(
-        `role_${itemKey}`
-      )
+      newList.push(`role_${itemKey}`)
     } else if (groupOptions.value.find((ui: any) => ui.value.includes(itemKey))) {
-      newList.push(
-        `group_${itemKey}`
-      )
+      newList.push(`group_${itemKey}`)
     }
   })
   return newList
@@ -207,7 +199,7 @@ function fillItem(list: any) {
     }
   })
 
-  Object.keys(item).forEach(prop => {
+  Object.keys(item).forEach((prop) => {
     if (item[prop].length === 0) {
       delete item[prop]
     }
@@ -231,7 +223,7 @@ async function submit() {
       routerProvider?.message.success(t('tip_updateSuccessMsg', { modelName: null, name: currentData.value.name }))
     } else {
       // TODO use def value
-      defWorkflow.value = generateDefWorkflow(currentData.value.name)
+      defWorkflow.value = await generateDefWorkflow(currentData.value.name)
       currentData.value.flows = defWorkflow.value
       const result = await adminApi.api.postEventCalendarsSetting(currentData.value)
       routerProvider?.message.success(t('tip_createdSuccessMsg', { modelName: null, name: currentData.value.name }))
@@ -247,7 +239,7 @@ async function submit() {
 async function handleJumpWorkflow(workflowKey: string) {
   if (!workflowKey) return
 
-  const data = await adminApi.api.getWorkflowVersionKeyProcessdefinitionkey(workflowKey).then(r => r.data)
+  const data = await adminApi.api.getWorkflowVersionKeyProcessdefinitionkey(workflowKey).then((r) => r.data)
   if (!data) return
 
   const params: NewWorkflowVersionDetailParams = {
