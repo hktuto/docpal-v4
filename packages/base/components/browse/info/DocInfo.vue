@@ -116,7 +116,7 @@ function getFileExtension(mimeType) {
       font-size: var(--app-font-size-s);
       display: block;
       color: var(--app-grey-600);
-      margin-bottom: 2px;
+      margin-bottom: var(--app-space-xs);
     }
   :deep(.infoContent) {
     font-size: var(--app-font-size-m);
