@@ -14,7 +14,7 @@
     <el-text :type="hasPreviewName(state.setting.previewName) ? '' : 'danger'" style="margin-bottom: 15px"
       >{{ $t('folderCabinet.previewName') }}：{{ state.setting.previewName }}</el-text
     >
-    <BrowseActionsReplaceUpload v-model="state.fileList" :limit="1" @change="handleChange"></BrowseActionsReplaceUpload>
+    <FormUpload v-model="state.fileList" :limit="1" @change="handleChange"></FormUpload>
     <MetaRenderForm2 ref="MetaFormRef" mode="folderCabinet" @formChange="handleMetaChange"></MetaRenderForm2>
     <template #footer>
       <el-button id="FolderCabinet__Detail__Create__Submit" :loading="state.loading" type="primary" @click="handleSubmit">{{ $t('submit') }} </el-button>
@@ -118,7 +118,7 @@ async function handleSubmit() {
     delete inputFile.properties.docName
     const formData: any = new FormData()
     inputFile.dfcId = state.setting.id
-    formData.append('files', file.raw)
+    formData.append('files', file)
     formData.append('document', JSON.stringify(inputFile))
     const res = await clientApi.api.postNuxeoDocumentCreatedocument(formData)
     emits('success', inputFile)
@@ -132,7 +132,7 @@ async function handleSubmit() {
 
 async function handleReplace(inputFile: any, file: any) {
   const formData: any = new FormData()
-  formData.append('file', file.raw)
+  formData.append('file', file)
   formData.append('document', JSON.stringify(inputFile))
   state.loading = true
   try {

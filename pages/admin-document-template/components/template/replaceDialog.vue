@@ -4,7 +4,7 @@
     v-model="state.visible" :title="$t('template.replace')"
     :close-on-click-modal="false" append-to-body
   >
-    <BrowseActionsReplaceUpload v-model="form.fileList" :limit="1" :accept="state.accept"></BrowseActionsReplaceUpload>
+    <FormUpload v-model="form.fileList" :limit="1" :accept="state.accept"></FormUpload>
     <template #footer>
       <el-button id="DocumentTemplate__ReplaceDocument__Submit" type="primary" :loading="state.loading"
                  @click="handleSubmit">
@@ -35,7 +35,7 @@ async function handleSubmit() {
     state.visible = false
     return
   }
-  const file = form.fileList[0].raw
+  const file = form.fileList[0]
   Object.defineProperty(file, 'name', {writable: true})
   file.name = getName()
   try {
