@@ -88,7 +88,7 @@ $alignItemsList: flex-start , flex-end , center , baseline , stretch;
     flex: 1;
     overflow: auto;
     height: 100%;
-    padding: var(--app-space-xs) var(--el-dialog-padding-primary);
+    padding: var(--app-space-xs) 0;
   }
   .el-form-item__error{
     z-index: 3;
