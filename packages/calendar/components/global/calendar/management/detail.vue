@@ -32,7 +32,7 @@ const event = ref({
 })
 const { setting: calendarSetting, categoriesOption, locationsOption } = useCalendarStore()
 const createDialogFormRef = ref()
-const rejectEventDialogRef = ref()
+const eventNotifyDialogRef = ref()
 
 const state = reactive({
   workflowKey: '',
@@ -99,9 +99,9 @@ function handleRejectEvent() {
   state.workflowKey = flow.key
 
   if (event.isEdit) {
-    rejectEventDialogRef.value.openDialog(event)
+    eventNotifyDialogRef.value.openDialog(event)
   } else {
-    rejectEventDialogRef.value.openDialogByCreator(event)
+    eventNotifyDialogRef.value.openDialogByCreator(event)
   }
 }
 
@@ -237,7 +237,7 @@ onMounted(() => {
     </el-col>
   </el-row>
 
-  <CalendarRejectEventDialog ref="rejectEventDialogRef" :categoriesOption="categoriesOption"
+  <CalendarEventNotifyDialog ref="eventNotifyDialogRef" :categoriesOption="categoriesOption" :state="s"
                              :workflowKey='state.workflowKey' />
 </template>
 
