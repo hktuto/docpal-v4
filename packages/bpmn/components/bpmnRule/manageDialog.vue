@@ -101,6 +101,11 @@ const { tableConfig, tableEvent, tableRef, query, reload, cleanSelectedRows } = 
       }
     ]
   ],
+  optionalConfig:{
+    rowConfig:{
+      keyField: 'id'
+    }
+  },
   saveColumnOrder: false
 })
 watch(

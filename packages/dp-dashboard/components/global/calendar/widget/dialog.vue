@@ -2,6 +2,9 @@
 import { clientApi, adminApi } from 'api'
 
 const routerProvider = inject(MenuRouterKey)
+if (!routerProvider) {
+  throw new Error('MenuRouterKey is not provided')
+}
 const emits = defineEmits(['reload'])
 const { t } = useI18n()
 const opened = ref(false)
@@ -10,76 +13,37 @@ const {
   categoriesOption,
   locationsOption,
   calendarViewOptions,
-  weekDayOptions
+  weekDayOptions,
+  EventFormData,
+  initWorkflowForm,
+  runWorkflow
 } = useCalendarStore()
 const props = defineProps({
   options: {}
 })
 const createDialogFormRef = ref()
+const eventNotifyDialogRef = ref()
+const eventNotifyType = ref<'create' | 'update' | 'reject'>()
+const sendMessageText = ref('Send Message to Creator')
 
 const state = reactive({
   workflowKey: '',
-  workflowId: {},
+  workflowId: '',
   location: '',
   formJson: {},
   loading: false,
-  isEdit: false
-})
-const event = reactive({
-  id: '',
-  category: '',
-  location: ''
+  isEdit: false,
+  userList: []
 })
 
 const categories = ref()
-
-async function initWorkflowForm(name: string) {
-  state.loading = true
-  try {
-    categories.value = categoriesOption.value.find((item: any) => item.id === state.workflowId)
-    if (!categories.value || !categories.value.flows || categories.value.flows.length === 0) {
-      state.workflowId = ''
-      return
-    }
-    // TODO：名稱之後需要重新定義
-    const flow = categories.value.flows.find((item: any) => {
-      if (item.name.toLowerCase().includes(name)) {
-        return item
-      }
-    })
-    if (!flow) return
-    state.workflowKey = flow.key
-    if (!!categories.value.location && categories.value.location.value.length > 0) {
-      state.location = categories.value.location.value.map(item => item.id).join(',')
-    }
-
-    const workflow = await adminApi.api.getWorkflowVersionKeyProcessdefinitionkey(flow.key).then((r) => r.data)
-    if (!workflow) return
-    state.formJson = await formJsonGet(workflow.processDefinitionKey, workflow.id)
-  } catch (e) {
-    console.log(e)
-    state.loading = false
-  } finally {
-    state.loading = false
-  }
-}
-
-async function formJsonGet(processKey: string, versionId: string) {
-  const response: any = await clientApi.api.getRelationQuery({
-    userTaskId: 'start',
-    processKey,
-    versionId
-  }).then((res: any) => res.data)
-  if (!response[0] || (response[0] && !response[0].jsonValue)) return {}
-  return JSON.parse(response[0].jsonValue)
-}
 
 async function setForm(isEdit: boolean, data: any) {
   if (!state.formJson && '' !== state.formJson) {
     routerProvider?.message.error('The form does not exist')
     return
   }
-  nextTick(() => {
+  nextTick(async () => {
     createDialogFormRef.value.setForm(state.formJson)
     createDialogFormRef.value.setFormData(isEdit, data)
   })
@@ -90,15 +54,17 @@ async function open(dateTime: string) {
   state.userList = []
   state.workflowId = ''
   state.location = ''
+  state.loading = true
+  opened.value = true
   try {
     if (!!props.options.defaultNewEventCalendar && '' !== props.options.defaultNewEventCalendar) {
       state.workflowId = props.options.defaultNewEventCalendar
       await initWorkflowForm('create calendar event')
       const data = {
-        category: state.workflowId
+        eventCategory: state.workflowId
       }
       if ('' !== state.location) {
-        data.location = state.location
+        data.eventLocation = state.location
       }
 
       // allow to create
@@ -109,23 +75,39 @@ async function open(dateTime: string) {
         const time = []
         time.push(`${startTime[1]}:00`)
         time.push('23:59:00')
-        data.time = time
+        data.eventTime = time
       }
       await setForm(false, data)
     }
   } catch (e) {
     console.log(e)
   }
-  opened.value = true
+  state.loading = false
 }
 
-async function create() {
-  await initWorkflowForm('create calendar event')
-
-  const data = {
-    category: state.workflowId
+async function handleCategories() {
+  if (!state.workflowId || '' === state.workflowId) {
+    routerProvider?.message.error('Workflow Id is empty.')
+    return
   }
-  await setForm(false, data)
+
+  try {
+    const workflowData: any = await initWorkflowForm('create calendar event', state.workflowId)
+    if (!workflowData) {
+      routerProvider?.message.error('Workflow Data is empty.')
+      return
+    }
+    state.workflowKey = workflowData.workflowData
+    state.formJson = workflowData.formJson
+    state.location = 'workflowData' in workflowData ? workflowData.workflowData : ''
+
+    const data = {
+      eventCategory: state.workflowId
+    }
+    await setForm(false, data)
+  } catch (e) {
+    throw e
+  }
 }
 
 function edit(event: any) {
@@ -145,11 +127,11 @@ async function editForm(event: any) {
     eventId: event.detail.eventId,
     eventName: event.detail.eventName,
     eventDescription: event.detail.eventDescription,
-    category: event.detail.category,
-    location: event.detail.location,
+    eventCategory: event.detail.category,
+    eventLocation: event.detail.location,
     startTime: startTime[0],
     endTime: endTime[0],
-    user: event.detail.relatedUsers.user,
+    eventUser: event.detail.relatedUsers.eventUser,
     isAllDay: event.detail.isAllDay
   }
 
@@ -157,34 +139,30 @@ async function editForm(event: any) {
     const time = []
     time.push(`${startTime[1]}:00`)
     time.push(`${endTime[1]}:00`)
-    data.time = time
+    data.eventTime = time
   }
 
   await initWorkflowForm('update calendar event')
   await setForm(true, data)
 }
 
-function conversionMessage(event: any) {
-  return JSON.stringify(event)
-}
-
-async function cancelAndRemove(isCancel: boolean, event: any) {
+async function cancelAndRemove1(isCancel: boolean, event: any) {
   state.isEdit = true
   state.userList = []
   state.workflowId = event.calendarId
   state.location = ''
-  const data = {
+  const data: EventFormData = {
     eventId: event.detail.eventId,
     eventName: event.detail.eventName,
     eventDescription: event.detail.eventDescription,
-    category: event.detail.category,
-    location: event.detail.location,
+    eventCategory: event.detail.category,
+    eventLocation: event.detail.location,
     startTime: event.start,
     endTime: event.end,
-    user: event.detail.relatedUsers.user,
+    eventUser: event.detail.relatedUsers.user,
     isAllDay: event.detail.isAllDay
   }
-  data.additionalContent = conversionMessage(data)
+  data.eventMessage = ''
 
   const statue = isCancel ? 'cancel calendar event' : 'delete calendar event'
   await initWorkflowForm(statue)
@@ -201,16 +179,23 @@ async function cancelAndRemove(isCancel: boolean, event: any) {
   emits('reload')
 }
 
-async function submit() {
+async function submit1() {
   try {
     const data = await createDialogFormRef.value.getFormData()
     if (!data) {
       return
     }
-    data.eId = `${Math.random().toString(36).substring(2, 9)}-${Date.now()}`
-
-    // 組裝消息推送的内容
-    data.additionalContent = conversionMessage(data)
+    const userId = useUserId()
+    if (!isEdit) {
+      const msg = {
+        title: `${userId.value} Create New Calendar Event`,
+        data: ''
+      }
+      data.eventMessage = JSON.stringify(msg)
+    } else {
+      data.sendMessageToCreator = true
+    }
+    data.recipient = data.eventUser
 
     const form = {
       processKey: state.workflowKey,
@@ -224,13 +209,41 @@ async function submit() {
     state.loading = true
     console.log('submit', data, form)
     await clientApi.api.postWorkflowProcessStart(form, { async: false }).then((res) => res.data)
-    state.formDialogVisible = false
     emits('reload')
     state.loading = false
     opened.value = false
   } catch (e) {
     console.log(e)
   }
+}
+
+async function cancelAndRemove(isCancel: boolean, event: any) {
+
+
+  emits('reload')
+}
+
+async function submit() {
+  opened.value = true
+  try {
+    const event = await createDialogFormRef.value.getFormData()
+    event.recipient = data.eventUser
+
+    // Send Message
+    eventNotifyType.value = 'create'
+    sendMessageText.value = ''
+    eventNotifyDialogRef.value.openDialog()
+
+    // run workflow
+    await runWorkflow(state.workflowId, event)
+  } catch (e) {
+    console.log(e)
+  } finally {
+    state.loading = false
+  }
+
+  emits('reload')
+  opened.value = false
 }
 
 defineExpose({ open, edit, cancelAndRemove })
@@ -240,7 +253,7 @@ defineExpose({ open, edit, cancelAndRemove })
   <el-dialog v-model="opened" :title="state.isEdit ? t('Edit Event') : t('New Event')" append-to-body>
     <el-form label-position="top" v-show="!state.isEdit">
       <el-form-item :label="t('Calendar')">
-        <el-select v-model="state.workflowId" @change="create">
+        <el-select v-model="state.workflowId" @change="handleCategories">
           <el-option v-for="categories in categoriesOption" :key="categories.key" :label="categories.name"
                      :value="categories.id" />
         </el-select>
@@ -261,4 +274,7 @@ defineExpose({ open, edit, cancelAndRemove })
       </el-button>
     </template>
   </el-dialog>
+
+  <CalendarEventNotifyDialog ref="eventNotifyDialogRef" :type="eventNotifyType" :sendMessageText="sendMessageText"
+                             @submit="handleSubmit" />
 </template>

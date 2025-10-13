@@ -20,7 +20,6 @@ const state = reactive({
 })
 
 function openDialog(event: any) {
-  console.log(222,event)
   state.event = event
   form.message = ''
   form.sendMessageToCreator = true
@@ -48,15 +47,15 @@ async function handleStart() {
     eventId: state.event.id,
     eventName: state.event.eventName,
     eventDescription: state.event.eventDescription,
-    category: state.event.category,
-    location: state.event.location,
+    eventCategory: state.event.category,
+    eventLocation: state.event.location,
     startTime: state.event.startTime,
     endTime: state.event.endTime,
-    user: user,
+    eventUser: user,
     isAllDay: state.event.isAllDay,
-    creator: state.event.creator,
-    additionalContent: form.message,
-    sendMessageToCreator: form.sendMessageToCreator
+    sendMessageToCreator: form.sendMessageToCreator,
+    recipient: state.event.creator,
+    eventMessage: form.message
   }
 
   const request = {
@@ -71,7 +70,7 @@ async function handleStart() {
   try {
     await clientApi.api.postWorkflowProcessStart(request, { async: false }).then((res) => res.data)
   } catch (e) {
-    console.log("rejectEvent",e)
+    console.log('rejectEvent', e)
   }
   dialogShow.value = false
 }
