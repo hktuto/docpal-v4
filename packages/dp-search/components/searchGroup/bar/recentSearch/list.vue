@@ -67,15 +67,18 @@ function displayValueMap(type: string, value: any) {
         })
         .join(', ')
     case 'collections':
-      if(!searchOptions.value.collections) return value
-      return value.map((v: string) => {
-        return searchOptions.value.collections.find((item: any) => item.value === v)?.label
-      }).join(', ')
+      if (!searchOptions.value.collections) return value
+      return value
+        .map((v: string) => {
+          return searchOptions.value.collections.find((item: any) => item.value === v)?.label
+        })
+        .join(', ')
     default:
       if (Array.isArray(value)) {
         return value.join(', ')
       } else if (typeof value === 'object') {
-        return `[${value.key}: ${value.value}]`
+        if (!value) return value
+        return value.key && value.value ? `[${value.key}: ${value.value}]` : value
       }
       return value
   }
