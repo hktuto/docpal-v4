@@ -8,7 +8,7 @@
     <el-form ref="formRef" :model="form" label-position="top" @submit.native.prevent>
       <el-form-item :label="$t('common_file')" prop="targetFile"
                     :rules="[{ required: true, message: $t('common_file') + $t('render.hint.fieldRequired')}]">
-        <BrowseActionsReplaceUpload v-model="form.fileList" :limit="1"></BrowseActionsReplaceUpload>
+        <FormUpload v-model="form.fileList" :limit="1"></FormUpload>
       </el-form-item>
       <el-checkbox v-if="checkLicenseFeatures('AI_CLASSIFICATION')" v-model="form.openAiAnalyzeMetadata">
         {{ $t('ai.checkAI') }}
@@ -49,7 +49,7 @@ async function handleConfirm() {
     // languages: form.value.languages
   }
   const formData = new FormData()
-  formData.append('file', form.value.fileList[0].blob)
+  formData.append('file', form.value.fileList[0])
   formData.append('document', JSON.stringify(d))
   formData.append('openAiAnalyzeMetadata', form.value.openAiAnalyzeMetadata)
   state.loading = true
