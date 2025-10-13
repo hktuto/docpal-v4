@@ -29,19 +29,19 @@
     </el-tree>
     <div>
       <template v-if="state.selectedRow && state.selectedRow.folder !== false">
-        <div class="flex-x-start">
+        <div class="flex-x-start" style="margin-bottom: var(--app-space-s)">
           <SvgIcon v-if="state.selectedRow.folder" class="el-icon--left" src="/icons/folder-general.svg"></SvgIcon>
           <SvgIcon v-else class="el-icon--left" src="/icons/file-general.svg"></SvgIcon>
           {{ state.selectedRow.docName || state.selectedRow.label }}
         </div>
-        <div>
+        <div style="margin-bottom: var(--app-space-s)">
           {{ $t('tableHeader_labelRule') }}：
           <template v-for="(item, index) in getLabelList(state.selectedRow.labelRule)" :key="index">
             <el-tag>{{ $t(item.metadata || item.metaData) }}</el-tag>
             <template v-if="index !== getLabelList(state.selectedRow.labelRule).length - 1"> -</template>
           </template>
         </div>
-        <el-text :type="hasPreviewName(state.selectedRow.previewName) ? '': 'danger'" style="margin-bottom: 15px">
+        <el-text  :type="hasPreviewName(state.selectedRow.previewName) ? '': 'danger'" style="margin-bottom: var(--app-space-s)">
           {{ $t('folderCabinet.previewName') }}：{{ state.selectedRow.previewName }}
         </el-text>
         <MetaRenderForm2 ref="MetaFormRef" mode="folderCabinet" @formChange="handleMetaChange"></MetaRenderForm2>
@@ -156,8 +156,14 @@ async function handleNodeClick(row: any) {
     await MetaFormRef.value.init(state.selectedRow.documentType, {
       requiredFields
     })
+    
     const properties = JSON.parse(JSON.stringify(state.selectedRow.properties))
     MetaFormRef.value.setData({
+      docName: state.selectedRow.docName ? state.selectedRow.docName : row.label,
+      ...defaultValue,
+      ...properties
+    })
+    console.log("requiredFields",{
       docName: state.selectedRow.docName ? state.selectedRow.docName : row.label,
       ...defaultValue,
       ...properties

@@ -93,7 +93,7 @@ async function getVariables(isFolder: boolean = false) {
     if (['ai', 'upload', 'folderCabinet'].includes(props.mode)) {
       state.variables.unshift({
         name: 'docName',
-        label: t('tableHeader_name'),
+        label: t('fc:docTitle'),
         type: 'input',
         required: true,
         options: {
