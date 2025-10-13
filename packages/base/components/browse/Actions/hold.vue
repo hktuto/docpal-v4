@@ -2,7 +2,7 @@
   <div v-if="hold">
     <el-dropdown v-if="doc.isFolder && (!hold.status || hold.status === 'R')" trigger="click">
       <BrowseActionsButton id="shareActionButton" :label="svgContent">
-        <SvgIcon class="hd-lock-img" src="/icons/file/lock.svg" round :content="svgContent"></SvgIcon>
+        <SvgIcon class="hd-lock-img" src="/icons/file/lock.svg" style="--icon-color: var(--app-error-color)" round :content="svgContent"></SvgIcon>
       </BrowseActionsButton>
       <template #dropdown>
         <el-dropdown-menu class="hd-list--menu">
