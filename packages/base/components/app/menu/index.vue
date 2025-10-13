@@ -69,7 +69,7 @@ watch(() => [layout, hightLightPanel], () => {
             <div class="menuHeader">
 
                 <slot name="header" />
-                <AppLogo :menuMode="menuMode" />
+                <AppLogo style="--icon-size: 2rem;" />
             </div>
             <div class="menuBody">
 

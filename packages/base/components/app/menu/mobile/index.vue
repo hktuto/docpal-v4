@@ -44,7 +44,7 @@ function handleSelect(item:any){
 
 <template>
 <div class="mobileMenuContainer">
-  <AppLogo menuMode="collapse" @click="opened = !opened"/>
+  <AppLogo style="--icon-size: 2rem;"  @click="opened = !opened"/>
   <div class="inlineMenuList">
     <template v-for="(item,index) in displayMenu" :key="index">
       <template v-if="item.children && item.children.length > 0" >
