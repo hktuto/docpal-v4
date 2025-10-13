@@ -1,7 +1,7 @@
 <template>
   <div class="watermarkListContainer">
     <div class="listActionContainer">
-      <el-button id="WatermarkSetting__CreateNewWatermark" type="primary" @click="createItem">
+      <el-button id="WatermarkSetting__CreateNewWatermark" type="primary"  @click="createItem">
         {{ $t('admin_watermark_create') }}
       </el-button>
       <!--            <SvgIcon src="/icons/add.svg" :title="$t('admin_watermark_create')" class="addButton" @click="createItem"/>-->
@@ -127,7 +127,7 @@ function switchDetail(id: string) {
   }
 
   &.selected, &:hover {
-    --color: #fff;
+    --color: var(--app-text-color-primary);
     cursor: default;
   }
   &:hover {
@@ -141,11 +141,15 @@ function switchDetail(id: string) {
 .listActionContainer {
   display: flex;
   flex-flow: row nowrap;
-  justify-content: flex-end;
+  justify-content: flex-start;
   align-items: center;
   border-bottom: 1px solid var(--app-grey-400);
   flex: 0 0 auto;
-  padding: calc(var(--app-space-xs) / 2);
+  padding-block: var(--app-space-s);
+  margin-bottom: var(--app-space-s);
+}
+#WatermarkSetting__CreateNewWatermark{
+  width: 100%;
 }
 
 .addButton {

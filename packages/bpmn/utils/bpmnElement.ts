@@ -366,7 +366,7 @@ export const bpmnElement: BpmnElement = {
     toolbar: [
       {
         icon: 'bpmn:clock',
-        label: 'boundaryEvent',
+        label: 'Boundary Event',
         group: '',
         order: 0,
         dropData: (id: string) => ({
@@ -468,7 +468,7 @@ export const bpmnElement: BpmnElement = {
             color = '#7B61FF'
             break
           case '${docpalNotificationDelegate}':
-            icon = '/bpmn/icons/browse.svg'
+            icon = '/bpmn/icons/message.svg'
             type = 'Send Notification'
             color = '#7B61FF'
             break
@@ -504,7 +504,7 @@ export const bpmnElement: BpmnElement = {
     toolbar: [
       {
         icon: 'bpmn:document',
-        label: 'document',
+        label: 'Document',
         group: '',
         order: 0,
         dropData: (id: string) => ({
@@ -542,7 +542,7 @@ export const bpmnElement: BpmnElement = {
       },
       {
         icon: 'bpmn:email',
-        label: 'email',
+        label: 'Email',
         group: '',
         order: 0,
         dropData: (id: string) => ({
@@ -881,7 +881,7 @@ export const bpmnElement: BpmnElement = {
         })
       },
       {
-        icon: 'bpmn:browse',
+        icon: 'bpmn:message',
         label: 'Send Notification',
         group: '',
         order: 0,
@@ -893,7 +893,7 @@ export const bpmnElement: BpmnElement = {
               ['flowable:field']: [
                 {
                   attr_name: 'message',
-                  'flowable:string': { __cdata: '' }
+                  'flowable:string': { __cdata: '{"templateId": "notification.workflow.custom","level": "success","eventType": "common","additionalContent": "","showNotification": true,"notiStatus":"SUCCESS"}' }
                 },
                 {
                   attr_name: 'notificationUserFromVariables',
@@ -911,7 +911,7 @@ export const bpmnElement: BpmnElement = {
               ['flowable:field']: [
                 {
                   attr_name: 'message',
-                  'flowable:string': { __cdata: '' }
+                  'flowable:string': { __cdata: '{"templateId": "notification.workflow.custom","level": "success","eventType": "common","additionalContent": "","showNotification": true,"notiStatus":"SUCCESS"}' }
                 },
                 {
                   attr_name: 'notificationUserFromVariables',

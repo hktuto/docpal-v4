@@ -49,6 +49,7 @@ export async function verifly() {
   const token = localStorage.getItem('access_token') || ''
   const decodedToken = parseJwt(token)
   if(decodedToken) {
+    console.log('decodedToken', decodedToken)
     const isAdmin = useIsAdmin()
     const isSuperAdmin = useIsSuperAdmin()
     const hasAdmin = decodedToken.roles.includes('ROLE_ADMIN')
@@ -178,9 +179,10 @@ export function logout() {
   const logedIn = useLoginState()
 
   const userState = useUserState()
+  const router = useRouter()
   const isSuperAdmin = sessionStorage.getItem('superAdmin')
   if (isSuperAdmin) {
-
+    router.push('/login')
   } else {
     keyCloakState.value?.logout()
 

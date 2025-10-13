@@ -156,7 +156,7 @@ onMounted(() => {
             <Icon name="lucide:clipboard-paste" />
             <div class="label">Paste</div>
         </div>
-        <ElPopconfirm v-if="contextSelectedNode && !['start','end'].includes(contextSelectedNode.data.id)" title="Are you sure to delete this item?" @confirm="deleteItem">
+        <ElPopconfirm v-if="contextSelectedNode && !['start', 'end'].includes(contextSelectedNode.data.id.toLowerCase())" title="Are you sure to delete this item?" @confirm="deleteItem">
             <template #reference>
                 <div class="contextAction" >
                     <Icon name="lucide:trash" />
