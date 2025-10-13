@@ -60,9 +60,5 @@ async function handleOpen() {
 defineExpose({ handleOpen })
 </script>
 <style lang="scss">
-.retention-add-dialog {
-  min-width: 900px;
-}
-
 
 </style>
