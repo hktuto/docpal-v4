@@ -5,6 +5,8 @@ import { adminApi, clientApi } from 'api'
 const props = defineProps<{
   messageEvent: any
 }>()
+const { t } = useI18n()
+
 const userId = useUserId()
 const showDetail = ref(false)
 const calendarRef = ref()
@@ -222,7 +224,8 @@ onMounted(() => {
 
         <!--  update form  -->
         <div v-else v-loading="state.loading" style="max-height: 75vh;overflow-y: auto">
-          <CalendarWidgetDialogForm ref="createDialogFormRef" />
+          <CalendarDialogForm ref="createDialogFormRef" :categoryId="state.categoryId" @ready="handleReady"
+                              @implement="handleImplement" @success="handleSuccess" />
         </div>
 
         <el-divider />

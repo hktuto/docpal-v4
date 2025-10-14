@@ -1,5 +1,6 @@
 <script lang="ts" setup>
-import { clientApi, adminApi } from 'api'
+import { clientApi } from 'api'
+import { createEventWorkflow, updateEventWorkflow } from '#imports'
 
 const routerProvider = inject(MenuRouterKey)
 if (!routerProvider) {
@@ -8,26 +9,15 @@ if (!routerProvider) {
 const emits = defineEmits(['reload'])
 const { t } = useI18n()
 const opened = ref(false)
-const {
-  setting: calendarSetting,
-  categoriesOption,
-  locationsOption,
-  calendarViewOptions,
-  weekDayOptions,
-  EventFormData,
-  initWorkflowForm,
-  runWorkflow
-} = useCalendarStore()
+const { setting: calendarSetting, categoriesOption } = useCalendarStore()
 const props = defineProps({
   options: {}
 })
-const createDialogFormRef = ref()
-const eventNotifyDialogRef = ref()
-const eventNotifyType = ref<'create' | 'update' | 'reject'>()
-const sendMessageText = ref('Send Message to Creator')
+const eventDialogFormRef = ref()
 
 const state = reactive({
   workflowKey: '',
+  categoryId: '',
   workflowId: '',
   location: '',
   formJson: {},
@@ -36,93 +26,53 @@ const state = reactive({
   userList: []
 })
 
-const categories = ref()
-
-async function setForm(isEdit: boolean, data: any) {
-  if (!state.formJson && '' !== state.formJson) {
-    routerProvider?.message.error('The form does not exist')
-    return
-  }
-  nextTick(async () => {
-    createDialogFormRef.value.setForm(state.formJson)
-    createDialogFormRef.value.setFormData(isEdit, data)
-  })
-}
-
-async function open(dateTime: string) {
-  state.isEdit = false
-  state.userList = []
-  state.workflowId = ''
-  state.location = ''
-  state.loading = true
-  opened.value = true
-  try {
-    if (!!props.options.defaultNewEventCalendar && '' !== props.options.defaultNewEventCalendar) {
-      state.workflowId = props.options.defaultNewEventCalendar
-      await initWorkflowForm('create calendar event')
-      const data = {
-        eventCategory: state.workflowId
-      }
-      if ('' !== state.location) {
-        data.eventLocation = state.location
-      }
-
-      // allow to create
-      if (!!dateTime && dateTime !== '') {
-        const startTime = dateTime.split(' ')
-        data.startTime = startTime[0]
-        data.isAllDay = false
-        const time = []
-        time.push(`${startTime[1]}:00`)
-        time.push('23:59:00')
-        data.eventTime = time
-      }
-      await setForm(false, data)
-    }
-  } catch (e) {
-    console.log(e)
-  }
-  state.loading = false
-}
-
-async function handleCategories() {
+async function handleCategoriesChange() {
   if (!state.workflowId || '' === state.workflowId) {
     routerProvider?.message.error('Workflow Id is empty.')
     return
   }
+  const data = {}
+  await eventDialogFormRef.value.initForm(createEventWorkflow, false, data)
+}
 
-  try {
-    const workflowData: any = await initWorkflowForm('create calendar event', state.workflowId)
-    if (!workflowData) {
-      routerProvider?.message.error('Workflow Data is empty.')
-      return
-    }
-    state.workflowKey = workflowData.workflowData
-    state.formJson = workflowData.formJson
-    state.location = 'workflowData' in workflowData ? workflowData.workflowData : ''
+async function createEvent(dateTime?: string) {
+  state.isEdit = false
+  state.workflowId = ''
+  opened.value = true
 
-    const data = {
-      eventCategory: state.workflowId
+  // options 設置了默認的Calendar
+  if (!!props.options.defaultNewEventCalendar && '' !== props.options.defaultNewEventCalendar) {
+    state.categoryId = props.options.defaultNewEventCalendar
+    const data = {}
+
+    // allow to create
+    if (!!dateTime && dateTime !== '') {
+      const startTime = dateTime.split(' ')
+      data.startTime = startTime[0]
+      data.isAllDay = false
+      const time = []
+      time.push(`${startTime[1]}:00`)
+      time.push('23:59:00')
+      data.eventTime = time
     }
-    await setForm(false, data)
-  } catch (e) {
-    throw e
+
+    nextTick(async () => {
+      await eventDialogFormRef.value.initForm(createEventWorkflow, false, data)
+    })
+
   }
 }
 
-function edit(event: any) {
+async function editEvent(event: any) {
+  console.log(22, event)
   state.isEdit = true
   state.userList = []
-  state.workflowId = event.calendarId
+  state.categoryId = event.calendarId
   state.location = ''
-  editForm(event)
-  opened.value = true
-}
 
-async function editForm(event: any) {
   const startTime = event.start.split(' ')
   const endTime = event.end.split(' ')
-
+  console.log(22, event)
   const data = {
     eventId: event.detail.eventId,
     eventName: event.detail.eventName,
@@ -142,16 +92,39 @@ async function editForm(event: any) {
     data.eventTime = time
   }
 
-  await initWorkflowForm('update calendar event')
-  await setForm(true, data)
+  nextTick(async () => {
+    await eventDialogFormRef.value.initForm(updateEventWorkflow, true, data)
+  })
+  opened.value = true
 }
 
-async function cancelAndRemove1(isCancel: boolean, event: any) {
+// open message dialog
+async function handleConfirm() {
+  const type = state.isEdit ? 'update' : 'create'
+  eventDialogFormRef.value.confirm(type)
+}
+
+function handleReady() {
+  state.loading = false
+}
+
+// Disable page operations
+function handleImplement(isLoading: boolean) {
+  state.loading = isLoading
+}
+
+function handleSuccess() {
+  emits('reload')
+  state.loading = false
+  opened.value = false
+}
+
+async function cancelAndRemove(isCancel: boolean, event: any) {
   state.isEdit = true
   state.userList = []
   state.workflowId = event.calendarId
   state.location = ''
-  const data: EventFormData = {
+  const data = {
     eventId: event.detail.eventId,
     eventName: event.detail.eventName,
     eventDescription: event.detail.eventDescription,
@@ -165,7 +138,7 @@ async function cancelAndRemove1(isCancel: boolean, event: any) {
   data.eventMessage = ''
 
   const statue = isCancel ? 'cancel calendar event' : 'delete calendar event'
-  await initWorkflowForm(statue)
+  // await initWorkflowForm(statue)
 
   const form = {
     processKey: state.workflowKey,
@@ -179,102 +152,35 @@ async function cancelAndRemove1(isCancel: boolean, event: any) {
   emits('reload')
 }
 
-async function submit1() {
-  try {
-    const data = await createDialogFormRef.value.getFormData()
-    if (!data) {
-      return
-    }
-    const userId = useUserId()
-    if (!isEdit) {
-      const msg = {
-        title: `${userId.value} Create New Calendar Event`,
-        data: ''
-      }
-      data.eventMessage = JSON.stringify(msg)
-    } else {
-      data.sendMessageToCreator = true
-    }
-    data.recipient = data.eventUser
-
-    const form = {
-      processKey: state.workflowKey,
-      businessKey: '',
-      properties: Object.entries(data).reduce((newObj, [key, val]) => {
-        if (val || val === false || val == '0') newObj[key] = val
-        return newObj
-      }, {})
-    }
-
-    state.loading = true
-    console.log('submit', data, form)
-    await clientApi.api.postWorkflowProcessStart(form, { async: false }).then((res) => res.data)
-    emits('reload')
-    state.loading = false
-    opened.value = false
-  } catch (e) {
-    console.log(e)
-  }
-}
-
-async function cancelAndRemove(isCancel: boolean, event: any) {
-
-
-  emits('reload')
-}
-
-async function submit() {
-  opened.value = true
-  try {
-    const event = await createDialogFormRef.value.getFormData()
-    event.recipient = data.eventUser
-
-    // Send Message
-    eventNotifyType.value = 'create'
-    sendMessageText.value = ''
-    eventNotifyDialogRef.value.openDialog()
-
-    // run workflow
-    await runWorkflow(state.workflowId, event)
-  } catch (e) {
-    console.log(e)
-  } finally {
-    state.loading = false
-  }
-
-  emits('reload')
-  opened.value = false
-}
-
-defineExpose({ open, edit, cancelAndRemove })
+defineExpose({ createEvent, editEvent, cancelAndRemove })
 </script>
 
 <template>
-  <el-dialog v-model="opened" :title="state.isEdit ? t('Edit Event') : t('New Event')" append-to-body>
+  <el-dialog v-model="opened" :title="state.isEdit ? t('Edit Event') : t('New Event')" append-to-body
+             style="width: 30%">
     <el-form label-position="top" v-show="!state.isEdit">
       <el-form-item :label="t('Calendar')">
-        <el-select v-model="state.workflowId" @change="handleCategories">
+        <el-select v-model="state.categoryId" @change="handleCategoriesChange" :loading="state.loading">
           <el-option v-for="categories in categoriesOption" :key="categories.key" :label="categories.name"
                      :value="categories.id" />
         </el-select>
       </el-form-item>
     </el-form>
-    <el-divider v-show="!state.isEdit" />
+    <el-divider v-show="!state.isEdit && !!state.categoryId && ''!=state.categoryId" />
 
-    <div v-loading="state.loading">
-      <CalendarWidgetDialogForm ref="createDialogFormRef" />
-    </div>
+    <CalendarDialogForm ref="eventDialogFormRef" :categoryId="state.categoryId" @ready="handleReady"
+                        @implement="handleImplement" @success="handleSuccess" />
 
     <template #footer>
-      <el-button id="Home__Dashboard__Calendar__NewEvent__Cancel" :loading="state.loading" @click="opened = false">
-        {{ $t('vxe.button.cancel') }}
-      </el-button>
-      <el-button id="Home__Dashboard__Calendar__NewEvent__Save" :loading="state.loading" type="primary" @click="submit">
-        {{ $t('button.save') }}
-      </el-button>
+      <div v-show="!!state.categoryId && ''!=state.categoryId">
+        <el-button id="Home__Dashboard__Calendar__NewEvent__Cancel" :loading="state.loading" @click="opened = false">
+          {{ $t('vxe.button.cancel') }}
+        </el-button>
+        <el-button id="Home__Dashboard__Calendar__NewEvent__Save" :loading="state.loading" type="primary"
+                   @click="handleConfirm">
+          {{ $t('button.save') }}
+        </el-button>
+      </div>
     </template>
   </el-dialog>
-
-  <CalendarEventNotifyDialog ref="eventNotifyDialogRef" :type="eventNotifyType" :sendMessageText="sendMessageText"
-                             @submit="handleSubmit" />
 </template>
