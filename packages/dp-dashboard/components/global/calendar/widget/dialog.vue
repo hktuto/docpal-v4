@@ -27,8 +27,8 @@ const state = reactive({
 })
 
 async function handleCategoriesChange() {
-  if (!state.workflowId || '' === state.workflowId) {
-    routerProvider?.message.error('Workflow Id is empty.')
+  if (!state.categoryId || '' === state.categoryId) {
+    routerProvider?.message.error('Category Id is empty.')
     return
   }
   const data = {}
