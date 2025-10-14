@@ -23,7 +23,7 @@ const displayOption = ref<CalendarOptions>({
   ...props.options
 })
 
-const emits = defineEmits(['createEvent', 'filterChange', 'openDetail', 'editEvent', 'onEventUpdate', 'updateEvent'])
+const emits = defineEmits(['createEvent', 'filterChange', 'openDetail', 'editEvent', 'onEventUpdate', 'updateEvent', 'ready'])
 
 function addEvent(newEvent: CalendarEventExternal) {
   viewerRef.value?.addEvent(newEvent)
@@ -148,6 +148,9 @@ const calendarEvents = {
   deleteEvent: (args: any) => {
     console.log('calendar/index-deleteEvent', args)
     emits('deleteEvent', args)
+  },
+  ready: () => {
+    emits('ready')
   }
 }
 
@@ -176,10 +179,19 @@ function refresh() {
   viewerRef.value.getList()
 }
 
+function setSpecificSate(date: string) {
+  viewerRef.value.setSpecificSate(date)
+}
+
+function getEventList() {
+  return viewerRef.value?.eventList || []
+}
+
 onMounted(async () => {
   await setDefaultFilter()
 })
 
+// TODO： Unable to obtain event list in real time
 const eventList = computed(() => viewerRef.value?.eventList || [])
 
 defineExpose({
@@ -189,7 +201,9 @@ defineExpose({
   filter,
   openDetail,
   eventList,
-  refresh
+  refresh,
+  setSpecificSate,
+  getEventList
 })
 </script>
 

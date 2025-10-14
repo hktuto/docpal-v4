@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { type EventFormData } from '#imports'
 import { cancelEventWorkflow, deleteEventWorkflow } from '#imports'
+
 const routerProvider = inject(MenuRouterKey)
 if (!routerProvider) {
   throw new Error('MenuRouterKey is not provided')
