@@ -2,7 +2,7 @@
   <el-card>
     <template #header>
       <div class="card-header">
-        <span style="font-size: 18px">{{ $t('caseManagement_detailPermission') }}</span>
+        <h4>{{ $t('caseManagement_detailPermission') }}</h4>
       </div>
     </template>
     <div class="permissionItemContainer">

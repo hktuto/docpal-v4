@@ -126,7 +126,7 @@ defineExpose({ handleOpen })
               <el-icon
                 v-if="state.fileList.length > 0"
                 :disabled="!state.fileList.length > 0"
-                style="position: relative; right: -80px; font-size: 18px; cursor: pointer"
+                style="position: relative; right: -80px; font-size: var(--app-font-size-l); cursor: pointer"
                 @click.stop="beforeRemove"
               >
                 <DeleteFilled />
