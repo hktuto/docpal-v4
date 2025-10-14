@@ -64,7 +64,6 @@ async function createEvent(dateTime?: string) {
 }
 
 async function editEvent(event: any) {
-  console.log(22, event)
   state.isEdit = true
   state.userList = []
   state.categoryId = event.calendarId
@@ -72,7 +71,6 @@ async function editEvent(event: any) {
 
   const startTime = event.start.split(' ')
   const endTime = event.end.split(' ')
-  console.log(22, event)
   const data = {
     eventId: event.detail.eventId,
     eventName: event.detail.eventName,
