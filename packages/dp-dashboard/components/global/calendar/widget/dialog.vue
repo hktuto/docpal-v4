@@ -9,7 +9,7 @@ if (!routerProvider) {
 const emits = defineEmits(['reload'])
 const { t } = useI18n()
 const opened = ref(false)
-const { setting: calendarSetting, categoriesOption } = useCalendarStore()
+const { setting: calendarSetting, categoriesOption, handleCancel,handleRemove } = useCalendarStore()
 const props = defineProps({
   options: {}
 })
@@ -71,7 +71,7 @@ async function editEvent(event: any) {
 
   const startTime = event.start.split(' ')
   const endTime = event.end.split(' ')
-  const data = {
+  const data: EventFormData = {
     eventId: event.detail.eventId,
     eventName: event.detail.eventName,
     eventDescription: event.detail.eventDescription,
@@ -96,6 +96,32 @@ async function editEvent(event: any) {
   opened.value = true
 }
 
+async function cancelAndRemove(isCancel: boolean, event: any) {
+  const data: EventFormData = {
+    eventId: event.detail.eventId,
+    eventName: event.detail.eventName,
+    eventDescription: event.detail.eventDescription,
+    eventCategory: event.detail.category,
+    eventLocation: event.detail.location,
+    startTime: event.start,
+    endTime: event.end,
+    eventUser: event.detail.relatedUsers.user,
+    isAllDay: event.detail.isAllDay,
+    sendMessage: false
+  }
+
+  if (isCancel) {
+    data.eventMessage = ''
+    await handleCancel(event.calendarId, data)
+  } else {
+    data.eventMessage = ''
+    await handleRemove(event.calendarId, data)
+  }
+  nextTick(() => {
+    emits('reload')
+  })
+}
+
 // open message dialog
 async function handleConfirm() {
   const type = state.isEdit ? 'update' : 'create'
@@ -115,39 +141,6 @@ function handleSuccess() {
   emits('reload')
   state.loading = false
   opened.value = false
-}
-
-async function cancelAndRemove(isCancel: boolean, event: any) {
-  state.isEdit = true
-  state.userList = []
-  state.workflowId = event.calendarId
-  state.location = ''
-  const data = {
-    eventId: event.detail.eventId,
-    eventName: event.detail.eventName,
-    eventDescription: event.detail.eventDescription,
-    eventCategory: event.detail.category,
-    eventLocation: event.detail.location,
-    startTime: event.start,
-    endTime: event.end,
-    eventUser: event.detail.relatedUsers.user,
-    isAllDay: event.detail.isAllDay
-  }
-  data.eventMessage = ''
-
-  const statue = isCancel ? 'cancel calendar event' : 'delete calendar event'
-  // await initWorkflowForm(statue)
-
-  const form = {
-    processKey: state.workflowKey,
-    businessKey: '',
-    properties: Object.entries(data).reduce((newObj, [key, val]) => {
-      if (val || val === false || val == '0') newObj[key] = val
-      return newObj
-    }, {})
-  }
-  await clientApi.api.postWorkflowProcessStart(form, { async: false }).then((res) => res.data)
-  emits('reload')
 }
 
 defineExpose({ createEvent, editEvent, cancelAndRemove })

@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { type EventFormData } from '#imports'
-import { cancelEventWorkflow, deleteEventWorkflow } from '#imports'
 
 const routerProvider = inject(MenuRouterKey)
 if (!routerProvider) {
@@ -253,21 +252,12 @@ async function handelUpdateEvent(event: EventFormData) {
   await runWorkflow(state.processKey, event)
 }
 
-async function handleCancel(eventData: any) {
-
-}
-
-async function handleRemove(eventData: any) {
-
-}
-
 async function handleReject(event: EventFormData) {
   // 移除直接
   event.recipient = state.creator
 }
 
 defineExpose({ initForm, confirm })
-
 </script>
 
 <template>
