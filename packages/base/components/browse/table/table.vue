@@ -1,7 +1,7 @@
 <script lang="tsx" setup>
 import { useDebounceFn, useMagicKeys } from '@vueuse/core'
 import { emitBus, EventType, useEventBus } from 'eventbus'
-import { createDropableFolder, createDropableFile, useSqliteTable, documentColumn, documentIndex, apiToColumn, columnToApi } from '#imports'
+import { useSqliteTable, documentColumn, documentIndex, apiToColumn, columnToApi } from '#imports'
 import type { DocumentColumnData, DocumentApiData } from '#imports'
 
 const cleanSelectedRowsBus = useEventBus(EventType.FILE_CLEAN_SELECTED_ROWS)
@@ -106,7 +106,6 @@ function recursiveLoadChild(checkList: any[] = [], treeData: any[], result: any[
   checkList.forEach((row, index) => {
     const rowData = treeData.find((el) => el.id === row)
     if (rowData) {
-      
       if (!tableRef.value?.isTreeExpandByRow(rowData)) {
         result.push(rowData)
       } else {
@@ -121,7 +120,7 @@ function recursiveLoadChild(checkList: any[] = [], treeData: any[], result: any[
 const reopenFolder = useDebounceFn(() => {
   console.log('reopenFolder', expandedItems)
   if (!tableRef.value || expandedItems.length === 0) return
-  const {fullData} = tableRef.value.getTableData()
+  const { fullData } = tableRef.value.getTableData()
   console.log('tableData', fullData)
   let needExpandList: any[] = recursiveLoadChild(expandedItems, fullData, [])
   console.log('needExpandList', needExpandList)
@@ -155,7 +154,6 @@ const { tableConfig, tableEvent, tableRef, reload, cleanSelectedRows } = useVxeT
     }
   },
   childChangeHandler: () => {
-    tableChildChangeHandler()
     // DEPRECATED: now system use sqlite to store expanded items, so this function is not needed
     reopenFolder()
   },
@@ -494,7 +492,7 @@ const { tableConfig, tableEvent, tableRef, reload, cleanSelectedRows } = useVxeT
           }
           break
         case 'docPreview':
-        case 'docWatermark': 
+        case 'docWatermark':
           result[key] = {
             visible: visible && !clickItem.isFolder,
             disabled: false
@@ -579,50 +577,8 @@ const { tableConfig, tableEvent, tableRef, reload, cleanSelectedRows } = useVxeT
     }
   }
 })
-
+const { dropEvent } = useBrowseDrop(tableRef, tableContainer, listProvider.docDetail)
 cleanSelectedRowsBus.on(cleanSelectedRows)
-
-let tableDropZone: any
-let dragableItemList: any[] = []
-const tableChildChangeHandler = useDebounceFn(() => {
-  if (!listProvider?.docDetail.value) {
-    // wait for docDetail to be ready
-    setTimeout(() => {
-      tableChildChangeHandler()
-    }, 300)
-    return
-  }
-  // body row may be empty when table is loading, create root drop zone first
-  if (!tableDropZone) {
-    tableDropZone = createRootDropZone(tableRef, listProvider?.docDetail)
-  }
-  const allBodyRow = tableRef.value?.$el.querySelectorAll('.vxe-table--main-wrapper .vxe-body--row')
-  if (allBodyRow.length === 0) {
-    // no body row, return
-    return
-  }
-  // unregister all dragableItemList
-  dragableItemList.forEach((item) => {
-    // check if item is a function, if so, call it
-    if (typeof item === 'function') {
-      item()
-    }
-  })
-  dragableItemList = []
-  // register all dragableItemList
-  allBodyRow.forEach((item: any) => {
-    const rowid = item.getAttribute('rowid')
-    if (!rowid) return
-    const rowData = tableRef.value?.getRowById(rowid)
-
-    if (!rowData) return
-    if (rowData.isFolder) {
-      dragableItemList.push(createDropableFolder(item, rowData, tableRef))
-    } else {
-      dragableItemList.push(createDropableFile(item, rowData, tableRef))
-    }
-  })
-}, 100)
 
 function dblClickHandler(row: any) {
   if (row.source === 'tempFile') {
@@ -676,33 +632,11 @@ function cleanSelected() {
 }
 
 onDeactivated(() => {
-  if (tableDropZone) {
-    tableDropZone()
-  }
-  if (dragableItemList) {
-    dragableItemList.forEach((item) => {
-      // check if item is a function, if so, call it
-      if (typeof item === 'function') {
-        item()
-      }
-    })
-  }
   emitBus(EventType.FILE_PREVIEW_CLOSE)
 
   cleanSelectedRowsBus.off(cleanSelectedRows)
 })
 onUnmounted(() => {
-  if (tableDropZone) {
-    tableDropZone()
-  }
-  if (dragableItemList) {
-    dragableItemList.forEach((item) => {
-      // check if item is a function, if so, call it
-      if (typeof item === 'function') {
-        item()
-      }
-    })
-  }
   emitBus(EventType.FILE_PREVIEW_CLOSE)
 
   cleanSelectedRowsBus.off(cleanSelectedRows)
@@ -784,7 +718,7 @@ defineExpose({
 </script>
 
 <template>
-  <div ref="tableContainer" class="tableContainer">
+  <div ref="tableContainer" class="tableContainer" @dragover.prevent="dropEvent.dragover" @drop="dropEvent.drop">
     <VxeGrid v-show="mode === 'browse'" ref="tableRef" v-bind="tableConfig" v-on="tableEvent">
       <template #toolbar_buttons>
         <slot name="toolbar_buttons" />
@@ -807,18 +741,13 @@ defineExpose({
   width: 100%;
   height: 100%;
   position: relative;
-
   :deep(.is-dragging) {
     background: var(--app-grey-900);
     opacity: 0.5;
   }
-
-  :deep(.dropOver) {
-    // overflow: hidden;
-    background: var(--app-grey-900);
-    --vxe-ui-layout-background-color: var(--app-grey-900);
+  &.drop-row {
+    border: 3px dashed var(--app-grey-900);
   }
-
   &.selected {
     :deep(.vxe-buttons--wrapper) {
       border-radius: var(--app-border-radius-m);
@@ -839,6 +768,13 @@ defineExpose({
     align-items: center;
     gap: var(--app-space-s);
     cursor: pointer;
+  }
+  :deep(.drop-row td) {
+    background-color: var(--app-grey-900) !important;
+  }
+  :deep(.drop-row-disabled td) {
+    // cursor: not-allowed;
+    // background-color: green !important;
   }
 }
 </style>
