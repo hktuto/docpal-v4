@@ -112,7 +112,7 @@ defineExpose({
     padding: unset;
     margin: unset;
     color: #464646;
-    font-size: 18px;
+    font-size: var(--app-font-size-l);
     font-family: Arial;
   }
 }

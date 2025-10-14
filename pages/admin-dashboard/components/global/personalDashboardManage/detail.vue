@@ -182,9 +182,9 @@ onMounted(() => {
 }
 
 .template-title {
-  font-size: 18px;
+  font-size: var(--app-font-size-l);
   font-weight: bold;
-  line-height: 22px;
+  line-height: 1.2;
   letter-spacing: 0px;
   color: #606266;
 }
