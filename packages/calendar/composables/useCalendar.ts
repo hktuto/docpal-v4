@@ -137,7 +137,6 @@ export const useCalendarStore = () => {
     }
   }
 
-
   async function getFormJson(processKey: string, versionId: string) {
     const response: any = await clientApi.api.getRelationQuery({
       userTaskId: 'start',
@@ -148,12 +147,7 @@ export const useCalendarStore = () => {
     return JSON.parse(response[0].jsonValue)
   }
 
-  async function initWorkflowForm(name: string, categoryId: string) {
-    const data: { processKey: string, location?: string, formJson: string } = {
-      processKey: '',
-      formJson: ''
-    }
-
+  async function getCategoriesAndProcessKey(name: string, categoryId: string) {
     if (0 == categoriesOption.value.length) {
       throw new Error('categoriesOption is empty')
     }
@@ -167,7 +161,24 @@ export const useCalendarStore = () => {
     if (!flow) {
       throw new Error('flow is empty', flow)
     }
-    data.processKey = flow.key
+
+    const data: { categories: any, processKey: string } = {
+      categories: categories,
+      processKey: flow.key
+    }
+
+    return data
+  }
+
+  async function initWorkflowForm(name: string, categoryId: string) {
+    const data: { processKey: string, location?: string, formJson: string } = {
+      processKey: '',
+      formJson: ''
+    }
+    const newVar: any = await getCategoriesAndProcessKey(name, categoryId)
+    const categories = newVar.categories
+    data.processKey = newVar.processKey
+
     if (!!categories.location && categories.location.value.length > 0) {
       data.location = categories.location.value.map((item: any) => item.id).join(',')
     }
@@ -175,13 +186,23 @@ export const useCalendarStore = () => {
     // const appPlatform = useAppPlatform()
     // const api = appPlatform.value === 'admin' ? adminApi : clientApi
     // TODO 該接口只有admin端有，client不存在
-    const workflow: any = await adminApi.api.getWorkflowVersionKeyProcessdefinitionkey(flow.key).then((r) => r.data)
+    const workflow: any = await adminApi.api.getWorkflowVersionKeyProcessdefinitionkey(data.processKey).then((r) => r.data)
     if (!workflow) {
       throw new Error('workflow is empty')
     }
 
     data.formJson = await getFormJson(workflow.processDefinitionKey, workflow.id)
     return data
+  }
+
+  async function handleCancel(calendarId: string, event: EventFormData) {
+    const CategoriesAndProcessKey: any = await getCategoriesAndProcessKey(cancelEventWorkflow, calendarId)
+    await runWorkflow(CategoriesAndProcessKey.processKey, event)
+  }
+
+  async function handleRemove(calendarId: string, event: EventFormData) {
+    const CategoriesAndProcessKey: any = await getCategoriesAndProcessKey(deleteEventWorkflow, calendarId)
+    await runWorkflow(CategoriesAndProcessKey.processKey, event)
   }
 
   async function runWorkflow(processKey: string, event: EventFormData) {
@@ -195,7 +216,7 @@ export const useCalendarStore = () => {
     }
 
     try {
-      await clientApi.api.postWorkflowProcessStart(form, { async: false }).then((res) => res.data)
+      await clientApi.api.postWorkflowProcessStart(form, {async: false}).then((res) => res.data)
     } catch (e) {
       console.error(e)
     }
@@ -218,6 +239,8 @@ export const useCalendarStore = () => {
     timeSelecteStep,
     timeSelectLimit,
     initWorkflowForm,
+    handleCancel,
+    handleRemove,
     createEventWorkflow,
     updateEventWorkflow,
     cancelEventWorkflow,
