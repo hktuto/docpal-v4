@@ -75,7 +75,7 @@ function checkExtension(filename: string) {
       <LazyCollaboraViewer :docId="props.doc.id" fileType="LOCAL" :readonly="true" />
     </template>
     <template v-else-if="fileType === 'pdf'">
-      <LazyViewerPdf v-if="state.blob" :blob="state.blob" :options="{print:false, loadAnnotations:false, readonly:true}" />
+      <LazyViewerPdf v-if="state.blob" :blob="state.blob" :options="{print:false, loadAnnotations:false, readOnly:true}" />
     </template>
     <template v-else-if="fileType === 'video'">
       <Video v-if="state.encodeUrl" :src="state.encodeUrl" />
