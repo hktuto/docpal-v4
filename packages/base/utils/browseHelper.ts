@@ -178,7 +178,7 @@ export const getUniqueName = async (file: any) => {
 export const getDocDetail = async (idOrPath: string, userId: string) => {
   try {
     const promise = []
-    promise.push(clientApi.api.postNuxeoDocument({ idOrPath }), getPermission(idOrPath, userId))
+    promise.push(clientApi.api.postNuxeoDocument({ idOrPath }))
     let [{ data: doc }, permission] = await Promise.all(promise)
     return {
       doc,

@@ -1485,6 +1485,7 @@
     "newFolderDuplicateName": "The system detected a duplicate folder name, please refill the folder name",
     "noMore": "No more",
     "noRollbackReminder": "<br>This action cannot be undone.",
+    "noUploadPermission": "No permission to upload",
     "noValidName": "The system detected that no valid name was generated",
     "pleaseSelectApprovalStatus": "Please select approval status",
     "resetWarning": "After submission, the groups of all selected users will be reset",

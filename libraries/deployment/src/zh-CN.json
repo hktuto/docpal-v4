@@ -1485,6 +1485,7 @@
     "newFolderDuplicateName": "系统检测到重复的资料夹名称，请重新填写资料夹名称",
     "noMore": "没有更多数据了",
     "noRollbackReminder": "<br>此操作无法撤消。",
+    "noUploadPermission": "没有上传权限",
     "noValidName": "系统检测到未生成有效名称",
     "pleaseSelectApprovalStatus": "请选择审批状态",
     "resetWarning": "提交后，所有选定用户的群组将被重置",
