@@ -135,6 +135,9 @@ h1, h2, h3, h4, h5, h6 {
 // override el-dialog
 .el-dialog{
   --el-dialog-width: clamp(260px, 90vw, 600px) !important;
+  &.is-fullscreen{
+    --el-dialog-width: 100vw !important;
+  }
 }
 .dp-tabs--auto {
   height: 100%;
