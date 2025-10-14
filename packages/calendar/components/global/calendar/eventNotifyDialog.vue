@@ -1,29 +1,25 @@
 <script setup lang="ts">
 const { t } = useI18n()
 const dialogShow = ref(false)
-const emits = defineEmits(['submit'])
+const emits = defineEmits(['submit', 'reject', 'rejectCancel'])
 const props = defineProps<{
-  type: 'create' | 'update' | 'reject',
-  sendMessageText: string
-}>
+  notifyType: 'create' | 'update' | 'reject';
+  sendMessageText: 'Send Message to Participants' | 'Send Message to Creator'
+}>()
 
 const state = reactive({
-  event: {},
-  creator: '',
   message: '',
-  sendMessage: false
+  sendMessage: true
 })
 
-function openDialog(event: any, creator: string) {
-  state.event = event
-  state.creator = creator
+function openDialog() {
   state.message = ''
   state.sendMessage = true
   dialogShow.value = true
 }
 
 function handleCancel() {
-  if ('reject' === props.type) {
+  if ('reject' === props.notifyType) {
     dialogShow.value = false
     return
   }
@@ -35,36 +31,32 @@ function handleCancel() {
 }
 
 function handleSubmit() {
-  const msg = {
-    title: state.event.eventName,
-    data: state.message
+  const data = {
+    message: state.message,
+    sendMessage: state.sendMessage
   }
 
-  const event = {
-    ...state.event,
-    eventMessage: JSON.stringify(msg),
-    sendMessageToCreator: state.sendMessage
-  }
-
-  if ('reject' === props.type && state.sendMessage) {
-    event.recipient = state.creator
+  // TODO: 沒辦法操作數據
+  if ('reject' === props.notifyType && state.sendMessage) {
+    emits('reject')
+    return
   }
 
   dialogShow.value = false
-  emits('submit', event)
+  emits('submit', data)
 }
 
 defineExpose({ openDialog })
 </script>
 
 <template>
-  <el-dialog v-model="dialogShow" :title="t('Update Message')" width="30%">
+  <el-dialog v-model="dialogShow" :title="t('Update Message')" width="30%" append-to-body>
     <el-form label-position="top">
       <el-form-item :label="t('Message')">
         <el-input v-model="state.message" :autosize="{ minRows: 4, maxRows: 6 }" type="textarea"
-                  :placeholder="t('vxe.base.pleaseInput')" />
+                  :placeholder="t('Please enter the content displayed in the notification.')" />
       </el-form-item>
-      <el-form-item :label="t(sendMessageText)">
+      <el-form-item v-show="'create'!== notifyType" :label="t(sendMessageText)">
         <el-switch v-model="state.sendMessage" />
       </el-form-item>
     </el-form>
