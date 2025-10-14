@@ -1485,6 +1485,7 @@
     "newFolderDuplicateName": "系統偵測到重複的資料夾名稱，請重新填寫資料夾名稱",
     "noMore": "沒有更多數據了",
     "noRollbackReminder": "<br>此操作無法撤銷。",
+    "noUploadPermission": "沒有上傳權限",
     "noValidName": "系統偵測到未產生有效名稱",
     "pleaseSelectApprovalStatus": "請選擇審核狀態",
     "resetWarning": "提交後，所有選定使用者的群組將被重置",
