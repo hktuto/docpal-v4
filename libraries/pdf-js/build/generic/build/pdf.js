@@ -64,17 +64,12 @@ exports.unreachable = unreachable;
 exports.utf8StringToString = utf8StringToString;
 exports.warn = warn;
 ;
-const IDENTITY_MATRIX = [1, 0, 0, 1, 0, 0];
-exports.IDENTITY_MATRIX = IDENTITY_MATRIX;
-const FONT_IDENTITY_MATRIX = [0.001, 0, 0, 0.001, 0, 0];
-exports.FONT_IDENTITY_MATRIX = FONT_IDENTITY_MATRIX;
-const LINE_FACTOR = 1.35;
-exports.LINE_FACTOR = LINE_FACTOR;
-const LINE_DESCENT_FACTOR = 0.35;
-exports.LINE_DESCENT_FACTOR = LINE_DESCENT_FACTOR;
-const BASELINE_FACTOR = LINE_DESCENT_FACTOR / LINE_FACTOR;
-exports.BASELINE_FACTOR = BASELINE_FACTOR;
-const RenderingIntentFlag = {
+const IDENTITY_MATRIX = exports.IDENTITY_MATRIX = [1, 0, 0, 1, 0, 0];
+const FONT_IDENTITY_MATRIX = exports.FONT_IDENTITY_MATRIX = [0.001, 0, 0, 0.001, 0, 0];
+const LINE_FACTOR = exports.LINE_FACTOR = 1.35;
+const LINE_DESCENT_FACTOR = exports.LINE_DESCENT_FACTOR = 0.35;
+const BASELINE_FACTOR = exports.BASELINE_FACTOR = LINE_DESCENT_FACTOR / LINE_FACTOR;
+const RenderingIntentFlag = exports.RenderingIntentFlag = {
   ANY: 0x01,
   DISPLAY: 0x02,
   PRINT: 0x04,
@@ -84,24 +79,20 @@ const RenderingIntentFlag = {
   ANNOTATIONS_DISABLE: 0x40,
   OPLIST: 0x100
 };
-exports.RenderingIntentFlag = RenderingIntentFlag;
-const AnnotationMode = {
+const AnnotationMode = exports.AnnotationMode = {
   DISABLE: 0,
   ENABLE: 1,
   ENABLE_FORMS: 2,
   ENABLE_STORAGE: 3
 };
-exports.AnnotationMode = AnnotationMode;
-const AnnotationEditorPrefix = "pdfjs_internal_editor_";
-exports.AnnotationEditorPrefix = AnnotationEditorPrefix;
-const AnnotationEditorType = {
+const AnnotationEditorPrefix = exports.AnnotationEditorPrefix = "pdfjs_internal_editor_";
+const AnnotationEditorType = exports.AnnotationEditorType = {
   DISABLE: -1,
   NONE: 0,
   FREETEXT: 3,
   INK: 15
 };
-exports.AnnotationEditorType = AnnotationEditorType;
-const AnnotationEditorParamsType = {
+const AnnotationEditorParamsType = exports.AnnotationEditorParamsType = {
   FREETEXT_SIZE: 1,
   FREETEXT_COLOR: 2,
   FREETEXT_OPACITY: 3,
@@ -109,8 +100,7 @@ const AnnotationEditorParamsType = {
   INK_THICKNESS: 12,
   INK_OPACITY: 13
 };
-exports.AnnotationEditorParamsType = AnnotationEditorParamsType;
-const PermissionFlag = {
+const PermissionFlag = exports.PermissionFlag = {
   PRINT: 0x04,
   MODIFY_CONTENTS: 0x08,
   COPY: 0x10,
@@ -120,8 +110,7 @@ const PermissionFlag = {
   ASSEMBLE: 0x400,
   PRINT_HIGH_QUALITY: 0x800
 };
-exports.PermissionFlag = PermissionFlag;
-const TextRenderingMode = {
+const TextRenderingMode = exports.TextRenderingMode = {
   FILL: 0,
   STROKE: 1,
   FILL_STROKE: 2,
@@ -133,14 +122,12 @@ const TextRenderingMode = {
   FILL_STROKE_MASK: 3,
   ADD_TO_PATH_FLAG: 4
 };
-exports.TextRenderingMode = TextRenderingMode;
-const ImageKind = {
+const ImageKind = exports.ImageKind = {
   GRAYSCALE_1BPP: 1,
   RGB_24BPP: 2,
   RGBA_32BPP: 3
 };
-exports.ImageKind = ImageKind;
-const AnnotationType = {
+const AnnotationType = exports.AnnotationType = {
   TEXT: 1,
   LINK: 2,
   FREETEXT: 3,
@@ -168,31 +155,26 @@ const AnnotationType = {
   THREED: 25,
   REDACT: 26
 };
-exports.AnnotationType = AnnotationType;
-const AnnotationStateModelType = {
+const AnnotationStateModelType = exports.AnnotationStateModelType = {
   MARKED: "Marked",
   REVIEW: "Review"
 };
-exports.AnnotationStateModelType = AnnotationStateModelType;
-const AnnotationMarkedState = {
+const AnnotationMarkedState = exports.AnnotationMarkedState = {
   MARKED: "Marked",
   UNMARKED: "Unmarked"
 };
-exports.AnnotationMarkedState = AnnotationMarkedState;
-const AnnotationReviewState = {
+const AnnotationReviewState = exports.AnnotationReviewState = {
   ACCEPTED: "Accepted",
   REJECTED: "Rejected",
   CANCELLED: "Cancelled",
   COMPLETED: "Completed",
   NONE: "None"
 };
-exports.AnnotationReviewState = AnnotationReviewState;
-const AnnotationReplyType = {
+const AnnotationReplyType = exports.AnnotationReplyType = {
   GROUP: "Group",
   REPLY: "R"
 };
-exports.AnnotationReplyType = AnnotationReplyType;
-const AnnotationFlag = {
+const AnnotationFlag = exports.AnnotationFlag = {
   INVISIBLE: 0x01,
   HIDDEN: 0x02,
   PRINT: 0x04,
@@ -204,8 +186,7 @@ const AnnotationFlag = {
   TOGGLENOVIEW: 0x100,
   LOCKEDCONTENTS: 0x200
 };
-exports.AnnotationFlag = AnnotationFlag;
-const AnnotationFieldFlag = {
+const AnnotationFieldFlag = exports.AnnotationFieldFlag = {
   READONLY: 0x0000001,
   REQUIRED: 0x0000002,
   NOEXPORT: 0x0000004,
@@ -226,16 +207,14 @@ const AnnotationFieldFlag = {
   RADIOSINUNISON: 0x2000000,
   COMMITONSELCHANGE: 0x4000000
 };
-exports.AnnotationFieldFlag = AnnotationFieldFlag;
-const AnnotationBorderStyleType = {
+const AnnotationBorderStyleType = exports.AnnotationBorderStyleType = {
   SOLID: 1,
   DASHED: 2,
   BEVELED: 3,
   INSET: 4,
   UNDERLINE: 5
 };
-exports.AnnotationBorderStyleType = AnnotationBorderStyleType;
-const AnnotationActionEventType = {
+const AnnotationActionEventType = exports.AnnotationActionEventType = {
   E: "Mouse Enter",
   X: "Mouse Exit",
   D: "Mouse Down",
@@ -251,32 +230,27 @@ const AnnotationActionEventType = {
   V: "Validate",
   C: "Calculate"
 };
-exports.AnnotationActionEventType = AnnotationActionEventType;
-const DocumentActionEventType = {
+const DocumentActionEventType = exports.DocumentActionEventType = {
   WC: "WillClose",
   WS: "WillSave",
   DS: "DidSave",
   WP: "WillPrint",
   DP: "DidPrint"
 };
-exports.DocumentActionEventType = DocumentActionEventType;
-const PageActionEventType = {
+const PageActionEventType = exports.PageActionEventType = {
   O: "PageOpen",
   C: "PageClose"
 };
-exports.PageActionEventType = PageActionEventType;
-const VerbosityLevel = {
+const VerbosityLevel = exports.VerbosityLevel = {
   ERRORS: 0,
   WARNINGS: 1,
   INFOS: 5
 };
-exports.VerbosityLevel = VerbosityLevel;
-const CMapCompressionType = {
+const CMapCompressionType = exports.CMapCompressionType = {
   NONE: 0,
   BINARY: 1
 };
-exports.CMapCompressionType = CMapCompressionType;
-const OPS = {
+const OPS = exports.OPS = {
   dependency: 1,
   setLineWidth: 2,
   setLineCap: 3,
@@ -366,8 +340,7 @@ const OPS = {
   paintSolidColorImageMask: 90,
   constructPath: 91
 };
-exports.OPS = OPS;
-const UNSUPPORTED_FEATURES = {
+const UNSUPPORTED_FEATURES = exports.UNSUPPORTED_FEATURES = {
   forms: "forms",
   javaScript: "javaScript",
   signatures: "signatures",
@@ -389,12 +362,10 @@ const UNSUPPORTED_FEATURES = {
   errorMarkedContent: "errorMarkedContent",
   errorContentSubStream: "errorContentSubStream"
 };
-exports.UNSUPPORTED_FEATURES = UNSUPPORTED_FEATURES;
-const PasswordResponses = {
+const PasswordResponses = exports.PasswordResponses = {
   NEED_PASSWORD: 1,
   INCORRECT_PASSWORD: 2
 };
-exports.PasswordResponses = PasswordResponses;
 let verbosity = VerbosityLevel.WARNINGS;
 function setVerbosityLevel(level) {
   if (Number.isInteger(level)) {
@@ -471,7 +442,7 @@ function shadow(obj, prop, value, nonSerializable = false) {
   });
   return value;
 }
-const BaseException = function BaseExceptionClosure() {
+const BaseException = exports.BaseException = function BaseExceptionClosure() {
   function BaseException(message, name) {
     if (this.constructor === BaseException) {
       unreachable("Cannot initialize BaseException.");
@@ -483,7 +454,6 @@ const BaseException = function BaseExceptionClosure() {
   BaseException.constructor = BaseException;
   return BaseException;
 }();
-exports.BaseException = BaseException;
 class PasswordException extends BaseException {
   constructor(msg, code) {
     super(msg, "PasswordException");
@@ -876,12 +846,9 @@ var _transport_stream = __w_pdfjs_require__(18);
 var _xfa_text = __w_pdfjs_require__(19);
 const DEFAULT_RANGE_CHUNK_SIZE = 65536;
 const RENDERING_CANCELLED_TIMEOUT = 100;
-let DefaultCanvasFactory = _display_utils.DOMCanvasFactory;
-exports.DefaultCanvasFactory = DefaultCanvasFactory;
-let DefaultCMapReaderFactory = _display_utils.DOMCMapReaderFactory;
-exports.DefaultCMapReaderFactory = DefaultCMapReaderFactory;
-let DefaultStandardFontDataFactory = _display_utils.DOMStandardFontDataFactory;
-exports.DefaultStandardFontDataFactory = DefaultStandardFontDataFactory;
+let DefaultCanvasFactory = exports.DefaultCanvasFactory = _display_utils.DOMCanvasFactory;
+let DefaultCMapReaderFactory = exports.DefaultCMapReaderFactory = _display_utils.DOMCMapReaderFactory;
+let DefaultStandardFontDataFactory = exports.DefaultStandardFontDataFactory = _display_utils.DOMStandardFontDataFactory;
 if (_is_node.isNodeJS) {
   const {
     NodeCanvasFactory,
@@ -1730,12 +1697,11 @@ class LoopbackPort {
   }
 }
 exports.LoopbackPort = LoopbackPort;
-const PDFWorkerUtil = {
+const PDFWorkerUtil = exports.PDFWorkerUtil = {
   isWorkerDisabled: false,
   fallbackWorkerSrc: null,
   fakeWorkerId: 0
 };
-exports.PDFWorkerUtil = PDFWorkerUtil;
 {
   if (_is_node.isNodeJS && typeof require === "function") {
     PDFWorkerUtil.isWorkerDisabled = true;
@@ -2725,10 +2691,8 @@ class InternalRenderTask {
     }
   }
 }
-const version = '3.4.0';
-exports.version = version;
-const build = '9b85d790';
-exports.build = build;
+const version = exports.version = '3.4.0';
+const build = exports.build = 'fdbe1585';
 
 /***/ }),
 /* 3 */
@@ -3905,8 +3869,7 @@ exports.setLayerDimensions = setLayerDimensions;
 var _base_factory = __w_pdfjs_require__(7);
 var _util = __w_pdfjs_require__(1);
 const SVG_NS = "http://www.w3.org/2000/svg";
-const AnnotationPrefix = "pdfjs_internal_id_";
-exports.AnnotationPrefix = AnnotationPrefix;
+const AnnotationPrefix = exports.AnnotationPrefix = "pdfjs_internal_id_";
 class PixelsPerInch {
   static CSS = 96.0;
   static PDF = 72.0;
@@ -4870,8 +4833,7 @@ Object.defineProperty(exports, "__esModule", ({
   value: true
 }));
 exports.isNodeJS = void 0;
-const isNodeJS = typeof process === "object" && process + "" === "[object process]" && !process.versions.nw && !(process.versions.electron && process.type && process.type !== "browser");
-exports.isNodeJS = isNodeJS;
+const isNodeJS = exports.isNodeJS = typeof process === "object" && process + "" === "[object process]" && !process.versions.nw && !(process.versions.electron && process.type && process.type !== "browser");
 
 /***/ }),
 /* 11 */
@@ -7128,12 +7090,11 @@ exports.TilingPattern = exports.PathType = void 0;
 exports.getShadingPattern = getShadingPattern;
 var _util = __w_pdfjs_require__(1);
 var _display_utils = __w_pdfjs_require__(6);
-const PathType = {
+const PathType = exports.PathType = {
   FILL: "Fill",
   STROKE: "Stroke",
   SHADING: "Shading"
 };
-exports.PathType = PathType;
 function applyBoundingBox(ctx, bbox) {
   if (!bbox) {
     return;
@@ -7636,8 +7597,7 @@ Object.defineProperty(exports, "__esModule", ({
   value: true
 }));
 exports.GlobalWorkerOptions = void 0;
-const GlobalWorkerOptions = Object.create(null);
-exports.GlobalWorkerOptions = GlobalWorkerOptions;
+const GlobalWorkerOptions = exports.GlobalWorkerOptions = Object.create(null);
 GlobalWorkerOptions.workerPort = null;
 GlobalWorkerOptions.workerSrc = "";
 
@@ -11658,8 +11618,7 @@ Object.defineProperty(exports, "__esModule", ({
   value: true
 }));
 exports.fitCurve = void 0;
-const fitCurve = __w_pdfjs_require__(31);
-exports.fitCurve = fitCurve;
+const fitCurve = exports.fitCurve = __w_pdfjs_require__(31);
 
 /***/ }),
 /* 31 */
@@ -15551,7 +15510,7 @@ exports.SVGGraphics = SVGGraphics;
 /******/ 	
 /************************************************************************/
 var __webpack_exports__ = {};
-// This entry need to be wrapped in an IIFE because it need to be isolated against other modules in the chunk.
+// This entry needs to be wrapped in an IIFE because it needs to be isolated against other modules in the chunk.
 (() => {
 var exports = __webpack_exports__;
 
@@ -15816,7 +15775,7 @@ var _worker_options = __w_pdfjs_require__(14);
 var _svg = __w_pdfjs_require__(35);
 var _xfa_layer = __w_pdfjs_require__(34);
 const pdfjsVersion = '3.4.0';
-const pdfjsBuild = '9b85d790';
+const pdfjsBuild = 'fdbe1585';
 })();
 
 /******/ 	return __webpack_exports__;

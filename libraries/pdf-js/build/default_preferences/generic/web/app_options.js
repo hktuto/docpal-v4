@@ -25,8 +25,7 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.compatibilityParams = exports.OptionKind = exports.AppOptions = void 0;
-const compatibilityParams = Object.create(null);
-exports.compatibilityParams = compatibilityParams;
+const compatibilityParams = exports.compatibilityParams = Object.create(null);
 {
   if (typeof navigator === "undefined") {
     globalThis.navigator = Object.create(null);
@@ -42,13 +41,12 @@ exports.compatibilityParams = compatibilityParams;
     }
   })();
 }
-const OptionKind = {
+const OptionKind = exports.OptionKind = {
   VIEWER: 0x02,
   API: 0x04,
   WORKER: 0x08,
   PREFERENCE: 0x80
 };
-exports.OptionKind = OptionKind;
 const defaultOptions = {
   annotationEditorMode: {
     value: 0,

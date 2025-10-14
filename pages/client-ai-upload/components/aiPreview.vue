@@ -72,17 +72,17 @@ function checkExtension(filename: string) {
      <ReaderText :blob="state.blob" />
     </template>
     <template v-else-if="fileType === 'collabora'">
-      <CollaboraViewer :docId="props.doc.id" fileType="LOCAL" :readonly="true" />
+      <LazyCollaboraViewer :docId="props.doc.id" fileType="LOCAL" :readonly="true" />
     </template>
-    <templat v-else-if="fileType === 'pdf'">
-      <ViewerPdf v-if="state.blob" :blob="state.blob" :options="{print:false, loadAnnotations:false, readonly:true}" />
-    </templat>
+    <template v-else-if="fileType === 'pdf'">
+      <LazyViewerPdf v-if="state.blob" :blob="state.blob" :options="{print:false, loadAnnotations:false, readonly:true}" />
+    </template>
     <template v-else-if="fileType === 'video'">
       <Video v-if="state.encodeUrl" :src="state.encodeUrl" />
       <!--      <VideoViewer :fileName="props.doc.fileName" />-->
     </template>
     <template v-else>
-      <Reader v-if="state.blob" :blob="state.blob" />
+      <LazyReader v-if="state.blob" :blob="state.blob" />
       <!--      <VideoViewer :fileName="props.doc.fileName" />-->
     </template>
   </div>
