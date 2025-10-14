@@ -2,10 +2,7 @@ import { adminApi, clientApi } from 'api'
 import { onMounted } from 'vue'
 import { viewName } from '../utils/calendarHelper'
 
-const routerProvider = inject(MenuRouterKey)
-if (!routerProvider) {
-  throw new Error('MenuRouterKey is not provided')
-}
+
 type CalendarVieweCalendar = {
   colorName: string,
   lightColors: {
@@ -144,48 +141,37 @@ export const useCalendarStore = () => {
   }
 
   async function initWorkflowForm(name: string, workflowId: string) {
-    try {
-      const data = {}
+    const data = {}
 
-      if (categoriesOption.value.lenthg < 0) {
-        routerProvider?.message.error('categoriesOption is null')
-        console.log('categoriesOption is null', categoriesOption)
-        return
-      }
-
-      const categories = categoriesOption.value.find((item: any) => item.id === workflowId)
-      if (!categories.value || !categories.value.flows || categories.value.flows.length === 0) {
-        console.log('categories is null', categories)
-        return
-      }
-
-      const flow = categories.value.flows.find((item: any) => item.name.toLowerCase().includes(name))
-      if (!flow) {
-        routerProvider?.message.error('flow is null')
-        console.log('flow is null', flow)
-        return
-      }
-      data.workflowKey = flow.key
-
-      if (!!categories.value.location && categories.value.location.value.length > 0) {
-        data.location = categories.value.location.value.map((item) => item.id).join(',')
-      }
-
-      const appPlatform = useAppPlatform()
-      const api = appPlatform.value === 'admin' ? adminApi : clientApi
-      const workflow = await api.api.getWorkflowVersionKeyProcessdefinitionkey(flow.key).then((r) => r.data)
-      if (!workflow) {
-        routerProvider?.message.error('workflow is null')
-        console.log('workflow is null', workflow)
-        return
-      }
-
-      data.formJson = await getFormJson(workflow.processDefinitionKey, workflow.id)
-
-      return data
-    } catch (error) {
-      throw error
+    if (0 == categoriesOption.value.length) {
+      throw new Error('categoriesOption is null')
     }
+
+    const categories = categoriesOption.value.find((item: any) => item.id === workflowId)
+    if (!categories.value || !categories.value.flows || categories.value.flows.length === 0) {
+      console.log('categories is null', categories)
+      return
+    }
+
+    const flow = categories.value.flows.find((item: any) => item.name.toLowerCase().includes(name))
+    if (!flow) {
+      throw new Error('flow is empty', flow)
+    }
+    data.workflowKey = flow.key
+
+    if (!!categories.value.location && categories.value.location.value.length > 0) {
+      data.location = categories.value.location.value.map((item) => item.id).join(',')
+    }
+
+    const appPlatform = useAppPlatform()
+    const api = appPlatform.value === 'admin' ? adminApi : clientApi
+    const workflow = await api.api.getWorkflowVersionKeyProcessdefinitionkey(flow.key).then((r) => r.data)
+    if (!workflow) {
+      throw new Error('workflow is empty')
+    }
+
+    data.formJson = await getFormJson(workflow.processDefinitionKey, workflow.id)
+    return data
   }
 
   // TODO：名稱之後需要重新定義
@@ -229,6 +215,10 @@ export const useCalendarStore = () => {
     timeSelectLimit,
     EventFormData,
     initWorkflowForm,
+    createEventWorkflow,
+    updateEventWorkflow,
+    cancelEventWorkflow,
+    deleteEventWorkflow,
     runWorkflow
   }
 }
