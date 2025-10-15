@@ -48,7 +48,7 @@ export async function verifly() {
   logedIn.value = true
   const token = localStorage.getItem('access_token') || ''
   const decodedToken = parseJwt(token)
-  if(decodedToken) {
+  if(decodedToken && decodedToken.roles) {
     console.log('decodedToken', decodedToken)
     const isAdmin = useIsAdmin()
     const isSuperAdmin = useIsSuperAdmin()
