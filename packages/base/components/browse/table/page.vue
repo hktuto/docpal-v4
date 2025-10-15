@@ -290,6 +290,7 @@ function handleSearchBlur() {
               </div>
             </slot>
             <slot name="toolbarTools">
+              <BrowseActionsShare class="shareActions" :doc="docDetail" :selectedList="selectedList" />
               <div :class="{ searchContainer: true, expanded: isSearchExpanded }">
                 <div v-if="!isSearchExpanded" class="searchButton" @click="expandSearch">
                   <Icon name="mdi:magnify" />
@@ -437,7 +438,9 @@ function handleSearchBlur() {
   align-items: center;
   gap: var(--app-space-xs);
 }
-
+.shareActions {
+  margin-right: var(--app-space-xs);
+}
 .searchIcon,
 .closeIcon {
   cursor: pointer;
