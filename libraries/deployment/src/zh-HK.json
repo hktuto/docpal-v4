@@ -1516,7 +1516,7 @@
   "dpTip_ocrStatusError": "OCR 未完成。請稍後再試",
   "dpTip_password": "至少 8 個字符，至少 1 個字母和 1 個數字",
   "dpTip_uploadTip1": "只允許 ",
-  "dpTip_uploadedSuccessfully": "上傳成功",
+  "dpTip_uploadedSuccessfully": "上傳完成",
   "dpTip_versoionError": "操作失敗，系統檢測到当前版本未发布",
   "dpTip_warning": "警告",
   "dpTool": "工具",

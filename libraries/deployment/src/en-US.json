@@ -1516,7 +1516,7 @@
   "dpTip_ocrStatusError": "OCR was not completed. please try later",
   "dpTip_password": "At least 8 characters, at least 1 letter and 1 number",
   "dpTip_uploadTip1": "Only Allow ",
-  "dpTip_uploadedSuccessfully": "Uploaded successfully.",
+  "dpTip_uploadedSuccessfully": "Upload Completed.",
   "dpTip_versoionError": "The operation failed, the system detected that the current version is not released",
   "dpTip_warning": "Warning",
   "dpTool": "Tools",
