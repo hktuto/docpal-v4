@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { clientApi } from 'api'
 import { type EventFormData, updateEventWorkflow } from '../../../../composables/useCalendar'
+import type { CalendarEventExternal } from '@schedule-x/calendar'
 
 const routerProvider = inject(MenuRouterKey)
 if (!routerProvider) {
@@ -54,7 +55,7 @@ const event = ref<{
   eventUser: '',
   creator: ''
 })
-const { setting: calendarSetting, categoriesOption, locationsOption, handleReject } = useCalendarStore()
+const { setting: calendarSetting, categoriesOption, locationsOption, handleCancel, handleRemove } = useCalendarStore()
 const eventDialogFormRef = ref()
 
 const state = reactive({
@@ -67,9 +68,6 @@ const isReject = ref(false)
 const isAccept = ref(false)
 const isUpdate = ref(false)
 
-/**
- * Remove the user from eventUser and inform the event initiator that the user rejected the event
- */
 function handleRejectEvent() {
   const userId = useUserId()
   // Remove from eventUser
@@ -136,6 +134,46 @@ function handleUpdateEvent() {
   showForm.value = !!isUpdate.value
 
   eventDialogFormRef.value.confirm('update', null)
+}
+
+async function handelCancelEvent(event: CalendarEventExternal) {
+  const data: EventFormData = {
+    eventId: event.detail.eventId,
+    eventName: event.detail.eventName,
+    eventDescription: event.detail.eventDescription,
+    eventCategory: event.detail.category,
+    eventLocation: event.detail.location,
+    startTime: event.start,
+    endTime: event.end,
+    eventUser: event.detail.relatedUsers.user,
+    isAllDay: event.detail.isAllDay,
+    sendMessage: false
+  }
+  data.eventMessage = ''
+  await handleCancel(event.calendarId, data)
+  nextTick(() => {
+    calendarRef.value.refresh()
+  })
+}
+
+async function handelDeleteEvent(event: CalendarEventExternal) {
+  const data: EventFormData = {
+    eventId: event.detail.eventId,
+    eventName: event.detail.eventName,
+    eventDescription: event.detail.eventDescription,
+    eventCategory: event.detail.category,
+    eventLocation: event.detail.location,
+    startTime: event.start,
+    endTime: event.end,
+    eventUser: event.detail.relatedUsers.user,
+    isAllDay: event.detail.isAllDay,
+    sendMessage: false
+  }
+  data.eventMessage = ''
+  await handleRemove(event.calendarId, data)
+  nextTick(() => {
+    calendarRef.value.refresh()
+  })
 }
 
 async function handleJump() {
@@ -321,7 +359,8 @@ onMounted(async () => {
   <el-row :gutter="20">
     <el-col :span="16">
       <div class="scrollable">
-        <Calendar ref="calendarRef" :options="options" @openDetail="handleShowDetail" @ready="handleJump" />
+        <Calendar ref="calendarRef" :options="options" @openDetail="handleShowDetail" @ready="handleJump"
+                  @cancelEvent="handelCancelEvent" @deleteEvent="handelDeleteEvent" />
       </div>
     </el-col>
 
@@ -341,7 +380,6 @@ onMounted(async () => {
             <el-text tag="b">{{ $t('EndTime') }}: {{ event.endTime }}</el-text>
           </el-space>
         </div>
-
 
         <div :class="{ 'update-form-container':showForm }" v-loading="state.loading">
           <CalendarDialogForm ref="eventDialogFormRef" :categoryId="state.categoryId" :showForm="showForm"
