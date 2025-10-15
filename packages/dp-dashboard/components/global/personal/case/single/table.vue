@@ -94,7 +94,7 @@ async function handleTask(actionItem: any, row?: any) {
 async function reorderColumn(fields: any) {
   try {
     const columns = [
-      // { field: "case_id", title: "caseManagement.name", width: 200 },
+      // { field: "case_id", title: "caseManagement.id", width: 200 },
       // {
       //   field: "created_date",
       //   title: "workflow_createDate",

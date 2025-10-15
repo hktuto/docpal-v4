@@ -404,6 +404,7 @@
     "digit": "案件编号 - 位数",
     "editDashboard": "编辑仪表板",
     "editPermission": "编辑权限",
+    "id": "案例编号",
     "idGenerator": "ID 生成器",
     "idTemplateVariables": "ID 生成器变量",
     "my": "案例",
