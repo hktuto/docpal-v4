@@ -251,18 +251,13 @@ function handleRightClick(def: any, event: any) {
   bus.emit(evtParams)
 }
 
-watch(
-  () => [setting, props.options],
+watch(() => [setting, props.options],
   async () => {
     if (setting.value) {
       console.log('calendar setting changed')
       setupCalendar()
     }
-  },
-  {
-    deep: true,
-    immediate: true
-  }
+  }, { deep: true, immediate: true }
 )
 
 onDeactivated(() => {
@@ -352,7 +347,7 @@ defineExpose({
               <br>
               {{ $t('Location') }}: {{ calendarEvent.location || calendarEvent.detail.location }}
               <br>
-              {{ $t('Personnel') }}: {{ calendarEvent.people.join(', ') }}
+              {{ $t('Personnel') }}: {{ calendarEvent.detail.relatedUsers.eventUser }}
               <br />
               {{ $t('Date') }}: {{ displayTimeFn(calendarEvent) }}
             </template>
@@ -382,7 +377,7 @@ defineExpose({
               <br>
               {{ $t('Location') }}: {{ calendarEvent.location || calendarEvent.detail.location }}
               <br>
-              {{ $t('Personnel') }} : {{ calendarEvent.people.join(', ') }}
+              {{ $t('Personnel') }} : {{ calendarEvent.detail.relatedUsers.eventUser }}
               <br />
               {{ $t('Date') }}: {{ displayTimeFn(calendarEvent) }}
             </template>

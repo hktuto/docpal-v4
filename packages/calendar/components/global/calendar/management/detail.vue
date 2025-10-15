@@ -1,17 +1,21 @@
 <script setup lang="ts">
-import type { CalendarEventExternal } from '@schedule-x/calendar'
-import { adminApi, clientApi } from 'api'
+import { clientApi } from 'api'
+import { type EventFormData, updateEventWorkflow } from '../../../../composables/useCalendar'
 
 const routerProvider = inject(MenuRouterKey)
 if (!routerProvider) {
   throw new Error('MenuRouterKey is not provided')
 }
+
 const props = defineProps<{
   processInstanceId: string
 }>()
+const { processInstanceId } = toRefs(props)
+const workflowInstanceId = ref<string>(processInstanceId.value)
+
 const { t } = useI18n()
-const userId = useUserId()
 const showDetail = ref(false)
+const showForm = ref(false)
 const calendarRef = ref()
 const options = ref({
   title: '',
@@ -23,7 +27,20 @@ const options = ref({
   allowCreate: false,
   editable: false
 })
-const event = ref({
+const event = ref<{
+  eventId: string,
+  eventName: string,
+  eventDescription: string,
+  eventLocation: string,
+  locationName?: string,
+  eventCategory: string,
+  categoriesName?: string,
+  startTime: string,
+  endTime: string,
+  isAllDay: boolean,
+  eventUser: string,
+  creator: string
+}>({
   eventId: '',
   eventName: '',
   eventDescription: '',
@@ -37,148 +54,55 @@ const event = ref({
   eventUser: '',
   creator: ''
 })
-const { setting: calendarSetting, categoriesOption, locationsOption } = useCalendarStore()
-const createDialogFormRef = ref()
-const eventNotifyDialogRef = ref()
+const { setting: calendarSetting, categoriesOption, locationsOption, handleReject } = useCalendarStore()
+const eventDialogFormRef = ref()
 
 const state = reactive({
   workflowKey: '',
   flows: [],
   loading: false,
-  formJson: {},
   categoryId: ''
 })
 const isReject = ref(false)
 const isAccept = ref(false)
 const isUpdate = ref(false)
 
-async function openDetail(eventExternal: CalendarEventExternal) {
-  // 隱藏詳情頁面
-  if ('R' === eventExternal.detail.status || 'D' === eventExternal.detail.status) {
-    showDetail.value = false
+/**
+ * Remove the user from eventUser and inform the event initiator that the user rejected the event
+ */
+function handleRejectEvent() {
+  const userId = useUserId()
+  // Remove from eventUser
+  const eventUser: any = event.value.eventUser.split(',')
+  if (!eventUser.includes(userId.value)) {
+    routerProvider?.message.error('You did not attend the event.')
     return
   }
 
-  event.value = {
-    id: eventExternal.detail.eventId,
-    eventName: eventExternal.title,
-    category: eventExternal.calendarId,
-    eventDescription: eventExternal.detail.eventDescription,
-    location: eventExternal.detail.location,
-    isAllDay: eventExternal.detail.isAllDay,
-    startTime: eventExternal.start,
-    endTime: eventExternal.end,
-    user: eventExternal.detail.relatedUsers.user,
-    creator: eventExternal.detail.createdBy
+  const newUserList: any = eventUser.filter((item: string) => item !== userId.value)
+
+  if (newUserList.length < 1) {
+    routerProvider?.message.error('The number of participants cannot be less than 1.')
+    return
   }
 
-  const location = locationsOption.value.find((item: any) => item.id === eventExternal.detail.location)
-  event.value.locationName = location ? location.name : ''
-  const categories = categoriesOption.value.find((item: any) => item.id === eventExternal.calendarId)
-  if (categories) {
-    event.value.categoriesName = categories.name
+  showForm.value = !!isUpdate.value
 
-    // workflow 組
-    state.flows = categories.flows
-
-    // 檢查用戶是否有權限操作
-    const updatePermission = categories.permission.update
-    console.log('updatePermission', updatePermission)
-    // TODO：權限組沒辦法檢查
-    if (!!updatePermission.USERS && updatePermission.USERS.length > 0) {
-      isUpdate.value = updatePermission.USERS.includes(userId.value)
-      nextTick(async () => {
-        await handleShowUpdateEventDetail()
-      })
-    } else {
-      isUpdate.value = false
-    }
-  } else {
-    event.value.categoriesName = ''
-  }
-  showDetail.value = true
-}
-
-function handleRejectEvent() {
-  // TODO：需要整合
-  const flow = state.flows.find((item: any) => {
-    if (item.name.toLowerCase().includes('update calendar event')) {
-      return item
-    }
-  })
-  if (!flow) return
-  state.workflowKey = flow.key
-
-  if (isUpdate.value) {
-    eventNotifyDialogRef.value.openDialog(event)
-  } else {
-    eventNotifyDialogRef.value.openDialogByCreator(event)
-  }
-}
-
-async function handleShowUpdateEventDetail() {
-  const startTime = event.value.startTime.split(' ')
-  const endTime = event.value.endTime.split(' ')
-
-  const data = {
+  const data: EventFormData = {
     eventId: event.value.eventId,
     eventName: event.value.eventName,
     eventDescription: event.value.eventDescription,
-    category: event.value.category,
-    location: event.value.location,
-    startTime: startTime[0],
-    endTime: endTime[0],
-    user: event.value.user,
-    isAllDay: event.value.isAllDay
-  }
-  if (!event.value.isAllDay) {
-    const time = []
-    time.push(`${startTime[1]}:00`)
-    time.push(`${endTime[1]}:00`)
-    data.time = time
+    eventCategory: event.value.eventCategory,
+    eventLocation: event.value.eventLocation,
+    startTime: event.value.startTime,
+    endTime: event.value.endTime,
+    isAllDay: event.value.isAllDay,
+    eventUser: newUserList.join(','),
+    sendMessage: true,
+    recipient: event.value.creator
   }
 
-  state.loading = true
-  nextTick(async () => {
-    try {
-      const flow = state.flows.find((item: any) => {
-        if (item.name.toLowerCase().includes('update calendar event')) {
-          return item
-        }
-      })
-      if (!flow) return
-      state.workflowKey = flow.key
-      const workflow = await adminApi.api.getWorkflowVersionKeyProcessdefinitionkey(flow.key).then((r) => r.data)
-      if (!workflow) return
-      state.formJson = await formJsonGet(workflow.processDefinitionKey, workflow.id)
-      await setForm(true, data)
-      state.loading = false
-    } catch (e) {
-      console.log(e)
-    }
-  })
-}
-
-async function formJsonGet(processKey: string, versionId: string) {
-  const response: any = await clientApi.api.getRelationQuery({
-    userTaskId: 'start',
-    processKey,
-    versionId
-  }).then((res: any) => res.data)
-  console.log()
-  if (!response[0] || (response[0] && !response[0].jsonValue)) return {}
-  return JSON.parse(response[0].jsonValue)
-}
-
-async function setForm(isEdit: boolean, data: any) {
-  if (!state.formJson && '' !== state.formJson) {
-    routerProvider?.message.error('The form does not exist')
-    return
-  }
-  nextTick(() => {
-    createDialogFormRef.value.setForm(state.formJson)
-    createDialogFormRef.value.setFormData(isEdit, data)
-  })
+  eventDialogFormRef.value.confirm('reject', data)
 }
 
 function handleAcceptEvent() {
@@ -191,20 +115,26 @@ function handleUpdateEvent() {
 }
 
 async function handleJump() {
-  console.log(2, props.processInstanceId)
-  const processInstanceId = 'f4653bf3-a8d9-11f0-9dca-76208614e69c'
+  // TODO: props。processInstanceId 不生效
+  console.log(2, workflowInstanceId.value)
+  workflowInstanceId.value = '8649a031-a9a7-11f0-9dca-76208614e69c'
 
-  // if (!props.processInstanceId || '' == props.processInstanceId) {
-  if (!processInstanceId || '' == processInstanceId) {
+  if (!workflowInstanceId.value || '' == workflowInstanceId.value) {
     return
   }
 
+  showForm.value = true
   const historyList: any = await clientApi.api.postWorkflowHistoryProcess({
-    processInstanceId: processInstanceId,
+    processInstanceId: workflowInstanceId.value,
     completed: false
   }).then((res) => res?.data?.entryList)
 
   const processVariables = historyList[historyList.length - 1].processVariables
+  if (!processVariables) {
+    routerProvider?.message.error('processVariables not exist')
+    return
+  }
+
   const startDate = processVariables.startTime
   const eventId = processVariables.eventId
   calendarRef.value.setSpecificSate(startDate)
@@ -212,7 +142,6 @@ async function handleJump() {
   setTimeout(() => {
     // TODO：可能會出現 EventList 獲取不到的情況
     const eventData = calendarRef.value.getEventList().find((item: any) => item.detail.eventId === eventId)
-    console.log(33, eventData)
     if (!eventData) {
       routerProvider?.message.error('Event does not exist')
       return
@@ -227,6 +156,12 @@ async function handleJump() {
 }
 
 function handleShowDetail(eventData: any) {
+  if ('R' === eventData.detail.status || 'D' === eventData.detail.status) {
+    showDetail.value = false
+    return
+  }
+  state.categoryId = eventData.calendarId
+
   event.value = {
     eventId: eventData.detail.eventId,
     eventName: eventData.title,
@@ -236,19 +171,27 @@ function handleShowDetail(eventData: any) {
     isAllDay: eventData.detail.isAllDay,
     startTime: eventData.start,
     endTime: eventData.end,
-    eventUser: eventData.detail.relatedUsers.user,
+    eventUser: eventData.detail.relatedUsers.eventUser,
     creator: eventData.detail.createdBy
   }
 
-  // Check permissions
-  const viewPermission = checkPermission(eventData.detail.category)
-  // if (!viewPermission) {
-  //   routerProvider?.message.error('No permission to view')
-  //   return
-  // }
+  try {
+    // Check permissions
+    checkPermission(eventData.detail.category)
+    // if (!viewPermission) {
+    //   routerProvider?.message.error('No permission to view')
+    //   return
+    // }
+  } catch (e) {
+    showDetail.value = false
+    routerProvider?.message.error(t('tip_deleteSuccessMessage', { name: 'Calendar setting' }))
+    return
+  }
 
-  const location = locationsOption.value.find((item: any) => item.id === eventExternal.detail.location)
+  const location = locationsOption.value.find((item: any) => item.id === eventData.detail.location)
   event.value.locationName = location ? location.name : ''
+
+  workflowInstanceId.value = ''
 }
 
 function checkPermission(categoryId: string) {
@@ -286,25 +229,57 @@ function checkPermission(categoryId: string) {
         break
       case 'update':
         isUpdate.value = true
+        showUpdateDetail()
         break
       default:
         isUpdate.value = false
     }
   })
-  return showDetail.value
 }
 
+function showUpdateDetail() {
+  state.loading = true
+
+  const startTime = event.value.startTime.split(' ')
+  const endTime = event.value.endTime.split(' ')
+
+  const data = {
+    eventId: event.value.eventId,
+    eventName: event.value.title,
+    eventCategory: event.value.calendarId,
+    eventLocation: event.value.location,
+    eventDescription: event.value.eventDescription,
+    isAllDay: event.value.isAllDay,
+    startTime: startTime[0],
+    endTime: endTime[0],
+    eventUser: event.value.relatedUsers.eventUser,
+    creator: event.value.createdBy
+  }
+
+  if (!event.value.isAllDay) {
+    const time = []
+    time.push(`${startTime[1]}:00`)
+    time.push(`${endTime[1]}:00`)
+    data.eventTime = time
+  }
+
+  nextTick(async () => {
+    await eventDialogFormRef.value.initForm(updateEventWorkflow, true, data)
+  })
+}
 
 function handleReady() {
-
+  state.loading = false
 }
 
-function handleImplement() {
-
+// Disable page operations
+function handleImplement(isLoading: boolean) {
+  state.loading = isLoading
 }
 
 function handleSuccess() {
-
+  state.loading = false
+  showDetail.value = false
 }
 
 onMounted(async () => {
@@ -319,16 +294,18 @@ onMounted(async () => {
   <el-row :gutter="20">
     <el-col :span="16">
       <div class="scrollable">
-        <Calendar ref="calendarRef" :options="options" @openDetail="openDetail" @ready="handleJump" />
+        <Calendar ref="calendarRef" :options="options" @openDetail="handleShowDetail" @ready="handleJump" />
       </div>
     </el-col>
 
     <el-col :span="8">
-      <div v-if="showDetail">
+      <div v-if="showDetail" class="detail-container">
+        <h2 style="color: #9e9e9e">{{ $t('Event Detail') }}</h2>
+        <el-space direction="vertical" alignment="stretch" class="left-aligned">
+          <el-text line-clamp="2" style="height: 30px ">{{ $t('Information') }}</el-text>
+        </el-space>
         <div v-if="!isUpdate">
-          <h2 style="color: #9e9e9e">{{ $t('Event Detail') }}</h2>
           <el-space direction="vertical" alignment="stretch" class="left-aligned">
-            <el-text line-clamp="2">{{ $t('Information') }}</el-text>
             <el-text tag="b">{{ $t('Name') }}: {{ event.eventName }}</el-text>
             <el-text tag="b">{{ $t('Description') }}: {{ event.eventDescription }}</el-text>
             <el-text tag="b">{{ $t('Location') }}: {{ event.locationName }}</el-text>
@@ -338,28 +315,32 @@ onMounted(async () => {
           </el-space>
         </div>
 
-        <!--  update form  -->
-        <div v-else v-loading="state.loading" style="max-height: 75vh;overflow-y: auto">
-          <CalendarDialogForm ref="createDialogFormRef" :categoryId="state.categoryId" @ready="handleReady"
-                              @implement="handleImplement" @success="handleSuccess" />
+
+        <div :class="{ 'update-form-container':showForm }" v-loading="state.loading">
+          <CalendarDialogForm ref="eventDialogFormRef" :categoryId="state.categoryId" :showForm="showForm"
+                              @ready="handleReady" @implement="handleImplement" @success="handleSuccess" />
         </div>
 
-        <el-divider style="height: 20px; top: 10px;" />
+        <div class="response-section" v-loading="state.loading">
+          <el-divider />
 
-        <el-text>{{ $t('Response') }}</el-text>
-        <div style="text-align: right">
-          <!--          <el-button v-show="isReject" type="warning" size="large" @click="handleRejectEvent">-->
-          <el-button type="warning" size="large" @click="handleRejectEvent">
-            {{ $t('Reject') }}
-          </el-button>
-          <!--          <el-button v-show="isAccept" type="primary" size="large" @click="handleAcceptEvent">-->
-          <el-button type="primary" size="large" @click="handleAcceptEvent">
-            {{ $t('Accept') }}
-          </el-button>
-          <!--          <el-button v-if="isUpdate && isUpdate" type="primary" size="large" @click="handleUpdateEvent">-->
-          <el-button v-if="isUpdate" type="primary" size="large" @click="handleUpdateEvent">
-            {{ $t('Update') }}
-          </el-button>
+          <div class="response-buttons">
+            <el-text>{{ $t('Response') }}</el-text>
+            <div style="text-align: right;">
+              <!--          <el-button v-show="isReject" type="warning" size="large" @click="handleRejectEvent">-->
+              <el-button type="warning" size="large" @click="handleRejectEvent">
+                {{ $t('Reject') }}
+              </el-button>
+              <!--          <el-button v-show="isAccept" type="primary" size="large" @click="handleAcceptEvent">-->
+              <el-button type="primary" size="large" @click="handleAcceptEvent">
+                {{ $t('Accept') }}
+              </el-button>
+              <!--          <el-button v-if="isUpdate && isUpdate" type="primary" size="large" @click="handleUpdateEvent">-->
+              <el-button v-if="isUpdate" type="primary" size="large" @click="handleUpdateEvent">
+                {{ $t('Update') }}
+              </el-button>
+            </div>
+          </div>
         </div>
       </div>
     </el-col>
@@ -374,5 +355,31 @@ onMounted(async () => {
 
 .left-aligned {
   text-align: left;
+}
+
+.detail-container {
+  display: flex;
+  flex-direction: column;
+  height: 88vh;
+  position: relative;
+}
+
+.update-form-container {
+  max-height: calc(88vh - 200px - 60px);
+  overflow-y: auto;
+  padding: 10px;
+}
+
+.response-section {
+  position: sticky;
+  bottom: 0;
+  flex-shrink: 0;
+  padding: 10px 0;
+  z-index: 10;
+}
+
+.response-buttons {
+  position: relative;
+  padding: 10px 0;
 }
 </style>

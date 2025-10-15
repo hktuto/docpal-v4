@@ -1,9 +1,9 @@
 <script setup lang="ts">
 const { t } = useI18n()
 const dialogShow = ref(false)
-const emits = defineEmits(['submit', 'reject', 'rejectCancel'])
+const emits = defineEmits(['submit', 'reject'])
 const props = defineProps<{
-  notifyType: 'create' | 'update' | 'reject';
+  notifyType: 'create' | 'update' | 'reject' | 'accept';
   sendMessageText: 'Send Message to Participants' | 'Send Message to Creator'
 }>()
 
@@ -36,9 +36,9 @@ function handleSubmit() {
     sendMessage: state.sendMessage
   }
 
-  // TODO: 沒辦法操作數據
   if ('reject' === props.notifyType && state.sendMessage) {
-    emits('reject')
+    emits('reject', data)
+    dialogShow.value = false
     return
   }
 
@@ -56,7 +56,7 @@ defineExpose({ openDialog })
         <el-input v-model="state.message" :autosize="{ minRows: 4, maxRows: 6 }" type="textarea"
                   :placeholder="t('Please enter the content displayed in the notification.')" />
       </el-form-item>
-      <el-form-item v-show="'create'!== notifyType" :label="t(sendMessageText)">
+      <el-form-item v-show="'create'!== notifyType" :label="t(sendMessageText)" label-position="right">
         <el-switch v-model="state.sendMessage" />
       </el-form-item>
     </el-form>
