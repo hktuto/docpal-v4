@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { createEventWorkflow, updateEventWorkflow } from '#imports'
+import { type EventFormData } from '#imports'
 
 const routerProvider = inject(MenuRouterKey)
 if (!routerProvider) {

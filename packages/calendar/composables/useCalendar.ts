@@ -2,7 +2,6 @@ import { adminApi, clientApi } from 'api'
 import { onMounted } from 'vue'
 import { viewName } from '../utils/calendarHelper'
 
-
 type CalendarVieweCalendar = {
   colorName: string,
   lightColors: {
