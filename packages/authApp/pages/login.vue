@@ -106,16 +106,15 @@ onMounted(async() => {
     place-items: center;
 }
 .fromContainer{
-    min-width: 300px;
-    max-width: 600px;
-    width: 100%;
+    
+    width: clamp(300px, calc(100vw - 4rem), 600px);
     display: flex;
     flex-flow: column nowrap;
     justify-content: flex-start;
     align-items: stretch;
 }
 .logo{
-    width: 80%;
+    --icon-size: clamp(100px, 80%, 200px);
     max-width: 200px;
     margin: 0 auto var(--app-space-s) auto;
 }
