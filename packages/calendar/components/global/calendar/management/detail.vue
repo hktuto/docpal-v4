@@ -106,12 +106,36 @@ function handleRejectEvent() {
 }
 
 function handleAcceptEvent() {
+  const userId = useUserId()
 
+  const eventUser: any = event.value.eventUser.split(',')
+  if (eventUser.includes(userId.value)) {
+    routerProvider?.message.error('You have attended this event')
+    return
+  } else {
+    eventUser.push(userId.value)
+  }
+
+  const data: EventFormData = {
+    eventId: event.value.eventId,
+    eventName: event.value.eventName,
+    eventDescription: event.value.eventDescription,
+    eventCategory: event.value.eventCategory,
+    eventLocation: event.value.eventLocation,
+    startTime: event.value.startTime,
+    endTime: event.value.endTime,
+    isAllDay: event.value.isAllDay,
+    eventUser: eventUser.join(','),
+    sendMessage: true,
+    recipient: event.value.creator
+  }
+  eventDialogFormRef.value.confirm('accept', data)
 }
 
 function handleUpdateEvent() {
+  showForm.value = !!isUpdate.value
 
-
+  eventDialogFormRef.value.confirm('update', null)
 }
 
 async function handleJump() {
@@ -183,6 +207,7 @@ function handleShowDetail(eventData: any) {
     //   return
     // }
   } catch (e) {
+    console.log(e)
     showDetail.value = false
     routerProvider?.message.error(t('tip_deleteSuccessMessage', { name: 'Calendar setting' }))
     return
@@ -243,16 +268,16 @@ function showUpdateDetail() {
   const startTime = event.value.startTime.split(' ')
   const endTime = event.value.endTime.split(' ')
 
-  const data = {
+  const data: EventFormData = {
     eventId: event.value.eventId,
-    eventName: event.value.title,
+    eventName: event.value.eventName,
     eventCategory: event.value.calendarId,
     eventLocation: event.value.location,
     eventDescription: event.value.eventDescription,
     isAllDay: event.value.isAllDay,
     startTime: startTime[0],
     endTime: endTime[0],
-    eventUser: event.value.relatedUsers.eventUser,
+    eventUser: event.value.eventUser,
     creator: event.value.createdBy
   }
 
@@ -278,12 +303,14 @@ function handleImplement(isLoading: boolean) {
 }
 
 function handleSuccess() {
+  calendarRef.value.refresh()
   state.loading = false
   showDetail.value = false
 }
 
 onMounted(async () => {
   showDetail.value = false
+  showForm.value = false
   isReject.value = false
   isAccept.value = false
   isUpdate.value = false
