@@ -17,12 +17,14 @@ function toggleView(view: string) {
 
 <template>
   <div style="margin: 12px">
-    <el-button key="info" type="info" text style="height:50px; width: 200px" @click="toggleView('calendar')">
-      <span :class="{ active: isCalendarView }">{{ $t('Calendar View') }}</span>
-    </el-button>
-    <el-button key="info" type="info" text style="height:50px; width: 200px" @click="toggleView('table')">
-      <span :class="{ active: !isCalendarView }">{{ $t('Table View') }}</span>
-    </el-button>
+    <div style="height: 35px">
+      <el-button key="info" type="info" text style="height:50px; width: 200px" @click="toggleView('calendar')">
+        <span :class="{ active: isCalendarView }" style="font-size: 20px;">{{ $t('Calendar View') }}</span>
+      </el-button>
+      <el-button key="info" type="info" text style="height:50px; width: 200px" @click="toggleView('table')">
+        <span :class="{ active: !isCalendarView }" style="font-size: 20px;">{{ $t('Table View') }}</span>
+      </el-button>
+    </div>
 
     <div style="margin-top: 20px;">
       <component :is="currentView"></component>

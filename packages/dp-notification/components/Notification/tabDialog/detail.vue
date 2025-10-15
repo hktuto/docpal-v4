@@ -139,8 +139,12 @@ function handleMessage(message: any) {
       // TODO: workflow notification task event type
       switch (eventType) {
         case 'calendar':
-          const contentMsg = JSON.parse(content.additionalContent)
-          msg = `${contentMsg.title}\n${contentMsg.data}`
+          try {
+            const contentMsg = JSON.parse(content.additionalContent)
+            msg = `${contentMsg.title}\n${contentMsg.data}`
+          } catch (e) {
+            msg = content.additionalContent
+          }
           break
         default:
           msg = content.additionalContent
