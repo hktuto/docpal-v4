@@ -1,5 +1,4 @@
 <script lang="ts" setup>
-import dayjs, { Dayjs } from 'dayjs'
 import type { CalendarEventExternal } from '@schedule-x/calendar'
 
 const { t } = useI18n()
@@ -31,7 +30,7 @@ async function handleDelete() {
 }
 
 function editEvent(event: CalendarEventExternal) {
-  eventDialogRef.value.edit(event)
+  eventDialogRef.value.editEvent(event)
 }
 
 function allowCreateNewEvent(dateTime: string) {
@@ -51,7 +50,7 @@ function deleteEvent(event: CalendarEventExternal) {
 }
 
 function openNewEventDialog() {
-  eventDialogRef.value.open()
+  eventDialogRef.value.createEvent()
 }
 
 onDeactivated(() => {

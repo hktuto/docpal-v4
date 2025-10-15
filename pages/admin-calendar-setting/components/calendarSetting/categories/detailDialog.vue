@@ -231,7 +231,6 @@ async function submit() {
   } catch (e) {
     throw new Error(e)
   }
-  routerProvider?.message.success(`${t('msg_successfulOperation')}`)
   emits('submit')
   opened.value = false
 }

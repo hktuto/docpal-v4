@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import { adminApi, clientApi } from 'api'
+import { clientApi } from 'api'
 import dayjs from 'dayjs'
 import utc from 'dayjs/plugin/utc'
 
 dayjs.extend(utc)
 const { t } = useI18n()
-const { categoriesOption, locationsOption } = useCalendarStore()
+const { setting: calendarSetting, categoriesOption, locationsOption } = useCalendarStore()
 const form = ref({
   category: '',
   user: '',
@@ -130,6 +130,11 @@ function editEvent(row: any) {
 
   eventDialogRef.value.edit(event)
 }
+
+function refresh() {
+  reload()
+}
+
 </script>
 
 <template>

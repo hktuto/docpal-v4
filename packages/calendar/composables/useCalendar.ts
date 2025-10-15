@@ -26,6 +26,29 @@ export const useCalenarCategories = () => useState<any[]>('calendarCategories', 
 export const useCalenarLocation = () => useState<any[]>('calendarLocations', () => ([]))
 export const useCalendarViewerCategories = () => useState<CalendarVieweCalendarSetting>('calendarViewerCategories')
 
+// Workflow Form Field
+export type EventFormData = {
+  eventId?: string;
+  eventName: string;
+  eventDescription: string;
+  eventCategory: string;
+  eventLocation: string;
+  startTime: string;
+  endTime: string;
+  eventUser: string;
+  isAllDay: boolean;
+  eventTime?: string,
+  sendMessage: boolean;
+  recipient?: string;
+  eventMessage?: string;
+  creator?: string;
+}
+
+export const createEventWorkflow = 'create calendar event'
+export const updateEventWorkflow = 'update calendar event'
+export const cancelEventWorkflow = 'cancel calendar event'
+export const deleteEventWorkflow = 'delete calendar event'
+
 export const useCalendarStore = () => {
   const setting = useCalendarSetting()
 
@@ -114,7 +137,6 @@ export const useCalendarStore = () => {
     }
   }
 
-
   async function getFormJson(processKey: string, versionId: string) {
     const response: any = await clientApi.api.getRelationQuery({
       userTaskId: 'start',
@@ -125,47 +147,46 @@ export const useCalendarStore = () => {
     return JSON.parse(response[0].jsonValue)
   }
 
-  type EventFormData = {
-    eventId?: string;
-    eventName: string;
-    eventDescription: string;
-    eventCategory: string;
-    eventLocation: string;
-    startTime: string;
-    endTime: string;
-    eventUser: string;
-    isAllDay: boolean;
-    sendMessageToCreator: boolean;
-    recipient?: string;
-    eventMessage?: string;
-  }
-
-  async function initWorkflowForm(name: string, workflowId: string) {
-    const data = {}
-
+  async function getCategoriesAndProcessKey(name: string, categoryId: string) {
     if (0 == categoriesOption.value.length) {
-      throw new Error('categoriesOption is null')
+      throw new Error('categoriesOption is empty')
     }
-
-    const categories = categoriesOption.value.find((item: any) => item.id === workflowId)
-    if (!categories.value || !categories.value.flows || categories.value.flows.length === 0) {
+    const categories = categoriesOption.value.find((item: any) => item.id === categoryId)
+    if (!categories || !categories.flows || categories.flows.length === 0) {
       console.log('categories is null', categories)
       return
     }
 
-    const flow = categories.value.flows.find((item: any) => item.name.toLowerCase().includes(name))
+    const flow = categories.flows.find((item: any) => item.name.toLowerCase().includes(name))
     if (!flow) {
       throw new Error('flow is empty', flow)
     }
-    data.workflowKey = flow.key
 
-    if (!!categories.value.location && categories.value.location.value.length > 0) {
-      data.location = categories.value.location.value.map((item) => item.id).join(',')
+    const data: { categories: any, processKey: string } = {
+      categories: categories,
+      processKey: flow.key
     }
 
-    const appPlatform = useAppPlatform()
-    const api = appPlatform.value === 'admin' ? adminApi : clientApi
-    const workflow = await api.api.getWorkflowVersionKeyProcessdefinitionkey(flow.key).then((r) => r.data)
+    return data
+  }
+
+  async function initWorkflowForm(name: string, categoryId: string) {
+    const data: { processKey: string, location?: string, formJson: string } = {
+      processKey: '',
+      formJson: ''
+    }
+    const newVar: any = await getCategoriesAndProcessKey(name, categoryId)
+    const categories = newVar.categories
+    data.processKey = newVar.processKey
+
+    if (!!categories.location && categories.location.value.length > 0) {
+      data.location = categories.location.value.map((item: any) => item.id).join(',')
+    }
+
+    // const appPlatform = useAppPlatform()
+    // const api = appPlatform.value === 'admin' ? adminApi : clientApi
+    // TODO 該接口只有admin端有，client不存在
+    const workflow: any = await adminApi.api.getWorkflowVersionKeyProcessdefinitionkey(data.processKey).then((r) => r.data)
     if (!workflow) {
       throw new Error('workflow is empty')
     }
@@ -174,15 +195,19 @@ export const useCalendarStore = () => {
     return data
   }
 
-  // TODO：名稱之後需要重新定義
-  const createEventWorkflow = 'create calendar event'
-  const updateEventWorkflow = 'update calendar event'
-  const cancelEventWorkflow = 'cancel calendar event'
-  const deleteEventWorkflow = 'delete calendar event'
+  async function handleCancel(calendarId: string, event: EventFormData) {
+    const CategoriesAndProcessKey: any = await getCategoriesAndProcessKey(cancelEventWorkflow, calendarId)
+    await runWorkflow(CategoriesAndProcessKey.processKey, event)
+  }
 
-  async function runWorkflow(workflowKey: string, event: EventFormData) {
+  async function handleRemove(calendarId: string, event: EventFormData) {
+    const CategoriesAndProcessKey: any = await getCategoriesAndProcessKey(deleteEventWorkflow, calendarId)
+    await runWorkflow(CategoriesAndProcessKey.processKey, event)
+  }
+
+  async function runWorkflow(processKey: string, event: EventFormData) {
     const form = {
-      processKey: workflowKey,
+      processKey: processKey,
       businessKey: '',
       properties: Object.entries(event).reduce((newObj, [key, val]) => {
         if (val || val === false || val == '0') newObj[key] = val
@@ -191,7 +216,7 @@ export const useCalendarStore = () => {
     }
 
     try {
-      await clientApi.api.postWorkflowProcessStart(form, { async: false }).then((res) => res.data)
+      await clientApi.api.postWorkflowProcessStart(form, {async: false}).then((res) => res.data)
     } catch (e) {
       console.error(e)
     }
@@ -213,8 +238,9 @@ export const useCalendarStore = () => {
     calendarViewerCategories,
     timeSelecteStep,
     timeSelectLimit,
-    EventFormData,
     initWorkflowForm,
+    handleCancel,
+    handleRemove,
     createEventWorkflow,
     updateEventWorkflow,
     cancelEventWorkflow,

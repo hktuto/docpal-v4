@@ -163,6 +163,6 @@ watch(() => props.tableData, (newVal) => {
 
 .title {
   font-weight: bold;
-  font-size: 18px;
+  font-size: var(--app-font-size-l);
 }
 </style>

@@ -60,7 +60,7 @@ watch(
 <style lang="scss" scoped>
 .title {
   font-weight: bold;
-  font-size: 18px;
+  font-size: var(--app-font-size-l);
 }
 
 .description {

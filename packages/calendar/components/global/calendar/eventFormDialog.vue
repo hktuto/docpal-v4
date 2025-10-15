@@ -23,7 +23,7 @@ interface EventFormData {
   endTime: string;
   eventUser: string;
   isAllDay: boolean;
-  sendMessageToCreator: boolean;
+  sendMessage: boolean;
   recipient?: string;
   eventMessage?: string;
 }

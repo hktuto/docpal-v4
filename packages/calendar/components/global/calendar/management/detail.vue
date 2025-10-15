@@ -2,9 +2,14 @@
 import type { CalendarEventExternal } from '@schedule-x/calendar'
 import { adminApi, clientApi } from 'api'
 
+const routerProvider = inject(MenuRouterKey)
+if (!routerProvider) {
+  throw new Error('MenuRouterKey is not provided')
+}
 const props = defineProps<{
-  messageEvent: any
+  processInstanceId: string
 }>()
+const { t } = useI18n()
 const userId = useUserId()
 const showDetail = ref(false)
 const calendarRef = ref()
@@ -19,16 +24,18 @@ const options = ref({
   editable: false
 })
 const event = ref({
-  id: '',
+  eventId: '',
   eventName: '',
   eventDescription: '',
-  location: '',
+  eventLocation: '',
   locationName: '',
-  category: '',
+  eventCategory: '',
+  categoriesName: '',
   startTime: '',
   endTime: '',
-  user: '',
-  isEdit: undefined
+  isAllDay: false,
+  eventUser: '',
+  creator: ''
 })
 const { setting: calendarSetting, categoriesOption, locationsOption } = useCalendarStore()
 const createDialogFormRef = ref()
@@ -38,8 +45,12 @@ const state = reactive({
   workflowKey: '',
   flows: [],
   loading: false,
-  formJson: {}
+  formJson: {},
+  categoryId: ''
 })
+const isReject = ref(false)
+const isAccept = ref(false)
+const isUpdate = ref(false)
 
 async function openDetail(eventExternal: CalendarEventExternal) {
   // 隱藏詳情頁面
@@ -75,12 +86,12 @@ async function openDetail(eventExternal: CalendarEventExternal) {
     console.log('updatePermission', updatePermission)
     // TODO：權限組沒辦法檢查
     if (!!updatePermission.USERS && updatePermission.USERS.length > 0) {
-      event.value.isEdit = updatePermission.USERS.includes(userId.value)
+      isUpdate.value = updatePermission.USERS.includes(userId.value)
       nextTick(async () => {
         await handleShowUpdateEventDetail()
       })
     } else {
-      event.value.isEdit = false
+      isUpdate.value = false
     }
   } else {
     event.value.categoriesName = ''
@@ -98,7 +109,7 @@ function handleRejectEvent() {
   if (!flow) return
   state.workflowKey = flow.key
 
-  if (event.isEdit) {
+  if (isUpdate.value) {
     eventNotifyDialogRef.value.openDialog(event)
   } else {
     eventNotifyDialogRef.value.openDialogByCreator(event)
@@ -179,21 +190,128 @@ function handleUpdateEvent() {
 
 }
 
-function getCategoryName(id: string) {
-  if ('' === id) return
-  const filter = categoriesOption.value.find((item: any) => item.id === id)
+async function handleJump() {
+  console.log(2, props.processInstanceId)
+  const processInstanceId = 'f4653bf3-a8d9-11f0-9dca-76208614e69c'
 
-  return filter ? filter.name : ''
+  // if (!props.processInstanceId || '' == props.processInstanceId) {
+  if (!processInstanceId || '' == processInstanceId) {
+    return
+  }
+
+  const historyList: any = await clientApi.api.postWorkflowHistoryProcess({
+    processInstanceId: processInstanceId,
+    completed: false
+  }).then((res) => res?.data?.entryList)
+
+  const processVariables = historyList[historyList.length - 1].processVariables
+  const startDate = processVariables.startTime
+  const eventId = processVariables.eventId
+  calendarRef.value.setSpecificSate(startDate)
+
+  setTimeout(() => {
+    // TODO：可能會出現 EventList 獲取不到的情況
+    const eventData = calendarRef.value.getEventList().find((item: any) => item.detail.eventId === eventId)
+    console.log(33, eventData)
+    if (!eventData) {
+      routerProvider?.message.error('Event does not exist')
+      return
+    }
+
+    if ('R' == eventData.detail.status) {
+      routerProvider?.message.error('Event canceled')
+      return
+    }
+    handleShowDetail(eventData)
+  }, 1000)
 }
 
-function getLocationName(id: string) {
-  if ('' === id) return
-  const filter = locationsOption.value.find((item: any) => item.id === id)
-  return filter ? filter.name : ''
+function handleShowDetail(eventData: any) {
+  event.value = {
+    eventId: eventData.detail.eventId,
+    eventName: eventData.title,
+    eventCategory: eventData.calendarId,
+    eventLocation: eventData.detail.location,
+    eventDescription: eventData.detail.eventDescription,
+    isAllDay: eventData.detail.isAllDay,
+    startTime: eventData.start,
+    endTime: eventData.end,
+    eventUser: eventData.detail.relatedUsers.user,
+    creator: eventData.detail.createdBy
+  }
+
+  // Check permissions
+  const viewPermission = checkPermission(eventData.detail.category)
+  // if (!viewPermission) {
+  //   routerProvider?.message.error('No permission to view')
+  //   return
+  // }
+
+  const location = locationsOption.value.find((item: any) => item.id === eventExternal.detail.location)
+  event.value.locationName = location ? location.name : ''
 }
 
-onMounted(() => {
+function checkPermission(categoryId: string) {
+  const categories = categoriesOption.value.find((item: any) => item.id === categoryId)
+  if (!categories) {
+    throw new Error('Operation without permission')
+  }
+  event.value.categoriesName = categories.name || ''
+  const userId = useUserId()
+  const categoriesPermission = categories.permission
+
+  const userPermissions: any = Object.keys(categoriesPermission).reduce((acc, action) => {
+    if (categoriesPermission[action].USERS.includes(userId.value)) {
+      acc.push(action)
+    }
+    return acc
+  }, [])
+
+  userPermissions.forEach((item: string) => {
+    switch (item) {
+      case 'view':
+        showDetail.value = true
+        break
+      case 'cancel':
+
+        break
+      case'create':
+
+        break
+      case 'export':
+
+        break
+      case 'remove':
+
+        break
+      case 'update':
+        isUpdate.value = true
+        break
+      default:
+        isUpdate.value = false
+    }
+  })
+  return showDetail.value
+}
+
+
+function handleReady() {
+
+}
+
+function handleImplement() {
+
+}
+
+function handleSuccess() {
+
+}
+
+onMounted(async () => {
   showDetail.value = false
+  isReject.value = false
+  isAccept.value = false
+  isUpdate.value = false
 })
 </script>
 
@@ -201,13 +319,13 @@ onMounted(() => {
   <el-row :gutter="20">
     <el-col :span="16">
       <div class="scrollable">
-        <Calendar ref="calendarRef" :options="options" @openDetail="openDetail" />
+        <Calendar ref="calendarRef" :options="options" @openDetail="openDetail" @ready="handleJump" />
       </div>
     </el-col>
 
     <el-col :span="8">
       <div v-if="showDetail">
-        <div v-if="event.isEdit !== undefined && !event.isEdit">
+        <div v-if="!isUpdate">
           <h2 style="color: #9e9e9e">{{ $t('Event Detail') }}</h2>
           <el-space direction="vertical" alignment="stretch" class="left-aligned">
             <el-text line-clamp="2">{{ $t('Information') }}</el-text>
@@ -222,23 +340,30 @@ onMounted(() => {
 
         <!--  update form  -->
         <div v-else v-loading="state.loading" style="max-height: 75vh;overflow-y: auto">
-          <CalendarWidgetDialogForm ref="createDialogFormRef" />
+          <CalendarDialogForm ref="createDialogFormRef" :categoryId="state.categoryId" @ready="handleReady"
+                              @implement="handleImplement" @success="handleSuccess" />
         </div>
 
-        <el-divider />
+        <el-divider style="height: 20px; top: 10px;" />
+
         <el-text>{{ $t('Response') }}</el-text>
         <div style="text-align: right">
-          <el-button type="warning" size="large" @click="handleRejectEvent">{{ $t('Reject') }}</el-button>
-          <el-button type="primary" size="large" @click="handleAcceptEvent">{{ $t('Accept') }}</el-button>
-          <el-button v-if="event.isEdit" type="primary" size="large" @click="handleUpdateEvent">{{ $t('Update') }}
+          <!--          <el-button v-show="isReject" type="warning" size="large" @click="handleRejectEvent">-->
+          <el-button type="warning" size="large" @click="handleRejectEvent">
+            {{ $t('Reject') }}
+          </el-button>
+          <!--          <el-button v-show="isAccept" type="primary" size="large" @click="handleAcceptEvent">-->
+          <el-button type="primary" size="large" @click="handleAcceptEvent">
+            {{ $t('Accept') }}
+          </el-button>
+          <!--          <el-button v-if="isUpdate && isUpdate" type="primary" size="large" @click="handleUpdateEvent">-->
+          <el-button v-if="isUpdate" type="primary" size="large" @click="handleUpdateEvent">
+            {{ $t('Update') }}
           </el-button>
         </div>
       </div>
     </el-col>
   </el-row>
-
-  <CalendarEventNotifyDialog ref="eventNotifyDialogRef" :categoriesOption="categoriesOption" :state="s"
-                             :workflowKey='state.workflowKey' />
 </template>
 
 <style scoped lang="scss">
