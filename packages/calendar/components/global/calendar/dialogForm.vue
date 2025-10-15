@@ -261,7 +261,7 @@ async function handelUpdateEvent(event: EventFormData) {
   await runWorkflow(state.processKey, event)
 }
 
-async function handleRejectEvent(notifyData: { message: string, sendMessage: boolean }) {
+async function handleRejectOrAcceptEvent(notifyData: { message: string, sendMessage: boolean }) {
   try {
     const userId = useUserId()
     const msg: EventNotifyMessage = {
@@ -323,7 +323,7 @@ defineExpose({ initForm, confirm })
   </div>
 
   <CalendarEventNotifyDialog ref="eventNotifyDialogRef" :notifyType="eventNotifyType" :sendMessageText="sendMessageText"
-                             @submit="handleNotifyDialogSubmit" @reject="handleRejectEvent" />
+                             @submit="handleNotifyDialogSubmit" @rejectOrAccept="handleRejectOrAcceptEvent" />
 </template>
 
 <style scoped lang="scss">

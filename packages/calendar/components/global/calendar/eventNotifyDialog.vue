@@ -1,7 +1,7 @@
 <script setup lang="ts">
 const { t } = useI18n()
 const dialogShow = ref(false)
-const emits = defineEmits(['submit', 'reject'])
+const emits = defineEmits(['submit', 'rejectOrAccept'])
 const props = defineProps<{
   notifyType: 'create' | 'update' | 'reject' | 'accept';
   sendMessageText: 'Send Message to Participants' | 'Send Message to Creator'
@@ -19,7 +19,7 @@ function openDialog() {
 }
 
 function handleCancel() {
-  if ('reject' === props.notifyType) {
+  if ('reject' === props.notifyType || 'accept' === props.notifyType) {
     dialogShow.value = false
     return
   }
@@ -36,10 +36,12 @@ function handleSubmit() {
     sendMessage: state.sendMessage
   }
 
-  if ('reject' === props.notifyType && state.sendMessage) {
-    emits('reject', data)
-    dialogShow.value = false
-    return
+  if (state.sendMessage) {
+    if ('reject' === props.notifyType || 'accept' === props.notifyType) {
+      emits('rejectOrAccept', data)
+      dialogShow.value = false
+      return
+    }
   }
 
   dialogShow.value = false
