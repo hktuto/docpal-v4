@@ -119,17 +119,17 @@ export const actions: BrowseActionItem[] = [
       return false;
     }
   },
-  {
-    name: 'share',
-    showInFolder: false,
-    showInDetail: true,
-    showInShare: true,
-    permission: 'share',
-    needFeature: ['SHARE_EXTERNAL'],
-    component: BrowseActionsShare,
-    groupBy: 'other',
-    hideAfterClick: false
-  },
+  // {
+  //   name: 'share',
+  //   showInFolder: false,
+  //   showInDetail: true,
+  //   showInShare: true,
+  //   permission: 'share',
+  //   needFeature: ['SHARE_EXTERNAL'],
+  //   component: BrowseActionsShare,
+  //   groupBy: 'other',
+  //   hideAfterClick: false
+  // },
   {
     name: 'collection',
     showInFolder: false,
@@ -160,6 +160,9 @@ export const actions: BrowseActionItem[] = [
 export const shareActions: ShareActionItem[] = []
 
 export const ActionsFilter = (actions: BrowseActionItem[], docDetail: any, booleanKey: 'showInFolder' | 'showInDetail' | 'showInShare') => {
+  console.log('actions', actions)
+  console.log('docDetail', docDetail)
+  console.log('booleanKey', booleanKey)
   return actions
     .filter((item) => {
       if (!item.needFeature || item.needFeature.length === 0) return true
