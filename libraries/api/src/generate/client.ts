@@ -2354,6 +2354,7 @@ export interface PolicyDocument {
     /** @format date-time */
     modifiedDate?: string;
     policyHoldName?: string;
+    valid?: boolean;
 }
 
 export interface ResultDocumentResponseDTO {
@@ -22795,6 +22796,20 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
                 path: `/docpal/cabinet/template/list`,
                 method: "GET",
                 query: query,
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags FolderCabinetController
+         * @name GetCabinetRefreshStatusDocumentid
+         * @request GET:/api/docpal/cabinet/refresh/status/{documentId}
+         */
+        getCabinetRefreshStatusDocumentid: (documentId: string, params: RequestParams = {}) =>
+            this.request<void, ResultString | (ResultString | Result)>({
+                path: `/docpal/cabinet/refresh/status/${documentId}`,
+                method: "GET",
                 ...params,
             }),
 

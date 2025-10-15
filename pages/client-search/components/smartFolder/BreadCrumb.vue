@@ -46,7 +46,7 @@ function goRoute(bItem: any, index: number) {
 
 <style lang="scss" scoped>
 .el-breadcrumb {
-  font-size: 18px;
+  font-size: var(--app-font-size-l);
   font-weight: 500;
   .el-breadcrumb__item {
     :deep(.el-breadcrumb__inner) {

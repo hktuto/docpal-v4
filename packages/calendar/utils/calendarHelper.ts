@@ -172,15 +172,15 @@ export function displayTimeFn(event: any, dateMode = false) {
   }
 }
 
-export const routeCalendarManagement = function(params: any) {
+export const routeCalendarManagement = function(processInstanceId: string) {
   return {
     id: 'calendar-management-' + new Date().getTime(),
     name: 'calendar-management',
-    icon: null,
+    icon: '',
     label: 'Calendar Management',
     component: 'LazyCalendarManagement',
     props: {
-      messageEvent: params
+      processInstanceId
     }
   } as TabItem
 }

@@ -3780,7 +3780,7 @@ export interface DocpalTypeRequestV2DTO {
         [key: string]: any;
     };
     metadataFields?: Record<string, object>[];
-    acls?: string[];
+    permission?: Permission;
 }
 
 export interface AddMetadataRequestDTO {
@@ -3859,7 +3859,7 @@ export interface DocpalTypeDetailResponseVO {
     category?: string;
     isFolder?: string;
     langs?: Record<string, object>;
-    acls?: string[];
+    permission?: Permission;
     metadataList?: DocpalTypeMetadataResponseVO[];
 }
 
