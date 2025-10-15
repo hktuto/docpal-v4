@@ -88,10 +88,8 @@ function getEvent(id: string) {
 }
 
 async function getList() {
-  const eventAllList = await getEventFromApi(calendarApp, calendarControls, props.filter)
-  console.log('get List', eventAllList)
-  // Exclude data with deleted status
-  eventList.value = eventAllList.filter(item => item.detail.status !== 'D')
+  eventList.value = await getEventFromApi(calendarApp, calendarControls, props.filter)
+  console.log('Get Event List', eventList.value)
 }
 
 function setSpecificSate(date: string) {

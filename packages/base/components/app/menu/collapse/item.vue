@@ -67,6 +67,9 @@ onMounted(() => {
 
 <style scoped lang="scss">
 .menuItem{
+  --app-shadow-color-h: var(--app-primary-h);
+  --app-shadow-color-s: var(--app-primary-s);
+  --app-shadow-color-l: var(--app-primary-l);
   cursor: pointer;
   width: var(--app-space-xl);
   padding-block: var(--app-space-xs);
@@ -83,15 +86,17 @@ onMounted(() => {
     line-height: 0;
   }
   &.selected{
-    background: var(--app-grey-950) !important;
-    box-shadow: var(--app-shadow-m);
-    color: var(--app-primary-color);
+    background: var(--app-primary-color) !important;
+    box-shadow: var(--app-shadow-primary-l);
+    color: var(--app-paper);
+    &:hover{
+      color: var(--app-paper);
+    }
   }
   &:hover{
-
     color: var(--app-primary-color);
     background: rgba(255, 255, 255, 0.6);
-    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    box-shadow: var(--app-shadow-m);
     backdrop-filter: blur(6.3px);
     -webkit-backdrop-filter: blur(6.3px);
     border: 1px solid rgba(255, 255, 255, 0.31);
