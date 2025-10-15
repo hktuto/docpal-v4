@@ -404,6 +404,7 @@
     "digit": "Case ID - No. of Digits",
     "editDashboard": "Edit Dashboard",
     "editPermission": "Edit Permission",
+    "id": "Case ID",
     "idGenerator": "ID Generator",
     "idTemplateVariables": "ID Generator Variable",
     "my": "My case",
