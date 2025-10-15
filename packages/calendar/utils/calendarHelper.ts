@@ -89,8 +89,9 @@ export async function getEventFromApi(calendarApp: any, calendarControls: any, f
   const data = await clientApi.api.postCalendarsList(params).then(res => res.data)
   const calendarLocation = useCalenarLocation()
 
-
   const events = data.filter((event: any) => {
+    // Exclude data with deleted status
+    if (event.status === 'D') return false
     if (filter.category) {
       const matCat = event.category === filter.category
       if (!matCat) return false
