@@ -73,7 +73,7 @@ watch(() => [layout, hightLightPanel], () => {
             </div>
             <div class="menuBody">
 
-              <AppMenuSearch menuMode="collapse"/>
+                <AppMenuSearch menuMode="collapse"/>
                 <AppMenuCollapse 
                     :menuMode="menuMode" 
                     :menu="displayMenu"  
