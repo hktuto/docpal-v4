@@ -55,7 +55,6 @@ async function createEvent(dateTime?: string) {
     nextTick(async () => {
       await eventDialogFormRef.value.initForm(createEventWorkflow, false, data)
     })
-
   }
 }
 
