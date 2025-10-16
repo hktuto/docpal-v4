@@ -19,11 +19,10 @@
       </el-form-item>
       <el-divider />
       <el-form-item :label="$t('dpTable_permission')">
-        <el-select v-model="formData.acls" multiple placeholder="Select" style="width: 100%" filterable>
+        <el-select v-model="state.permission" multiple placeholder="Select" style="width: 100%" filterable>
           <el-option-group v-for="group in permissionOptions" :key="group.label" :label="$t(group.label)">
             <el-option v-for="item in group.options" :key="item.value" :label="item.label" :value="item.value" />
           </el-option-group>
-          <!-- <el-option v-for="item in permissionOptions" :key="item" :label="item" :value="item" /> -->
         </el-select>
       </el-form-item>
       <!-- Add more fields as needed -->
@@ -43,54 +42,26 @@
 <script lang="ts" setup>
 import { adminApi, clientApi } from 'api'
 import { ElMessage } from 'element-plus'
+import { getPermissionSelectOption, convertPermissionObjectByPermissions } from '#imports'
 const emits = defineEmits([
   'refresh'
 ])
 const state = reactive({
   loading: false,
   visible: false,
-  setting: {}
+  setting: {},
+  permission:[]
 })
 
 const elFormRef = ref()
 const { t } = useI18n()
 const { flatRole } = useRBAC()
-const permissionOptions = ref<any[]>([])
+const permissionOptions = ref<any>()
 const categoryOptions = ref<any[]>([])
-let userList: any = []
+
 async function getOptions() {
-  await getUserList()
-  permissionOptions.value.push(
-    {
-      label: 'user_role',
-      value: 2, // 1=User, 3=Group, 2=Role
-      type: 'select',
-      options: flatRole.value.map((item: any) => ({
-        label: item.name,
-        value: 'role____' + item.id
-      }))
-    },
-    {
-      label: 'user_users',
-      value: 1,
-      type: 'select',
-      options: userList
-    }
-  )
-  async function getUserList() {
-    if (userList.length > 0) return
-    try {
-      const _userList: any = await clientApi.api.postNuxeoIdentityUsers().then((res) => res.data)
-      userList = _userList
-        .sort((a: any, b: any) => a.username.localeCompare(b.username))
-        .map((item: any) => ({
-          label: item.userId,
-          value: item.userId
-        }))
-    } catch (error) {
-      userList = []
-    }
-  }
+  permissionOptions.value = await getPermissionSelectOption()
+
   const data = await adminApi.api.getDocpaltypeSettingsCategories().then((res) => res.data)
   categoryOptions.value = data.map((item: any) => ({
     label: item,
@@ -102,7 +73,7 @@ const formData = reactive({
   name: '',
   category: '',
   isFolder: false,
-  acls:[],
+  permission: {},
   status: 'A',
   langs:{
     en:true,
@@ -118,6 +89,8 @@ async function handleSubmit() {
   try {
     await elFormRef.value.validate()
     const data = formData
+    data.permission = convertPermissionObjectByPermissions(state.permission)
+
     state.loading = true
 
     const result = await adminApi.api.postDocpaltypeSettingsDocpalTypeV2Create(data)

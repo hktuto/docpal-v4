@@ -107,7 +107,7 @@ function convertId(options: any) {
   }))
 }
 
-// From the select array, convert permissions to objects. input Data
+// From the select array, convert permissions to objects. format: { "user": ["joshua"], "group": ['group_IT'], "role": ['role_cxv']}
 export const convertPermissionObjectByPermissions = (permissions: any) => {
   const item: {} = {}
   permissions.forEach((key: string) => {
@@ -121,6 +121,17 @@ export const convertPermissionObjectByPermissions = (permissions: any) => {
     }
   })
   return item
+}
+
+// Convert permissions object to permission array.  format: [ "user_joshua","group_IT","role_cxv"  ]
+export const convertPermissionsByPermissionObject = (permissions: {
+  user: string[],
+  role: string[],
+  group: string[]
+}) => {
+  return Object.entries(permissions).flatMap(([key, values]) =>
+    values.map(value => `${key}_${value}`)
+  )
 }
 
 // To Select Options. output Data
