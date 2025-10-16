@@ -122,7 +122,7 @@ onMounted(async () => {
             <el-option v-for="item in actionTypeOptions" :key="item" :label="item" :value="item" />
           </el-select>
         </el-form-item>
-        <el-form-item v-if="'Create' !== form.attr_actionType" label="Event Id">
+        <el-form-item label="Event Id">
           <el-select v-model="form.attr_eventId" clearable>
             <el-option v-for="item in stringFields" :key="item.id" :label="item.name" :value="item.id" />
           </el-select>

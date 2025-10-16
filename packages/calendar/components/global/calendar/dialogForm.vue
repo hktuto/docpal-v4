@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { type EventFormData } from '#imports'
+import type { EventNotifyMessage } from '../../../composables/useCalendar'
 
 const routerProvider = inject(MenuRouterKey)
 if (!routerProvider) {
@@ -11,21 +12,22 @@ const loading = ref(false)
 const showSelectUserDialog = ref(false)
 
 const eventNotifyDialogRef = ref()
-const eventNotifyType = ref<'create' | 'update' | 'reject'>('create')
+const eventNotifyType = ref<'create' | 'update' | 'reject' | 'accept'>('create')
 // TODO: i18n Not replenished
 const sendMessageText = ref<'Send Message to Participants' | 'Send Message to Creator'>('Send Message to Participants')
 
-const props = defineProps({
-  categoryId: {}
-})
+const props = defineProps<{
+  categoryId: string,
+  showForm: boolean
+}>()
 
-const { initWorkflowForm, runWorkflow } = useCalendarStore()
+const { initWorkflowForm, runWorkflow, handleReject } = useCalendarStore()
 const emits = defineEmits(['ready', 'implement', 'success'])
 
+const eventData = ref<EventFormData>()
 const state = reactive({
   loading: false,
   formJson: '',
-  readonly: false,
   tableData: [],
   userList: [],
   isEdit: false,
@@ -71,7 +73,12 @@ function openSelectUser() {
 }
 
 function handleUserListConfirm() {
-  state.tableData = userList.value.filter((item: any) => state.userList.includes(item.id))
+  const filter = userList.value.filter((item: any) => state.userList.includes(item.id))
+  filter.forEach((item: any) => {
+    if (!state.tableData.some((tData: any) => tData.id === item.id)) {
+      state.tableData.push(item)
+    }
+  })
   showSelectUserDialog.value = false
 }
 
@@ -111,7 +118,7 @@ async function initForm(name: string, isEdit: boolean, event: EventFormData) {
     event.eventCategory = props.categoryId
 
     if ('location' in workflowData && '' != workflowData.location) {
-      event.location = workflowData.location
+      event.eventLocation = workflowData.location
     }
     await setForm(workflowData.formJson, isEdit, event)
     emits('ready')
@@ -138,10 +145,7 @@ function setFormData(isEdit: boolean, data: EventFormData) {
   state.isEdit = isEdit
   if (isEdit) {
     state.userList = data.eventUser.split(',')
-    handleUserListConfirm()
-    delete data.eventUser
-  } else {
-    sendMessageText.value = t('Send Message to Participants')
+    state.tableData = userList.value.filter((item: any) => state.userList.includes(item.id))
   }
   nextTick(() => {
     formRendererRef.value.setFormData(data)
@@ -156,8 +160,7 @@ async function getFormData() {
         return
       })
     if (!formData) return
-
-    if (state.userList.length === 0) {
+    if (state.tableData.length === 0) {
       routerProvider?.message.error(t('Please add a user'))
       return
     }
@@ -170,7 +173,7 @@ async function getFormData() {
       startTime: formData.startTime + ' 00:00',
       endTime: formData.endTime + ' 23:59',
       isAllDay: formData.isAllDay,
-      eventUser: state.userList.join(','),
+      eventUser: state.tableData.map((item: any) => item.id).join(','),
       sendMessage: false
     }
 
@@ -193,10 +196,18 @@ async function getUserList() {
   userList.value = await getUserSelectOption()
 }
 
-function confirm(type: 'create' | 'update' | 'reject') {
+function confirm(type: 'create' | 'update' | 'reject' | 'accept', event: EventFormData) {
   if ('create' === type) {
     handleNotifyDialogSubmit()
     return
+  }
+
+  if ('update' === type) {
+    sendMessageText.value = 'Send Message to Participants'
+  } else if ('reject' === type || 'accept' === type) {
+    state.isEdit = true
+    eventData.value = event
+    sendMessageText.value = 'Send Message to Creator'
   }
 
   eventNotifyType.value = type
@@ -205,9 +216,8 @@ function confirm(type: 'create' | 'update' | 'reject') {
 
 /**
  * create and update
- * @param notifyData  '{ message:string, sendMessage: boolean }'
  */
-async function handleNotifyDialogSubmit(notifyData?: any) {
+async function handleNotifyDialogSubmit(notifyData?: { message: string, sendMessage: boolean }) {
   emits('implement', true)
   if (!state.processKey) {
     throw new Error('processKey is empty')
@@ -219,7 +229,7 @@ async function handleNotifyDialogSubmit(notifyData?: any) {
     if (!state.isEdit) {
       await handleCreateEvent(event)
     } else {
-      const msg = {
+      const msg: EventNotifyMessage = {
         title: event.eventName,
         data: notifyData.message
       }
@@ -227,7 +237,6 @@ async function handleNotifyDialogSubmit(notifyData?: any) {
       event.sendMessage = notifyData.sendMessage
       await handelUpdateEvent(event)
     }
-
     emits('success')
   } catch (error) {
     throw error
@@ -239,8 +248,8 @@ async function handleNotifyDialogSubmit(notifyData?: any) {
 async function handleCreateEvent(event: EventFormData) {
   // Send message by default
   const msg = {
-    title: event.eventName,
-    data: null
+    title: `Calendar Event - ${event.eventName}`,
+    data: ''
   }
   event.eventMessage = JSON.stringify(msg)
   event.sendMessage = true
@@ -252,16 +261,32 @@ async function handelUpdateEvent(event: EventFormData) {
   await runWorkflow(state.processKey, event)
 }
 
-async function handleReject(event: EventFormData) {
-  // 移除直接
-  event.recipient = state.creator
+async function handleRejectOrAcceptEvent(notifyData: { message: string, sendMessage: boolean }) {
+  try {
+    const userId = useUserId()
+    const type: string = eventNotifyType.value === 'reject' ? 'declined' : `accepts`
+
+    const msg: EventNotifyMessage = {
+      title: `${eventData.value.eventName} - User ${userId.value} ${type} this event`,
+      data: notifyData.message
+    }
+    eventData.value.eventMessage = JSON.stringify(msg)
+    await handleReject(eventData.value.eventCategory, eventData.value)
+    nextTick(() => {
+      emits('success')
+    })
+  } catch (error) {
+    throw error
+  } finally {
+    emits('implement', false)
+  }
 }
 
 defineExpose({ initForm, confirm })
 </script>
 
 <template>
-  <div v-loading="loading">
+  <div v-loading="loading" v-show="showForm">
     <FormRenderer ref="formRendererRef" :form-json="state.formJson">
       <template v-slot:eventUser>
         <VxeGrid ref="tableRef" v-bind="tableConfig" v-on="tableEvent" style="height: 300px">
@@ -277,7 +302,8 @@ defineExpose({ initForm, confirm })
           </template>
         </VxeGrid>
 
-        <el-dialog v-model="showSelectUserDialog" :title="t('Select User')" append-to-body align-center width="400px">
+        <el-dialog v-model="showSelectUserDialog" :title="t('Select User')" append-to-body align-center
+                   style="width: 400px">
           <el-form-item :label="t('User')" label-position="top">
             <el-select v-model="state.userList" multiple filterable clearable>
               <el-option v-for="user in userList" :key="user.id" :label="user.name" :value="user.id" />
@@ -299,7 +325,7 @@ defineExpose({ initForm, confirm })
   </div>
 
   <CalendarEventNotifyDialog ref="eventNotifyDialogRef" :notifyType="eventNotifyType" :sendMessageText="sendMessageText"
-                             @submit="handleNotifyDialogSubmit" />
+                             @submit="handleNotifyDialogSubmit" @rejectOrAccept="handleRejectOrAcceptEvent" />
 </template>
 
 <style scoped lang="scss">

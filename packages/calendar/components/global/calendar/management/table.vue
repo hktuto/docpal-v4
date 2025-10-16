@@ -2,6 +2,7 @@
 import { clientApi } from 'api'
 import dayjs from 'dayjs'
 import utc from 'dayjs/plugin/utc'
+import { convertSiteEventToCalendarEvent } from '../../../../utils/calendarHelper'
 
 dayjs.extend(utc)
 const { t } = useI18n()
@@ -12,9 +13,9 @@ const form = ref({
   location: '',
   dateRange: []
 })
-let extraParams: any = {}
 const eventDialogRef = ref()
 const userFilterOptions = ref()
+const options = ref({})
 
 function formLocation(id: string) {
   const location = locationsOption.value.find((item: any) => item.id === id)
@@ -30,40 +31,51 @@ const { tableRef, tableConfig, tableEvent, reload } = useVxeTable({
   id: 'calendarEventManagement',
   zoom: false,
   api: async (params: any) => {
-    return await clientApi.api.postCalendarsList({ ...params, ...extraParams })
+    return await getEventList({})
   },
   remoteSort: true,
   columns: [
     {
       title: 'dpTable_name',
-      field: 'eventName',
+      field: 'title',
       fixed: 'left'
     },
     {
       title: 'dpTable_location',
-      field: 'location',
+      field: 'detail.location',
       formatter({ cellValue }: any) {
         return formLocation(cellValue)
       }
     },
     {
-      title: 'category',
-      field: 'category',
+      title: 'Category',
+      field: 'detail.category',
       formatter({ cellValue }: any) {
         return formCategory(cellValue)
       }
     },
     {
+      title: 'Description',
+      field: 'detail.eventDescription'
+    },
+    {
       title: 'Participants',
-      field: 'relatedUsers.user',
+      field: 'detail.relatedUsers.eventUser',
       formatter({ cellValue }: any) {
         // 給role and group id轉成name
         return cellValue
       }
     },
     {
+      title: 'info_by',
+      field: 'detail.createdBy'
+    },
+    {
       title: 'info_created',
-      field: 'createdBy'
+      field: 'detail.createdDate',
+      formatter({ cellValue }: any) {
+        return formatDate(cellValue)
+      }
     }
   ],
   bodyActions: [
@@ -74,66 +86,66 @@ const { tableRef, tableConfig, tableEvent, reload } = useVxeTable({
       }
     ]
   ]
-  // permissionMethod: listProvider?.actionPermission
 })
 
-function filterChange() {
-  if (!!form.value.category) {
-    extraParams.category = form.value.category
-  } else {
-    delete extraParams.category
+async function getEventList(filterParams?: any) {
+  const params: any = {
+    startTime: filterParams.date?.startTime,
+    endTime: filterParams.date?.endTime
   }
+  try {
+    const data = await clientApi.api.postCalendarsList(params).then(res => res.data)
 
-  if (!!form.value.user) {
-    extraParams.user = form.value.user
-  } else {
-    delete extraParams.user
+    tableConfig.data = data.filter((event: any) => {
+      if (!!filterParams.category) {
+        const matCat = event.category === filterParams.category
+        if (!matCat) return false
+      }
+      if (!!filterParams.location) {
+        const matLoc = event.location === filterParams.location
+        if (!matLoc) return false
+      }
+      if (!!filterParams.user) {
+        const userFilter = event.user === filterParams.user
+        const mapUser = event.assignee === userFilter || event.modifiedBy === userFilter
+        const userInRelated = event.relatedUsers ? event.relatedUsers.user === userFilter : false
+        if (!mapUser && !userInRelated) return false
+      }
+      return true
+    }).map((ev) => convertSiteEventToCalendarEvent(ev)).sort((a, b) => {
+      return new Date(b.detail.createdDate) - new Date(a.detail.createdDate)
+    })
+    reload()
+  } catch (e) {
+    console.log(e)
+    throw e
   }
-
-  if (!!form.value.location) {
-    extraParams.location = form.value.location
-  } else {
-    delete extraParams.location
-  }
-
-  if (!!form.value.dateRange) {
-    extraParams.startTime = dayjs.utc(form.value.dateRange[0]).toISOString()
-    extraParams.endTime = dayjs.utc(form.value.dateRange[1]).toISOString()
-  } else {
-    delete extraParams.startTime
-    delete extraParams.endTime
-  }
-  reload()
 }
 
 function createEvent() {
-
+  eventDialogRef.value.createEvent()
 }
 
 function editEvent(row: any) {
   // TODO：應該在外層禁用事件
-  if ('R' === row.status || 'D' === row.status) {
+  if ('R' === row.detail.status || 'D' === row.detail.status) {
     return
   }
+  eventDialogRef.value.editEvent(row)
+}
 
-  const format = 'YYYY-MM-DD HH:mm'
-  const event = {
-    id: row.id,
-    title: row.eventName,
-    calendarId: row.category,
-    location: row.location,
-    start: dayjs.utc(row.startTime).format(format),
-    end: dayjs.utc(row.endTime).format(format),
-    people: row.relatedUsers.values[0],
-    detail: row
+watch(form, (newValue, oldValue) => {
+  const filterParams: any = {
+    date: {
+      startTime: dayjs.utc(newValue.dateRange[0]).toISOString(),
+      endTime: dayjs.utc(newValue.dateRange[1]).toISOString()
+    },
+    category: newValue.category,
+    location: newValue.location,
+    user: newValue.user
   }
-
-  eventDialogRef.value.edit(event)
-}
-
-function refresh() {
-  reload()
-}
+  getEventList(filterParams)
+}, { deep: true })
 
 </script>
 
@@ -146,36 +158,38 @@ function refresh() {
           <div class="filter-section">
             <el-form label-position="top" :inline="true">
               <el-formItem :label="t('Location')">
-                <el-select v-model="form.location" clearable placeholder="Select" filterable @change="filterChange">
+                <el-select v-model="form.location" clearable :placeholder="t('common_selectOccupancyContent')"
+                           filterable>
                   <el-option v-for="item in locationsOption" :key="item.id" :label="item.name" :value="item.id" />
                 </el-select>
               </el-formItem>
               <el-formItem :label="t('Category')">
-                <el-select v-model="form.category" clearable placeholder="Select" filterable @change="filterChange">
+                <el-select v-model="form.category" clearable :placeholder="t('common_selectOccupancyContent')"
+                           filterable>
                   <el-option v-for="item in categoriesOption" :key="item.id" :label="item.name" :value="item.id" />
                 </el-select>
               </el-formItem>
               <el-formItem :label="t('User')">
-                <el-select v-model="form.user" clearable placeholder="Select" filterable @change="filterChange">
+                <el-select v-model="form.user" clearable :placeholder="t('common_selectOccupancyContent')" filterable>
                   <el-option v-for="item in userFilterOptions" :key="item.value" :label="item.label"
                              :value="item.value" />
                 </el-select>
               </el-formItem>
               <el-formItem :label="t('Date Range')">
                 <el-date-picker v-model="form.dateRange" type="daterange" range-separator="To"
-                                start-placeholder="Start date" end-placeholder="End date" @change="filterChange" />
+                                start-placeholder="Start Date" end-placeholder="End Date" />
               </el-formItem>
             </el-form>
           </div>
           <div class="button-section">
-            <el-button size="large" type="primary" @click="createEvent">{{ $t('new Event') }}</el-button>
+            <el-button size="large" type="primary" @click="createEvent">{{ $t('New Event') }}</el-button>
           </div>
         </div>
       </template>
     </VxeGrid>
   </div>
 
-  <CalendarWidgetDialog ref="eventDialogRef" :options="setting" @reload="refresh" />
+  <CalendarManagementUpdateEventDialog ref="eventDialogRef" :options="options" @reload="reload()" />
 </template>
 
 <style scoped lang="scss">

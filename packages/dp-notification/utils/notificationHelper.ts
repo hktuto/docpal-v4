@@ -1,4 +1,5 @@
 import { clientApi } from 'api'
+import { routeCalendarManagement } from '#imports'
 
 export function notiShowView(row: any) {
   if ('Workflow' === row.type && '' !== row.content?.message) {
@@ -63,7 +64,7 @@ export async function notiHandleView(row: any, tabProvider: any) {
     const eventType = event.eventType
     switch (eventType) {
       case 'calendar':
-        const newItem = routeCalendarManagement(event.processInstanceId)
+        const newItem = routeCalendarManagement(event.processInstanceId, 'calendar')
         tabProvider?.openTab(newItem, true)
         break
     }
