@@ -2,7 +2,6 @@ import { adminApi, clientApi } from 'api'
 import { onMounted } from 'vue'
 import { viewName } from '../utils/calendarHelper'
 
-
 type CalendarVieweCalendar = {
   colorName: string,
   lightColors: {
@@ -37,11 +36,16 @@ export type EventFormData = {
   endTime: string;
   eventUser: string;
   isAllDay: boolean;
-  eventTime?: string,
-  sendMessage: boolean;
+  eventTime?: string[],
+  sendMessage?: boolean;
   recipient?: string;
   eventMessage?: string;
   creator?: string;
+}
+
+export type EventNotifyMessage = {
+  title: string,
+  data: string
 }
 
 export const createEventWorkflow = 'create calendar event'
@@ -205,6 +209,11 @@ export const useCalendarStore = () => {
     await runWorkflow(CategoriesAndProcessKey.processKey, event)
   }
 
+  async function handleReject(calendarId: string, event: EventFormData) {
+    const CategoriesAndProcessKey: any = await getCategoriesAndProcessKey(updateEventWorkflow, calendarId)
+    await runWorkflow(CategoriesAndProcessKey.processKey, event)
+  }
+
   async function runWorkflow(processKey: string, event: EventFormData) {
     const form = {
       processKey: processKey,
@@ -216,7 +225,7 @@ export const useCalendarStore = () => {
     }
 
     try {
-      await clientApi.api.postWorkflowProcessStart(form, {async: false}).then((res) => res.data)
+      await clientApi.api.postWorkflowProcessStart(form, { async: false }).then((res) => res.data)
     } catch (e) {
       console.error(e)
     }
@@ -241,6 +250,7 @@ export const useCalendarStore = () => {
     initWorkflowForm,
     handleCancel,
     handleRemove,
+    handleReject,
     createEventWorkflow,
     updateEventWorkflow,
     cancelEventWorkflow,
