@@ -11,6 +11,7 @@ if (!routerProvider) {
 const props = defineProps<{
   processInstanceId: string
 }>()
+
 const { processInstanceId } = toRefs(props)
 const workflowInstanceId = ref<string>(processInstanceId.value)
 
@@ -177,10 +178,6 @@ async function handelDeleteEvent(event: CalendarEventExternal) {
 }
 
 async function handleJump() {
-  // TODO: props。processInstanceId 不生效
-  console.log(2, workflowInstanceId.value)
-  workflowInstanceId.value = '8649a031-a9a7-11f0-9dca-76208614e69c'
-
   if (!workflowInstanceId.value || '' == workflowInstanceId.value) {
     return
   }

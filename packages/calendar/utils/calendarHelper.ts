@@ -173,8 +173,7 @@ export function displayTimeFn(event: any, dateMode = false) {
   }
 }
 
-// TODO：跳轉后無法獲取processInstanceId的值，function handleJump
-export const routeCalendarManagement = function(processInstanceId: string) {
+export const routeCalendarManagement = function(processInstanceId?: string, activeTab: 'calendar' | 'table') {
   return {
     id: 'calendar-management-' + new Date().getTime(),
     name: 'calendar-management',
@@ -182,7 +181,8 @@ export const routeCalendarManagement = function(processInstanceId: string) {
     label: 'Calendar Management',
     component: 'LazyCalendarManagement',
     props: {
-      processInstanceId
+      processInstanceId,
+      activeTab
     }
   } as TabItem
 }
