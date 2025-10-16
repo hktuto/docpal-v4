@@ -958,7 +958,7 @@ export const bpmnElement: BpmnElement = {
             extensionElements: {
               'flowable:calendarEvent': {
                 attr_description: 'New Calendar Task',
-                attr_eventId: false,
+                attr_eventId: '',
                 attr_eventName: '',
                 attr_actionType: '',
                 attr_eventDescription: '',

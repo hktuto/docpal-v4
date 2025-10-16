@@ -34,7 +34,7 @@ function editEvent(event: CalendarEventExternal) {
 }
 
 function allowCreateNewEvent(dateTime: string) {
-  eventDialogRef.value.open(dateTime)
+  eventDialogRef.value.createEvent(dateTime)
 }
 
 function updateEvent(params: CalendarEventExternal) {
@@ -87,7 +87,7 @@ onDeactivated(() => {
     <Calendar v-else ref="CalendarRef" :options="setting" @editEvent="editEvent" @createEvent="allowCreateNewEvent"
               @updateEvent="updateEvent" @cancelEvent="cancelEvent" @deleteEvent="deleteEvent" />
 
-    <CalendarWidgetDialog ref="eventDialogRef" :options="setting" @reload="refresh" />
+    <CalendarManagementUpdateEventDialog ref="eventDialogRef" :options="setting" @reload="refresh" />
     <CalendarWidgetSetting ref="settingRef" :setting="setting" @submit="(setting) => $emit('refreshSetting', setting)"
                            @delete="handleDelete" />
   </DashboardCard>

@@ -1,6 +1,6 @@
 <script lang="ts" setup>
-import { clientApi } from 'api'
 import { createEventWorkflow, updateEventWorkflow } from '#imports'
+import { type EventFormData } from '#imports'
 
 const routerProvider = inject(MenuRouterKey)
 if (!routerProvider) {
@@ -9,21 +9,17 @@ if (!routerProvider) {
 const emits = defineEmits(['reload'])
 const { t } = useI18n()
 const opened = ref(false)
-const { setting: calendarSetting, categoriesOption, handleCancel,handleRemove } = useCalendarStore()
+const { setting: calendarSetting, categoriesOption, handleCancel, handleRemove } = useCalendarStore()
 const props = defineProps({
   options: {}
 })
 const eventDialogFormRef = ref()
+const showForm = ref(false)
 
 const state = reactive({
-  workflowKey: '',
   categoryId: '',
-  workflowId: '',
-  location: '',
-  formJson: {},
   loading: false,
-  isEdit: false,
-  userList: []
+  isEdit: false
 })
 
 async function handleCategoriesChange() {
@@ -31,17 +27,20 @@ async function handleCategoriesChange() {
     routerProvider?.message.error('Category Id is empty.')
     return
   }
+  showForm.value = true
   const data = {}
-  await eventDialogFormRef.value.initForm(createEventWorkflow, false, data)
+  nextTick(async () => {
+    await eventDialogFormRef.value.initForm(createEventWorkflow, false, data)
+  })
 }
 
 async function createEvent(dateTime?: string) {
   state.isEdit = false
-  state.workflowId = ''
+  showForm.value = false
   opened.value = true
-
   // options 設置了默認的Calendar
   if (!!props.options.defaultNewEventCalendar && '' !== props.options.defaultNewEventCalendar) {
+    showForm.value = true
     state.categoryId = props.options.defaultNewEventCalendar
     const data = {}
 
@@ -59,15 +58,13 @@ async function createEvent(dateTime?: string) {
     nextTick(async () => {
       await eventDialogFormRef.value.initForm(createEventWorkflow, false, data)
     })
-
   }
 }
 
 async function editEvent(event: any) {
   state.isEdit = true
-  state.userList = []
+  showForm.value = true
   state.categoryId = event.calendarId
-  state.location = ''
 
   const startTime = event.start.split(' ')
   const endTime = event.end.split(' ')
@@ -125,7 +122,7 @@ async function cancelAndRemove(isCancel: boolean, event: any) {
 // open message dialog
 async function handleConfirm() {
   const type = state.isEdit ? 'update' : 'create'
-  eventDialogFormRef.value.confirm(type)
+  eventDialogFormRef.value.confirm(type, null)
 }
 
 function handleReady() {
@@ -143,6 +140,14 @@ function handleSuccess() {
   opened.value = false
 }
 
+watch(() => state.categoryId, (newValue) => {
+  handleCategoriesChange()
+}, { deep: true })
+
+onMounted(() => {
+  state.categoryId = ''
+})
+
 defineExpose({ createEvent, editEvent, cancelAndRemove })
 </script>
 
@@ -151,7 +156,7 @@ defineExpose({ createEvent, editEvent, cancelAndRemove })
              style="width: 30%">
     <el-form label-position="top" v-show="!state.isEdit">
       <el-form-item :label="t('Calendar')">
-        <el-select v-model="state.categoryId" @change="handleCategoriesChange" :loading="state.loading">
+        <el-select v-model="state.categoryId" :loading="state.loading">
           <el-option v-for="categories in categoriesOption" :key="categories.key" :label="categories.name"
                      :value="categories.id" />
         </el-select>
@@ -159,8 +164,8 @@ defineExpose({ createEvent, editEvent, cancelAndRemove })
     </el-form>
     <el-divider v-show="!state.isEdit && !!state.categoryId && ''!=state.categoryId" />
 
-    <CalendarDialogForm ref="eventDialogFormRef" :categoryId="state.categoryId" @ready="handleReady"
-                        @implement="handleImplement" @success="handleSuccess" />
+    <CalendarDialogForm ref="eventDialogFormRef" :categoryId="state.categoryId" :showForm="showForm"
+                        @ready="handleReady" @implement="handleImplement" @success="handleSuccess" />
 
     <template #footer>
       <div v-show="!!state.categoryId && ''!=state.categoryId">
