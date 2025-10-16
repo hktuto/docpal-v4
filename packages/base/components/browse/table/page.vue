@@ -131,26 +131,8 @@ async function handleRefresh() {
 
 async function handleRefreshChild(childId: string) {
   if (tableRef.value) {
-    const tableData: any = tableRef.value?.tableRef?.getData()
-    const cItem = findNodeById({ children: tableData }, childId)
+    const cItem = tableRef.value?.tableRef?.getRowById(childId)
     if (!!cItem) tableRef.value?.tableRef?.reloadTreeExpand(cItem)
-  }
-
-  function findNodeById(node: any, targetId) {
-    // 当前节点匹配时直接返回
-    if (node.id === targetId) {
-      return node
-    }
-    // 遍历子节点递归查找
-    if (node.children && node.children.length > 0) {
-      for (const child of node.children) {
-        const found = findNodeById(child, targetId)
-        if (found) {
-          return found // 找到则立即返回
-        }
-      }
-    }
-    return null // 未找到返回null
   }
 }
 
@@ -191,7 +173,8 @@ provide(BrowseListProviderKey, {
   removeFromSelection,
   collapseSearch
 })
-
+const BrowseDragMove = useBrowseDragMove(selectedList)
+provide('BrowseDragMove', BrowseDragMove)
 const bus = useEventBus(EventType.FILE_NEED_REFRESH)
 bus.on((ids: any) => {
   if (!ids) return
