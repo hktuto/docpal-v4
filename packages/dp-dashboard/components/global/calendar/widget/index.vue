@@ -34,7 +34,7 @@ function editEvent(event: CalendarEventExternal) {
 }
 
 function allowCreateNewEvent(dateTime: string) {
-  eventDialogRef.value.open(dateTime)
+  eventDialogRef.value.createEvent(dateTime)
 }
 
 function updateEvent(params: CalendarEventExternal) {

@@ -218,6 +218,8 @@ async function handleJump() {
 }
 
 function handleShowDetail(eventData: any) {
+  workflowInstanceId.value = ''
+
   if ('R' === eventData.detail.status || 'D' === eventData.detail.status) {
     showDetail.value = false
     return
@@ -254,7 +256,6 @@ function handleShowDetail(eventData: any) {
   const location = locationsOption.value.find((item: any) => item.id === eventData.detail.location)
   event.value.locationName = location ? location.name : ''
 
-  workflowInstanceId.value = ''
 }
 
 function checkPermission(categoryId: string) {

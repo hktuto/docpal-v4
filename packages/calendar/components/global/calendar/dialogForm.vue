@@ -264,8 +264,10 @@ async function handelUpdateEvent(event: EventFormData) {
 async function handleRejectOrAcceptEvent(notifyData: { message: string, sendMessage: boolean }) {
   try {
     const userId = useUserId()
+    const type: string = eventNotifyType.value === 'reject' ? 'declined' : `accepts`
+
     const msg: EventNotifyMessage = {
-      title: `${eventData.value.eventName} - User ${userId.value} declined this event`,
+      title: `${eventData.value.eventName} - User ${userId.value} ${type} this event`,
       data: notifyData.message
     }
     eventData.value.eventMessage = JSON.stringify(msg)
