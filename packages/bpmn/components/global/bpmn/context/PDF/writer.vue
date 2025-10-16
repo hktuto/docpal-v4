@@ -149,7 +149,7 @@ watch(() => node, async () => {
 <template>
   <div>
     <BpmnSidebarEditLabel :node="node" />
-    <el-form label-width="auto" label-position="top">
+    <el-form label-width="auto" label-position="top" :disabled="editorProvider.readonly.value">
       <el-form-item :label="t('Save Filled PDF to')">
         <el-select v-model="state.fileField" :placeholder="t('common_selectedIsRequiredMsg')"
                    @change="(val:any) => fieldMappingUpdate(val, 'fileField')">
@@ -176,7 +176,8 @@ watch(() => node, async () => {
 
     <div v-loading="loading">
       {{ $t('Field Mapping') }}
-      <el-form label-width="auto" label-position="top" v-for="(item, index) in displayFieldList">
+      <el-form label-width="auto" label-position="top" v-for="(item, index) in displayFieldList"
+               :disabled="editorProvider.readonly.value">
         <el-form-item :key="item.attr_name" :label="item.attr_name">
           <el-select v-model="item['flowable:expression'].__cdata" :placeholder="t('common_selectOccupancyContent')"
                      @change="(val:any) => fieldMappingUpdate(val, item.attr_name)" clearable>
