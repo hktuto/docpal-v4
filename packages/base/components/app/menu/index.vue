@@ -73,7 +73,7 @@ watch(() => [layout, hightLightPanel], () => {
             </div>
             <div class="menuBody">
 
-                
+              <AppMenuSearch menuMode="collapse"/>
                 <AppMenuCollapse 
                     :menuMode="menuMode" 
                     :menu="displayMenu"  
@@ -97,7 +97,7 @@ watch(() => [layout, hightLightPanel], () => {
             <div class="toggleIcon">
                   <Icon class="menuToggleIcon" :name="menuMode === 'collapse' ? 'lucide:chevron-right' : 'lucide:chevron-left'" @click="toggleMenuMode" />
                 </div>
-            <AppMenuSearch menuMode="collapse"/>
+            
           </div>
           
           <AppMenuExpand v-if="expandMenu" :menu="expandMenu" :selectedMenuItem="selectedMenuItem"  @select="handleSelect" />
