@@ -29,15 +29,18 @@ async function handleCategoriesChange() {
   }
   showForm.value = true
   const data = {}
-  await eventDialogFormRef.value.initForm(createEventWorkflow, false, data)
+  nextTick(async () => {
+    await eventDialogFormRef.value.initForm(createEventWorkflow, false, data)
+  })
 }
 
 async function createEvent(dateTime?: string) {
   state.isEdit = false
-  showForm.value = true
+  showForm.value = false
   opened.value = true
   // options 設置了默認的Calendar
   if (!!props.options.defaultNewEventCalendar && '' !== props.options.defaultNewEventCalendar) {
+    showForm.value = true
     state.categoryId = props.options.defaultNewEventCalendar
     const data = {}
 
@@ -137,6 +140,14 @@ function handleSuccess() {
   opened.value = false
 }
 
+watch(() => state.categoryId, (newValue) => {
+  handleCategoriesChange()
+}, { deep: true })
+
+onMounted(() => {
+  state.categoryId = ''
+})
+
 defineExpose({ createEvent, editEvent, cancelAndRemove })
 </script>
 
@@ -145,7 +156,7 @@ defineExpose({ createEvent, editEvent, cancelAndRemove })
              style="width: 30%">
     <el-form label-position="top" v-show="!state.isEdit">
       <el-form-item :label="t('Calendar')">
-        <el-select v-model="state.categoryId" @change="handleCategoriesChange" :loading="state.loading">
+        <el-select v-model="state.categoryId" :loading="state.loading">
           <el-option v-for="categories in categoriesOption" :key="categories.key" :label="categories.name"
                      :value="categories.id" />
         </el-select>
