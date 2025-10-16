@@ -53,7 +53,7 @@ describe('[client-case]CaseManageDetailPage', () => {
             type: 'string',
             isMultiple: false,
             options: [
-              { label: 'caseManagement.name', value: 'case_id' },
+              { label: 'caseManagement.id', value: 'case_id' },
               { label: 'table_modifiedDate', value: 'modified_date' },
               { label: 'workflow_createDate', value: 'created_date' }
             ]

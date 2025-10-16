@@ -48,7 +48,7 @@ async function handleDelete() {
   try {
     const action = await ElMessageBox.confirm(`${t('msg_confirmWhetherToDelete')}`)
     if (action !== 'confirm') return
-    const res = await adminApi.api.postNuxeoIdentityGroup({ groupId: id })
+    const res = await adminApi.api.deleteNuxeoIdentityGroup({ groupId: id })
     if (!!res) openGroupList()
   } catch (error) {
     console.log(error)

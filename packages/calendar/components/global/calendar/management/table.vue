@@ -2,6 +2,7 @@
 import { clientApi } from 'api'
 import dayjs from 'dayjs'
 import utc from 'dayjs/plugin/utc'
+import type { EventFormData } from '../../../../composables/useCalendar'
 
 dayjs.extend(utc)
 const { t } = useI18n()
@@ -116,16 +117,19 @@ function editEvent(row: any) {
     return
   }
 
+  console.log(22, row)
   const format = 'YYYY-MM-DD HH:mm'
-  const event = {
-    id: row.id,
-    title: row.eventName,
-    calendarId: row.category,
-    location: row.location,
-    start: dayjs.utc(row.startTime).format(format),
-    end: dayjs.utc(row.endTime).format(format),
-    people: row.relatedUsers.values[0],
-    detail: row
+
+  const event:EventFormData = {
+    eventId: row.eventId,
+    eventName: row.eventName,
+    eventDescription: row.eventDescription,
+    eventCategory: row.category,
+    eventLocation: row.location,
+    startTime: dayjs.utc(row.startTime).format(format),
+    endTime: dayjs.utc(row.endTime).format(format),
+    eventUser: row.relatedUsers.eventUser,
+    isAllDay: row.isAllDay
   }
 
   eventDialogRef.value.edit(event)
@@ -168,14 +172,14 @@ function refresh() {
             </el-form>
           </div>
           <div class="button-section">
-            <el-button size="large" type="primary" @click="createEvent">{{ $t('new Event') }}</el-button>
+            <el-button size="large" type="primary" @click="createEvent">{{ $t('New Event') }}</el-button>
           </div>
         </div>
       </template>
     </VxeGrid>
   </div>
 
-  <CalendarWidgetDialog ref="eventDialogRef" :options="setting" @reload="refresh" />
+  <CalendarManagementUpdateEventDialog ref="eventDialogRef" :options="setting" @reload="refresh" />
 </template>
 
 <style scoped lang="scss">
