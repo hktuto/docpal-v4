@@ -26,6 +26,7 @@ export async function getLocale(){
       }
     }
     let clientJson;
+    console.log("config.public", config.public.isProduction)
     if(config.public.isProduction){
         const { data:clientData } = await clientApi.api.getRelationQuerylanguage({
                 locale:locale.value, 
