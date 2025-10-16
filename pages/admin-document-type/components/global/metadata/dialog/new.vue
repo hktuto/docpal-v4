@@ -90,18 +90,6 @@ async function handleCreate() {
       if (!ruleValid) {
         return
       }
-      // step 3 check if the name is already exists
-      const nameExists = await adminApi.api
-        .postDocpaltypeSettingsMetadataV2Query({
-          metadataName: formData.name,
-          pageNum: 0,
-          pageSize: 1
-        })
-        .then((res) => res.data?.entryList?.length > 0)
-      if (nameExists) {
-        ElMessage.error(t('dpTip.exit', { name: formData.name }))
-        return
-      }
       // step 4 create the metadata
       const result = await adminApi.api.postDocpaltypeSettingsMetadataV2Create(formData).then((res) => res.data)
       if (result) {
