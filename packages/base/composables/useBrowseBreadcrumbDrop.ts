@@ -11,9 +11,12 @@ export const useBrowseBreadcrumbDrop = () => {
   const DEBOUNCE_TIME = 200
   const { createUploadRequest } = useUploadAIStore()
   const { t } = useI18n()
+  const BrowseDragMove: any = inject('BrowseDragMove')
   async function handleDrop(event: any) {
     event.preventDefault()
+    event.stopPropagation()
     const dropRow = JSON.parse(JSON.stringify(currentRow.value))
+    BrowseDragMove.setDropRow(dropRow, true)
     handleDragleave()
     const docDetail = await clientApi.api.getNuxeoDocument({ idOrPath: dropRow.data.id }).then((res: any) => res.data)
     if (!docDetail) return
@@ -32,6 +35,7 @@ export const useBrowseBreadcrumbDrop = () => {
   }
   const handleDragover = useDebounceFn(
     (event: any, docDetail: any) => {
+      event.stopPropagation()
       const rowEl = getParentRowId(event.target)
       if (rowEl) {
         if (currentRow.value.id !== docDetail.id) {
@@ -60,6 +64,7 @@ export const useBrowseBreadcrumbDrop = () => {
     return getParentRowId(element?.parentElement)
   }
   function handleDragleave(event?: any) {
+    event?.stopPropagation()
     setTimeout(() => {
       if (currentRow.value.el) {
         currentRow.value.el.classList.remove('drop-row')
