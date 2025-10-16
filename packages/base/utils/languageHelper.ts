@@ -32,8 +32,10 @@ export async function getLocale(){
                 locale:locale.value, 
                 languageKey: 'client'
             }) as any
+            console.log("get language from api")
         clientJson = JSON.parse(clientData[0].languageContent)
     }else{
+        console.log("get language from local file")
         clientJson = locale.value === 'en-US' ? enJson : locale.value === 'zh-CN' ? zhJson : zhHKJson
         // const jsonFile = await fetch(`/defaultLang/${code}.json`).then(res => res.json())
         // clientJson = jsonFile
