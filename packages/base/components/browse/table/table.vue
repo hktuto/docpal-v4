@@ -1,19 +1,21 @@
 <script lang="tsx" setup>
 import { useDebounceFn, useMagicKeys } from '@vueuse/core'
 import { emitBus, EventType, useEventBus } from 'eventbus'
+import { ElMessageBox } from 'element-plus'
 import { useSqliteTable, documentColumn, documentIndex, apiToColumn, columnToApi } from '#imports'
 import type { DocumentColumnData, DocumentApiData } from '#imports'
 
 const cleanSelectedRowsBus = useEventBus(EventType.FILE_CLEAN_SELECTED_ROWS)
 const listProvider = inject(BrowseListProviderKey)
 const routerProvider = inject(MenuRouterKey)
+const BrowseDragMove = inject('BrowseDragMove')
+const { handleDragEnd, getToolTip } = BrowseDragMove
 import { clientApi } from 'api'
 
 if (!listProvider || !routerProvider) {
   throw new Error('BrowseListProviderKey not found')
 }
-const { selectedRows, expandedItems, mode } = defineProps<{
-  selectedRows: any[]
+const { expandedItems, mode } = defineProps<{
   expandedItems: any[]
   mode: string
 }>()
@@ -22,8 +24,9 @@ const tableContainer = ref<HTMLElement>()
 const emits = defineEmits(['selectedChange', 'expandedItemsChange'])
 const lastSelectedIndex = ref(-1)
 const lastSelectedRow = ref<any>(null)
+const docSelectedRows = ref<any[]>([])
 const { shift } = useMagicKeys()
-
+const { t } = useI18n()
 // const { find, syncData } = useSqliteTable<DocumentColumnData>({
 //   schema: {
 //     name: 'docpal_documents',
@@ -127,9 +130,8 @@ const reopenFolder = useDebounceFn(() => {
   tableRef.value?.setTreeExpand(needExpandList, true)
   // get table opened row
 }, 300)
-
 const { tableConfig, tableEvent, tableRef, reload, cleanSelectedRows } = useVxeTable({
-  id: 'tableSetting',
+  id: 'browseTableSetting',
   api: async (pageParams: any) => {
     cleanSelectedRows()
     // if mode is browse, use loadData to get current path data
@@ -168,6 +170,7 @@ const { tableConfig, tableEvent, tableRef, reload, cleanSelectedRows } = useVxeT
       title: 'document_name',
       minWidth: 200,
       treeNode: true,
+      dragSort: true,
       type: 'html',
       formatter: ({ cellValue, row }: any) => {
         let icon = '/icons/doc/file.svg'
@@ -515,6 +518,7 @@ const { tableConfig, tableEvent, tableRef, reload, cleanSelectedRows } = useVxeT
       return
     }
     const resultSelectedRows = handleCheckboxChange(selectedRows, selectedRow)
+    docSelectedRows.value = resultSelectedRows
     emits('selectedChange', resultSelectedRows)
   },
   optionalConfig: {
@@ -548,7 +552,22 @@ const { tableConfig, tableEvent, tableRef, reload, cleanSelectedRows } = useVxeT
       isCurrent: true,
       isHover: true,
       useKey: true,
-      keyField: 'id'
+      keyField: 'id',
+      drag: true
+    },
+    rowDragConfig: {
+      icon: '',
+      trigger: 'cell',
+      isPeerDrag: true,
+      isCrossDrag: true,
+      showGuidesStatus: false,
+      tooltipMethod({ row }) {
+        return getToolTip(row)
+      },
+      async dragEndMethod(data: any) {
+        handleDragEnd(data)
+        return false
+      }
     },
     rowStyle: ({ rowIndex, row }) => {
       if (row.source === 'tempFile') {
@@ -577,6 +596,7 @@ const { tableConfig, tableEvent, tableRef, reload, cleanSelectedRows } = useVxeT
     }
   }
 })
+
 const { dropEvent } = useBrowseDrop(tableRef, tableContainer, listProvider.docDetail)
 cleanSelectedRowsBus.on(cleanSelectedRows)
 
@@ -761,8 +781,15 @@ defineExpose({
   :deep(.browseFileIcon) {
     width: calc(var(--app-space-m) * 1.5);
     height: calc(var(--app-space-m) * 1.5);
+    -webkit-user-drag: none; /* Safari */
+    -khtml-user-drag: none; /* Konqueror HTML */
+    -moz-user-drag: none; /* Firefox */
+    -o-user-drag: none; /* Opera */
+    user-drag: none; /* Non-prefixed version, currently supported by Chrome */
   }
-
+  :deep(.vxe-cell--drag-handle) {
+    display: none;
+  }
   :deep(.browseNameCell) {
     display: flex;
     align-items: center;

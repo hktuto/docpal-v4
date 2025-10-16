@@ -1,26 +1,29 @@
 import type { Ref } from 'vue'
 import { emitBus, EventType } from 'eventbus'
 import { useEventListener, useDebounceFn } from '@vueuse/core'
-export const useBrowseDrop = (tableRef: any, containerRef: Ref<HTMLElement>, rootDocDetail: any) => {
-  const currentRow = ref<any>({
+export const useBrowseDrop = (tableRef: any, containerRef: any, rootDocDetail: any) => {
+  const dropRow = ref<any>({
     el: null,
     id: '',
     data: null,
     canDrop: false,
     parentData: null
   })
+  const BrowseDragMove: any = inject('BrowseDragMove')
   const DEBOUNCE_TIME = 200
   const { createUploadRequest } = useUploadAIStore()
   async function handleDrop(event: any) {
     event.preventDefault()
-    const dropRow = JSON.parse(JSON.stringify(currentRow.value))
+    const _dropRow = JSON.parse(JSON.stringify(dropRow.value))
+    BrowseDragMove.setDropRow(_dropRow)
     handleDragleave()
+    if (event.dataTransfer && event.dataTransfer.items.length === 0) return
     try {
-      if (!currentRow.value.canDrop) {
+      if (!_dropRow.canDrop) {
         return
       }
       const files: any = await addDataTransfer(event.dataTransfer)
-      uploadFiles(dropRow.parentData ? dropRow.parentData : dropRow.data, files)
+      uploadFiles(_dropRow.parentData ? _dropRow.parentData : _dropRow.data, files)
     } catch (error) {
       console.log('error', error)
     } finally {
@@ -46,29 +49,29 @@ export const useBrowseDrop = (tableRef: any, containerRef: Ref<HTMLElement>, roo
         }
         rowEl = containerRef.value
       }
-      if (currentRow.value.id !== tableRow?.rowid) {
-        if (tableRow?.parent) {
-          currentRow.value.parentData = tableRow?.parent
+      if (dropRow.value.id !== tableRow?.rowid) {
+        if (!tableRow?.item?.isFolder) {
+          dropRow.value.parentData = tableRow?.parent
         } else {
-          currentRow.value.parentData = null
+          dropRow.value.parentData = null
         }
-        if (currentRow.value.parentData) {
-          currentRow.value.canDrop = currentRow.value.parentData.source === 'tempFile' ? false : RbacAllowTo('create', { ...currentRow.value.parentData })
+        if (dropRow.value.parentData) {
+          dropRow.value.canDrop = dropRow.value.parentData.source === 'tempFile' ? false : RbacAllowTo('create', { ...dropRow.value.parentData })
         } else {
-          currentRow.value.canDrop = tableRow?.item.source === 'tempFile' ? false : RbacAllowTo('create', { ...tableRow?.item })
+          dropRow.value.canDrop = tableRow?.item.source === 'tempFile' ? false : RbacAllowTo('create', { ...tableRow?.item })
         }
-        if (currentRow.value.el) {
-          currentRow.value.el.classList.remove('drop-row')
-          currentRow.value.el.classList.remove('drop-row-disabled')
+        if (dropRow.value.el) {
+          dropRow.value.el.classList.remove('drop-row')
+          dropRow.value.el.classList.remove('drop-row-disabled')
         }
-        // change currentRow
-        currentRow.value.el = rowEl
-        currentRow.value.id = tableRow?.rowid
-        currentRow.value.data = tableRow?.item
-        if (currentRow.value.canDrop) {
-          currentRow.value.el.classList.add('drop-row')
+        // change dropRow
+        dropRow.value.el = rowEl
+        dropRow.value.id = tableRow?.rowid
+        dropRow.value.data = tableRow?.item
+        if (dropRow.value.canDrop) {
+          dropRow.value.el.classList.add('drop-row')
         } else {
-          currentRow.value.el.classList.add('drop-row-disabled')
+          dropRow.value.el.classList.add('drop-row-disabled')
         }
       }
     },
@@ -79,13 +82,13 @@ export const useBrowseDrop = (tableRef: any, containerRef: Ref<HTMLElement>, roo
   )
   function handleDragleave(event?: any) {
     setTimeout(() => {
-      if (currentRow.value.el) {
-        currentRow.value.el.classList.remove('drop-row')
-        currentRow.value.el.classList.remove('drop-row-disabled')
+      if (dropRow.value.el) {
+        dropRow.value.el.classList.remove('drop-row')
+        dropRow.value.el.classList.remove('drop-row-disabled')
       }
-      currentRow.value.el = null
-      currentRow.value.id = ''
-      currentRow.value.data = null
+      dropRow.value.el = null
+      dropRow.value.id = ''
+      dropRow.value.data = null
     }, DEBOUNCE_TIME + 30)
   }
   function getParentRowId(element: any) {

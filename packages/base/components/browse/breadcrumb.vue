@@ -114,9 +114,9 @@ function fileRefreshHandler({ relatedIdOrPath }: any) {
             navigate(item.id)
           }
         "
-        @drop="dropEvent.drop"
-        @dragover="dropEvent.dragover($event, item)"
-        @dragleave="dropEvent.dragleave"
+        @drop.prevent="dropEvent.drop"
+        @dragover.prevent="dropEvent.dragover($event, item)"
+        @dragleave.prevent="dropEvent.dragleave"
       >
         {{ item.name }}
       </div>
