@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { useEventListener } from "@vueuse/core";
+import { emitBus, EventType } from 'eventbus'
 const show = ref(false);
 const infoOpened = ref(false);
 const permission = ref();
@@ -31,7 +32,9 @@ function itemDeleted(){
 }
 
 function handleRefresh(){
-    // todo: refresh
+  emitBus(EventType.FILE_NEED_REFRESH, {
+    relatedIdOrPath: doc.value
+  })
 }
 
 </script>
@@ -70,7 +73,7 @@ function handleRefresh(){
                     >
                         <template #header>
                             <div class="infoHeaderActions">
-                                <BrowseActionsHold  :doc="doc" :permission="permission"/>
+                                <BrowseActionsHold :doc="doc" :permission="permission" @success="handleRefresh"/>
                                 <BrowseActionsEdit v-if="AllowTo({feature:'ReadWrite', permission })" :doc="doc" @success="handleRefresh"/>
                                 <BrowseActionsSubscribe v-if="allowFeature('SUBSCRIBE')" :doc="doc" />
                                 <BrowseActionsReplace :doc="doc" v-if=" AllowTo({feature:'ReadWrite', permission })" @success="handleRefresh"/>
