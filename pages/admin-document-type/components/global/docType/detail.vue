@@ -21,7 +21,7 @@
             </el-select>
           </el-form-item>
           <el-form-item :label="$t('dpTable_permission')">
-            <el-select v-model="state.form.acls" placeholder="Select" multiple filterable clearable
+            <el-select v-model="state.form.permission" placeholder="Select" multiple filterable clearable
                        @blur="handleSubmit('permission')" :disabled="state.loading">
               <el-option-group v-for="group in permissionOptions" :key="group.label" :label="$t(group.label)">
                 <el-option v-for="item in group.options" :key="item.value" :label="item.label" :value="item.value" />
@@ -56,6 +56,7 @@
 import { adminApi, clientApi } from 'api'
 import { useDebounceFn } from '@vueuse/core'
 import { initCategoryOpts, categoryOpts } from '@/composables/useDocumentTypeOptioins'
+import { convertPermissionObjectByPermissions, convertPermissionsByPermissionObject, getPermissionSelectOption } from '#imports'
 // const { getLanguageListStore } = useLanguage()
 const { name, id } = defineProps<{
   name: string
@@ -63,13 +64,14 @@ const { name, id } = defineProps<{
 }>()
 const { t } = useI18n()
 const routerProvider = inject(MenuRouterKey)
-const permissionOptions = ref<any[]>([])
+const permissionOptions = ref<any>()
 
 const state = reactive({
   docTypeDetail: {},
   activeTabName: 'metadata',
   loading: false,
   form: {
+    permission: [],
     acls: [],
     docpalTypeName: '',
     category: '',
@@ -78,50 +80,20 @@ const state = reactive({
 })
 const categoryLoading = ref(false)
 
-const { flatRole } = useRBAC()
-let userList: any = []
 async function getOptions() {
-  await getUserList()
-  permissionOptions.value.push(
-    {
-      label: 'user_role',
-      value: 2, // 1=User, 3=Group, 2=Role
-      type: 'select',
-      options: flatRole.value.map((item: any) => ({
-        label: item.name,
-        value: 'role____' + item.id
-      }))
-    },
-    {
-      label: 'user_users',
-      value: 1,
-      type: 'select',
-      options: userList
-    }
-  )
-  async function getUserList() {
-    if (userList.length > 0) return
-    try {
-      const _userList: any = await clientApi.api.postNuxeoIdentityUsers().then((res) => res.data)
-      userList = _userList
-        .sort((a: any, b: any) => a.username.localeCompare(b.username))
-        .map((item: any) => ({
-          label: item.userId,
-          value: item.userId
-        }))
-    } catch (error) {
-      userList = []
-    }
-  }
+  permissionOptions.value = await getPermissionSelectOption()
 }
 
 async function initDocType(detail: any) {
+  console.log(22, detail)
   state.docTypeDetail = {
     docpalTypeName: detail.docpalTypeName,
     category: detail.category,
     isFolder: detail.isFolder === 'Yes',
     dataType: detail.dataType
   }
+  convertPermissionsByPermissionObject(detail.permission)
+
   setTimeout(() => {
     state.form = {
       acls: detail.acls,
@@ -149,11 +121,12 @@ async function handleSubmit(attr: string) {
     routerProvider?.message.error(t('render.hint.fieldRequired', { name: t('search.type') }))
     return
   }
+  const permissionsObjet = convertPermissionObjectByPermissions(state.form.permission)
 
   try {
     state.loading = true
     const params = {
-      acls: state.form.acls,
+      permission: permissionsObjet,
       name: state.form.docpalTypeName,
       category: state.form.category,
       isFolder: state.form.isFolder,
