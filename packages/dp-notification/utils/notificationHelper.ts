@@ -8,9 +8,7 @@ export function notiShowView(row: any) {
         return true
       }
     } catch (e) {
-      return false
     }
-    return false
   }
 
   const isCancel = ['TRASH', 'DELETE', 'CANCELD'].includes(row.operate) ||
