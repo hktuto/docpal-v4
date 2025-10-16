@@ -803,5 +803,12 @@ defineExpose({
     // cursor: not-allowed;
     // background-color: green !important;
   }
+  :deep(.vxe-table--drag-wrapper) {
+    display: none !important; // delete bottom border when drag
+  }
+  :deep(.vxe-cell--html) {
+    display: flex;
+    align-items: center;
+  }
 }
 </style>
