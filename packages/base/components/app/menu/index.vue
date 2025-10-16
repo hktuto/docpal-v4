@@ -135,11 +135,13 @@ watch(() => [layout, hightLightPanel], () => {
     padding: var(--app-space-m) var(--app-space-s) 0 var(--app-space-s);
 
 }
+
 .menuExpand{
   height: 100%;
   overflow-y: auto;
   padding: var(--app-space-s);
   border-left: 1px solid var(--app-grey-800);
+  
   &.collapse{
     position: fixed;
     top: var(--app-space-m);
@@ -150,13 +152,15 @@ watch(() => [layout, hightLightPanel], () => {
     z-index: 2;
     opacity: 0;
     pointer-events: none;
+    overflow: hidden;
+    isolation: isolate;
     border-radius: var(--app-border-radius-m);
-    
-    background: var(--app-primary-alpha-10);
+    background-image: linear-gradient(to bottom, rgba(255,255,255,0.5) 0%, var(--app-primary-alpha-10) 2%, var(--app-primary-alpha-30) 98%, hsla(var(--app-primary-h), var(--app-primary-s), calc(var(--app-primary-l) *  0.1), 0.1 ) 100%);
     box-shadow: 10px 4px 30px rgba(0, 0, 0, 0.1);
     backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(6.3px);
+    -webkit-backdrop-filter: blur(20px);
     border: 1px solid rgba(255, 255, 255, 0.31);
+    
 
   }
 }

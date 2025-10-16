@@ -120,7 +120,7 @@ onMounted(async() => {
 }
 .glass{
     /* From https://css.glass */
-    background: rgba(255, 255, 255, 0.6);
+    background-image: linear-gradient(to bottom, rgba(255,255,255,0.3) 0%, var(--app-primary-alpha-30) 2%, var(--app-primary-alpha-50) 100%);
     border-radius: 16px;
     box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
     backdrop-filter: blur(6.3px);
