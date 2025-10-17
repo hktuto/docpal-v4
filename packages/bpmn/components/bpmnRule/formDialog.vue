@@ -21,6 +21,7 @@ function handleOpen(editField: any = {}) {
     isEdit.value = editField.type
   } else{
     formData.value = { ...initData, ...editField }
+    isEdit.value = false
   }
 
   exitRules = isEdit.value ? bpmnGlobalRules.value.filter((item: any) => item.id !== editField.id) : bpmnGlobalRules.value
