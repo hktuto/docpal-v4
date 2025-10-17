@@ -236,9 +236,10 @@ function createSearchItem(item:MenuItem, parentKey?:string,) {
 }
 
 function checkVisible(row: any) {
-  if(row.feature && row.feature !== 'CORE') {
-      return allowFeature(row.feature)
-  }
+  // TODO : disable feature by now
+  // if(row.feature && row.feature !== 'CORE') {
+  //     return allowFeature(row.feature)
+  // }
   return true
 }
 function generateMenu(admin: boolean){
