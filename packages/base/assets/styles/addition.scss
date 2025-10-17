@@ -303,7 +303,9 @@ h1, h2, h3, h4, h5, h6 {
   &.temp-file{
     background-color: var(--app-grey-900) !important;
     color: var(--app-grey-500) !important;
-
+    img{
+      opacity : 0.3;
+    }
   }
 }
 // 隐藏vxe-table右击事件底边框
