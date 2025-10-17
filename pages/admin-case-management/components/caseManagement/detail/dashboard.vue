@@ -72,6 +72,17 @@ const { tableConfig, tableEvent, tableRef, reload } = useVxeTable({
       fixed: 'left'
     },
     {
+      field: 'permissions',
+      title: 'rbac.permission.permissionLevel',
+      formatter({ cellValue }: any) {
+        if(!cellValue) return '-'
+        const permissions = cellValue.map((item: any) => {
+          return item.name
+        })
+        return permissions.join(',')
+      }
+    },
+    {
       field: 'createdDate',
       title: 'workflow_createDate',
       formatter({ cellValue }: any) {
@@ -83,17 +94,6 @@ const { tableConfig, tableEvent, tableRef, reload } = useVxeTable({
       title: 'table_modifiedDate',
       formatter({ cellValue }: any) {
         return formatDate(cellValue)
-      }
-    },
-    {
-      field: 'permissions',
-      title: 'caseManagement.userGroup',
-      formatter({ cellValue }: any) {
-        if(!cellValue) return '-'
-        const permissions = cellValue.map((item: any) => {
-          return item.name
-        })
-        return permissions.join(',')
       }
     }
     // {
