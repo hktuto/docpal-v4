@@ -88,19 +88,19 @@ function focus() {
     align-items: center;
     font-size: var(--app-font-size-m);
     color: var(--app-grey-400);
-    &.collapse{
-        padding: var(--app-space-xs);
-    }
+    margin: 0 auto;
     .left{
+        
          flex: 1 0 auto;
          display: flex;
          flex-flow: row nowrap;
-         justify-content: flex-start;
+         justify-content: center;
          align-items: center;
          gap: var(--app-space-xs);
          line-height: 1;
-         color: var(--app-grey-600);
+         color: var(--app-grey-300);
          font-weight: 500;
+         font-size: var(--app-font-size-l);
     }
     .sub{
         font-size: var(--app-font-size-xs);
