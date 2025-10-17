@@ -57,16 +57,16 @@ async function handleDataGet() {
 }
 
 const ReadList = computed(() => {
-  return aces.value.filter(ace => ace.permission === 'Read')
+  return aces.value?.filter(ace => ace.permission === 'Read')
 })
 const ReadWriteList = computed(() => {
-  return aces.value.filter((ace: any) => ace.acl === 'r')
+  return aces.value?.filter((ace: any) => ace.acl === 'r')
 })
 const ManageRecordList = computed(() => {
-  return aces.value.filter((ace: any) => ace.acl === 'm')
+  return aces.value?.filter((ace: any) => ace.acl === 'm')
 })
 const EverythingList = computed(() => {
-  return aces.value.filter((ace: any) => ace.acl === 'e')
+  return aces.value?.filter((ace: any) => ace.acl === 'e')
 })
 
 // #region module: handle Edit
