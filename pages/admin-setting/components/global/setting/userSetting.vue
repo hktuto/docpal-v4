@@ -143,7 +143,10 @@ onMounted(() => {
       </el-col>
 
       <el-col :span="6">
-        <h3>{{ $t('user.setting.systemField') }}</h3>
+        <div class="header-row">
+          <h3>{{ $t('user.setting.systemField') }}</h3>
+          <span>{{$t('Drag the fields you need to display to the left.')}}</span>
+        </div>
         <el-divider />
 
         <draggable
@@ -244,5 +247,21 @@ onMounted(() => {
 .fixed-save-btn {
   position: fixed;
   bottom: 16px;
+}
+
+.header-row {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  height: 46px;
+  position: relative;
+}
+
+.header-row span {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  font-size: 12px;
+  color: #666;
 }
 </style>
