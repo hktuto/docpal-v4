@@ -541,7 +541,7 @@ onMounted(async () => {
 
 .disabled-line {
   text-decoration: line-through;
-  color: var(--app-grey-9500);
+  color: var(--app-grey-950);
 }
 
 :deep(.formContainer) {

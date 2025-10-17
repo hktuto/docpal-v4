@@ -77,7 +77,7 @@ watch(
 
 .description {
   line-height: var(--app-font-size-xl);
-  color: var(--app-grey-9500);
+  color: var(--app-grey-950);
 }
 
 .el-input {

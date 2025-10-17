@@ -2,6 +2,7 @@
 import { ElMessageBox } from 'element-plus'
 const emits = defineEmits(['delete', 'refreshSetting', 'openSetting', 'refresh'])
 const { t } = useI18n()
+
 const props = withDefaults(
   defineProps<{
     showSkeleton?: boolean,
@@ -18,7 +19,37 @@ const props = withDefaults(
     extraParams: []
   }
 )
-
+const cardRef = ref<HTMLElement>()
+const fullscreen = ref(false)
+function openFullscreen() {
+  if(!cardRef.value || !cardRef.value.$el) return
+  if(cardRef.value.$el.requestFullscreen) {
+    cardRef.value.$el.requestFullscreen()
+  } else if(cardRef.value.$el.webkitRequestFullscreen) {
+    cardRef.value.$el.webkitRequestFullscreen()
+  } else if(cardRef.value.$el.msRequestFullscreen) {
+    cardRef.value.$el.msRequestFullscreen()
+  }
+}
+function exitFullscreen() {
+  if(!cardRef.value || !cardRef.value.$el) return
+  if(document.exitFullscreen) {
+    document.exitFullscreen()
+  } else if(document.webkitExitFullscreen) {
+    document.webkitExitFullscreen()
+  } else if(document.msExitFullscreen) {
+    document.msExitFullscreen()
+  }
+}
+function toggleFullscreen() {
+  if(fullscreen.value) {
+    exitFullscreen()
+    fullscreen.value = false
+  } else {
+    openFullscreen()
+    fullscreen.value = true
+  }
+}
 function resize() {}
 
 function openSetting() {
@@ -56,7 +87,9 @@ defineExpose({
 
         <div class="flex-x-end">
           <slot name="action_prefix"></slot>
+          <!-- FUll screen toggle button -->
           <SvgIcon id="refresh" src="/icons/refresh.svg" @click="handleRefresh" />
+          <Icon :name="fullscreen ? 'material-symbols:fullscreen-exit-rounded' : 'material-symbols:fullscreen'" @click="toggleFullscreen" />
           <SvgIcon v-if="!hideSetting && settingRef" class="" id="setting" src="/icons/setting.svg" @click="openSetting" />
           <SvgIcon v-if="!hideSetting" class="setting--icon" id="delete" src="/icons/delete.svg" @click="handleDelete" />
         </div>
@@ -70,6 +103,7 @@ defineExpose({
 <style lang="scss" scoped>
 .el-card {
   --dashboard-item-padding: var(--el-card-padding);
+
   height: 100%;
   display: grid;
   grid-template-rows: min-content 1fr;
@@ -141,7 +175,7 @@ defineExpose({
 :deep(.iconify) {
   width: 1.2rem;
   height: 1.2rem;
-  background-color: var(--app-grey-9500);
+  background-color: var(--app-grey-600);
 }
 :deep(.iconify.icon-right) {
   margin-right: var(--app-space-xxs);

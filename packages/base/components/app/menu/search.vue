@@ -104,7 +104,7 @@ function focus() {
     }
     .sub{
         font-size: var(--app-font-size-xs);
-        color: var(--app-grey-9500);
+        color: var(--app-grey-950);
         padding: var(--app-space-xxs);
         border: 1px solid var(--app-grey-800);
         border-radius: var(--app-border-radius-s);
