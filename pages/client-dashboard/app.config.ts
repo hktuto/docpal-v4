@@ -14,7 +14,7 @@ export default defineAppConfig({
         'client-work-panel': {
             id:'client-work-panel',
             name : 'client-work-panel',
-            label: "vxe.pager.homePageTitle",
+            label: "adminMenu.workPanel",
             icon: 'material-symbols:home',
             hoverIcon : 'material-symbols:home',
             component: "LazyHomePage",
