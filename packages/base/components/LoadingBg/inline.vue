@@ -1,7 +1,6 @@
 <template>
      <div class="loadingContainer">
         <div class="loadingbar gradient"></div>
-        {{ $t('loading') }}
     </div>
 </template>
 
@@ -9,7 +8,7 @@
 .loadingContainer{
         position:absolute;
         width:100%;
-        height: 100%;
+        height: var(--app-space-m);
         display: grid;
         place-items: center;
     }
@@ -25,7 +24,7 @@
 
 .gradient {
     background: var(--app-grey-800); /* Old browsers */
-    background: linear-gradient(to right,  var(--app-primary-6) 0%,var(--app-primary-3) 25%,var(--app-success-3) 50%,var(--app-success-1) 75%, var(--app-primary-3) 100%); /* W3C */
+    background: linear-gradient(to right,  var(--app-primary-4) 0%,var(--app-primary-3) 25%,var(--app-accent-color)  100%); /* W3C */
 
 }
 @keyframes rotate {

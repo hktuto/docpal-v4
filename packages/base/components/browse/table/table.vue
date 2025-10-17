@@ -568,13 +568,11 @@ const { tableConfig, tableEvent, tableRef, reload, cleanSelectedRows } = useVxeT
         return false
       }
     },
-    rowStyle: ({ rowIndex, row }) => {
+    cellClassName: ({ rowIndex, row }) => {
       if (row.source === 'tempFile') {
-        return {
-          backgroundColor: 'var(--app-grey-800)'
-        }
+        return 'temp-file'
       }
-    }
+    },
   },
   optionalEvent: {
     toggleTreeExpand: ({ expanded, row }) => {

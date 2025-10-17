@@ -20,7 +20,7 @@
              :close-on-click-modal="false"
              :fullscreen="isFullScreen"
              @close="isFullScreen = false"
-             class="scroll-dialog"
+             class="scroll-dialog big"
   >
     <template #header>
       <div class="float-right">
