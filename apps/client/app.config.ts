@@ -2,7 +2,12 @@ export default defineAppConfig({
 
   appMenu: [
     {
-      name: 'client-work-panel'
+      name: 'client-work-panel',
+      children: [
+        {
+          name: 'client-home-sub-list'
+        }
+      ]
     },
     // browse
     {

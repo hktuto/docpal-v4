@@ -10,7 +10,12 @@ export default defineAppConfig({
             component: "LazyHomePage",
             feature: "DASHBOARD",
             handleError:true,
-            props:{}
+            props:{},
+        },
+        'client-home-sub-list':{
+          id:'client-home-sublist',
+          label: 'client-home-sub-list',
+          inlineComponent: 'HomeMenuDropdown',
         }
     }
 
