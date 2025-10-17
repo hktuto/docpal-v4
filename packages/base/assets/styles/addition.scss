@@ -301,7 +301,9 @@ h1, h2, h3, h4, h5, h6 {
 }
 .vxe-table--column{
   &.temp-file{
-    background-color: var(--app-grey-800) !important;
+    background-color: var(--app-grey-900) !important;
+    color: var(--app-grey-500) !important;
+
   }
 }
 // 隐藏vxe-table右击事件底边框
