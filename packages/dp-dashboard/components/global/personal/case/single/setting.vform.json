@@ -25,8 +25,7 @@
         "automaticDropdown": false,
         "multiple": false,
         "multipleLimit": 0,
-        "optionItems": [
-        ],
+        "optionItems": [],
         "required": false,
         "requiredHint": "",
         "validation": "",
@@ -198,6 +197,37 @@
         "onValidate": ""
       },
       "id": "select27075"
+    },
+    {
+      "key": 52405,
+      "type": "switch",
+      "icon": "switch-field",
+      "formItemFlag": true,
+      "options": {
+        "name": "showAdd",
+        "label": "singleCase.showAdd",
+        "labelAlign": "",
+        "defaultValue": false,
+        "columnWidth": "200px",
+        "labelWidth": null,
+        "labelHidden": false,
+        "disabled": false,
+        "hidden": false,
+        "customClass": "",
+        "labelIconClass": null,
+        "labelIconPosition": "rear",
+        "labelTooltip": null,
+        "switchWidth": 40,
+        "activeText": "el.popconfirm.confirmButtonText",
+        "inactiveText": "el.popconfirm.cancelButtonText",
+        "activeColor": null,
+        "inactiveColor": null,
+        "onCreated": "",
+        "onMounted": "",
+        "onChange": "",
+        "onValidate": ""
+      },
+      "id": "switch31159"
     }
   ],
   "formConfig": {
@@ -213,6 +243,7 @@
     "functions": "",
     "layoutType": "PC",
     "jsonVersion": 3,
+    "isCreateDynamicCode": true,
     "onFormCreated": "",
     "onFormMounted": "",
     "onFormDataChange": "",
