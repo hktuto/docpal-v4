@@ -23,6 +23,7 @@ onMounted(() => {
 <style lang="scss">
 #infoActionButton{
     color: var(--app-grey-300);
+    margin-left: var(--app-space-xs);
 }
 </style>
 
