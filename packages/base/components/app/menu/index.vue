@@ -47,13 +47,24 @@ function handleWrapperFocusOut() {
 
 function toggleMenuMode() {
   menuMode.value = menuMode.value === 'collapse' ? 'expand' : 'collapse'
+  localStorage.setItem('menuMode', menuMode.value)
 }
 
 watch(() => [layout, hightLightPanel], () => {
     // get hightLightPanel
-    setSelectedMenuItem(selectedMenuItem, expandMenu)
+    setSelectedMenuItem(selectedMenuItem, expandMenu, props.displayMenu)
+    console.log('selectedMenuItem',selectedMenuItem.value, expandMenu.value, props.displayMenu)
 },{
     deep:true,
+})
+
+// get local storage memory to set menu mode
+onMounted(() => {
+  const savedMenuMode = localStorage.getItem('menuMode')
+  if(savedMenuMode) {
+    menuMode.value = savedMenuMode as 'collapse' | 'expand'
+  }
+  showExpandMenu.value = menuMode.value === 'expand' ? true : false
 })
 
 

@@ -67,7 +67,8 @@ onMounted(() => {
   }
   transition: all 0.2s ease-in-out;
   &.selected{
-    background: var(--app-grey-950) !important;
+    background: var(--app-primary-color) !important;
+    color: var(--app-paper) !important;
     box-shadow: var(--app-shadow-s);
   }
   &:hover{
