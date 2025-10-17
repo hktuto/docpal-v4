@@ -129,7 +129,6 @@ defineExpose({
             <div>Title</div>
             <div>Field</div>
           </div>
-          {{ state.setting.columns }}
           <div v-for="(row, index) in state.setting.columns" :key="index" class="row">
             <ElInput v-model="row.title" placeholder="Title" />
             <ElSelect v-model="row.field" multiple clearable filterable allow-create>
