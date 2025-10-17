@@ -1,8 +1,22 @@
 <script setup lang="ts">
 const { homeList, currentHome, checkoutDashboard } = useHomePage()
-
-function handleSelect(item: any) {
-  checkoutDashboard(item)
+const tabProvider = inject(TabManagerKey)
+if(!tabProvider) {
+    throw createError('tab manger not found on menu')
+}
+async function handleSelect(item: any) {
+  await checkoutDashboard(item);
+  tabProvider?.openInCurrentTab({
+    id:'client-work-panel',
+    name : 'client-work-panel',
+    label: "adminMenu.workPanel",
+    icon: 'material-symbols:home',
+    hoverIcon : 'material-symbols:home',
+    component: "LazyHomePage",
+    feature: "DASHBOARD",
+    handleError:true,
+    props:{},
+  }, false)
 }
 </script>
 
