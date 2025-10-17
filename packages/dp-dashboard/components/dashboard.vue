@@ -137,45 +137,6 @@ async function handleClear() {
   }
 }
 
-// async function getDashboardList() {
-//   console.log('getDashboardList')
-//   let personal: any = await clientApi.api.getPersonalLanding().then((res) => res.data)
-//   let dashboardList: any = await clientApi.api.getPersonalLandingDashboardList().then((res: any) => res.data)
-//   if (!personal) personal = {}
-//   if (!dashboardList) dashboardList = []
-//   personal.id = 'PERSONAL'
-//   personal.name = 'PERSONAL'
-//   state.dashboardList = [personal, ...dashboardList]
-//   checkoutDashboard(personal)
-// }
-
-// async function handleCheckout(id: any) {
-//   if (id === state.curDashboard.id) return
-//   if (id !== 'PERSONAL' && state.editMode) handleFinish()
-//   const cur = state.dashboardList.find((item: any) => item.id === id)
-//   checkoutDashboard(cur)
-// }
-
-// async function checkoutDashboard(detail: any) {
-//   state.loading = true
-//   state.curDashboard = deepCopy(detail)
-//   let dashboardDetail: any
-//   if (detail.id === 'PERSONAL') {
-//     dashboardDetail = await clientApi.api.getPersonalLanding().then((res: any) => res.data)
-//   } else {
-//     dashboardDetail = await clientApi.api.getPersonalLandingDashboardId(detail.id).then((res: any) => res.data)
-//   }
-//   try {
-//     const styleJson = JSON.parse(dashboardDetail.styleJson)
-//     state.curDashboard.layout = Array.isArray(styleJson) ? styleJson : []
-//   } catch (error) {
-//     state.curDashboard.layout = []
-//   }
-//   setTimeout(() => {
-//     state.loading = false
-//   })
-// }
-
 onMounted(async () => {
 
   routerProvider?.refeshActions.value.push(getHomeList(true))
