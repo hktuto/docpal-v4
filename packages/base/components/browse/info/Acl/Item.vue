@@ -1,12 +1,12 @@
 <template>
     <el-tag  :class="['userRightItem',{ [ace.type]:true }]" effect="dark"
               :closable="false" >
-              {{ ace.userId }}
+              {{ ace.name }}
     </el-tag>
 </template>
 
 <script lang="ts" setup>
-const props = defineProps<{ace:{userId: string, type:string},permission:any }>();
+const props = defineProps<{ace:{name: string, type:string},permission:any }>();
 </script>
 
 <style scoped lang="scss">

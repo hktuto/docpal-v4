@@ -4996,6 +4996,7 @@ export interface BatchMailSendRequest {
     tos: string[];
     ccs?: string[];
     bcc?: string[];
+    files?: File[];
     variables?: Record<string, object>;
     userId?: string;
     accessToken?: string;
@@ -8313,6 +8314,16 @@ export interface ResultCmmnPlanFormDTO {
     locale?: string;
 }
 
+export interface ResultListPlanTableFieldDTO {
+    result?: boolean;
+    /** @format int32 */
+    code?: number;
+    message?: string;
+    data?: PlanTableFieldDTO[];
+    messageKey?: string;
+    locale?: string;
+}
+
 export interface ResultCaseTypeResponseDTO {
     result?: boolean;
     /** @format int32 */
@@ -8797,6 +8808,24 @@ export interface ResultRoleDTO {
     data?: RoleDTO;
     messageKey?: string;
     locale?: string;
+}
+
+/** Grpc permission object, extend_data.permissions */
+export interface PermissionDTO {
+    acl?: string;
+    entityId?: string;
+    id?: string;
+    inheritFrom?: string;
+    type?: string;
+    path?: string;
+}
+
+export interface ResultListPermissionDTO {
+    result?: boolean;
+    /** @format int32 */
+    code?: number;
+    message?: string;
+    data?: PermissionDTO[];
 }
 
 export interface AiTopicIdVO {
@@ -16687,6 +16716,31 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
             }),
 
         /**
+         * No description
+         *
+         * @tags DocPalEmailController
+         * @name PostEmailBatchSendundefined
+         * @request POST:/api/docpal/email/batch-send
+         */
+        postEmailBatchSendundefined: (
+            query: {
+                request: string;
+            },
+            data: {
+                files?: File[];
+            },
+            params: RequestParams = {},
+        ) =>
+            this.request<ResultBatchSendEmailResponseDTO, ResultString | (ResultString | Result)>({
+                path: `/docpal/email/batch-send`,
+                method: "POST",
+                query: query,
+                body: data,
+                type: ContentType.FormData,
+                ...params,
+            }),
+
+        /**
          * @description 创建一个新的文档模板签名配置
          *
          * @tags DocTemplateSignatureController
@@ -16935,6 +16989,23 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
         postCaseTypesTablePage: (data: CaseTableRequestDTO, params: RequestParams = {}) =>
             this.request<ResultObject, ResultString | (ResultString | Result)>({
                 path: `/docpal/case/types/table/page`,
+                method: "POST",
+                body: data,
+                type: ContentType.Json,
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags CaseTypeController
+         * @name PostCaseTypesRecordsList
+         * @summary Get all case instance data of deployed case type without permission
+         * @request POST:/api/docpal/case/types/records/list
+         */
+        postCaseTypesRecordsList: (data: CmmnDashboardRequestDTO, params: RequestParams = {}) =>
+            this.request<ResultListLinkedHashMapStringObject, ResultString | (ResultString | Result)>({
+                path: `/docpal/case/types/records/list`,
                 method: "POST",
                 body: data,
                 type: ContentType.Json,
@@ -21753,6 +21824,7 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
         getCaseTypes: (
             query?: {
                 name?: string;
+                deployed?: boolean;
             },
             params: RequestParams = {},
         ) =>
@@ -21820,6 +21892,21 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
                 path: `/docpal/case/types/${id}/primaryForm`,
                 method: "GET",
                 query: query,
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags CaseTypeController
+         * @name GetCaseTypesIdCaseinfo
+         * @summary Get form fields of deployed version based on this case type
+         * @request GET:/api/docpal/case/types/{id}/caseInfo
+         */
+        getCaseTypesIdCaseinfo: (id: string, params: RequestParams = {}) =>
+            this.request<ResultListPlanTableFieldDTO, ResultString | (ResultString | Result)>({
+                path: `/docpal/case/types/${id}/caseInfo`,
+                method: "GET",
                 ...params,
             }),
 
@@ -22990,6 +23077,20 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
         getAclRoleHierarchyRoleid: (roleId: string, params: RequestParams = {}) =>
             this.request<ResultRoleDTO, ResultString | (ResultString | Result)>({
                 path: `/docpal/acl/role/hierarchy/${roleId}`,
+                method: "GET",
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags Acl Resource Management
+         * @name GetAclResourceResourceid
+         * @request GET:/api/docpal/acl/resource/{resourceId}
+         */
+        getAclResourceResourceid: (resourceId: string, params: RequestParams = {}) =>
+            this.request<ResultListPermissionDTO, ResultString | (ResultString | Result)>({
+                path: `/docpal/acl/resource/${resourceId}`,
                 method: "GET",
                 ...params,
             }),

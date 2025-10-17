@@ -157,6 +157,7 @@ useEventListener(window, 'resize', calMinWidth)
                   v-if="docDetail.properties && docDetail.properties['file:content'] && docDetail.properties['file:content']['mime-type']"
                   class="doc-extension"
                   effect="dark"
+                  type="info"
                   >{{ mime.extension(docDetail.properties['file:content']['mime-type']) }}</el-tag
                 >
               </div>

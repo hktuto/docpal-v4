@@ -10,18 +10,18 @@ const { t } = useI18n()
 
 const selectedIndex = ref(0)
 
-// watch(selectedMenuItem, (newSelectedMenuItem) => {
-//   if(!newSelectedMenuItem || !props.menu.children) return
-//   props.menu.children.forEach((element:any, index:number) => {
-//     if(element.name === newSelectedMenuItem.name) {
-//       selectedIndex.value = index
-//       return
-//     }
-//   });
-// },{
-//   deep:true,
-//   immediate: true
-// })
+watch(selectedMenuItem, (newSelectedMenuItem) => {
+  if(!newSelectedMenuItem || !props.menu.children) return
+  props.menu.children.forEach((element:any, index:number) => {
+    if(element.name === newSelectedMenuItem.name) {
+      selectedIndex.value = index
+      return
+    }
+  });
+},{
+  deep:true,
+  immediate: true
+})
 
 
 
