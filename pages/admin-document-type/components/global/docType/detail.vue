@@ -85,18 +85,17 @@ async function getOptions() {
 }
 
 async function initDocType(detail: any) {
-  console.log(22, detail)
   state.docTypeDetail = {
     docpalTypeName: detail.docpalTypeName,
     category: detail.category,
     isFolder: detail.isFolder === 'Yes',
     dataType: detail.dataType
   }
-  convertPermissionsByPermissionObject(detail.permission)
+  const permissions = convertPermissionsByPermissionObject(detail.permission)
 
   setTimeout(() => {
     state.form = {
-      acls: detail.acls,
+      permission: permissions,
       docpalTypeName: detail.docpalTypeName,
       category: detail.category,
       isFolder: detail.isFolder === 'Yes'
