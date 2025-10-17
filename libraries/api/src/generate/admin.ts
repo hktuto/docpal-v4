@@ -1522,6 +1522,8 @@ export interface CmmnDashboardRequestDTO {
     cmmnVersionId?: string;
     businessKey?: string;
     status?: string;
+    /** Where Condition */
+    where?: Record<string, object>;
     sort?: SortObject;
     sortOrModifiedDate?: SortObject;
     descSort?: SortObject;
@@ -8912,6 +8914,16 @@ export interface ResultListPlanItemDefinitionDTO {
     locale?: string;
 }
 
+export interface ResultListPlanTableFieldDTO {
+    result?: boolean;
+    /** @format int32 */
+    code?: number;
+    message?: string;
+    data?: PlanTableFieldDTO[];
+    messageKey?: string;
+    locale?: string;
+}
+
 export interface CmmnInstance {
     id?: string;
     procInstId?: string;
@@ -9039,16 +9051,6 @@ export interface ResultListCaseDefinitionDTO {
     code?: number;
     message?: string;
     data?: CaseDefinitionDTO[];
-    messageKey?: string;
-    locale?: string;
-}
-
-export interface ResultListPlanTableFieldDTO {
-    result?: boolean;
-    /** @format int32 */
-    code?: number;
-    message?: string;
-    data?: PlanTableFieldDTO[];
     messageKey?: string;
     locale?: string;
 }
@@ -11459,6 +11461,7 @@ export class Admin<SecurityDataType extends unknown> extends HttpClient<Security
         getCaseTypes: (
             query?: {
                 name?: string;
+                deployed?: boolean;
             },
             params: RequestParams = {},
         ) =>
@@ -17654,6 +17657,23 @@ export class Admin<SecurityDataType extends unknown> extends HttpClient<Security
         /**
          * No description
          *
+         * @tags CaseInstanceController
+         * @name PostCaseTypesRecordsList
+         * @summary Get all case instance data of deployed case type without permission
+         * @request POST:/api/docpal/case/types/records/list
+         */
+        postCaseTypesRecordsList: (data: CmmnDashboardRequestDTO, params: RequestParams = {}) =>
+            this.request<ResultListLinkedHashMapStringObject, Result | (ResultObject | Result | ResultString)>({
+                path: `/docpal/case/types/records/list`,
+                method: "POST",
+                body: data,
+                type: ContentType.Json,
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
          * @tags CaseTypeController
          * @name PostCaseTypesPage
          * @summary Pagination search (Case Type)
@@ -22764,6 +22784,21 @@ export class Admin<SecurityDataType extends unknown> extends HttpClient<Security
         getCaseTypesIdDownloadDeployVersion: (id: string, params: RequestParams = {}) =>
             this.request<string[], Result | (ResultObject | Result | ResultString)>({
                 path: `/docpal/case/types/${id}/download/deploy/version`,
+                method: "GET",
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags CaseTypeController
+         * @name GetCaseTypesIdCaseinfo
+         * @summary Get form fields of deployed version based on this case type
+         * @request GET:/api/docpal/case/types/{id}/caseInfo
+         */
+        getCaseTypesIdCaseinfo: (id: string, params: RequestParams = {}) =>
+            this.request<ResultListPlanTableFieldDTO, Result | (ResultObject | Result | ResultString)>({
+                path: `/docpal/case/types/${id}/caseInfo`,
                 method: "GET",
                 ...params,
             }),

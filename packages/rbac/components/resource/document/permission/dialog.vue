@@ -14,7 +14,7 @@ defineExpose({
 </script>
 
 <template>
-  <ElDialog v-model="dialogVisible" class="scroll-dialog" :title="currentRow?.name || 'Permission'" width="80%" append-to-body destroy-on-close center>
+  <ElDialog v-model="dialogVisible" class="scroll-dialog big" :title="currentRow?.name || 'Permission'" width="80%" append-to-body destroy-on-close center >
     <div v-if="currentRow" class="permission-dialog-content-container">
       <ResourceDocumentPermissionTable  :document="currentRow" />
     </div>
