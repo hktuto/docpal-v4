@@ -556,11 +556,10 @@ const { tableConfig, tableEvent, tableRef, reload, cleanSelectedRows } = useVxeT
       drag: true
     },
     rowDragConfig: {
-      icon: '',
       trigger: 'cell',
       isPeerDrag: true,
       isCrossDrag: true,
-      showGuidesStatus: false,
+      showGuidesStatus: true,
       tooltipMethod({ row }) {
         return getToolTip(row)
       },
@@ -804,7 +803,11 @@ defineExpose({
     // background-color: green !important;
   }
   :deep(.vxe-table--drag-wrapper) {
-    display: none !important; // delete bottom border when drag
+    // display: none !important; // delete bottom border when drag
+    .is--guides {
+      background-color: unset;
+      border: none;
+    }
   }
   :deep(.vxe-cell--html) {
     display: flex;
