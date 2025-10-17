@@ -28,11 +28,18 @@
       <div class="listSection">
         <div class="listTitle">{{ $t('permission.manage') }}</div>
         <div class="listContent">
-          <BrowseInfoAclItem v-for="(ace, i) in EverythingList" :key="i" :ace="ace" :permission="permission"
+          <BrowseInfoAclItem v-for="(ace, i) in ManageRecordList" :key="i" :ace="ace" :permission="permission"
                              @handleRemove="handleRemove"></BrowseInfoAclItem>
         </div>
       </div>
 
+<!--      <div class="listSection">-->
+<!--        <div class="listTitle">{{ $t('permission.custom') }}</div>-->
+<!--        <div class="listContent">-->
+<!--          <BrowseInfoAclItem v-for="(ace, i) in CustomList" :key="i" :ace="ace" :permission="permission"-->
+<!--                             @handleRemove="handleRemove"></BrowseInfoAclItem>-->
+<!--        </div>-->
+<!--      </div>-->
 
     </div>
 
@@ -69,6 +76,10 @@ const ManageRecordList = computed(() => {
 })
 const EverythingList = computed(() => {
   return aces.value?.filter((ace: any) => ace.acl === 'e')
+})
+
+const CustomList = computed(() => {
+  return aces.value?.filter((ace: any) => ace.acl === 'c')
 })
 
 // #region module: handle Edit
