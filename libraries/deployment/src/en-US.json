@@ -3058,6 +3058,7 @@
       }
     },
     "setting": {
+      "SIGN": "Sign",
       "address": "Address",
       "allowUserEdit": "Allow User Edit",
       "company": "Company",
@@ -3075,9 +3076,11 @@
       "notificationPreference": "Notification Preference",
       "phone": "Contact Details",
       "preference": "Preference",
+      "registered": "Registered",
       "role": "Role",
       "status": "Status",
       "systemField": "System Field",
+      "userLevel": "User Level",
       "userProfile": "User Profile",
       "userProfileView": "User Profile View",
       "userSignature": "User Signature",

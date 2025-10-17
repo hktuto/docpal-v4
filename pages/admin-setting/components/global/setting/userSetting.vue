@@ -195,7 +195,9 @@ onMounted(() => {
         <ElButton id="UserProfileView__Dialog__Cancel" type="info" @click="state.visible = false">
           {{ $t('dpButtom_cancel') }}
         </ElButton>
-        <ElButton id="UserProfileView__Dialog__Save" type="primary" @click="saveField">{{ $t('common_save') }} </ElButton>
+        <ElButton id="UserProfileView__Dialog__Save" type="primary" @click="saveField">
+          {{ $t('common_save') }}
+        </ElButton>
       </div>
     </template>
   </el-dialog>
