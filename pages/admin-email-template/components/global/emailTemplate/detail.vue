@@ -1,55 +1,55 @@
 <script lang="ts" setup>
-import {adminApi} from "api";
+import { adminApi } from 'api'
 
 const routerProvider = inject(MenuRouterKey)
-const {t} = useI18n()
-const {id} = defineProps<{
+const { t } = useI18n()
+const { id } = defineProps<{
   id: string;
-}>();
-const editInfoOpened = ref(false);
-const testEmailOpened = ref(false);
-const testEmailDialog = ref();
-const variables = ref<any[]>([]);
-const ready = ref(false);
-const layouts = ref<any[]>([]);
-const editorEl = ref();
-const selectedLayout = ref<any>("");
-const infoFormEl = ref();
-const showClose = ref(true);
+}>()
+const editInfoOpened = ref(false)
+const testEmailOpened = ref(false)
+const testEmailDialog = ref()
+const variables = ref<any[]>([])
+const ready = ref(false)
+const layouts = ref<any[]>([])
+const editorEl = ref()
+const selectedLayout = ref<any>('')
+const infoFormEl = ref()
+const showClose = ref(true)
 
 const layoutHtml = computed(() => {
   try {
-    if (!selectedLayout.value || !layouts.value) return null;
-    return layouts.value.find((item) => item.id === selectedLayout.value).layoutContent;
+    if (!selectedLayout.value || !layouts.value) return null
+    return layouts.value.find((item) => item.id === selectedLayout.value).layoutContent
   } catch (error) {
     return null
   }
-});
+})
 let data: any = ref(null)
 
 async function handleInit() {
 
   // TODO : if id is new , create new dummy data
-  if (!id || id === "new") {
-    ready.value = true;
-    await getTemplateLayout("");
-    editInfoOpened.value = true;
-    showClose.value = true;
+  if (!id || id === 'new') {
+    ready.value = true
+    await getTemplateLayout('')
+    editInfoOpened.value = true
+    showClose.value = true
     return {
-      subject: "new template",
-      body: "",
-      emailLayoutId: "",
-      emailTemplateJson: "",
-      emailTemplateVariable: "",
-    };
+      subject: 'new template',
+      body: '',
+      emailLayoutId: '',
+      emailTemplateJson: '',
+      emailTemplateVariable: ''
+    }
   }
-  const res = await adminApi.api.getTemplateEmailTemplateId(id).then((res) => res.data);
+  const res = await adminApi.api.getTemplateEmailTemplateId(id).then((res) => res.data)
   // loop template body and get all variables
   // const body = res?.body;
-  await getTemplateLayout(res?.emailLayoutId);
+  await getTemplateLayout(res?.emailLayoutId)
 
-  ready.value = true;
-  return res;
+  ready.value = true
+  return res
 }
 
 /**
@@ -62,23 +62,23 @@ async function handleInit() {
  */
 async function getTemplateLayout(templateId?: any) {
   const res: any = await adminApi.api
-    .postTemplateEmailLayoutPage({pageNum: 0, pageSize: 1000})
-    .then((res) => res.data);
-  layouts.value = res?.entryList;
+    .postTemplateEmailLayoutPage({ pageNum: 0, pageSize: 1000 })
+    .then((res) => res.data)
+  layouts.value = res?.entryList
   const layoutId = layouts.value.length > 0 ? layouts.value[0].id : ''
-  selectedLayout.value = templateId || layoutId;
+  selectedLayout.value = templateId || layoutId
   // selectedLayout.value = templateId || entryList[0].id;
 }
 
 function handleClose() {
   if (id === 'new') {
     const newItem: any = {
-      id: "admin-email-template",
+      id: 'admin-email-template',
       name: 'admin-email-template',
-      icon: "fluent:mail-template-16-regular",
-      label: "adminMenu.emailTemplate",
-      component: "LazyEmailTemplatePage",
-      props: {},
+      icon: 'fluent:mail-template-16-regular',
+      label: 'adminMenu.emailTemplate',
+      component: 'LazyEmailTemplatePage',
+      props: {}
     }
     routerProvider?.navigateTo(newItem)
   }
@@ -88,20 +88,20 @@ function handleClose() {
  *  儲存
  */
 async function save() {
-  const {html, json, variable} = await editorEl.value.getData();
-  try{
-
+  const { html, json, variable } = await editorEl.value.getData()
+  try {
 
     // if id is new , create new
     // check form valid
-    // if (id === "new") {
-    if (infoFormEl.value) {
-        try {
+    if (id === 'new') {
+      try {
+        nextTick(async () => {
           await infoFormEl.value.validate()
-        } catch (e) {
-          console.error(e)
-          return
-        }
+        })
+      } catch (e) {
+        console.error(e)
+        return
+      }
       // }
       const result = await adminApi.api.postTemplateEmailTemplate({
         ...data.value,
@@ -110,7 +110,7 @@ async function save() {
         body: html,
         emailLayoutId: selectedLayout.value,
         emailTemplateJson: JSON.stringify(json),
-        emailTemplateVariable: JSON.stringify(variable),
+        emailTemplateVariable: JSON.stringify(variable)
       }).then(res => res.data)
       if (result?.id) {
         routerProvider?.updateProps({
@@ -118,12 +118,13 @@ async function save() {
           id: result.id
         })
       }
-      routerProvider?.message.success(t('tip_createdMsg', {modelName: null, name: data.value.label}));
-      editInfoOpened.value = false;
-      showClose.value = true;
+      routerProvider?.message.success(t('tip_createdMsg', { modelName: null, name: data.value.label }))
+      editInfoOpened.value = false
+      showClose.value = true
       // TODO : add notification
-      return;
+      return
     }
+
     // update new variable
     // test save json to backend
     await adminApi.api.putTemplateEmailTemplate({
@@ -134,13 +135,13 @@ async function save() {
       body: html,
       emailLayoutId: selectedLayout.value,
       emailTemplateJson: JSON.stringify(json),
-      emailTemplateVariable: JSON.stringify(variable),
-    });
+      emailTemplateVariable: JSON.stringify(variable)
+    })
     routerProvider?.message.success(t('tip_updateMsg', {
       modelName: null,
       name: data.value.label
-    }));
-    editInfoOpened.value = false;
+    }))
+    editInfoOpened.value = false
   } catch (error) {
     console.error(error)
   }
@@ -151,15 +152,15 @@ let title = t('emailContentTemplate_create')
 
 function handleEdit() {
   title = t('emailContentTemplate_edit')
-  editInfoOpened.value = true;
-  showClose.value = true;
+  editInfoOpened.value = true
+  showClose.value = true
 }
 
 /**
  *  送出測試信
  */
 async function sendTest() {
-  testEmailDialog.value.send();
+  testEmailDialog.value.send()
   // TODO : add notification
 }
 
@@ -172,7 +173,7 @@ onMounted(async () => {
     <Editorjs v-if="data" ref="editorEl" :data="data" :layout="layoutHtml">
       <template #name>
         <div class="editButton">
-          <SvgIcon id="EmailContentTemplate__Detail__Edit" :src="'/icons/edit.svg'" @click="handleEdit"/>
+          <SvgIcon id="EmailContentTemplate__Detail__Edit" :src="'/icons/edit.svg'" @click="handleEdit" />
         </div>
       </template>
       <template #action>
@@ -181,10 +182,10 @@ onMounted(async () => {
         </ElSelect>
         <ElButton id="EmailContentTemplate__Detail__SendTest" type="primary" size="small"
                   @click="testEmailOpened = true">
-          {{ $t("email_send_test") }}
+          {{ $t('email_send_test') }}
         </ElButton>
         <ElButton id="EmailContentTemplate__Detail__Save" type="primary" size="small" @click="save">
-          {{ $t("common_save") }}
+          {{ $t('common_save') }}
         </ElButton>
       </template>
     </Editorjs>
@@ -200,21 +201,21 @@ onMounted(async () => {
       @closed="handleClose"
       :title="title"
     >
-      <EditorjsInfoForm v-if="data" ref="infoFormEl" :data="data"/>
+      <EditorjsInfoForm v-if="data" ref="infoFormEl" :data="data" />
       <template #footer>
         <!-- <ElButton v-if="!showClose" type="primary" @click="$router.back()">{{
         $t("common_back")
       }}</ElButton> -->
         <ElButton id="EmailContentTemplate__CreateNewEmailTemplate__Submit" type="primary" @click="save">
-          {{ $t("common_submit") }}
+          {{ $t('common_submit') }}
         </ElButton>
       </template>
     </ElDialog>
     <ElDialog v-model="testEmailOpened" append-to-body destroy-on-close>
-      <EditorjsTestDialog ref="testEmailDialog" v-if="data" :data="data" :id="id" :variables="variables"/>
+      <EditorjsTestDialog ref="testEmailDialog" v-if="data" :data="data" :id="id" :variables="variables" />
       <template #footer>
         <ElButton type="primary" @click="() => {sendTest();testEmailOpened = false;}">
-          {{ $t("email_send_test") }}
+          {{ $t('email_send_test') }}
         </ElButton>
       </template>
     </ElDialog>
