@@ -95,7 +95,7 @@ watch(
       font-weight: normal;
       font-size: 1.125rem;
       line-height: 1.375rem;
-      color: var(--app-grey-9500);
+      color: var(--app-grey-950);
     }
   }
   .activitiesDetail {

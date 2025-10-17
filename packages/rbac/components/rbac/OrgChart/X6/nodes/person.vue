@@ -72,6 +72,6 @@ function handleClick() {
   }
 }
 .rbac-node-2 {
-  background: var(--app-grey-9500);
+  background: var(--app-grey-950);
 }
 </style>

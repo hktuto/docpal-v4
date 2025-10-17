@@ -412,7 +412,7 @@ function handleSearchBlur() {
   min-width: 120px;
 
   &::placeholder {
-    color: var(--app-grey-9500);
+    color: var(--app-grey-950);
   }
 }
 
