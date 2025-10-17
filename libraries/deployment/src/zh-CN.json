@@ -3055,6 +3055,7 @@
       }
     },
     "setting": {
+      "SIGN": "Sign",
       "address": "地址",
       "allowUserEdit": "允许用户编辑",
       "company": "公司",
@@ -3072,9 +3073,11 @@
       "notificationPreference": "通知偏好",
       "phone": "联系方式",
       "preference": "偏好",
+      "registered": "Registered",
       "role": "角色",
       "status": "状态",
       "systemField": "系统字段",
+      "userLevel": "用户级别",
       "userProfile": "用戶資料",
       "userProfileView": "用户资料视图",
       "userSignature": "用户签名",
