@@ -19,7 +19,7 @@
   </DashboardCard>
 </template>
 <script lang="ts" setup>
-import { adminApi, clientApi } from 'api'
+import { clientApi, globalApi } from 'api'
 const props = withDefaults(
   defineProps<{
     dates?: any
@@ -52,7 +52,7 @@ const { tableConfig, tableEvent, tableRef, reload, query } = useVxeTable({
       ...state.extraParams
     }
     const _instanceId: any = CMDProvider?.instanceId?.value || null
-    return adminApi.api.postCaseDashboardInstanceCaseidProcessInstancePage(_instanceId, params)
+    return globalApi.api.postCaseDashboardInstanceCaseidProcessInstancePage(_instanceId, params)
   },
   saveColumnOrder: false,
   zoom: false,
