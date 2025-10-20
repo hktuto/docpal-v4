@@ -183,11 +183,11 @@
   "admin_watermark_type_clearanceLevel": "文件許可級別",
   "admin_watermark_type_clearanceLevel_example": "High",
   "admin_watermark_type_contributors": "檔案參與人",
-  "admin_watermark_type_contributors_example": "陳大文，張少明",
+  "admin_watermark_type_contributors_example": "文件貢獻者，文件貢獻者",
   "admin_watermark_type_createAt": "文件最後創建日期",
   "admin_watermark_type_createAt_example": "2023-05-01 18:24",
   "admin_watermark_type_createBy": "檔案創建者",
-  "admin_watermark_type_createBy_example": "李華",
+  "admin_watermark_type_createBy_example": "文檔創建者",
   "admin_watermark_type_lastModify": "檔案最後修改日期",
   "admin_watermark_type_lastModify_example": "2023-05-02 18:24",
   "admin_watermark_type_text": "文本",
@@ -198,7 +198,7 @@
   "admin_watermark_type_watermarkApplyAt": "水印應用日期",
   "admin_watermark_type_watermarkApplyAt_example": "2023-05-02 18:24",
   "admin_watermark_type_watermarkApplyBy": "水印申請者",
-  "admin_watermark_type_watermarkApplyBy_example": "李華",
+  "admin_watermark_type_watermarkApplyBy_example": "水印應用者",
   "admin_watermark_upload_limit": "小於 100kb 的 jpg/png 文件",
   "ai": {
     "addContext": "已限定 AI 問答範圍",
@@ -695,7 +695,8 @@
       "group": "用戶群組",
       "masterTable": "主表格",
       "masterTableColumn": "主表格記錄",
-      "user": "使用者"
+      "user": "使用者",
+      "caseInfo": "@:adminMenu.caseManagement"
     }
   },
   "dataFieldUg": {

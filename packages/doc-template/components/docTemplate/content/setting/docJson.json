@@ -7,7 +7,7 @@
       "formItemFlag": true,
       "options": {
         "name": "textContent",
-        "label": "textContent",
+        "label": "Text Content",
         "labelAlign": "",
         "rows": 22,
         "defaultValue": "",
