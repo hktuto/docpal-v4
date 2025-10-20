@@ -90,7 +90,9 @@ async function init() {
       .sort((a, b) => a.sort - b.sort)
       .map(({ sort, ...rest }) => rest)
 
-    state.systemFieldList = await adminApi.api.getUserSystemFields().then((res) => res.data)
+    const systemFieldList: any = await adminApi.api.getUserSystemFields().then((res) => res.data)
+    const exceptionList = ['SIGN']
+    state.systemFieldList = systemFieldList.filter((item: any) => !exceptionList.includes(item.key))
   } catch (e: any) {
     throw createError(e)
   }
@@ -145,7 +147,7 @@ onMounted(() => {
       <el-col :span="6">
         <div class="header-row">
           <h3>{{ $t('user.setting.systemField') }}</h3>
-          <span>{{$t('Drag the fields you need to display to the left.')}}</span>
+          <span>{{ $t('Drag the fields you need to display to the left.') }}</span>
         </div>
         <el-divider />
 
