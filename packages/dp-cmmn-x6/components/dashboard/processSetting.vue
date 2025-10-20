@@ -1,6 +1,6 @@
 <template>
 <el-dialog v-model="state.visible" :title="$t('dashboard.setting')"
-    class="scroll-dialog processSetting-dialog"
+    class="scroll-dialog processSetting-dialog big"
     append-to-body 
     :close-on-click-modal="false"
     @close="handleClose"

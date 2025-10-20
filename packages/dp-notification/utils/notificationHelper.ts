@@ -22,7 +22,7 @@ export function notiShowView(row: any) {
 
 export async function notiHandleView(row: any, tabProvider: any) {
   // const router = useRouter()
-  if (row.content.processInstanceId && !row.content.processDefinitionId.includes('adhocApproval')) {
+  if (row.content.processInstanceId && !row.content?.processDefinitionId?.includes('adhocApproval')) {
     if (row.type === 'Upload-Request') {
       // router.push(`/fileRequest/${row.content.processInstanceId}`)
       const newItem = createUploadRequestDetailParams({
@@ -45,6 +45,15 @@ export async function notiHandleView(row: any, tabProvider: any) {
       ...params
     })
     tabProvider?.openTab(newItem, true)
+  } else if(row.content.caseInstanceId) {
+    // TODO: get case instance
+    const caseInstance = await clientApi.api.getCaseInstanceCaseinstanceidVariables(row.content.caseInstanceId).then((res) => res.data)
+    console.log(caseInstance)
+    // const newItem = caseManageDashboardPage({
+    //   instanceId: row.content.caseInstanceId,
+    //   versionId: row.content.versionId
+    // })
+    // tabProvider?.openTab(newItem, true)
   } else if (row.content.uploadId) {
     const status = row.content.notiStatus === 'FAIL' ? 'Error' : 'Ready'
     // router.push(`/AIUpload/${row.content.uploadId}?status=${status}`)
