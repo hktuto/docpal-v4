@@ -695,7 +695,8 @@
       "group": "用户组",
       "masterTable": "主表格",
       "masterTableColumn": "主表格记录",
-      "user": "用户"
+      "user": "用户",
+      "caseInfo": "@:adminMenu.caseManagement"
     }
   },
   "dataFieldUg": {
