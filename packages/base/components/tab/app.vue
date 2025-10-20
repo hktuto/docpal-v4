@@ -12,6 +12,7 @@ const activeElement = useActiveElement()
 
 const appPlatform = useAppPlatform()
 
+
 const notUsingInput = computed(() =>
   activeElement.value?.tagName !== 'INPUT'
   && activeElement.value?.tagName !== 'TEXTAREA'
@@ -312,6 +313,7 @@ function generateMenu(admin: boolean){
 
 onMounted(() => {
   displayMenu.value = generateMenu(appPlatform.value === 'admin')
+  
 })
 
 watch(appPlatform, () => {
@@ -323,15 +325,16 @@ watch(appPlatform, () => {
 <template>
 <TabWrapper>
         <template #sidebar>
-          <AppMenu v-if="!isMobile" class="sideMenu" :displayMenu="displayMenu">
+          <template v-if="!isMobile">
+          <AppMenu  class="sideMenu" :menuStyle="menuStyle" :displayMenu="displayMenu">
                 <template #header>
                 </template>
                 <template #footer>
                 </template>
             </AppMenu>
-            <AppMenuMobile v-if="isMobile" class="sideMenu"  :displayMenu="displayMenu">
-                
-            </AppMenuMobile>
+            
+          </template>
+            <AppMenuMobile v-if="isMobile" class="sideMenu"  :displayMenu="displayMenu" />
             <slot name="sidebar"></slot>
         </template>
         <template #default>
