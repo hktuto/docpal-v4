@@ -4,20 +4,29 @@ const props = defineProps<{
     menu: any,
     selectedMenuItem?:TabItem, 
 }>()
-const { selectedMenuItem } = toRefs(props)
+const { selectedMenuItem, menu } = toRefs(props)
 
 const { t } = useI18n()
 
-const selectedIndex = ref(0)
+const selectedIndex = ref<any>()
 
-watch(selectedMenuItem, (newSelectedMenuItem) => {
-  if(!newSelectedMenuItem || !props.menu.children) return
-  props.menu.children.forEach((element:any, index:number) => {
+watch([selectedMenuItem, menu], ([newSelectedMenuItem, newMenu]) => {
+  if(!newSelectedMenuItem || !newMenu && !newMenu.children ){
+    selectedIndex.value = null;
+    return
+  } 
+  
+  let found = false
+  newMenu.children.forEach((element:any, index:number) => {
     if(element.name === newSelectedMenuItem.name) {
+      found = true
       selectedIndex.value = index
       return
     }
   });
+  if(!found){
+    selectedIndex.value = null;
+  }
 },{
   deep:true,
   immediate: true
@@ -38,7 +47,7 @@ watch(selectedMenuItem, (newSelectedMenuItem) => {
     <template v-if="menu && menu.children && menu.children.length > 0" v-for="(item,index) in menu.children" :key="item.component">
 
       <template v-if="item.inlineComponent">
-        <component :is="item.inlineComponent" :menuItem="item" :selected="selectedIndex === index"/>
+        <component :is="item.inlineComponent" :menuItem="item" :selected="index === selectedIndex"/>
       </template>
       <template v-else>
         <AppMenuExpandItem :item="item" @click="$emit('select', item)" :selected="selectedIndex === index" />
