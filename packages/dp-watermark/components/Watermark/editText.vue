@@ -53,12 +53,7 @@ function typeChange(newType: string) {
   if (newType !== 'text') {
     ob.type = 'dynamic'
     ob.editable = false
-    if ('createBy' == newType) {
-      const userState = useUserState()
-      ob.text = `${userState.value.firstName} ${userState.value.lastName}`
-    } else {
-      ob.text = t('admin_watermark_type_' + newType + '_example') as string
-    }
+    ob.text = t('admin_watermark_type_' + newType + '_example') as string
   } else {
     ob.type = 'text'
     ob.editable = true
