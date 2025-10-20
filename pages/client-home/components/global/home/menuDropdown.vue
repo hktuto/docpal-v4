@@ -32,7 +32,6 @@ async function handleSelect(item: any) {
 <style lang="scss" scoped>
 .dashboardList{
   width: 100%;
-  min-width: 220px;
   display: flex;
   flex-flow: column nowrap;
   justify-content: flex-start;

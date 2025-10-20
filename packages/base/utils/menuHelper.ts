@@ -1,7 +1,7 @@
 import type { MenuItem } from '#imports'
 import {TabManagerKey } from '#imports'
 
-export function setSelectedMenuItem(selectedMenuItem: Ref<any>, expandMenu: Ref<MenuItem>, displayMenu: any[]) {
+export function setSelectedMenuItem(selectedMenuItem: Ref<any>, displayMenu: any[], expandMenu?: Ref<MenuItem>) {
   const hightLightPanel = useCurrentTargetPanel()
   const layout = useTabLayout()
 
@@ -23,7 +23,7 @@ export function setSelectedMenuItem(selectedMenuItem: Ref<any>, expandMenu: Ref<
       }
       return false
     })
-    if(selectedMenu) {
+    if(selectedMenu && expandMenu) {
       expandMenu.value = JSON.parse(JSON.stringify(selectedMenu))
     }
   }

@@ -2,7 +2,8 @@
 
 const props = defineProps<{
     menu: any,
-    selectedMenuItem?:TabItem, 
+    selectedMenuItem?:TabItem,
+    hideHeader?:boolean 
 }>()
 const { selectedMenuItem, menu } = toRefs(props)
 
@@ -17,7 +18,6 @@ watch([selectedMenuItem, menu], ([newSelectedMenuItem, newMenu]) => {
   } 
   
   let found = false
-  console.log(newMenu)
   newMenu.children.forEach((element:any, index:number) => {
     if(element.name === newSelectedMenuItem.name) {
       found = true
@@ -39,7 +39,7 @@ watch([selectedMenuItem, menu], ([newSelectedMenuItem, newMenu]) => {
 
 <template>
   <div class="expandMenuContainer">
-    <div class="header">
+    <div v-if="!hideHeader" class="header">
       <Icon v-if="menu.icon" :name="menu.icon" />
       <div class="label">
         {{ t(menu.label || '') }}
@@ -60,7 +60,6 @@ watch([selectedMenuItem, menu], ([newSelectedMenuItem, newMenu]) => {
 <style lang="scss" scoped>
 .expandMenuContainer{
   width: 100%;
-  min-width: 220px;
   display: flex;
   flex-flow: column nowrap;
   justify-content: flex-start;

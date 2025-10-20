@@ -1,7 +1,7 @@
 <script setup lang="ts" generic="T extends MenuItem">
 
 const props = defineProps<{
-    displayMenu?: any[]
+    displayMenu: any[]
 }>()
 const menuStyle = defineModel('menuStyle')
 const layout = useTabLayout()
@@ -27,7 +27,7 @@ function handleHover(item:MenuItem) {
   showExpandMenu.value = true
 }
 
-function handleSelect(item:MenuItem) {
+function handleSelect(item:any) {
   if(menuMode.value === 'expand' && item.children&& item.children.length > 0) {
     expandMenu.value = JSON.parse(JSON.stringify(item)) || []
   }
@@ -52,15 +52,14 @@ function toggleMenuMode() {
 
 watch(() => [layout, hightLightPanel], () => {
     // get hightLightPanel
-    setSelectedMenuItem(selectedMenuItem, expandMenu, props.displayMenu)
-    console.log('selectedMenuItem',selectedMenuItem.value, expandMenu.value, props.displayMenu)
+    setSelectedMenuItem(selectedMenuItem, props.displayMenu, expandMenu)
 },{
     deep:true,
 })
 
 function toggleMenuStyle(){
   menuStyle.value = 'full'
-  localStorage.setItem('docPalMenuStyle','full')
+  localStorage.setItem('docPalMenuStyle','stack')
 }
 
 // get local storage memory to set menu mode
@@ -98,12 +97,13 @@ onMounted(() => {
                     @hover="handleHover"
                     @mouseOut="handleWrapperMouseLeave"
                   />
-               
-
+              
             </div>
 
             <div class="menuFooter">
-              <!-- <Icon name="mdi:arrow-expand-right" @click="toggleMenuStyle" /> -->
+              <div class="iconContainer">
+                <Icon name="mdi:arrow-expand-right" @click="toggleMenuStyle" />
+              </div>
 
                 <AuthUser menuMode="collapse" /> 
                 <slot name="footer"></slot>
@@ -142,7 +142,15 @@ onMounted(() => {
   align-items: center;
   font-size: var(--app-font-size-xl);
 }
-
+.iconContainer{
+  color: var(--app-grey-300);
+  cursor: pointer;
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: var(--app-space-s);
+}
 
 .menuHeader{
     display: flex;
@@ -155,6 +163,7 @@ onMounted(() => {
 
 .menuExpand{
   height: 100%;
+  width: 200px;
   overflow-y: auto;
   padding: var(--app-space-s);
   border-left: 1px solid var(--app-grey-800);
