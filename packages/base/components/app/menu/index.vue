@@ -1,7 +1,7 @@
 <script setup lang="ts" generic="T extends MenuItem">
 
 const props = defineProps<{
-    displayMenu?: any[]
+    displayMenu: any[]
 }>()
 
 const menuStyle = ref<'stack' | 'full'>('stack')
