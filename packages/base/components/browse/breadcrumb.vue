@@ -64,7 +64,7 @@ function navigate(idOrPath?: string) {
     return
   }
 
-  listProvider?.changeRoute('/')
+  listProvider?.changeRoute('root')
 }
 
 watch(

@@ -15,7 +15,7 @@ const props = withDefaults(
     showInfo?: boolean
   }>(),
   {
-    idOrPath: '/',
+    idOrPath: 'root',
     expandedItems: [],
     isReload: false
   }
@@ -63,6 +63,7 @@ const docPermission = ref()
 const selectedList = ref<any[]>([])
 
 async function getDoc() {
+  console.log("get doc")
   docDetail.value = null
   docPermission.value = null
   selectedList.value = []
