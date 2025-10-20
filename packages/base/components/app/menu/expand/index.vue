@@ -11,12 +11,13 @@ const { t } = useI18n()
 const selectedIndex = ref<any>()
 
 watch([selectedMenuItem, menu], ([newSelectedMenuItem, newMenu]) => {
-  if(!newSelectedMenuItem || !newMenu && !newMenu.children ){
+  if(!newSelectedMenuItem || !newMenu || !newMenu.children ){
     selectedIndex.value = null;
     return
   } 
   
   let found = false
+  console.log(newMenu)
   newMenu.children.forEach((element:any, index:number) => {
     if(element.name === newSelectedMenuItem.name) {
       found = true
