@@ -124,7 +124,7 @@ defineExpose({
 </script>
 
 <template>
-  <ElDialog v-model="opened" width="80%" draggable append-to-body>
+  <ElDialog v-model="opened" width="80%" draggable append-to-body class="big">
     <template #header> Edit Field </template>
     <template #default>
       <div class="selecteAndCreateContainer">

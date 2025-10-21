@@ -104,7 +104,6 @@ function newNameChanged(rule: any, value: any, callback: any) {
 async function confirmHandler() {
   try {
     await FormRef.value.validate()
-    console.log(1111,isEdit)
     if (isEdit.value) {
       emits('updated', { ...formData.value })
     } else {
