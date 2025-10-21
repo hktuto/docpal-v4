@@ -4,7 +4,8 @@ const tabProvider = inject(TabManagerKey)
 if(!tabProvider) {
     throw createError('tab manger not found on menu')
 }
-async function handleSelect(item: any) {
+async function handleSelect(e:Event, item: any) {
+  e.stopPropagation()
   await checkoutDashboard(item);
   tabProvider?.openInCurrentTab({
     id:'client-work-panel',
@@ -22,7 +23,7 @@ async function handleSelect(item: any) {
 
 <template>
   <div class="dashboardList">
-    <div :class="{ 'dashboardItem': true, 'selected': currentHome.id === item.id }" v-for="item in homeList" :key="item.id" @click="handleSelect(item)">
+    <div :class="{ 'dashboardItem': true, 'selected': currentHome.id === item.id }" v-for="item in homeList" :key="item.id" @click="(e) => handleSelect(e, item)">
       <span class="label">{{ item.name }}</span>
 
     </div>
