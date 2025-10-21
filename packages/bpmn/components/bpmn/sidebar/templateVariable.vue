@@ -90,13 +90,11 @@ watch(templateId, () => {
   <div class="templateVariableContainer">
     <ElForm v-if="!isEmptyObj(variableList)" label-position="top" style="width:100%;">
       <el-divider />
-      <ElFormItem>
-        <span>Variables</span>
-      </ElFormItem>
+      <span>Variables</span>
 
       <ElFormItem v-for="(value, key) in variableList" :key="value.id" :label="value.name">
         <ElSelect v-model="value.value" @change="updateData" clearable filterable>
-          <ElOption v-for="item in allFields" :key="item.attr_id" :label="item.attr_name" :value="item.attr_id" />
+          <ElOption v-for="item in allFields" :key="item.name" :label="item.name" :value="item.name" />
         </ElSelect>
       </ElFormItem>
     </ElForm>
