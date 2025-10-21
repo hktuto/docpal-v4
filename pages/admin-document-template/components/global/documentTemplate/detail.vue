@@ -447,7 +447,7 @@ onBeforeMount(async () => {
   overflow: hidden;
   border: 1px solid #e4e7ed;
   border-radius: 4px;
-  padding: 10px;
+  // padding: 10px;
   display: flex;
   flex-direction: column;
 
