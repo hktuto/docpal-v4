@@ -82,11 +82,6 @@ function fieldUpdate(item:any, val:string, index:number) {
 
 const allInfo = computed(() => {
   const formInfo = deepCopy(caseEditorProvider?.allInfo.value)
-  //defeault fields 
-  formInfo.unshift({
-    value:"case_id",
-    label: "case id",
-  })
   return formInfo
 })
 
