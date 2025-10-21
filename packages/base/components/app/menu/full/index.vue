@@ -13,7 +13,7 @@ const hightLightPanel = useCurrentTargetPanel()
 const { t} = useI18n()
 function toggleMenuStyle(){
   menuStyle.value = 'stack'
-  localStorage.setItem('docPalMenuStyle','full')
+  localStorage.setItem('docPalMenuStyle','stack')
 }
 const selectedMenuItem = ref<TabItem | undefined>()
 
