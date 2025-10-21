@@ -35,15 +35,17 @@ const { tableConfig, tableEvent, tableRef, query, reload, cleanSelectedRows } = 
   id: 'a-externalStorage-profile-output',
   virtualScroll: true,
   api: async (pageParams: any) => {
-    console.log(adminApi.api?.getExternalstorageProfilesProfileidOutputrecordList, props.id, pageParams,extraParams)
+    console.log('api');
     try{
-
-      const data = await adminApi.api?.getExternalstorageProfilesProfileidOutputrecordList(props.id, {
+      const params = {
         ...pageParams, ...extraParams
-      }).then((res: any) => res.data)
+      }
+      console.log(params)
+      const data = await adminApi.api?.getExternalstorageProfilesProfileidOutputrecordList(props.id, params).then((res: any) => res.data)
       return data
     }catch(err){
       console.log("err", err)
+      return []
     }
   },
   columns: [
