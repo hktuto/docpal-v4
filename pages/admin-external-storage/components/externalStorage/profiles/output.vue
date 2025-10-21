@@ -35,8 +35,8 @@ const { tableConfig, tableEvent, tableRef, query, reload, cleanSelectedRows } = 
   id: 'a-externalStorage-profile-output',
   virtualScroll: true,
   api: async (pageParams: any) => {
-    if(!adminApi.api.getExternalstorageProfilesProfileidOutputrecordList) console.log('adminApi.api.getExternalstorageProfilesProfileidOutputrecordList is not defined')
-    const data = await adminApi.api.getExternalstorageProfilesProfileidOutputrecordList(props.id, {
+    console.log(deepCopy(adminApi), props.id, pageParams,extraParams)
+    const data = await adminApi.api?.getExternalstorageProfilesProfileidOutputrecordList(props.id, {
       ...pageParams, ...extraParams
     }).then((res: any) => res.data)
     return data
