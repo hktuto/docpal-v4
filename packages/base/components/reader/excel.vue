@@ -12,6 +12,5 @@ const props = defineProps<{
 <style lang="scss" scoped>
 .vue-office-excel {
     width: 100%;
-    height: 100%;
 }
 </style>
