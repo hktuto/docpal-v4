@@ -4,12 +4,12 @@ const props = defineProps<{
     displayMenu: any[]
 }>()
 
-const menuStyle = ref<'stack' | 'full'>('stack')
+const menuStyle = useMenuStyle()
 
 onMounted(() => {
   // check menuStyle on localstorage
   const menuStyleStorage = localStorage.getItem('docPalMenuStyle') as any
-  if(menuStyleStorage && ['stack','full'].includes(menuStyleStorage)){
+  if(menuStyleStorage && menuOptions.includes(menuStyleStorage)){
     menuStyle.value = menuStyleStorage
   }
 })
