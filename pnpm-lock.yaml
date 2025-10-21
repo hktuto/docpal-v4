@@ -872,6 +872,9 @@ importers:
       '@vue/test-utils':
         specifier: ^2.4.6
         version: 2.4.6
+      eventbus:
+        specifier: workspace:^
+        version: link:../../libraries/eventbus
       happy-dom:
         specifier: ^17.4.7
         version: 17.6.3
@@ -893,6 +896,9 @@ importers:
       '@vue/test-utils':
         specifier: ^2.4.6
         version: 2.4.6
+      eventbus:
+        specifier: workspace:^
+        version: link:../../libraries/eventbus
       happy-dom:
         specifier: ^17.4.7
         version: 17.6.3
@@ -916,6 +922,9 @@ importers:
       '@vue/test-utils':
         specifier: ^2.4.6
         version: 2.4.6
+      eventbus:
+        specifier: workspace:^
+        version: link:../../libraries/eventbus
       happy-dom:
         specifier: ^17.4.7
         version: 17.6.3
@@ -937,6 +946,9 @@ importers:
       '@vue/test-utils':
         specifier: ^2.4.6
         version: 2.4.6
+      eventbus:
+        specifier: workspace:^
+        version: link:../../libraries/eventbus
       happy-dom:
         specifier: ^17.4.7
         version: 17.6.3
@@ -958,6 +970,9 @@ importers:
       '@vue/test-utils':
         specifier: ^2.4.6
         version: 2.4.6
+      eventbus:
+        specifier: workspace:^
+        version: link:../../libraries/eventbus
       happy-dom:
         specifier: ^17.4.7
         version: 17.6.3
@@ -979,6 +994,9 @@ importers:
       '@vue/test-utils':
         specifier: ^2.4.6
         version: 2.4.6
+      eventbus:
+        specifier: workspace:^
+        version: link:../../libraries/eventbus
       happy-dom:
         specifier: ^17.4.7
         version: 17.6.3
@@ -1000,6 +1018,9 @@ importers:
       '@vue/test-utils':
         specifier: ^2.4.6
         version: 2.4.6
+      eventbus:
+        specifier: workspace:^
+        version: link:../../libraries/eventbus
       happy-dom:
         specifier: ^17.4.7
         version: 17.6.3
@@ -1021,6 +1042,9 @@ importers:
       '@vue/test-utils':
         specifier: ^2.4.6
         version: 2.4.6
+      eventbus:
+        specifier: workspace:^
+        version: link:../../libraries/eventbus
       happy-dom:
         specifier: ^17.4.7
         version: 17.6.3
@@ -1042,6 +1066,9 @@ importers:
       '@vue/test-utils':
         specifier: ^2.4.6
         version: 2.4.6
+      eventbus:
+        specifier: workspace:^
+        version: link:../../libraries/eventbus
       happy-dom:
         specifier: ^17.4.7
         version: 17.6.3
@@ -1063,6 +1090,9 @@ importers:
       '@vue/test-utils':
         specifier: ^2.4.6
         version: 2.4.6
+      eventbus:
+        specifier: workspace:^
+        version: link:../../libraries/eventbus
       happy-dom:
         specifier: ^17.4.7
         version: 17.6.3
@@ -1084,6 +1114,9 @@ importers:
       '@vue/test-utils':
         specifier: ^2.4.6
         version: 2.4.6
+      eventbus:
+        specifier: workspace:^
+        version: link:../../libraries/eventbus
       happy-dom:
         specifier: ^17.4.7
         version: 17.6.3
@@ -1105,6 +1138,9 @@ importers:
       '@vue/test-utils':
         specifier: ^2.4.6
         version: 2.4.6
+      eventbus:
+        specifier: workspace:^
+        version: link:../../libraries/eventbus
       happy-dom:
         specifier: ^17.4.7
         version: 17.6.3
@@ -1126,6 +1162,9 @@ importers:
       '@vue/test-utils':
         specifier: ^2.4.6
         version: 2.4.6
+      eventbus:
+        specifier: workspace:^
+        version: link:../../libraries/eventbus
       happy-dom:
         specifier: ^17.4.7
         version: 17.6.3
@@ -1147,6 +1186,9 @@ importers:
       '@vue/test-utils':
         specifier: ^2.4.6
         version: 2.4.6
+      eventbus:
+        specifier: workspace:^
+        version: link:../../libraries/eventbus
       happy-dom:
         specifier: ^17.4.7
         version: 17.6.3
@@ -1168,6 +1210,9 @@ importers:
       '@vue/test-utils':
         specifier: ^2.4.6
         version: 2.4.6
+      eventbus:
+        specifier: workspace:^
+        version: link:../../libraries/eventbus
       happy-dom:
         specifier: ^17.4.7
         version: 17.6.3
@@ -1189,6 +1234,9 @@ importers:
       '@vue/test-utils':
         specifier: ^2.4.6
         version: 2.4.6
+      eventbus:
+        specifier: workspace:^
+        version: link:../../libraries/eventbus
       happy-dom:
         specifier: ^17.4.7
         version: 17.6.3
@@ -1210,6 +1258,9 @@ importers:
       '@vue/test-utils':
         specifier: ^2.4.6
         version: 2.4.6
+      eventbus:
+        specifier: workspace:^
+        version: link:../../libraries/eventbus
       happy-dom:
         specifier: ^17.4.7
         version: 17.6.3
@@ -1231,6 +1282,9 @@ importers:
       '@vue/test-utils':
         specifier: ^2.4.6
         version: 2.4.6
+      eventbus:
+        specifier: workspace:^
+        version: link:../../libraries/eventbus
       happy-dom:
         specifier: ^17.4.7
         version: 17.6.3
@@ -1252,6 +1306,9 @@ importers:
       '@vue/test-utils':
         specifier: ^2.4.6
         version: 2.4.6
+      eventbus:
+        specifier: workspace:^
+        version: link:../../libraries/eventbus
       happy-dom:
         specifier: ^17.4.7
         version: 17.6.3
@@ -1273,6 +1330,9 @@ importers:
       '@vue/test-utils':
         specifier: ^2.4.6
         version: 2.4.6
+      eventbus:
+        specifier: workspace:^
+        version: link:../../libraries/eventbus
       happy-dom:
         specifier: ^17.4.7
         version: 17.6.3
@@ -1294,6 +1354,9 @@ importers:
       '@vue/test-utils':
         specifier: ^2.4.6
         version: 2.4.6
+      eventbus:
+        specifier: workspace:^
+        version: link:../../libraries/eventbus
       happy-dom:
         specifier: ^17.4.7
         version: 17.6.3
@@ -1315,6 +1378,9 @@ importers:
       '@vue/test-utils':
         specifier: ^2.4.6
         version: 2.4.6
+      eventbus:
+        specifier: workspace:^
+        version: link:../../libraries/eventbus
       happy-dom:
         specifier: ^17.4.7
         version: 17.6.3
@@ -1336,6 +1402,9 @@ importers:
       '@vue/test-utils':
         specifier: ^2.4.6
         version: 2.4.6
+      eventbus:
+        specifier: workspace:^
+        version: link:../../libraries/eventbus
       happy-dom:
         specifier: ^17.4.7
         version: 17.6.3
@@ -1357,6 +1426,9 @@ importers:
       '@vue/test-utils':
         specifier: ^2.4.6
         version: 2.4.6
+      eventbus:
+        specifier: workspace:^
+        version: link:../../libraries/eventbus
       happy-dom:
         specifier: ^17.4.7
         version: 17.6.3
@@ -1378,6 +1450,9 @@ importers:
       '@vue/test-utils':
         specifier: ^2.4.6
         version: 2.4.6
+      eventbus:
+        specifier: workspace:^
+        version: link:../../libraries/eventbus
       happy-dom:
         specifier: ^17.4.7
         version: 17.6.3
@@ -1399,6 +1474,9 @@ importers:
       '@vue/test-utils':
         specifier: ^2.4.6
         version: 2.4.6
+      eventbus:
+        specifier: workspace:^
+        version: link:../../libraries/eventbus
       happy-dom:
         specifier: ^17.4.7
         version: 17.6.3
@@ -1420,6 +1498,9 @@ importers:
       '@vue/test-utils':
         specifier: ^2.4.6
         version: 2.4.6
+      eventbus:
+        specifier: workspace:^
+        version: link:../../libraries/eventbus
       happy-dom:
         specifier: ^17.4.7
         version: 17.6.3
@@ -1441,6 +1522,9 @@ importers:
       '@vue/test-utils':
         specifier: ^2.4.6
         version: 2.4.6
+      eventbus:
+        specifier: workspace:^
+        version: link:../../libraries/eventbus
       happy-dom:
         specifier: ^17.4.7
         version: 17.6.3
@@ -1462,6 +1546,9 @@ importers:
       '@vue/test-utils':
         specifier: ^2.4.6
         version: 2.4.6
+      eventbus:
+        specifier: workspace:^
+        version: link:../../libraries/eventbus
       happy-dom:
         specifier: ^17.4.7
         version: 17.6.3
@@ -1483,6 +1570,9 @@ importers:
       '@vue/test-utils':
         specifier: ^2.4.6
         version: 2.4.6
+      eventbus:
+        specifier: workspace:^
+        version: link:../../libraries/eventbus
       happy-dom:
         specifier: ^17.4.7
         version: 17.6.3
@@ -1504,6 +1594,9 @@ importers:
       '@vue/test-utils':
         specifier: ^2.4.6
         version: 2.4.6
+      eventbus:
+        specifier: workspace:^
+        version: link:../../libraries/eventbus
       happy-dom:
         specifier: ^17.4.7
         version: 17.6.3
