@@ -9,15 +9,14 @@ export default defineAppConfig({
         }
       ]
     },
+
     // browse
     {
       name: 'client-browse',
       icon: 'dp-icon:browse-outline',
       hoverIcon: 'dp-icon:browse-fill',
       children:[
-        {
-          name: 'client-search'
-        },
+        
         {
           name: 'client-browse',
         },
@@ -37,6 +36,9 @@ export default defineAppConfig({
         
       ]
     }, 
+    {
+      name: 'client-search'
+    },
     {
       label:"share.share",
       icon: 'lucide:share-2',

@@ -71,7 +71,7 @@ function handleOpenUpload(show: boolean = false, action: 'upload' | 'ai' | '' = 
 
 <template>
     <div :class="{userMenuWidgetContainer:true, [menuMode]:true}">
-        <template v-if="menuMode === 'expand'">
+        <!-- <template v-if="menuMode === 'expand'">
           <div v-if="user" class="username">
               {{ user.username }}
           </div>
@@ -79,8 +79,8 @@ function handleOpenUpload(show: boolean = false, action: 'upload' | 'ai' | '' = 
               <UploadStructureButton v-if="uploadState.uploadRequestList && uploadState.uploadRequestList.length > 0" @click="handleOpenUpload(true, 'upload')"></UploadStructureButton>
               <Notification  />
           </div>
-        </template>
-        <template v-else>
+        </template> -->
+
           <UploadStructureButton v-if="uploadState.uploadRequestList && uploadState.uploadRequestList.length > 0" @click="handleOpenUpload(true, 'upload')"></UploadStructureButton>
           <Notification v-if="appPlatform !== 'admin'"  />
           <AppThemeEditor ref="appThemeEditorRef" />
@@ -109,7 +109,6 @@ function handleOpenUpload(show: boolean = false, action: 'upload' | 'ai' | '' = 
                 </template>
             </ElDropdown>
           
-        </template>
     </div>
 
 </template>
