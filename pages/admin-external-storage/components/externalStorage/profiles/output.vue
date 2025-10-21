@@ -37,10 +37,7 @@ const { tableConfig, tableEvent, tableRef, query, reload, cleanSelectedRows } = 
   api: async (pageParams: any) => {
     console.log(adminApi.api?.getExternalstorageProfilesProfileidOutputrecordList, props.id, pageParams,extraParams)
     try{
-
-      const data = await adminApi.api?.getExternalstorageProfilesProfileidOutputrecordList(props.id, {
-        ...pageParams, ...extraParams
-      }).then((res: any) => res.data)
+      const data = await adminApi.api?.getExternalstorageProfilesProfileidOutputrecordList(props.id).then((res: any) => res.data)
       return data
     }catch(err){
       console.log("err", err)
