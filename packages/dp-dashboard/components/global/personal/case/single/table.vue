@@ -193,7 +193,7 @@ defineExpose({ reorderColumn, reload, query })
               {{ item.name }}
             </el-dropdown-item>
           </el-dropdown-menu>
-          <div v-else>no data</div>
+          <div v-else>{{$t('noData')}}</div>
         </template>
       </el-dropdown>
     </template>

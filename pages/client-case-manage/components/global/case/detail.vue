@@ -108,7 +108,7 @@ async function reorderColumn() {
   try {
     const { data: { fields } } = await clientApi.api.getCaseDashboardCasetypeCasetypeidPrimaryform(id)
     const columns = [
-      { field: 'case_id', title: 'caseManagement.id' },
+      // { field: 'case_id', title: 'caseManagement.id' },
       {
         field: 'created_date',
         title: 'workflow_createDate',
@@ -125,8 +125,12 @@ async function reorderColumn() {
       }
     ]
     fields.forEach((row) => {
-      columns.splice(1, 0, { field: row.id, title: row.name, width: 200 })
+      columns.unshift({ field: row.id, title: row.name, width: 200 })
     })
+    const caseIdIndex = columns.findIndex((item) => item.field === 'case_id')
+    if (caseIdIndex !== -1) {
+      columns.splice(0, 0, columns.splice(caseIdIndex, 1)[0])
+    }
     const actionColumn = tableConfig.columns.find(
       (item) => item.title === 'dpTable_actions'
     )
