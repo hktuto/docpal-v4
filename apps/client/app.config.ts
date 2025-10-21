@@ -2,7 +2,12 @@ export default defineAppConfig({
 
   appMenu: [
     {
-      name: 'client-work-panel'
+      name: 'client-work-panel',
+      children: [
+        {
+          name: 'client-home-sub-list'
+        }
+      ]
     },
     // browse
     {
@@ -210,17 +215,7 @@ export default defineAppConfig({
       name: 'admin-case-management'
     },
     {
-      label: 'admin-dashboard',
-      icon: 'carbon:dashboard',
-      hoverIcon: 'carbon:dashboard',
-      children: [
-        {
-          name: 'admin-dashboard'
-        },
-        {
-          name: 'admin-work-panel'
-        }
-      ]
+      name: 'admin-dashboard'
     },
     {
       label: 'adminMenu.policy',

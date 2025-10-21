@@ -24,7 +24,7 @@ const {
   zoom: false,
   api: (pageParams: any) => getData(pageParams),
   columns: [
-    { field: "case_id", title: "caseManagement.name", fixed: "left" },
+    { field: "case_id", title: "caseManagement.id", fixed: "left" },
     {
       field: "modified_date",
       title: "table_modifiedDate",

@@ -105,10 +105,10 @@ async function saveTabsToLocalStorage(layout: TabPanel[]) {
   localStorage.setItem(tabStorageKey, JSON.stringify(saveData));
 }
 const { t } = useI18n();
-onMounted(async () => {
-  await getLocale();
-  // emits("ready");
-});
+// onMounted(async () => {
+//   await getLocale();
+//   // emits("ready");
+// });
 </script>
 
 

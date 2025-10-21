@@ -156,7 +156,8 @@ export const responseErrorHelper = async (error: any, axiosInstance: AxiosInstan
       console.log('retry', data)
       console.log('refresh token response', data)
       if(!data){
-        throw new Error('refresh token response is null')
+        logout()
+        return Promise.reject(new Error('refresh token response is null'))
       }
       localStorage.setItem('access_token', data.data.access_token)
       localStorage.setItem('refresh_token', data.data.refresh_token)

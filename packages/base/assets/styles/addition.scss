@@ -10,6 +10,9 @@ h1, h2, h3, h4, h5, h6 {
 .vxe-toolbar {
   gap: var(--app-space-xs);
 }
+.vxe-grid--table-container{
+  --vxe-ui-layout-background-color: var(--app-paper) !important;
+}
 // // vxe table context menu
 // .vxe-table--context-menu-wrapper{
 //   border-radius: var(--app-border-radius-m);
@@ -135,6 +138,12 @@ h1, h2, h3, h4, h5, h6 {
 // override el-dialog
 .el-dialog{
   --el-dialog-width: clamp(260px, 90vw, 600px) !important;
+  &.big{
+    --el-dialog-width: clamp(260px, 90vw, 1280px) !important;
+  }
+  &.is-fullscreen{
+    --el-dialog-width: 100vw !important;
+  }
 }
 .dp-tabs--auto {
   height: 100%;
@@ -271,6 +280,16 @@ h1, h2, h3, h4, h5, h6 {
   z-index: 10000 !important;
 }
 
+.el-card {
+  .el-card__header{
+    h1, h2, h3, h4, h5, h6{
+      padding:0;
+      margin:0;
+      font-size: var(--app-font-size-l);
+    }
+  }
+}
+
 .tableRow-icon-cell {
   display: flex;
   align-items: center;
@@ -278,6 +297,15 @@ h1, h2, h3, h4, h5, h6 {
   cursor: pointer;
   img {
     width: var(--app-space-m);
+  }
+}
+.vxe-table--column{
+  &.temp-file{
+    background-color: var(--app-grey-900) !important;
+    color: var(--app-grey-500) !important;
+    img{
+      opacity : 0.3;
+    }
   }
 }
 // 隐藏vxe-table右击事件底边框

@@ -122,7 +122,7 @@ defineExpose({ handleOpen })
 <template>
   <el-dialog 
     v-model="state.visible" :title="label || state.title" 
-    class="scroll-dialog" 
+    class="scroll-dialog big" 
     append-to-body
     :fullscreen="isFullScreen"
     :close-on-click-modal="false" 

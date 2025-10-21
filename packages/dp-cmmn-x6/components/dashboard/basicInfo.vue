@@ -13,7 +13,7 @@
     <div class="flex-zoom">
       <div :style="`--field-width: ${item.width}`" class="list-group-item" v-for="item in state.layout">
         <div class="header">{{ state.label[item.id] || renderLabel(item.name) }}</div>
-        <div class="content">
+        <div :class="{ content: true, 'content--link': item.linkType }" @click="handleLink(item)">
           {{ displayValue(item) }}
         </div>
       </div>
@@ -47,8 +47,7 @@ const props = withDefaults(
 const caseProvider: any = inject(CaseManagementDashboardKey)
 const emits = defineEmits(['refreshSetting', 'delete'])
 const { t } = useI18n()
-
-
+const tabProvider = inject(TabManagerKey)
 function displayValue(item: any) {
   if (platform.value === 'admin') {
     return state.defaultValue[item.id]
@@ -78,7 +77,22 @@ function handleRefresh(chartSetting: any) {
   emits('refreshSetting', chartSetting)
 }
 // #endregion
-
+function handleLink(item: any) {
+  if (!item.linkType) return
+  const content: any = {}
+  switch (item.linkType) {
+    case 'case':
+      content.caseInstanceId = item.value
+      break
+    case 'workflow':
+      content.processInstanceId = item.value
+      break
+    case 'document':
+      content.documentId = item.value
+      break
+  }
+  notiHandleView({ content }, tabProvider)
+}
 function renderLabel(label: any) {
   // convert label to titel case
   // return orgin label if secound string is also uppercase
@@ -96,7 +110,7 @@ async function getCDBasciInfo() {
     if (id) {
       // in client platform
       state.mode = 'normal'
-      const { data } = await globalApi.api.getCaseDashboardInstanceCaseidPrimaryformData(id) 
+      const { data } = await globalApi.api.getCaseDashboardInstanceCaseidPrimaryformData(id)
       state.data = data
     } else if (versionId) {
       // in admin platform
@@ -118,7 +132,7 @@ async function getCDBasciInfo() {
       }
     }
   } catch (error) {
-    console.log("getCDBasciInfo error", error)
+    console.log('getCDBasciInfo error', error)
     state.data = {
       fields: [],
       rows: []
@@ -181,7 +195,7 @@ function needRefresh(detail: any) {
       color: #687a8f;
     }
     .content {
-      font-size: 18px;
+      font-size: var(--app-font-size-l);
       font-weight: 600;
     }
   }
@@ -191,5 +205,12 @@ function needRefresh(detail: any) {
 }
 .o-auto > .el-card__body {
   overflow: auto;
+}
+.content--link {
+  cursor: pointer;
+  color: var(--el-color-primary);
+  &:hover {
+    color: var(--el-color-primary-dark-2);
+  }
 }
 </style>

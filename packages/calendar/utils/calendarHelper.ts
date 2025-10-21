@@ -89,8 +89,9 @@ export async function getEventFromApi(calendarApp: any, calendarControls: any, f
   const data = await clientApi.api.postCalendarsList(params).then(res => res.data)
   const calendarLocation = useCalenarLocation()
 
-
   const events = data.filter((event: any) => {
+    // Exclude data with deleted status
+    if (event.status === 'D') return false
     if (filter.category) {
       const matCat = event.category === filter.category
       if (!matCat) return false
@@ -172,15 +173,16 @@ export function displayTimeFn(event: any, dateMode = false) {
   }
 }
 
-export const routeCalendarManagement = function(params: any) {
+export const routeCalendarManagement = function(processInstanceId?: string, activeTab: 'calendar' | 'table') {
   return {
     id: 'calendar-management-' + new Date().getTime(),
     name: 'calendar-management',
-    icon: null,
+    icon: '',
     label: 'Calendar Management',
     component: 'LazyCalendarManagement',
     props: {
-      messageEvent: params
+      processInstanceId,
+      activeTab
     }
   } as TabItem
 }

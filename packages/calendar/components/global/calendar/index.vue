@@ -2,6 +2,7 @@
 import { clientApi } from 'api'
 import type { CalendarEventExternal } from '@schedule-x/calendar'
 
+const { t } = useI18n()
 const { setting: calendarSetting, categoriesOption, locationsOption } = useCalendarStore()
 import {
   type CalendarOptions,
@@ -22,7 +23,7 @@ const displayOption = ref<CalendarOptions>({
   ...props.options
 })
 
-const emits = defineEmits(['createEvent', 'filterChange', 'openDetail', 'editEvent', 'onEventUpdate', 'updateEvent'])
+const emits = defineEmits(['createEvent', 'filterChange', 'openDetail', 'editEvent', 'onEventUpdate', 'updateEvent', 'ready'])
 
 function addEvent(newEvent: CalendarEventExternal) {
   viewerRef.value?.addEvent(newEvent)
@@ -147,6 +148,9 @@ const calendarEvents = {
   deleteEvent: (args: any) => {
     console.log('calendar/index-deleteEvent', args)
     emits('deleteEvent', args)
+  },
+  ready: () => {
+    emits('ready')
   }
 }
 
@@ -175,10 +179,19 @@ function refresh() {
   viewerRef.value.getList()
 }
 
+function setSpecificSate(date: string) {
+  viewerRef.value.setSpecificSate(date)
+}
+
+function getEventList() {
+  return viewerRef.value?.eventList || []
+}
+
 onMounted(async () => {
   await setDefaultFilter()
 })
 
+// TODO： Unable to obtain event list in real time
 const eventList = computed(() => viewerRef.value?.eventList || [])
 
 defineExpose({
@@ -188,7 +201,9 @@ defineExpose({
   filter,
   openDetail,
   eventList,
-  refresh
+  refresh,
+  setSpecificSate,
+  getEventList
 })
 </script>
 
@@ -198,21 +213,21 @@ defineExpose({
       <ElForm label-position="top">
         <ElRow :gutter="20">
           <ElCol v-if="options.showLocationFilter" :span="filtetColumnWidth">
-            <ElFormItem :label="options.locationLabel || 'Location'">
+            <ElFormItem :label="options.locationLabel || t('Location')">
               <ElSelect v-model="filter.location" clearable placeholder="Select" filterable @change="filterChange">
                 <ElOption v-for="item in locationsOption" :key="item.id" :label="item.name" :value="item.id" />
               </ElSelect>
             </ElFormItem>
           </ElCol>
           <ElCol v-if="options.showUserFilter" :span="filtetColumnWidth">
-            <ElFormItem :label="options.userLabel || 'User'">
+            <ElFormItem :label="options.userLabel || t('User')">
               <ElSelect v-model="filter.user" clearable placeholder="Select" filterable @change="filterChange">
                 <ElOption v-for="item in userFiterOptions" :key="item.value" :label="item.label" :value="item.value" />
               </ElSelect>
             </ElFormItem>
           </ElCol>
           <ElCol v-if="options.showCategoryFilter" :span="filtetColumnWidth">
-            <ElFormItem :label="options.categoryLabel || 'Category'">
+            <ElFormItem :label="options.categoryLabel || t('Category')">
               <ElSelect v-model="filter.category" clearable placeholder="Select" filterable @change="filterChange">
                 <ElOption v-for="item in categoriesOption" :key="item.id" :label="item.name" :value="item.id" />
               </ElSelect>

@@ -39,8 +39,7 @@ var _download_manager = __webpack_require__(43);
 var _genericl10n = __webpack_require__(44);
 var _generic_scripting = __webpack_require__(46);
 ;
-const GenericCom = {};
-exports.GenericCom = GenericCom;
+const GenericCom = exports.GenericCom = {};
 class GenericPreferences extends _preferences.BasePreferences {
   async _writeToStorage(prefObj) {
     localStorage.setItem("pdfjs.preferences", JSON.stringify(prefObj));
@@ -160,7 +159,7 @@ class DefaultExternalServices {
   }
 }
 exports.DefaultExternalServices = DefaultExternalServices;
-const PDFViewerApplication = {
+const PDFViewerApplication = exports.PDFViewerApplication = {
   initialBookmark: document.location.hash.substring(1),
   _initializedCapability: (0, _pdfjsLib.createPromiseCapability)(),
   appConfig: null,
@@ -1546,7 +1545,6 @@ const PDFViewerApplication = {
     return this.pdfScriptingManager.ready;
   }
 };
-exports.PDFViewerApplication = PDFViewerApplication;
 {
   const HOSTED_VIEWER_ORIGINS = ["null", "http://mozilla.github.io", "https://mozilla.github.io"];
   var validateFileURL = function (file) {
@@ -2382,7 +2380,7 @@ function beforeUnload(evt) {
 function webViewerAnnotationEditorStatesChanged(data) {
   PDFViewerApplication.externalServices.updateEditorStates(data);
 }
-const PDFPrintServiceFactory = {
+const PDFPrintServiceFactory = exports.PDFPrintServiceFactory = {
   instance: {
     supportsPrinting: false,
     createPrintService() {
@@ -2390,7 +2388,6 @@ const PDFPrintServiceFactory = {
     }
   }
 };
-exports.PDFPrintServiceFactory = PDFPrintServiceFactory;
 
 /***/ }),
 /* 3 */
@@ -2423,39 +2420,28 @@ exports.removeNullCharacters = removeNullCharacters;
 exports.roundToDivide = roundToDivide;
 exports.scrollIntoView = scrollIntoView;
 exports.watchScroll = watchScroll;
-const DEFAULT_SCALE_VALUE = "auto";
-exports.DEFAULT_SCALE_VALUE = DEFAULT_SCALE_VALUE;
-const DEFAULT_SCALE = 1.0;
-exports.DEFAULT_SCALE = DEFAULT_SCALE;
-const DEFAULT_SCALE_DELTA = 1.1;
-exports.DEFAULT_SCALE_DELTA = DEFAULT_SCALE_DELTA;
-const MIN_SCALE = 0.1;
-exports.MIN_SCALE = MIN_SCALE;
-const MAX_SCALE = 10.0;
-exports.MAX_SCALE = MAX_SCALE;
-const UNKNOWN_SCALE = 0;
-exports.UNKNOWN_SCALE = UNKNOWN_SCALE;
-const MAX_AUTO_SCALE = 1.25;
-exports.MAX_AUTO_SCALE = MAX_AUTO_SCALE;
-const SCROLLBAR_PADDING = 40;
-exports.SCROLLBAR_PADDING = SCROLLBAR_PADDING;
-const VERTICAL_PADDING = 5;
-exports.VERTICAL_PADDING = VERTICAL_PADDING;
-const RenderingStates = {
+const DEFAULT_SCALE_VALUE = exports.DEFAULT_SCALE_VALUE = "auto";
+const DEFAULT_SCALE = exports.DEFAULT_SCALE = 1.0;
+const DEFAULT_SCALE_DELTA = exports.DEFAULT_SCALE_DELTA = 1.1;
+const MIN_SCALE = exports.MIN_SCALE = 0.1;
+const MAX_SCALE = exports.MAX_SCALE = 10.0;
+const UNKNOWN_SCALE = exports.UNKNOWN_SCALE = 0;
+const MAX_AUTO_SCALE = exports.MAX_AUTO_SCALE = 1.25;
+const SCROLLBAR_PADDING = exports.SCROLLBAR_PADDING = 40;
+const VERTICAL_PADDING = exports.VERTICAL_PADDING = 5;
+const RenderingStates = exports.RenderingStates = {
   INITIAL: 0,
   RUNNING: 1,
   PAUSED: 2,
   FINISHED: 3
 };
-exports.RenderingStates = RenderingStates;
-const PresentationModeState = {
+const PresentationModeState = exports.PresentationModeState = {
   UNKNOWN: 0,
   NORMAL: 1,
   CHANGING: 2,
   FULLSCREEN: 3
 };
-exports.PresentationModeState = PresentationModeState;
-const SidebarView = {
+const SidebarView = exports.SidebarView = {
   UNKNOWN: -1,
   NONE: 0,
   THUMBS: 1,
@@ -2463,40 +2449,33 @@ const SidebarView = {
   ATTACHMENTS: 3,
   LAYERS: 4
 };
-exports.SidebarView = SidebarView;
-const RendererType = {
+const RendererType = exports.RendererType = {
   CANVAS: "canvas",
   SVG: "svg"
 };
-exports.RendererType = RendererType;
-const TextLayerMode = {
+const TextLayerMode = exports.TextLayerMode = {
   DISABLE: 0,
   ENABLE: 1
 };
-exports.TextLayerMode = TextLayerMode;
-const ScrollMode = {
+const ScrollMode = exports.ScrollMode = {
   UNKNOWN: -1,
   VERTICAL: 0,
   HORIZONTAL: 1,
   WRAPPED: 2,
   PAGE: 3
 };
-exports.ScrollMode = ScrollMode;
-const SpreadMode = {
+const SpreadMode = exports.SpreadMode = {
   UNKNOWN: -1,
   NONE: 0,
   ODD: 1,
   EVEN: 2
 };
-exports.SpreadMode = SpreadMode;
-const CursorTool = {
+const CursorTool = exports.CursorTool = {
   SELECT: 0,
   HAND: 1,
   ZOOM: 2
 };
-exports.CursorTool = CursorTool;
-const AutoPrintRegExp = /\bprint\s*\(/;
-exports.AutoPrintRegExp = AutoPrintRegExp;
+const AutoPrintRegExp = exports.AutoPrintRegExp = /\bprint\s*\(/;
 class OutputScale {
   constructor() {
     const pixelRatio = window.devicePixelRatio || 1;
@@ -2799,12 +2778,10 @@ function isValidSpreadMode(mode) {
 function isPortraitOrientation(size) {
   return size.width <= size.height;
 }
-const animationStarted = new Promise(function (resolve) {
+const animationStarted = exports.animationStarted = new Promise(function (resolve) {
   window.requestAnimationFrame(resolve);
 });
-exports.animationStarted = animationStarted;
-const docStyle = document.documentElement.style;
-exports.docStyle = docStyle;
+const docStyle = exports.docStyle = document.documentElement.style;
 function clamp(v, min, max) {
   return Math.min(Math.max(v, min), max);
 }
@@ -2943,8 +2920,7 @@ Object.defineProperty(exports, "__esModule", ({
   value: true
 }));
 exports.compatibilityParams = exports.OptionKind = exports.AppOptions = void 0;
-const compatibilityParams = Object.create(null);
-exports.compatibilityParams = compatibilityParams;
+const compatibilityParams = exports.compatibilityParams = Object.create(null);
 {
   const userAgent = navigator.userAgent || "";
   const platform = navigator.platform || "";
@@ -2957,13 +2933,12 @@ exports.compatibilityParams = compatibilityParams;
     }
   })();
 }
-const OptionKind = {
+const OptionKind = exports.OptionKind = {
   VIEWER: 0x02,
   API: 0x04,
   WORKER: 0x08,
   PREFERENCE: 0x80
 };
-exports.OptionKind = OptionKind;
 const defaultOptions = {
   annotationEditorMode: {
     value: 0,
@@ -3237,11 +3212,10 @@ Object.defineProperty(exports, "__esModule", ({
 }));
 exports.WaitOnType = exports.EventBus = exports.AutomationEventBus = void 0;
 exports.waitOnEventOrTimeout = waitOnEventOrTimeout;
-const WaitOnType = {
+const WaitOnType = exports.WaitOnType = {
   EVENT: "event",
   TIMEOUT: "timeout"
 };
-exports.WaitOnType = WaitOnType;
 function waitOnEventOrTimeout({
   target,
   name,
@@ -3354,14 +3328,13 @@ Object.defineProperty(exports, "__esModule", ({
 exports.SimpleLinkService = exports.PDFLinkService = exports.LinkTarget = void 0;
 var _ui_utils = __webpack_require__(3);
 const DEFAULT_LINK_REL = "noopener noreferrer nofollow";
-const LinkTarget = {
+const LinkTarget = exports.LinkTarget = {
   NONE: 0,
   SELF: 1,
   BLANK: 2,
   PARENT: 3,
   TOP: 4
 };
-exports.LinkTarget = LinkTarget;
 function addLinkAttributes(link, {
   url,
   target,
@@ -4895,13 +4868,12 @@ exports.PDFFindController = exports.FindState = void 0;
 var _ui_utils = __webpack_require__(3);
 var _pdfjsLib = __webpack_require__(4);
 var _pdf_find_utils = __webpack_require__(18);
-const FindState = {
+const FindState = exports.FindState = {
   FOUND: 0,
   NOT_FOUND: 1,
   WRAPPED: 2,
   PENDING: 3
 };
-exports.FindState = FindState;
 const FIND_TIMEOUT = 250;
 const MATCH_SCROLL_OFFSET_TOP = -50;
 const MATCH_SCROLL_OFFSET_LEFT = -400;
@@ -5589,7 +5561,7 @@ Object.defineProperty(exports, "__esModule", ({
 }));
 exports.CharacterType = void 0;
 exports.getCharacterType = getCharacterType;
-const CharacterType = {
+const CharacterType = exports.CharacterType = {
   SPACE: 0,
   ALPHA_LETTER: 1,
   PUNCT: 2,
@@ -5599,7 +5571,6 @@ const CharacterType = {
   HALFWIDTH_KATAKANA_LETTER: 6,
   THAI_LETTER: 7
 };
-exports.CharacterType = CharacterType;
 function isAlphabeticalScript(charCode) {
   return charCode < 0x2e80;
 }
@@ -8324,12 +8295,11 @@ var _pdf_rendering_queue = __webpack_require__(23);
 var _pdf_link_service = __webpack_require__(7);
 const DEFAULT_CACHE_SIZE = 10;
 const ENABLE_PERMISSIONS_CLASS = "enablePermissions";
-const PagesCountLimit = {
+const PagesCountLimit = exports.PagesCountLimit = {
   FORCE_SCROLL_MODE_PAGE: 15000,
   FORCE_LAZY_PAGE_INIT: 7500,
   PAUSE_EAGER_PAGE_INIT: 250
 };
-exports.PagesCountLimit = PagesCountLimit;
 function isValidAnnotationEditorMode(mode) {
   return Object.values(_pdfjsLib.AnnotationEditorType).includes(mode) && mode !== _pdfjsLib.AnnotationEditorType.DISABLE;
 }
@@ -9866,7 +9836,7 @@ function formatL10nValue(text, args) {
     return name in args ? args[name] : "{{" + name + "}}";
   });
 }
-const NullL10n = {
+const NullL10n = exports.NullL10n = {
   async getLanguage() {
     return "en-us";
   },
@@ -9878,7 +9848,6 @@ const NullL10n = {
   },
   async translate(element) {}
 };
-exports.NullL10n = NullL10n;
 
 /***/ }),
 /* 31 */
@@ -13696,7 +13665,7 @@ function getXfaHtmlForPrinting(printContainer, pdfDocument) {
 /******/ 	
 /************************************************************************/
 var __webpack_exports__ = {};
-// This entry need to be wrapped in an IIFE because it need to be isolated against other modules in the chunk.
+// This entry needs to be wrapped in an IIFE because it needs to be isolated against other modules in the chunk.
 (() => {
 var exports = __webpack_exports__;
 
@@ -13724,14 +13693,13 @@ var _app_options = __webpack_require__(5);
 var _pdf_link_service = __webpack_require__(7);
 var _app = __webpack_require__(2);
 const pdfjsVersion = '3.4.0';
-const pdfjsBuild = '9b85d790';
-const AppConstants = {
+const pdfjsBuild = 'fdbe1585';
+const AppConstants = exports.PDFViewerApplicationConstants = {
   LinkTarget: _pdf_link_service.LinkTarget,
   RenderingStates: _ui_utils.RenderingStates,
   ScrollMode: _ui_utils.ScrollMode,
   SpreadMode: _ui_utils.SpreadMode
 };
-exports.PDFViewerApplicationConstants = AppConstants;
 window.PDFViewerApplication = _app.PDFViewerApplication;
 window.PDFViewerApplicationConstants = AppConstants;
 window.PDFViewerApplicationOptions = _app_options.AppOptions;
@@ -13907,7 +13875,7 @@ function messageFromParent(ev) {
   webViewerLoad(url);
   const saveAnnotationButton = document.querySelectorAll(".saveAnnotationButton");
   if (options.readOnly === true) {
-    const hiddenEL = [document.querySelector("#editorModeButtons"), document.querySelector("#saveAnnotation"), document.querySelector("#print")];
+    const hiddenEL = [document.querySelector("#editorModeButtons"), document.querySelector("#saveAnnotation"), document.querySelector("#print"), document.querySelector("#editorFreeText"), document.querySelector("#editorInk")];
     hiddenEL.forEach(el => el.classList.add("hidden"));
     saveAnnotationButton.forEach(el => el.classList.add("hidden"));
   } else {

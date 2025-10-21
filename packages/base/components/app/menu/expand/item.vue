@@ -5,7 +5,7 @@ const props= defineProps<{
   item: MenuItem,
   selected: boolean
 }>()
-
+const emit = defineEmits('click')
 const dropOtion:UseDraggableParam = {
     key: menuKey,
     dragData: {
@@ -22,6 +22,11 @@ if(props.item.onDropItself) {
 }
 const { dragState ,setupDrag } = useDragable(dropOtion)
 const elRef = ref()
+
+function itemClick(e:Event, item){
+  e.stopPropagation()
+  emit('click', item)
+}
 onMounted(() => {
     if(!elRef) return
     if(props.item.component && props.item.component !== '') {
@@ -32,7 +37,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div ref="elRef" :class="{menuItem:true, selected}" @click="$emit('click', props.item)">
+  <div ref="elRef" :class="{menuItem:true, selected}" @click="(e) => itemClick(e,item)">
     <Icon :name="item.icon"></Icon>
     <div class="label">
       {{ $t(item.label) }}
@@ -67,7 +72,8 @@ onMounted(() => {
   }
   transition: all 0.2s ease-in-out;
   &.selected{
-    background: var(--app-grey-950) !important;
+    background: var(--app-primary-color) !important;
+    color: var(--app-paper) !important;
     box-shadow: var(--app-shadow-s);
   }
   &:hover{

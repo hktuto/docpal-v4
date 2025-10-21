@@ -60,22 +60,22 @@ const userId = useUserId()
 const dialogEl = ref()
 
 async function handleDataGet() {
-  const data = await clientApi.api.getAclResourceResourceid(props.doc.id).then(res => res.data)
+  const data: any = await clientApi.api.getAclResourceResourceid(props.doc.id).then(res => res.data)
 
-  aces.value = data.filter(item => item.name !== null)
+  aces.value = data.filter((item: any) => item.name !== null)
 }
 
 const ReadList = computed(() => {
-  return aces.value.filter(ace => ace.permission === 'Read')
+  return aces.value?.filter((ace: any) => ace.acl === 'r')
 })
 const ReadWriteList = computed(() => {
-  return aces.value.filter((ace: any) => ace.acl === 'r')
+  return aces.value?.filter((ace: any) => ace.acl === 'w')
 })
 const ManageRecordList = computed(() => {
-  return aces.value.filter((ace: any) => ace.acl === 'm')
+  return aces.value?.filter((ace: any) => ace.acl === 'm')
 })
 const EverythingList = computed(() => {
-  return aces.value.filter((ace: any) => ace.acl === 'e')
+  return aces.value?.filter((ace: any) => ace.acl === 'e')
 })
 
 const CustomList = computed(() => {

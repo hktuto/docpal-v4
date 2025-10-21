@@ -47,7 +47,8 @@ const emits = defineEmits([
   'onClickPlusEvents',
   'onBeforeEventUpdate',
   'deleteEvent',
-  'cancelEvent'
+  'cancelEvent',
+  'ready'
 ])
 
 const temEvent = ref()
@@ -87,10 +88,12 @@ function getEvent(id: string) {
 }
 
 async function getList() {
-  const eventList = await getEventFromApi(calendarApp, calendarControls, props.filter)
-  console.log('get List', eventList)
-  // Exclude data with deleted status
-  eventList.value = eventList.filter(item => item.detail.status !== 'D')
+  eventList.value = await getEventFromApi(calendarApp, calendarControls, props.filter)
+  console.log('Get Event List', eventList.value)
+}
+
+function setSpecificSate(date: string) {
+  calendarControls.setDate(dayjs(date).format('YYYY-MM-DD'))
 }
 
 function setupCalendar() {
@@ -153,6 +156,7 @@ function setupCalendar() {
         }
       }
       getList()
+      emits('ready')
     })
   } catch (e) {
     console.log('setupCalendar', e)
@@ -208,6 +212,11 @@ function handleRightClick(def: any, event: any) {
     console.log('No calendar events were obtained')
     return
   }
+  // TODO 需要檢查當前user是否具備權限操作
+  const userId = useUserId()
+  // userId.value
+
+
   // 阻止默认的右键菜单
   def.preventDefault()
   const bus = useEventBus(EventType.TABLE_CONTEXT_MENU_OPEN)
@@ -242,18 +251,13 @@ function handleRightClick(def: any, event: any) {
   bus.emit(evtParams)
 }
 
-watch(
-  () => [setting, props.options],
+watch(() => [setting, props.options],
   async () => {
     if (setting.value) {
       console.log('calendar setting changed')
       setupCalendar()
     }
-  },
-  {
-    deep: true,
-    immediate: true
-  }
+  }, { deep: true, immediate: true }
 )
 
 onDeactivated(() => {
@@ -274,7 +278,8 @@ defineExpose({
   deleteEvent,
   getEvent,
   getList,
-  eventList
+  eventList,
+  setSpecificSate
 })
 </script>
 
@@ -342,7 +347,7 @@ defineExpose({
               <br>
               {{ $t('Location') }}: {{ calendarEvent.location || calendarEvent.detail.location }}
               <br>
-              {{ $t('Personnel') }}: {{ calendarEvent.people.join(', ') }}
+              {{ $t('Personnel') }}: {{ calendarEvent.detail.relatedUsers.eventUser }}
               <br />
               {{ $t('Date') }}: {{ displayTimeFn(calendarEvent) }}
             </template>
@@ -372,7 +377,7 @@ defineExpose({
               <br>
               {{ $t('Location') }}: {{ calendarEvent.location || calendarEvent.detail.location }}
               <br>
-              {{ $t('Personnel') }} : {{ calendarEvent.people.join(', ') }}
+              {{ $t('Personnel') }} : {{ calendarEvent.detail.relatedUsers.eventUser }}
               <br />
               {{ $t('Date') }}: {{ displayTimeFn(calendarEvent) }}
             </template>

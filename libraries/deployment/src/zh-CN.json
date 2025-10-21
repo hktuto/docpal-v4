@@ -183,11 +183,11 @@
   "admin_watermark_type_clearanceLevel": "文件许可级别",
   "admin_watermark_type_clearanceLevel_example": "High",
   "admin_watermark_type_contributors": "档案参与人",
-  "admin_watermark_type_contributors_example": "陈大文，张少明",
+  "admin_watermark_type_contributors_example": "文件贡献者，文件贡献者",
   "admin_watermark_type_createAt": "文件最后创建日期",
   "admin_watermark_type_createAt_example": "2023-05-01 18:24",
   "admin_watermark_type_createBy": "档案创建者",
-  "admin_watermark_type_createBy_example": "李华",
+  "admin_watermark_type_createBy_example": "文档创建者",
   "admin_watermark_type_lastModify": "档案最后修改日期",
   "admin_watermark_type_lastModify_example": "2023-05-02 18:24",
   "admin_watermark_type_text": "文本",
@@ -198,7 +198,7 @@
   "admin_watermark_type_watermarkApplyAt": "水印应用日期",
   "admin_watermark_type_watermarkApplyAt_example": "2023-05-02 18:24",
   "admin_watermark_type_watermarkApplyBy": "水印申请者",
-  "admin_watermark_type_watermarkApplyBy_example": "李华",
+  "admin_watermark_type_watermarkApplyBy_example": "水印应用者",
   "admin_watermark_upload_limit": "小于 100kb 的 jpg/png 文件",
   "ai": {
     "addContext": "已限定 AI 问答范围",
@@ -404,6 +404,7 @@
     "digit": "案件编号 - 位数",
     "editDashboard": "编辑仪表板",
     "editPermission": "编辑权限",
+    "id": "案例编号",
     "idGenerator": "ID 生成器",
     "idTemplateVariables": "ID 生成器变量",
     "my": "案例",
@@ -694,7 +695,8 @@
       "group": "用户组",
       "masterTable": "主表格",
       "masterTableColumn": "主表格记录",
-      "user": "用户"
+      "user": "用户",
+      "caseInfo": "@:adminMenu.caseManagement"
     }
   },
   "dataFieldUg": {
@@ -1485,6 +1487,7 @@
     "newFolderDuplicateName": "系统检测到重复的资料夹名称，请重新填写资料夹名称",
     "noMore": "没有更多数据了",
     "noRollbackReminder": "<br>此操作无法撤消。",
+    "noUploadPermission": "没有上传权限",
     "noValidName": "系统检测到未生成有效名称",
     "pleaseSelectApprovalStatus": "请选择审批状态",
     "resetWarning": "提交后，所有选定用户的群组将被重置",
@@ -1515,7 +1518,7 @@
   "dpTip_ocrStatusError": "OCR 未完成。 请稍后再试",
   "dpTip_password": "至少 8 个字符，至少 1 个字母和 1 个数字",
   "dpTip_uploadTip1": "只允许 ",
-  "dpTip_uploadedSuccessfully": "上传成功",
+  "dpTip_uploadedSuccessfully": "上传完成",
   "dpTip_versoionError": "操作失败，系统检测到当前版本未发布",
   "dpTip_warning": "警告",
   "dpTool": "工具",
@@ -2763,7 +2766,8 @@
     "caseId": "案例编号",
     "caseLabel": "案例标签",
     "displayColumns": "显示列",
-    "newButtonLabel": "新建按鈕标签"
+    "newButtonLabel": "新建按鈕标签",
+    "showAdd": "显示添加按钮"
   },
   "singleStepTip": "适用于简单的文件审批、报价审批...等",
   "smartFolder": {
@@ -3188,7 +3192,14 @@
     },
     "button": {
       "cancel": "取消",
+      "clear": "清除",
       "confirm": "确认"
+    },
+    "colorPicker": {
+      "clear": "清除",
+      "confirm": "确认",
+      "copySuccess": "已复制到剪贴板：{0}",
+      "hex": "十六进制"
     },
     "countdown": {
       "formats": {
@@ -3212,13 +3223,19 @@
         "colFixedMax": "冻结列（最多 {0} 列）",
         "colResizable": "列宽（像素）",
         "colSort": "排序",
-        "colTitle": "标题",
+        "colTitle": "列标题",
         "colVisible": "是否显示",
         "fixedLeft": "左侧",
         "fixedRight": "右侧",
         "fixedUnset": "不设置",
-        "sortHelpTip": "点击并拖动图标可以调整列的排序"
+        "sortHelpTip": "点击并拖动图标可以调整顺序"
       }
+    },
+    "datePicker": {
+      "yearTitle": "{0} 年"
+    },
+    "dateRangePicker": {
+      "pleaseRange": "请选择开始日期与结束日期"
     },
     "drawer": {
       "close": "关闭"
@@ -3239,31 +3256,44 @@
       "errConflicts": "参数 \"{0}\" 与 \"{1}\" 有冲突",
       "errFormat": "全局的格式化内容应该使用 \"VXETable.formats\" 定义，挂载 \"formatter={0}\" 的方式已不建议使用",
       "errFunc": "参数 \"{0}\" 不是一个方法",
+      "errLargeData": "当绑定的数据量过大时，应该请使用 {0}，否则可能会出现卡顿",
+      "errMaxRow": "超过支持的最大数据量 {0} 行，这可能会导致出现错误",
       "errProp": "不支持的参数 \"{0}\"，可能为 \"{1}\"",
+      "errorVersion": "版本不匹配，当前版本 {0}，最低支持版本为 {1}",
       "expandContent": "展开行的插槽应该是 \"content\"，请检查是否正确",
       "groupFixed": "如果使用分组表头，冻结列必须按组设置",
       "groupMouseRange": "分组表头与 \"{0}\" 不能同时使用，这可能会出现错误",
       "groupTag": "分组列头应该使用 \"{0}\" 而不是 \"{1}\"，这可能会出现错误",
       "impFields": "导入失败，请检查字段名和数据格式是否正确",
+      "modelConflicts": "绑定的字段值 \"{0}\" 与 \"{1}\" 存在冲突，将会出现错误",
+      "noGroup": "数据分组后不支持 \"{0}\"",
       "noTree": "树结构不支持 \"{0}\"",
       "notCommands": "全局指令 \"{0}\" 不存在",
+      "notConflictProp": "当使用 \"{0}\" 时，应该设置 \"{1}\"，否则可能会存在功能冲突",
       "notExp": "该浏览器不支持导入/导出功能",
       "notFormats": "全局格式化 \"{0}\" 不存在",
       "notFunc": "方法 \"{0}\" 不存在",
       "notProp": "不支持的参数 \"{0}\"",
       "notSlot": "插槽 \"{0}\" 不存在",
+      "notSupportProp": "当启用参数 \"{0}\" 时不支持 \"{1}\"，应该为 \"{2}\"，否则将会出现错误",
       "notType": "不支持的文件类型 \"{0}\"",
       "notValidators": "全局校验 \"{0}\" 不存在",
       "removeProp": "参数 \"{0}\" 已废弃，不建议使用，这可能会导致出现错误",
       "repeatKey": "主键重复 {0}=\"{1}\"，这可能会出现错误",
+      "repeatProp": "参数重复 {0}=\"{1}\"，这可能会出现错误",
       "reqComp": "缺少 \"{0}\" 组件，请检查是否正确安装。 https://vxeui.com/#/start/useGlobal",
       "reqModule": "缺少 \"{0}\" 模块",
+      "reqPlugin": "扩展插件未安装 \"{1}\" https://vxeui.com/other{0}/#/{1}/install",
       "reqProp": "缺少必要的 \"{0}\" 参数，这可能会导致出现错误",
+      "reqSupportProp": "当使用 \"{0}\" 时，应该设置 \"{1}\"，否则可能会出现错误",
       "scrollErrProp": "启用虚拟滚动后不支持该参数 \"{0}\"",
+      "treeCrossDrag": "只能拖拽第一层级",
+      "treeDragChild": "父级不能拖拽到自己的子级中",
       "treeNotImp": "树表格不支持导入",
       "unableInsert": "无法插入到指定位置，请检查参数是否正确",
       "uniField": "字段名 \"{0}\" 重复定义，这可能会出现错误",
-      "useErr": "安装 \"{0}\" 模块时发生错误，可能顺序不正确，依赖的模块需要在 Table 之前安装"
+      "useErr": "安装 \"{0}\" 模块时发生错误，可能顺序不正确，依赖的模块需要在 Table 之前安装",
+      "useNew": "不建议使用 {0}，请使用 {1}"
     },
     "export": {
       "expAllExpandTitle": "如果存在，则支持将带有层级结构的数据全部展开",
@@ -3278,12 +3308,13 @@
       "expMode": "选择数据",
       "expName": "文件名",
       "expNamePlaceholder": "请输入文件名",
-      "expOptAllExpand": "展开层级",
+      "expOptAllExpand": "展开树",
       "expOptColgroup": "分组表头",
       "expOptFooter": "表尾",
       "expOptHeader": "表头",
       "expOptMerge": "合并",
       "expOptOriginal": "源数据",
+      "expOptTitle": "列标题",
       "expOptUseStyle": "样式",
       "expOpts": "参数设置",
       "expOriginalTitle": "如果为源数据，则支持导入到表格中",
@@ -3291,11 +3322,13 @@
       "expSheetName": "标题",
       "expSheetNamePlaceholder": "请输入标题",
       "expTitle": "导出数据",
+      "expTitleTitle": "是否为列标题，否则显示为列的字段名",
       "expType": "保存类型",
       "expUseStyleTitle": "如果存在，则支持带样式的单元格",
       "modes": {
         "all": "全量数据（包括所有分页的数据）",
         "current": "当前数据（当前页的数据）",
+        "empty": "空数据",
         "selected": "选中数据（当前页选中的数据）"
       },
       "printTitle": "打印数据",
@@ -3322,7 +3355,7 @@
         "wdFormUni": "该类型的控件在表单中只允许添加一个",
         "wdSubUni": "该类型的控件在子表中只允许添加一个"
       },
-      "formName": "表格名称",
+      "formName": "表单名称",
       "styleSetting": {
         "alignLeft": "居左",
         "alignRight": "居右",
@@ -3436,6 +3469,37 @@
       },
       "widgetPropTab": "控件属性"
     },
+    "gantt": {
+      "dayss": {
+        "w0": "日",
+        "w1": "一",
+        "w2": "二",
+        "w3": "三",
+        "w4": "四",
+        "w5": "五",
+        "w6": "六"
+      },
+      "tFullFormat": {
+        "date": "{yy}年{M}月{d}日",
+        "day": "{yy}年{M}月{E}日",
+        "hour": "{yy}年 {M}月{d}日{H}时",
+        "minute": "{yy}年{M}月{d}日{H}时{m}分",
+        "month": "{yy}年{M}月",
+        "quarter": "{yy}年第{q}季度",
+        "week": "{yy}年第{W}周",
+        "year": "{yy}年"
+      },
+      "tSimpleFormat": {
+        "date": "{d}",
+        "day": "{d}",
+        "hour": "{H}时",
+        "minute": "{m}分",
+        "month": "{M}月",
+        "quarter": "{q}季度",
+        "week": "{W}周",
+        "year": "{yy}年"
+      }
+    },
     "grid": {
       "dataUnchanged": "数据未改动！",
       "delSuccess": "成功删除所选记录！",
@@ -3521,7 +3585,7 @@
           "q4": "第四季度"
         },
         "weeks": {
-          "w": "周",
+          "w": "",
           "w0": "周日",
           "w1": "周一",
           "w2": "周二",
@@ -3565,6 +3629,9 @@
       "zoomMin": "最小化",
       "zoomOut": "还原"
     },
+    "numberInput": {
+      "currencySymbol": "¥"
+    },
     "pager": {
       "endPage": "末页",
       "endPageTitle": "末页",
@@ -3595,6 +3662,10 @@
           "selectErr": "无法操作指定区域的单元格"
         },
         "fnr": {
+          "body": {
+            "col": "列：{0}",
+            "row": "行：{0}"
+          },
           "btns": {
             "cancel": "取消",
             "findAll": "查找全部",
@@ -3628,6 +3699,25 @@
           "title": "查找和替换"
         }
       },
+      "extendPivotTable": {
+        "aggFuncs": {
+          "avg": "平均值",
+          "count": "计数",
+          "first": "首个值",
+          "last": "末尾值",
+          "max": "最大值",
+          "min": "最小值",
+          "sum": "求和"
+        },
+        "aggregation": {
+          "dragExistCol": "该列已存在",
+          "groupPlaceholder": "拖至此处进行分组",
+          "grouping": "分组",
+          "sortHelpTip": "点击并拖动图标可以调整顺序",
+          "values": "值",
+          "valuesPlaceholder": "拖至此处进行聚合"
+        }
+      },
       "filterCombination": {
         "cases": {
           "begin": "开头是",
@@ -3657,6 +3747,7 @@
           "fixedLeft": "冻结左侧",
           "fixedRight": "冻结右侧",
           "numberOption": "数值筛选",
+          "sort": "排序",
           "sortAsc": "升序",
           "sortDesc": "降序",
           "textOption": "文本筛选"
@@ -3760,6 +3851,7 @@
           "fixedLeft": "冻结到左侧",
           "fixedRight": "冻结到右侧",
           "numberOption": "数值筛选",
+          "sort": "排序",
           "sortAsc": "升序",
           "sortDesc": "降序",
           "textOption": "文本筛选"
@@ -3776,9 +3868,15 @@
       "search": "搜索"
     },
     "select": {
+      "allChecked": "全选",
+      "clear": "清除",
       "emptyText": "暂无数据",
       "loadingText": "加载中",
-      "search": "搜索"
+      "maxSize": "最大可选择的数量不能超过 {0} 个",
+      "overSizeErr": "已超出最大可选数量 {0} 个，超出部分将被忽略！",
+      "search": "搜索",
+      "searchEmpty": "未匹配到数据！",
+      "total": "{0} / {1}"
     },
     "table": {
       "actionTitle": "操作",
@@ -3801,7 +3899,11 @@
       "filter": "对所选的列启用筛选",
       "impSuccess": "成功导入 {0} 条记录",
       "maxFixedCol": "最大冻结列的数量不能超过 {0} 个",
+      "maxGroupCol": "最大分组字段的数量不能超过 {0} 个",
       "resetFilter": "重置",
+      "resizeColTip": "宽：{0} 像素",
+      "resizeRowTip": "高：{0} 像素",
+      "rowGroupContentTotal": "{0}（{1}）",
       "seqTitle": "序号",
       "sortAsc": "升序：最低到最高",
       "sortDesc": "降序：最高到最低"
@@ -3825,6 +3927,18 @@
       "zoomIn": "全屏",
       "zoomOut": "还原"
     },
+    "tree": {
+      "searchEmpty": "未匹配到数据！"
+    },
+    "treeSelect": {
+      "allChecked": "全选",
+      "allExpand": "全部展开",
+      "clearChecked": "清除",
+      "clearExpand": "全部收起",
+      "emptyText": "暂无数据",
+      "search": "搜索",
+      "total": "已选 {0}"
+    },
     "upload": {
       "dragPlaceholder": "请把文件拖放到这个区域即可上传",
       "fileBtnText": "点击或拖拽上传",
@@ -3834,6 +3948,7 @@
       "imgBtnText": "点击或拖拽上传",
       "imgCountHint": "最多{0}张",
       "imgSizeHint": "单张{0}",
+      "manualUpload": "点击上传",
       "moreBtnText": "更多（{0}）",
       "morePopup": {
         "fileTitle": "上传文件",

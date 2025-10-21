@@ -25,8 +25,7 @@
         "automaticDropdown": false,
         "multiple": false,
         "multipleLimit": 0,
-        "optionItems": [
-        ],
+        "optionItems": [],
         "required": false,
         "requiredHint": "",
         "validation": "",
@@ -38,7 +37,7 @@
         "onCreated": "const _this = this\nasync function getList() {\n  const data = await $api.post('/docpal/case/types/page',{ pageSize:9999 }).then(res => res.data.data.entryList)\n  return data.reduce((prev, item) => {\n    if(!item.id || !item.name) return prev \n const resultItem = {\n      value: item.id,\n      label: item.name || '' ,\n      versionId: item.productionVersionId\n    }\n   prev.push(resultItem) \n return prev\n  }, []).sort((a,b)=> (a.label.localeCompare(b.label) ))\n\n}\nasync function init() {\n  const options = await getList()\n  _this.loadOptions(options)\n}\ninit()",
         "onMounted": "",
         "onRemoteQuery": "",
-        "onChange": "\nconst optionItems = this.getOptionItems()\nconst _this = this\nloadColumn()\nconst curCase = optionItems.find(item => item.value === value)\nif(curCase){\n  const caseLabelRef = _this.getWidgetRef('caseLabel')\n  caseLabelRef.setValue(curCase.label) \n  \n}\n\nasync function loadColumn() {\n  const displayColumnsRef = _this.getWidgetRef('displayColumns')\n  if(!!oldValue) {\n    displayColumnsRef.setValue([])\n    displayColumnsRef.loadOptions([]) \n  }\n  if(!value) return\n  const primaryData = await getPrimaryData(value)\n  displayColumnsRef.loadOptions(primaryData) \n} \n\nasync function getPrimaryData(id) {\n  try {\n    const data = await $api.get(`/docpal/case/dashboard/caseType/${id}/primaryForm`).then(res => res.data.data.fields)\n  return [...data.reduce((prev, item) => {\n      if(!item.id || !item.name || prev.some(p => p.value === item.id)) return prev \n      const resultItem = {\n        value: item.id,\n        label: item.name || '' \n      }\n      prev.push(resultItem) \n      return prev\n    }, []), {value:'case_id', label:'caseManagement.name'},{value:'created_date', label:'workflow_createDate'},{value:'modified_date',label:'table_modifiedDate'}].sort((a,b)=> (a.label.localeCompare(b.label) ))\n  } catch (e) {\n    return []\n  }\n\n}",
+        "onChange": "\nconst optionItems = this.getOptionItems()\nconst _this = this\nloadColumn()\nconst curCase = optionItems.find(item => item.value === value)\nif(curCase){\n  const caseLabelRef = _this.getWidgetRef('caseLabel')\n  caseLabelRef.setValue(curCase.label) \n  \n}\n\nasync function loadColumn() {\n  const displayColumnsRef = _this.getWidgetRef('displayColumns')\n  if(!!oldValue) {\n    displayColumnsRef.setValue([])\n    displayColumnsRef.loadOptions([]) \n  }\n  if(!value) return\n  const primaryData = await getPrimaryData(value)\n  displayColumnsRef.loadOptions(primaryData) \n} \n\nasync function getPrimaryData(id) {\n  try {\n    const data = await $api.get(`/docpal/case/dashboard/caseType/${id}/primaryForm`).then(res => res.data.data.fields)\n  return [...data.reduce((prev, item) => {\n      if(!item.id || !item.name || prev.some(p => p.value === item.id)) return prev \n      const resultItem = {\n        value: item.id,\n        label: item.name || '' \n      }\n      prev.push(resultItem) \n      return prev\n    }, []), {value:'case_id', label:'caseManagement.id'},{value:'created_date', label:'workflow_createDate'},{value:'modified_date',label:'table_modifiedDate'}].sort((a,b)=> (a.label.localeCompare(b.label) ))\n  } catch (e) {\n    return []\n  }\n\n}",
         "changeSettings": [],
         "onChangeSetting": true,
         "onFocus": "",
@@ -198,6 +197,37 @@
         "onValidate": ""
       },
       "id": "select27075"
+    },
+    {
+      "key": 52405,
+      "type": "switch",
+      "icon": "switch-field",
+      "formItemFlag": true,
+      "options": {
+        "name": "showAdd",
+        "label": "singleCase.showAdd",
+        "labelAlign": "",
+        "defaultValue": false,
+        "columnWidth": "200px",
+        "labelWidth": null,
+        "labelHidden": false,
+        "disabled": false,
+        "hidden": false,
+        "customClass": "",
+        "labelIconClass": null,
+        "labelIconPosition": "rear",
+        "labelTooltip": null,
+        "switchWidth": 40,
+        "activeText": "el.popconfirm.confirmButtonText",
+        "inactiveText": "el.popconfirm.cancelButtonText",
+        "activeColor": null,
+        "inactiveColor": null,
+        "onCreated": "",
+        "onMounted": "",
+        "onChange": "",
+        "onValidate": ""
+      },
+      "id": "switch31159"
     }
   ],
   "formConfig": {
@@ -213,6 +243,7 @@
     "functions": "",
     "layoutType": "PC",
     "jsonVersion": 3,
+    "isCreateDynamicCode": true,
     "onFormCreated": "",
     "onFormMounted": "",
     "onFormDataChange": "",
