@@ -3,7 +3,7 @@
 const props = defineProps<{
     displayMenu: any[]
 }>()
-const menuStyle = defineModel('menuStyle')
+const menuStyle = useMenuStyle()
 const layout = useTabLayout()
 const hightLightPanel = useCurrentTargetPanel()
 const tabProvider = inject(TabManagerKey)
