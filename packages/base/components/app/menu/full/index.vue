@@ -28,6 +28,7 @@ watch(() => [layout, hightLightPanel], () => {
     setSelectedMenuItem(selectedMenuItem, props.displayMenu )
 },{
     deep:true,
+    immediate:true
 })
 
 
