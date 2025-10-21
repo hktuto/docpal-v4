@@ -38,6 +38,7 @@ watch(() => [layout, hightLightPanel], () => {
     <img class="logo"  src="/icons/logo-withName-light.svg" />
   </div>
   <div class="menuBody">
+    <AppMenuSearch menuMode="expand"/>
     <AppMenuFullItem  v-for="(item, index) in displayMenu" :key="index" :item="item" :selectedMenuItem="selectedMenuItem" @click="handleSelect"/>
   </div>
   <div class="menuFooter">
@@ -83,6 +84,7 @@ watch(() => [layout, hightLightPanel], () => {
   justify-content: flex-start;
   align-items: flex-start;
   gap: var(--app-space-xs);
+
 }
 .menuFooter{
   width:100%;
