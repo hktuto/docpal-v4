@@ -163,7 +163,7 @@ onMounted(async () => {
 }
 .tip {
   font-size: 1rem;
-  color: var(--app-grey-9500);
+  color: var(--app-grey-950);
   margin-bottom: 12px;
 }
 .reset-password-form {

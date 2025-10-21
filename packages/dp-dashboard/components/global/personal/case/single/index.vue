@@ -116,7 +116,7 @@ watch(
     <div class="table-container">
       <PersonalCaseSingleTable ref="tableRef" :id="setting.caseId" :detail="state.detail" :label="setting.caseLabel">
         <template #table_right>
-          <el-button v-if="props.setting.caseId" type="primary" @click="handleAddCaseDialog">
+          <el-button v-if="props.setting.caseId && props.setting.showAdd" type="primary" @click="handleAddCaseDialog">
             {{ $t(props.setting.newButtonLabel) }}
           </el-button>
         </template>

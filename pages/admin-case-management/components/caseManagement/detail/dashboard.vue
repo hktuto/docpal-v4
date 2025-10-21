@@ -2,7 +2,7 @@
   <el-card class="viewer">
     <template #header>
       <div class="card-header">
-        <span style="font-size: 18px">{{ $t('caseManagement_detailCaseDashboardView') }}</span>
+        <h4 >{{ $t('caseManagement_detailCaseDashboardView') }}</h4>
       </div>
     </template>
     <div style="height: 100%">

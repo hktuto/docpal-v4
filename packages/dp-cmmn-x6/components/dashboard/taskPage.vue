@@ -29,7 +29,7 @@
   </DashboardCard>
 </template>
 <script lang="ts" setup>
-import { adminApi } from 'api'
+import { globalApi } from 'api'
 const props = withDefaults(
   defineProps<{
     dates?: any
@@ -96,7 +96,7 @@ async function getList(param) {
       state.options.paginationConfig.currentPage = 1
       return
     }
-    const { data: res }: any = await adminApi.api.postCaseDashboardInstanceCaseidProcessInstancePage(_instanceId, { ...param, ...state.extraParams })
+    const { data: res }: any = await globalApi.api.postCaseDashboardInstanceCaseidProcessInstancePage(_instanceId, { ...param, ...state.extraParams })
     state.tableData = res.entryList
     state.options.paginationConfig.total = res.totalSize
     state.options.paginationConfig.pageSize = param.pageSize

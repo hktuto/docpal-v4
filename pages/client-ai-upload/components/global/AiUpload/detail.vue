@@ -432,6 +432,7 @@ onMounted(async () => {
   width: 28px;
   height: 28px;
   position: relative;
+  display: flex;
   img {
     width: 100%;
     height: 100%;
@@ -540,7 +541,7 @@ onMounted(async () => {
 
 .disabled-line {
   text-decoration: line-through;
-  color: var(--app-grey-9500);
+  color: var(--app-grey-950);
 }
 
 :deep(.formContainer) {

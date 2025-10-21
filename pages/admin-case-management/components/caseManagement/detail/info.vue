@@ -2,7 +2,7 @@
   <el-card>
     <template #header>
       <div class="card-header">
-        <span style="font-size: 18px;">{{ t('caseManagement_detailBasicInfo') }}</span>
+        <h4 >{{ t('caseManagement_detailBasicInfo') }}</h4>
       </div>
     </template>
     <el-row v-if="!!detail" :gutter="10">

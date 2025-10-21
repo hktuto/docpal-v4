@@ -1,6 +1,4 @@
-import zhCN from 'vxe-table/lib/locale/lang/zh-CN'
-import enUS from 'vxe-table/lib/locale/lang/en-US'
-import zhHK from 'vxe-table/lib/locale/lang/zh-HK'
+
 
 export default defineI18nLocale((locale:string) => {
     const basic = {
@@ -12,17 +10,17 @@ export default defineI18nLocale((locale:string) => {
     switch(locale){
         case 'zh-CN':
             return {
-                ...zhCN,
+                // ...zhCN,
                 ...basic
             }
         case 'en-US':
             return {
-                ...enUS,
+                // ...enUS,
                 ...basic
             }
         case 'zh-HK':
             return {
-                ...zhHK,
+                // ...zhHK,
                 ...basic
             }
     }

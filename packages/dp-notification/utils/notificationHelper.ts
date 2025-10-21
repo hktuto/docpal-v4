@@ -1,4 +1,5 @@
 import { clientApi } from 'api'
+import { routeCalendarManagement } from '#imports'
 
 export function notiShowView(row: any) {
   if ('Workflow' === row.type && '' !== row.content?.message) {
@@ -21,7 +22,7 @@ export function notiShowView(row: any) {
 
 export async function notiHandleView(row: any, tabProvider: any) {
   // const router = useRouter()
-  if (row.content.processInstanceId && !row.content.processDefinitionId.includes('adhocApproval')) {
+  if (row.content.processInstanceId && !row.content?.processDefinitionId?.includes('adhocApproval')) {
     if (row.type === 'Upload-Request') {
       // router.push(`/fileRequest/${row.content.processInstanceId}`)
       const newItem = createUploadRequestDetailParams({
@@ -44,6 +45,15 @@ export async function notiHandleView(row: any, tabProvider: any) {
       ...params
     })
     tabProvider?.openTab(newItem, true)
+  } else if(row.content.caseInstanceId) {
+    // TODO: get case instance
+    const caseInstance = await clientApi.api.getCaseInstanceCaseinstanceidVariables(row.content.caseInstanceId).then((res) => res.data)
+    console.log(caseInstance)
+    // const newItem = caseManageDashboardPage({
+    //   instanceId: row.content.caseInstanceId,
+    //   versionId: row.content.versionId
+    // })
+    // tabProvider?.openTab(newItem, true)
   } else if (row.content.uploadId) {
     const status = row.content.notiStatus === 'FAIL' ? 'Error' : 'Ready'
     // router.push(`/AIUpload/${row.content.uploadId}?status=${status}`)
@@ -58,8 +68,13 @@ export async function notiHandleView(row: any, tabProvider: any) {
   else if (row.content.message && 'Workflow' === row.type) {
     const event = JSON.parse(row.content.message)
     // TODO：You need to jump to a different page according to the type of workflow message
-    const newItem = routeCalendarManagement(JSON.parse(event.additionalContent))
-    tabProvider?.openTab(newItem, true)
+    const eventType = event.eventType
+    switch (eventType) {
+      case 'calendar':
+        const newItem = routeCalendarManagement(event.processInstanceId, 'calendar')
+        tabProvider?.openTab(newItem, true)
+        break
+    }
   }
 }
 

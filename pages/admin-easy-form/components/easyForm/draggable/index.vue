@@ -117,7 +117,7 @@ function handleEdit(data: any) {
 <style scoped>
 .header {
   font-size: 0.8rem;
-  color: var(--app-grey-9500);
+  color: var(--app-grey-950);
 }
 
 .list-group-item, .header {

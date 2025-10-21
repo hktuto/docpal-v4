@@ -100,7 +100,7 @@ defineExpose({ handleOpen, initData })
 <template>
   <el-dialog
     v-model="state.visible"
-    class="scroll-dialog notification-tag-dialog"
+    class="scroll-dialog notification-tag-dialog big"
     :title="$t('notifications.text')"
     :close-on-click-modal="false"
     append-to-body

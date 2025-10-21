@@ -16,7 +16,14 @@ let exitRules = []
 const idFieldRef = ref()
 function handleOpen(editField: any = {}) {
   formData.value = editField.type ? { ...editField } : { ...initData, ...editField }
-  isEdit.value = editField.type
+  if(!!editField.type){
+    formData.value = { ...editField }
+    isEdit.value = editField.type
+  } else{
+    formData.value = { ...initData, ...editField }
+    isEdit.value = false
+  }
+
   exitRules = isEdit.value ? bpmnGlobalRules.value.filter((item: any) => item.id !== editField.id) : bpmnGlobalRules.value
   opened.value = true
   setTimeout(() => {
@@ -97,6 +104,7 @@ function newNameChanged(rule: any, value: any, callback: any) {
 async function confirmHandler() {
   try {
     await FormRef.value.validate()
+    console.log(1111,isEdit)
     if (isEdit.value) {
       emits('updated', { ...formData.value })
     } else {
@@ -104,7 +112,7 @@ async function confirmHandler() {
     }
   
     opened.value = false
-    FormRef.value.resetFields()
+    // FormRef.value.resetFields()
   } catch (error) {
     console.error(error)
   }

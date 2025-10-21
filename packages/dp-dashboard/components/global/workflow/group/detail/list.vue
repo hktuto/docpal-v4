@@ -252,10 +252,10 @@ defineExpose({
   }
   
   .card-item--Small {
-    font-size: 12px;
+    font-size: var(--app-font-size-m);
   }
   .card-item--Large {
-    font-size: 18px;
+    font-size: var(--app-font-size-l);;
   }
   .card-item--right {
     text-align: right;

@@ -1,21 +1,13 @@
 <template>
   <div class="template-container">
+    <template v-if="!currentHome">
+      loading...
+    </template>
+    <template v-else>
     <div class="template-container--header">
-      <el-dropdown class="template-container--header__title" trigger="click" @command="handleCheckout">
-        <div>{{ state.curDashboard.name }}
-          <ArrowDown class="el-icon--left" />
-        </div>
-        <template #dropdown>
-          <el-dropdown-menu>
-            <template v-for="item in state.dashboardList" :key="item.id">
-              <el-dropdown-item :disabled="item.id === state.curDashboard.id" :command="item.id">
-                {{ item.name }}
-              </el-dropdown-item>
-            </template>
-          </el-dropdown-menu>
-        </template>
-      </el-dropdown>
-      <template v-if="!state.editMode && state.curDashboard.name === 'PERSONAL'">
+      <span class="template-container--header__title">{{ currentHome.name }}</span>
+
+      <template v-if="!state.editMode && currentHome.name === 'PERSONAL'">
         <el-button id="Dashboard__Home__Edit" @click="handleEdit" type="primary" :icon="Edit" circle />
       </template>
       <template v-else-if="state.editMode">
@@ -40,10 +32,10 @@
       </template>
     </div>
     <DashboardDetail class="template-container--main"
-                     v-if="state.curDashboard && state.curDashboard.layout"
+                     v-if="currentHome && currentHome.layout"
                      ref="DashboardDetailRef"
-                     :id="state.curDashboard.id"
-                     v-model:layout="state.curDashboard.layout"
+                     :id="currentHome.id"
+                     v-model:layout="currentHome.layout"
                      :dates="state.dates"
                      :hideSetting="!state.editMode"
                      :resizable="state.editMode"
@@ -52,30 +44,30 @@
                      @delete="handleDelete"
                      @refreshSetting="handleRefresh"
     ></DashboardDetail>
+    </template>
   </div>
 </template>
 
 <script lang="ts" setup>
 import dayjs from 'dayjs'
-import { ArrowDown } from '@element-plus/icons-vue'
+import { allowFeature } from '#imports'
+
 import { Plus, Edit } from '@element-plus/icons-vue'
-import { ElNotification } from 'element-plus'
+
 import { clientApi } from 'api'
 
-import { allowFeature } from '#imports'
 import { getNormalizeSetting, dashboardWidgetSetting, getWidgetSetting } from '../utils/dashboardWidgetHelper'
 import type { DashboardWidget, DashboardWidgetSetting } from '../utils/dashboardWidgetHelper'
 import { onMounted, onUnmounted } from 'vue'
 
 const routerProvider = inject(MenuRouterKey)
 
-const dateFormat = useDisplayTimeFormat().value
+const { currentHome, loading, getHomeList } = useHomePage()
+
 const state = reactive<any>({
   editMode: false,
   loading: false,
   dates: [dayjs().startOf('year').format('YYYY-MM-DD'), formatDate(new Date(), 'YYYY-MM-DD')],
-  dashboardList: [],
-  curDashboard: {},
   editCount: 0
 })
 
@@ -83,7 +75,7 @@ function handleAdd(command: DashboardWidget) {
   state.editCount++
   state.editMode = false
   const item = getWidgetSetting(command)
-  state.curDashboard.layout.push({
+  currentHome.value.layout.push({
     x: (state.curDashboard.layout.length * 2) % 4,
     y: state.curDashboard.layout.length + 4, // puts it at the bottom
     i: new Date().valueOf().toString(),
@@ -103,14 +95,14 @@ function handleEdit() {
 
 function handleRefresh(layoutSetting: any, id: any) {
   state.editCount++
-  const index = state.curDashboard.layout.findIndex((item) => item.i === layoutSetting.i)
-  state.curDashboard.layout[index] = deepCopy(layoutSetting)
+  const index = currentHome.value.layout.findIndex((item) => item.i === layoutSetting.i)
+  currentHome.value.layout[index] = deepCopy(layoutSetting)
 }
 
 function handleDelete(i: any) {
   state.editCount++
-  const index = state.curDashboard.layout.findIndex((item) => item.i === i)
-  state.curDashboard.layout.splice(index, 1)
+  const index = currentHome.value.layout.findIndex((item) => item.i === i)
+  currentHome.value.layout.splice(index, 1)
 }
 
 function handleFinish() {
@@ -120,13 +112,13 @@ function handleFinish() {
 
 async function handleSave() {
   try {
-    state.loading = true
+    loading.value = true
     await clientApi.api.putPersonalLandingSave({
       styleJson: JSON.stringify(state.curDashboard.layout)
     })
   } catch (error) {
   } finally {
-    state.loading = false
+    loading.value = false
   }
 }
 
@@ -145,48 +137,9 @@ async function handleClear() {
   }
 }
 
-async function getDashboardList() {
-  console.log('getDashboardList')
-  let personal: any = await clientApi.api.getPersonalLanding().then((res) => res.data)
-  let dashboardList: any = await clientApi.api.getPersonalLandingDashboardList().then((res: any) => res.data)
-  if (!personal) personal = {}
-  if (!dashboardList) dashboardList = []
-  personal.id = 'PERSONAL'
-  personal.name = 'PERSONAL'
-  state.dashboardList = [personal, ...dashboardList]
-  checkoutDashboard(personal)
-}
-
-async function handleCheckout(id: any) {
-  if (id === state.curDashboard.id) return
-  if (id !== 'PERSONAL' && state.editMode) handleFinish()
-  const cur = state.dashboardList.find((item: any) => item.id === id)
-  checkoutDashboard(cur)
-}
-
-async function checkoutDashboard(detail: any) {
-  state.loading = true
-  state.curDashboard = deepCopy(detail)
-  let dashboardDetail: any
-  if (detail.id === 'PERSONAL') {
-    dashboardDetail = await clientApi.api.getPersonalLanding().then((res: any) => res.data)
-  } else {
-    dashboardDetail = await clientApi.api.getPersonalLandingDashboardId(detail.id).then((res: any) => res.data)
-  }
-  try {
-    const styleJson = JSON.parse(dashboardDetail.styleJson)
-    state.curDashboard.layout = Array.isArray(styleJson) ? styleJson : []
-  } catch (error) {
-    state.curDashboard.layout = []
-  }
-  setTimeout(() => {
-    state.loading = false
-  })
-}
-
 onMounted(async () => {
-  getDashboardList()
-  routerProvider?.refeshActions.value.push(getDashboardList)
+
+  routerProvider?.refeshActions.value.push(getHomeList(true))
 })
 
 
@@ -212,7 +165,10 @@ onMounted(async () => {
     padding: var(--app-space-s);
     text-align: left;
     line-height: 30px;
-
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: var(--app-space-s);
     &__title {
       height: 100%;
       line-height: 30px;

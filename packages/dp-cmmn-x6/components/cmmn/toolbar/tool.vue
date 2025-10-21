@@ -59,7 +59,7 @@ function mousedown(ev:any) {
         --icon-color: var(--app-main-color);
     }
     &.disabled {
-        --icon-color: var(--app-grey-9500) !important;
+        --icon-color: var(--app-grey-950) !important;
         --cursor: not-allowed;
     }
 }

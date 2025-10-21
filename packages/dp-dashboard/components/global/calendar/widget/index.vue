@@ -1,5 +1,4 @@
 <script lang="ts" setup>
-import dayjs, { Dayjs } from 'dayjs'
 import type { CalendarEventExternal } from '@schedule-x/calendar'
 
 const { t } = useI18n()
@@ -31,11 +30,11 @@ async function handleDelete() {
 }
 
 function editEvent(event: CalendarEventExternal) {
-  eventDialogRef.value.edit(event)
+  eventDialogRef.value.editEvent(event)
 }
 
 function allowCreateNewEvent(dateTime: string) {
-  eventDialogRef.value.open(dateTime)
+  eventDialogRef.value.createEvent(dateTime)
 }
 
 function updateEvent(params: CalendarEventExternal) {
@@ -51,7 +50,7 @@ function deleteEvent(event: CalendarEventExternal) {
 }
 
 function openNewEventDialog() {
-  eventDialogRef.value.open()
+  eventDialogRef.value.createEvent()
 }
 
 onDeactivated(() => {
@@ -88,7 +87,7 @@ onDeactivated(() => {
     <Calendar v-else ref="CalendarRef" :options="setting" @editEvent="editEvent" @createEvent="allowCreateNewEvent"
               @updateEvent="updateEvent" @cancelEvent="cancelEvent" @deleteEvent="deleteEvent" />
 
-    <CalendarWidgetDialog ref="eventDialogRef" :options="setting" @reload="refresh" />
+    <CalendarManagementUpdateEventDialog ref="eventDialogRef" :options="setting" @reload="refresh" />
     <CalendarWidgetSetting ref="settingRef" :setting="setting" @submit="(setting) => $emit('refreshSetting', setting)"
                            @delete="handleDelete" />
   </DashboardCard>

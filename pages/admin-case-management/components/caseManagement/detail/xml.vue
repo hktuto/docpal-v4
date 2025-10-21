@@ -130,7 +130,7 @@ defineExpose({save, getAllForm})
     <el-card class="viewer">
         <template #header>
             <div class="flex-x-between">
-                <span style="font-size: 18px;">{{ $t('caseManagement_detailDesign') }}</span>
+                <h4>{{ $t('caseManagement_detailDesign') }}</h4>
                 <el-icon class="color__primary__hover cursorPointer" size="20" @click="handleEdit">
                     <Edit/>
                 </el-icon>

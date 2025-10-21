@@ -4,7 +4,7 @@
     v-model="state.visible" :title="$t('template.create')"
     :close-on-click-modal="false" append-to-body
     >
-    <BrowseActionsReplaceUpload v-model="form.fileList" :limit="1" :accept="state.accept"></BrowseActionsReplaceUpload>
+    <FormUpload v-model="form.fileList" :limit="1" :accept="state.accept"></FormUpload>
     <template #footer>
         <el-button v-if="state.setting && state.setting.fileType !== 'PDF'" type="primary" :loading="state.loading" @click="goOffice">{{$t('template.createInOffice')}}</el-button>
         <el-button type="primary" :loading="state.loading" @click="handleSubmit">{{$t('smartFolder_create')}}</el-button>
@@ -30,7 +30,7 @@ async function handleSubmit() {
         state.visible = false
         return
     }
-    const file = form.fileList[0].raw
+    const file = form.fileList[0]
     try {
         state.loading = true
         const formData = new FormData()

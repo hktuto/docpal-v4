@@ -134,7 +134,7 @@ function switchDetail(id: string) {
     --bg: var(--app-grey-700);
   }
   &.selected {
-    --bg: var(--app-grey-9500);
+    --bg: var(--app-grey-950);
   }
 }
 

@@ -266,6 +266,8 @@ function messageFromParent(ev) {
       document.querySelector("#editorModeButtons"),
       document.querySelector("#saveAnnotation"),
       document.querySelector("#print"),
+      document.querySelector("#editorFreeText"),
+      document.querySelector("#editorInk"),
     ];
     hiddenEL.forEach(el => el.classList.add("hidden"));
     saveAnnotationButton.forEach(el => el.classList.add("hidden"));

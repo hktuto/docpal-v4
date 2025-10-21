@@ -23,7 +23,7 @@
             })
           }}
         </div>
-        <div v-if="item.content.message">
+        <div v-if="item.content.message" style="white-space: pre-wrap;">
           {{ handleMessage(item.content.message) }}
         </div>
         <!--        <el-alert v-if="item.content.message" :title="item.content.message"-->
@@ -31,10 +31,12 @@
         {{ item.content.comment }}
         <div>{{ item.creator }}</div>
         <div>
-          <el-button :loading="item.loading" :test-id="`notification-dismiss-button-${item.id}`" type="info" @click="handleDismiss(item)">
+          <el-button :loading="item.loading" :test-id="`notification-dismiss-button-${item.id}`" type="info"
+                     @click="handleDismiss(item)">
             {{ $t('button.dismiss') }}
           </el-button>
-          <el-button v-if="notiShowView(item)" :test-id="`notification-view-button-${item.id}`" type="primary" @click="handleView(item)">
+          <el-button v-if="notiShowView(item)" :test-id="`notification-view-button-${item.id}`" type="primary"
+                     @click="handleView(item)">
             {{ $t('button.view') }}
           </el-button>
         </div>
@@ -132,7 +134,22 @@ function handleMessage(message: any) {
   try {
     const content = JSON.parse(message)
     if (content.showNotification && content.additionalContent) {
-      return JSON.parse(content.additionalContent)
+      let msg
+      const eventType = content.eventType
+      // TODO: workflow notification task event type
+      switch (eventType) {
+        case 'calendar':
+          try {
+            const contentMsg = JSON.parse(content.additionalContent)
+            msg = `${contentMsg.title}\n${contentMsg.data}`
+          } catch (e) {
+            msg = content.additionalContent
+          }
+          break
+        default:
+          msg = content.additionalContent
+      }
+      return msg
     }
     return message
   } catch (e) {

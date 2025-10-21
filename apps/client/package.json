@@ -99,7 +99,7 @@
     "tippy.js": "^6.3.7",
     "tiptap-extension-pagination": "workspace:*",
     "v-code-diff": "^1.13.1",
-    "v-form": "file:..\\..\\packages\\dp-form\\dist\\v-form-designer-3.3.16.tar.gz",
+    "v-form": "file:..\\..\\packages\\dp-form\\dist\\v-form-designer-3.3.21.tar.gz",
     "v-viewer": "^3.0.21",
     "vcard-parser": "^1.0.0",
     "vcards-js": "^2.10.0",
@@ -122,6 +122,6 @@
   },
   "engines": {
     "pnpm": ">=8.5.0",
-    "node": ">=20.0.0"
+    "node": ">=19.0.0"
   }
 }

@@ -72,12 +72,12 @@ watch(
 <style lang="scss" scoped>
 .title {
   font-weight: bold;
-  font-size: 18px;
+  font-size: var(--app-font-size-l);
 }
 
 .description {
-  line-height: 32px;
-  color: var(--app-grey-9500);
+  line-height: var(--app-font-size-xl);
+  color: var(--app-grey-950);
 }
 
 .el-input {

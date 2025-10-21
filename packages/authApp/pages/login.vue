@@ -106,22 +106,21 @@ onMounted(async() => {
     place-items: center;
 }
 .fromContainer{
-    min-width: 300px;
-    max-width: 600px;
-    width: 100%;
+    
+    width: clamp(300px, calc(100vw - 4rem), 600px);
     display: flex;
     flex-flow: column nowrap;
     justify-content: flex-start;
     align-items: stretch;
 }
 .logo{
-    width: 80%;
+    --icon-size: clamp(100px, 80%, 200px);
     max-width: 200px;
     margin: 0 auto var(--app-space-s) auto;
 }
 .glass{
     /* From https://css.glass */
-    background: rgba(255, 255, 255, 0.6);
+    background-image: linear-gradient(to bottom, rgba(255,255,255,0.3) 0%, var(--app-primary-alpha-30) 2%, var(--app-primary-alpha-50) 100%);
     border-radius: 16px;
     box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
     backdrop-filter: blur(6.3px);

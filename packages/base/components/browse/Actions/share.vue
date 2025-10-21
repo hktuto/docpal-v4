@@ -1,5 +1,5 @@
 <template>
-    <div class="flex-x-center">
+    <div class="flex-x-center" v-if="selectedList.length > 0">
         <SvgIcon id="shareToQueue" src="/icons/file/share.svg" round></SvgIcon>
         <BrowseActionsButton id="shareActionButton" :label="$t('tip.addToShare')"  >
             <el-badge :value="shareList.length" :max="99" 

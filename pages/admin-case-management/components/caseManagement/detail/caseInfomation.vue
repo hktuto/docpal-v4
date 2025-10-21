@@ -2,7 +2,7 @@
   <el-card>
     <template #header>
       <div class="card-header">
-        <span style="font-size: 18px">{{ t('caseManagement_detailCaseInformation') }}</span>
+        <h4>{{ t('caseManagement_detailCaseInformation') }}</h4>
       </div>
     </template>
     <CmmnSidePanelDraggable :list="caseInformation" :dragHeader="dragHeader" formJsonUrl="field" @change="handleSave"> </CmmnSidePanelDraggable>

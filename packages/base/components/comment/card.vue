@@ -209,7 +209,7 @@ function replyBoxShow() {
 
 .commentCard_text {
   user-select: text;
-  color: var(--app-grey-950);
+  color: var(--app-grey-050);
 }
 
 .highlight-comments {

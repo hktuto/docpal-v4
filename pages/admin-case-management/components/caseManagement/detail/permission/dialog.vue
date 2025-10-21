@@ -8,7 +8,8 @@
   >
     <el-form ref="FormRef" style="--icon-size: 1.2rem" label-position="top" :model="form">
       <el-form-item prop="isGroup">
-        <el-switch v-model="form.isGroup" :active-text="$t('user_UserGroup')" :inactive-text="$t('user_role')" @change="handleIsGroupChange" />
+        <el-switch v-model="form.isGroup" :active-text="$t('user_UserGroup')" :inactive-text="$t('user_role')"
+                   @change="handleIsGroupChange" />
       </el-form-item>
       <template v-if="!form.isGroup">
         <el-form-item
@@ -64,14 +65,16 @@
           <el-col :span="5">{{ $t('easyForm.fields') }}</el-col>
           <el-col :span="5">{{ $t('case.condition') }}</el-col>
           <el-col :span="12"
-            >{{ $t('case.value') }} <small>({{ $t('case.value_tip') }}</small
-            >)</el-col
+          >{{ $t('case.value') }} <small>({{ $t('case.value_tip') }}</small
+          >)
+          </el-col
           >
         </el-row>
         <el-row :gutter="20" v-for="(item, index) in form.filed_condition" :key="index">
           <el-col :span="5">
             <el-form-item :prop="`filed_condition[${index}].id`" :rules="[selectRule]">
-              <el-select-v2 v-model="item.id" :options="state.caseInformation" @change="(value: any) => handleRowIdChange(value, index)" />
+              <el-select-v2 v-model="item.id" :options="state.caseInformation"
+                            @change="(value: any) => handleRowIdChange(value, index)" />
             </el-form-item>
           </el-col>
           <el-col :span="5">
@@ -97,10 +100,12 @@
     </el-form>
     <CaseManagementDetailPermissionDrag :list="state.permissionField" />
     <template #footer>
-      <el-button id="CaseManagement__Detail__Permission__AddPermission__Delete" v-if="state.isEdit" type="danger" @click="handleDelete">
+      <el-button id="CaseManagement__Detail__Permission__AddPermission__Delete" v-if="state.isEdit" type="danger"
+                 @click="handleDelete">
         {{ $t('common_delete') }}
       </el-button>
-      <el-button id="CaseManagement__Detail__Permission__AddPermission__Submit" type="primary" :loading="state.loading" @click="handleSubmit">
+      <el-button id="CaseManagement__Detail__Permission__AddPermission__Submit" type="primary" :loading="state.loading"
+                 @click="handleSubmit">
         {{ $t('common_submit') }}
       </el-button>
     </template>
@@ -150,19 +155,20 @@ const form = ref<any>({
 })
 const FormRef = ref()
 const enableGroupList = computed(() => {
-  if(!state.groupList) return []
+  if (!state.groupList) return []
   return state.groupList.map((item: any) => {
     item.disabled = props.exitList.some((exitItem: any) => exitItem.group === item.value)
     return item
   })
 })
 const enableRoleList = computed(() => {
-  if(!state.roleList) return []
+  if (!state.roleList) return []
   return state.roleList.map((item: any) => {
     item.disabled = props.exitList.some((exitItem: any) => exitItem.role === item.value)
     return item
   })
 })
+
 function handleIsGroupChange(value: boolean) {
   if (value) {
     form.value.role = ''
@@ -237,7 +243,10 @@ function handleDelete() {
   emits('delete', state.setting)
 }
 
-function handleOpen(setting: any) {
+async function handleOpen(setting: any) {
+  await getGroup()
+  await getRole()
+
   state.visible = true
   state.isEdit = false
   form.value.group = ''
@@ -300,7 +309,9 @@ function handleRecordChange(value: any) {
   form.value.filed_condition = []
   if (value === 'some') handleAdd()
 }
+
 let time = 1
+
 function handleAdd() {
   if (!form.value.filed_condition) form.value.filed_condition = []
   const id = new Date().getTime() + time++
@@ -401,8 +412,6 @@ async function getRole() {
 }
 
 onMounted(async () => {
-  getGroup()
-  getRole()
 })
 defineExpose({ handleOpen })
 </script>

@@ -28,17 +28,17 @@ export default defineI18nLocale(async(locale:string) => {
         const languageContent = JSON.parse(data[0].languageContent)
         if(locale === 'zh-CN') {
             return {
-                ...zhCN,
+                // ...zhCN,
                 ...languageContent
             }
         }else if(locale === 'en-US') {
             return {
-                ...enUS,
+                // ...enUS,
                 ...languageContent
             }
         }else if(locale === 'zh-HK') {
             return {
-                ...zhHK,
+                // ...zhHK,
                 ...languageContent
             }
         }

@@ -11,7 +11,7 @@ export default defineAppConfig({
             component: "LazyBrowsePage",
             feature: "BROWSE", 
             props: {
-                idOrPath: "/",
+                idOrPath: "root",
                 filter: {}
             }
         },

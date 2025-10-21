@@ -6,7 +6,7 @@ const pageKeys: any = {
     '/trash': ['commons_success', 'Fail', 'trash_error_noAction', 'dpTip_noSelection']
 }
 const GetLanguageApi = async(locale: string, languageKey: string) => {
-    console.log('GetLanguageApi', locale, languageKey);
+
     
     const data: any = await adminApi.api.getRelationQuerylanguage({locale, languageKey}, {
         headers: { 'noRouteErrorPage' : "true" }
