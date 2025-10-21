@@ -59,7 +59,7 @@ watch(() => [layout, hightLightPanel], () => {
 
 function toggleMenuStyle(){
   menuStyle.value = 'full'
-  localStorage.setItem('docPalMenuStyle','stack')
+  localStorage.setItem('docPalMenuStyle','full')
 }
 
 // get local storage memory to set menu mode
