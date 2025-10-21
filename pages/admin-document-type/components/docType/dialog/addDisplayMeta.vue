@@ -3,7 +3,7 @@
     v-model="state.visible"
     :title="state.isEdit ? $t('docTypeDetail_editDisplayMeta') : $t('docTypeDetail_addDisplayMeta')"
     :close-on-click-modal="false"
-    class="scroll-dialog add-display-meta-dialog"
+    class="scroll-dialog add-display-meta-dialog big"
   >
     <!-- form -->
     <el-form ref="formRef" :model="formData" :rules="formRules" label-position="top" class="display-meta-form">
