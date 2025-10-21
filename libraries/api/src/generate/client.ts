@@ -8818,6 +8818,7 @@ export interface PermissionDTO {
     inheritFrom?: string;
     type?: string;
     path?: string;
+    name?: string;
 }
 
 export interface ResultListPermissionDTO {
