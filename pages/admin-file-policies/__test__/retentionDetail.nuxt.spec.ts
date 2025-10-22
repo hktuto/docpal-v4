@@ -160,7 +160,7 @@ describe('[admin-retention]RetentionAddDialog', () => {
       id: 1,
       actionType: 'D'
     })
-    expect(ElMessage.success).toHaveBeenCalledWith('tip_createdSuccessMsg')
+    expect(ElMessage.success).toHaveBeenCalledWith('tip_createdMsg')
     expect(wrapper.vm.state.visible).toBe(false)
   })
   it('does not submit if form data is not valid', async () => {
