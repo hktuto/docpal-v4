@@ -495,6 +495,7 @@ onBeforeMount(async () => {
   line-height: 1.2;
   letter-spacing: 0px;
   color: #606266;
+  padding-inline: var(--app-space-xs);
 }
 
 .save-or-exit-icon-container {
