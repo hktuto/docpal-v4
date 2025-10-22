@@ -56,8 +56,6 @@ describe('[client-share-external]ShareDialog', () => {
   })
 
   it('should initFormatItem the component correctly', async () => {
-    vi.spyOn(wrapper.vm, 'echoEamilList')
-
     const shareInfo = {
       shareID: 'ecc33439-392d-4cd8-b9da-7c7d7d964b05',
       easyShareList: [
