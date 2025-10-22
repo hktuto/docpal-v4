@@ -114,9 +114,10 @@ async function handleSave() {
   try {
     loading.value = true
     await clientApi.api.putPersonalLandingSave({
-      styleJson: JSON.stringify(state.curDashboard.layout)
+      styleJson: JSON.stringify(currentHome.value.layout)
     })
   } catch (error) {
+    console.log("error", error)
   } finally {
     loading.value = false
   }
