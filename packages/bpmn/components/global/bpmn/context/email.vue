@@ -5,145 +5,106 @@ import { adminApi } from 'api'
 const { node } = defineProps<{
   node: Node
 }>()
-
-const allEmailTemplates = ref<any>([])
-const templateVariables = ref<any>([])
-const emailTemplateId = ref('')
-
-const contactBookFieldList = ref<any>([])
 const graphProvider = inject(BPMN_PROVIDER)
 const editorProvider = inject(EDITOR_PROVIDER)
 if (!graphProvider || !editorProvider) {
   throw createError('graph provider not found')
 }
+const { bpmnGlobalRules } = editorProvider.BpmnRule
+
+const { t } = useI18n()
+const allEmailTemplates = ref<any>([])
+
+const contactBookFieldList = ref<any>([])
+
+const form = reactive({
+  emailTemplateId: '',
+  attachmentsFilePath: [],
+  tos: [],
+  ccs: [],
+  bcc: []
+})
 
 graphProvider?.graph.value?.on('history:change', async () => {
   console.log('on-history:change')
-  await initForm()
+  await getField()
 })
 
-const allFieldOptions = computed(() => {
-  if (!graphProvider.allFormField.value) return []
+const staticStringFields = computed(() => {
+  if (!bpmnGlobalRules.value || bpmnGlobalRules.value.length === 0) return []
 
-  const allField = Object.fromEntries(Object.entries(graphProvider.allFormField.value).filter(([key, value]) => value.attr_type === 'string'))
-
-  return Object.keys(allField).map((key) => {
+  return bpmnGlobalRules.value.filter((item: any) => item.validationRule.type === 'text').map((item: any) => {
     return {
-      label: graphProvider.allFormField.value[key].attr_name,
-      value: '${variables:get(' + graphProvider.allFormField.value[key].attr_id + ')}'
+      id: '${variables:get(' + item.id + ')}',
+      name: item.name
     }
   })
 })
 
-function setEmailTemplateId(value: string) {
-  const newItem = {
-    attr_name: 'notificationType',
-    'flowable:string': {
-      __cdata: value
-    }
-  }
-  const nodeData = node.getData()
-
-  const newData = {
-    ...nodeData,
-    version: (nodeData.version || 0) + 1
-  }
-  newData.data.extensionElements['flowable:field'] = [newItem]
-  newData.data.extensionElements['flowable:field'].push(
-    {
-      attr_name: 'tos',
-      'flowable:expression': {
-        __cdata: ''
-      }
-    },
-    {
-      attr_name: 'ccs',
-      'flowable:expression': {
-        __cdata: ''
-      }
-    },
-    {
-      attr_name: 'bcc',
-      'flowable:expression': {
-        __cdata: ''
-      }
-    }
-  )
-
-  const varList = allEmailTemplates.value.find((item: any) => item.id === value)?.emailTemplateVariable
-  if (varList || JSON.parse(varList)) {
-    const varListJson = JSON.parse(varList)
-    varListJson.unshift('tos', 'ccs', 'bcc')
-    const variable = varListJson
-      .filter((j: any) => !j.includes(','))
-      .map((item: any) => {
-        return {
-          attr_name: item,
-          'flowable:expression': {
-            __cdata: ''
-          }
-        }
-      })
-    newData.data.extensionElements['flowable:field'] = [newItem, ...variable]
-  }
-
-  templateVariables.value = nodeData.data.extensionElements['flowable:field'].filter(
-    (item: any) =>
-      item.attr_name !== 'notificationType' && item.attr_name !== 'hostUrl' && item.attr_name !== 'processInstanceId' && !item.attr_name.includes(',')
-  )
-  node.setData(newData, { overwrite: true, deep: true, silent: false })
-}
-
-function fieldMappingUpdate(name: string, newVal: string[]) {
-  console.log('fieldMappingUpdate', name, newVal)
-  const newValArray = newVal.join(',')
+function updateFieldData(key: string, data: string) {
   graphProvider?.graph.value?.startBatch('update-email-data')
+
   const nodeData = node.getData()
   const newData = {
     ...nodeData,
     version: (nodeData.version || 0) + 1
   }
-
-  const index = newData.data.extensionElements['flowable:field'].findIndex((f: any) => f.attr_name === name)
-  newData.data.extensionElements['flowable:field'][index]['flowable:expression'].__cdata = newValArray || ''
-  node.setData(newData, { overwrite: true, deep: true, silent: false })
+  const index = newData.data.extensionElements['flowable:field'].findIndex((f: any) => f.attr_name === key)
+  if ('notificationType' === key) {
+    newData.data.extensionElements['flowable:field'][index]['flowable:string'].__cdata = data || ''
+  } else {
+    newData.data.extensionElements['flowable:field'][index]['flowable:expression'].__cdata = data || ''
+  }
+  node.setData(newData, { overwrite: true, deep: true })
 
   graphProvider?.graph.value?.stopBatch('update-email-data')
 }
 
-async function initForm() {
-  if (allEmailTemplates.value.length === 0) {
-    const response = await adminApi.api.getTemplateEmailAll()
-    allEmailTemplates.value = response.data
-  }
-  const notificationTypeField = node.data.data.extensionElements['flowable:field'].find((el: any) => el.attr_name === 'notificationType')
-  emailTemplateId.value = notificationTypeField ? notificationTypeField['flowable:string'].__cdata : ''
-  generateFieldList()
-}
-
-function generateFieldList() {
-  const nodeData = node.getData()
-  if (!nodeData.data.extensionElements || !nodeData.data.extensionElements['flowable:field']) templateVariables.value = []
-
-  templateVariables.value = nodeData.data.extensionElements['flowable:field'].filter(
-    (item: any) =>
-      item.attr_name !== 'notificationType' && item.attr_name !== 'hostUrl' && item.attr_name !== 'processInstanceId' && !item.attr_name.includes(',')
-  )
-}
 async function getContactBookFieldList() {
-  const response = await adminApi.api.getContactgroupList()
-  contactBookFieldList.value = response.data
+  contactBookFieldList.value = await adminApi.api.getContactgroupList().then(r => r.data)
 }
+
+async function getField() {
+  if (allEmailTemplates.value.length === 0) {
+    allEmailTemplates.value = await adminApi.api.getTemplateEmailAll().then(r => r.data)
+  }
+
+  const fields: any = node.data.data.extensionElements['flowable:field']
+
+  if (fields && fields.lenght < 1) {
+    return
+  }
+
+  fields.forEach((item: any) => {
+    const name = item.attr_name
+    const itemList: any = item['flowable:expression']?.__cdata.split(',').filter((item: string) => item.trim() !== '')
+    switch (name) {
+      case 'notificationType':
+        form.emailTemplateId = item['flowable:string'].__cdata
+        break
+      case 'tos':
+        form.tos = itemList.length > 0 ? itemList : []
+        break
+      case 'ccs':
+        form.ccs = itemList.length > 0 ? itemList : []
+        break
+      case 'bcc':
+        form.bcc = itemList.length > 0 ? itemList : []
+        break
+      case 'attachmentsFilePath':
+        form.attachmentsFilePath = itemList.length > 0 ? itemList : []
+        break
+    }
+  })
+}
+
 onMounted(async () => {
   await getContactBookFieldList()
 })
-watch(
-  () => node,
-  async () => {
+watch(() => node, async () => {
     console.log('watch node from email', node)
-    await initForm()
-  },
-  {
+    await getField()
+  }, {
     immediate: true,
     deep: true
   }
@@ -153,38 +114,55 @@ watch(
 <template>
   <div class="fromContainer">
     <BpmnSidebarEditLabel :node="node" />
-    <ElForm label-position="top" label-width="80px">
-      <ElFormItem label="Email template">
-        <ElSelect
-          v-model="emailTemplateId"
-          placeholder="Select email template"
-          class="fullwidth"
-          @change="setEmailTemplateId"
-          :disabled="editorProvider.readonly.value"
-          filterable
-        >
+    <el-form label-position="top" label-width="80px" :disabled="editorProvider.readonly.value">
+      <el-form-item label="Email template" required>
+        <ElSelect v-model="form.emailTemplateId" :placeholder="t('common_selectedIsRequiredMsg')" class="fullwidth"
+                  @change="(val: string) => updateFieldData('notificationType', form.emailTemplateId)" filterable>
           <ElOption v-for="item in allEmailTemplates" :key="item.id" :label="item.label" :value="item.id"></ElOption>
         </ElSelect>
-      </ElFormItem>
-      <ElFormItem v-for="item in templateVariables" :key="item.attr_name" :label="item.attr_name">
-        <ElSelect
-          v-model="item.value"
-          placeholder="Select form field"
-          class="fullwidth"
-          :disabled="editorProvider.readonly.value"
-          clearable
-          multiple
-          @change="(val: any) => fieldMappingUpdate(item.attr_name, item.value)"
-        >
-          <ElOptionGroup label="Form Fields">
-            <ElOption v-for="item in allFieldOptions" :key="item.value" :label="item.label" :value="item.value"></ElOption>
-          </ElOptionGroup>
-          <ElOptionGroup :label="$t('adminMenu.contactBook')">
-            <ElOption v-for="item in contactBookFieldList" :key="item.value" :label="item.name" :value="item.id"></ElOption>
-          </ElOptionGroup>
-        </ElSelect>
-      </ElFormItem>
-    </ElForm>
+      </el-form-item>
+      <el-form-item label="TOS" required>
+        <el-select v-model="form.tos" :placeholder="t('common_selectedIsRequiredMsg')" clearable multiple
+                   @change="(val: any) => updateFieldData('tos', form.tos.join(','))">
+          <El-Option-Group label="Form Fields">
+            <el-option v-for="item in staticStringFields" :key="item.id" :label="item.name" :value="item.id" />
+          </El-Option-Group>
+          <el-option-group :label="$t('adminMenu.contactBook')">
+            <ElOption v-for="item in contactBookFieldList" :key="item.value" :label="item.name"
+                      :value="item.id"></ElOption>
+          </el-option-group>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="CCS">
+        <el-select v-model="form.ccs" :placeholder="t('common_selectOccupancyContent')" clearable multiple
+                   @change="(val: any) => updateFieldData('ccs',form.ccs.join(','))">
+          <El-Option-Group label="Form Fields">
+            <el-option v-for="item in staticStringFields" :key="item.id" :label="item.name" :value="item.id" />
+          </El-Option-Group>
+          <el-option-group :label="$t('adminMenu.contactBook')">
+            <ElOption v-for="item in contactBookFieldList" :key="item.value" :label="item.name" :value="item.id" />
+          </el-option-group>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="BCC">
+        <el-select v-model="form.bcc" :placeholder="t('common_selectOccupancyContent')" clearable multiple
+                   @change="(val: any) => updateFieldData('bcc', form.bcc.join(','))">
+          <El-Option-Group label="Form Fields">
+            <el-option v-for="item in staticStringFields" :key="item.id" :label="item.name" :value="item.id" />
+          </El-Option-Group>
+          <el-option-group :label="$t('adminMenu.contactBook')">
+            <ElOption v-for="item in contactBookFieldList" :key="item.value" :label="item.name" :value="item.id" />
+          </el-option-group>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="Attached">
+        <el-select v-model="form.attachmentsFilePath" :placeholder="t('common_selectOccupancyContent')"
+                   @change="(val:any) => updateFieldData('attachmentsFilePath', form.attachmentsFilePath.join(','))"
+                   clearable multiple>
+          <el-option v-for="item in staticStringFields" :key="item.id" :label="item.name" :value="item.id" />
+        </el-select>
+      </el-form-item>
+    </el-form>
   </div>
 </template>
 
