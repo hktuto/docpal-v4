@@ -1,20 +1,22 @@
 <template>
   <div class="variable_editor">
-    <template v-for="(signature, signatureIndex) in modelValue">
-      <div class="signatureSettingContainer">
-        <TemplateEditor :setting="signature" field="prefix" @update="(newVal:any) => updateSignatureSetting(signatureIndex, 'prefix', newVal)" />
-        <TemplateEditor :setting="signature" field="suffix" />
-        <div class="removeBtnContainer">
-          <Icon name="lucide:trash-2" @click="removeSignature(signatureIndex)" />
-        </div>
-      </div>
-    </template>
+    <TemplateEditor 
+          v-for="(signature, signatureIndex) in modelValue"
+          :key="signature.id"
+          :index="signatureIndex"
+          :setting="signature" 
+          :companyListOptions="companyOptions" 
+          @update="(newVal:any) => updateSignatureSetting(signatureIndex, newVal)" 
+          @delete="removeSignature(signatureIndex)"
+        />
+
     <template v-if="modelValue.length <= SignatureMaxLength">
       <ElButton @click="addSignature">Add</ElButton>
     </template>
   </div>
 </template>
 <script setup lang="ts">
+import { adminApi } from 'api'
 import { ref, watch, defineProps, defineEmits } from 'vue'
 import type { SignatureSetting } from './type'
 import TemplateEditor from './templateEditor.vue'
@@ -26,7 +28,6 @@ const linkTypeList = ['String', 'Document', 'Workflow', 'Case']
 
 
 const companyOptions = ref([])
-const companySignatureOptions = ref([])
 
 
 const defaultValue:SignatureSetting = {
@@ -59,18 +60,31 @@ function removeSignature(signatureIndex:number) {
   }
 }
 
-function updateSignatureSetting(signatureIndex:number, field:keyof SignatureSetting, newValue:any) {
+function updateSignatureSetting(signatureIndex:number, newValue:any) {
   if(signatureIndex !== -1) {
     if(modelValue.value[signatureIndex] ){
-      modelValue.value[signatureIndex][field] = newValue
+      modelValue.value[signatureIndex] = JSON.parse(JSON.stringify(newValue))
     }else{
-      console.error('updateSignatureSetting fail', modelValue.value, field, newValue)
+      console.error('updateSignatureSetting fail', modelValue.value, newValue)
     }
   }else{
     console.error('updateSignatureSetting fail', 'index not valid', signatureIndex, modelValue.value)
   }
 }
 
+async function getCompanyList(){
+  const {data} = await adminApi.api.postCompanyprofilesPage({
+    pageNum:0,
+    pageSize: 100
+  })
+  if(data && data.entryList) {
+    companyOptions.value = data.entryList
+  }
+}
+
+onMounted(async () => {
+  await getCompanyList()
+})
 
 </script>
 <style lang="scss" scoped>

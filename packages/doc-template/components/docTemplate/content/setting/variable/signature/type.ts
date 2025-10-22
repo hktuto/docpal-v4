@@ -8,3 +8,5 @@ export type SignatureSetting = {
   company?:string // only when type is company, should store the company id
   signatureId?: string  // the signature to replace with
 }
+
+
