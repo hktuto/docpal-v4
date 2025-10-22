@@ -52,10 +52,10 @@ onUnmounted(() => {
 })
 
 function newTab() {
-    const config = useRuntimeConfig()
     const newDate = new Date().getTime()
-    if(config.public.defaultTab){
-        const newItem:any = {...config.public.defaultTab}
+    const defaultTab = useAppDefaultTab()
+    if(defaultTab){
+        const newItem:any = {...defaultTab}
         newItem.parent = panel.id
         newItem.id = 'tabpanel-' + newDate
         addTabToPanel(panel.id, newItem)
