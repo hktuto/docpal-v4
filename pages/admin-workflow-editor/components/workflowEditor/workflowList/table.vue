@@ -166,7 +166,7 @@ defineExpose({
       <slot name="toolbar_buttons" />
     </template>
     <template #status="{ row }">
-      <el-tag v-if="row.status=== 'A'" type="success">
+      <el-tag v-if="row.publishStatus=== 'A'" type="success">
         {{ $t('actions.activated') }}
       </el-tag>
       <el-tag v-else type="danger">{{ $t('actions.inactive') }}</el-tag>
