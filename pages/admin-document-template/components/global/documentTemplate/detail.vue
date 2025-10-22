@@ -472,6 +472,7 @@ onBeforeMount(async () => {
   display: grid;
   grid-template-rows: min-content 1fr;
   gap: var(--app-space-xs);
+  padding-top: var(--app-space-xs);
 }
 
 .template-interact-drawer {
