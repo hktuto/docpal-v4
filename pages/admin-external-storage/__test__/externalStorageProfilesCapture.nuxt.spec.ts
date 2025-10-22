@@ -17,18 +17,18 @@ vi.mock('element-plus', () => ({
 describe('[admin-external-storage]ExternalStorageProfilesCapture', () => {
   let wrapper: any
   const mockSettings = {
-    useDocumentType: true,
-    documentType: ['pdf', 'doc'],
-    needConfirm: true,
-    confirmUser: ['user1', 'user2'],
-    confirmGroup: ['group1', 'group2']
+    use_document_type: true,
+    document_type: ['pdf', 'doc'],
+    need_confirm: true,
+    confirm_user: ['user1', 'user2'],
+    confirm_group: ['group1', 'group2']
   }
 
   const mockFormData = {
-    useDocumentType: true,
-    documentType: ['pdf', 'doc'],
-    needConfirm: true,
-    confirmUser: ['user1', 'user2', 'group&&&&group1', 'group&&&&group2']
+    use_document_type: true,
+    document_type: ['pdf', 'doc'],
+    need_confirm: true,
+    confirm_user: ['user1', 'user2', 'group&&&&group1', 'group&&&&group2']
   }
 
   beforeEach(async () => {
@@ -81,7 +81,7 @@ describe('[admin-external-storage]ExternalStorageProfilesCapture', () => {
       expect(wrapper.vm.FormRendererRef).toBeDefined()
     })
 
-    it('should set form data when settings prop changes with useDocumentType true', async () => {
+    it('should set form data when settings prop changes with use_document_type true', async () => {
       const setFormDataSpy = vi.fn()
       wrapper.vm.FormRendererRef = {
         vFormRenderRef: {
@@ -91,25 +91,25 @@ describe('[admin-external-storage]ExternalStorageProfilesCapture', () => {
 
       await wrapper.setProps({
         settings: {
-          useDocumentType: true,
-          documentType: ['txt'],
-          needConfirm: false,
-          confirmUser: ['user3'],
-          confirmGroup: ['group3']
+          use_document_type: true,
+          document_type: ['txt'],
+          need_confirm: false,
+          confirm_user: ['user3'],
+          confirm_group: ['group3']
         }
       })
 
       await wrapper.vm.$nextTick()
 
       expect(setFormDataSpy).toHaveBeenCalledWith({
-        useDocumentType: true,
-        documentType: ['txt'],
-        needConfirm: false,
-        confirmUser: ['user3', 'group&&&&group3']
+        use_document_type: true,
+        document_type: ['txt'],
+        need_confirm: false,
+        confirm_user: ['user3', 'group&&&&group3']
       })
     })
 
-    it('should set form data when settings prop changes with useDocumentType false', async () => {
+    it('should set form data when settings prop changes with use_document_type false', async () => {
       const setFormDataSpy = vi.fn()
       wrapper.vm.FormRendererRef = {
         vFormRenderRef: {
@@ -119,18 +119,18 @@ describe('[admin-external-storage]ExternalStorageProfilesCapture', () => {
 
       await wrapper.setProps({
         settings: {
-          useDocumentType: false
+          use_document_type: false
         }
       })
 
       await wrapper.vm.$nextTick()
 
       expect(setFormDataSpy).toHaveBeenCalledWith({
-        useDocumentType: false
+        use_document_type: false
       })
     })
 
-    it('should handle settings with missing confirmUser and confirmGroup', async () => {
+    it('should handle settings with missing confirm_user and confirm_group', async () => {
       const setFormDataSpy = vi.fn()
       wrapper.vm.FormRendererRef = {
         vFormRenderRef: {
@@ -140,20 +140,20 @@ describe('[admin-external-storage]ExternalStorageProfilesCapture', () => {
 
       await wrapper.setProps({
         settings: {
-          useDocumentType: true,
-          documentType: ['pdf'],
-          needConfirm: true
-          // Missing confirmUser and confirmGroup
+          use_document_type: true,
+          document_type: ['pdf'],
+          need_confirm: true
+          // Missing confirm_user and confirm_group
         }
       })
 
       await wrapper.vm.$nextTick()
 
       expect(setFormDataSpy).toHaveBeenCalledWith({
-        useDocumentType: true,
-        documentType: ['pdf'],
-        needConfirm: true,
-        confirmUser: []
+        use_document_type: true,
+        document_type: ['pdf'],
+        need_confirm: true,
+        confirm_user: []
       })
     })
 
@@ -176,7 +176,7 @@ describe('[admin-external-storage]ExternalStorageProfilesCapture', () => {
   })
 
   describe('Save Functionality', () => {
-    it('should call API and emit update event on successful save with useDocumentType true', async () => {
+    it('should call API and emit update event on successful save with use_document_type true', async () => {
       const getFormDataSpy = vi.fn().mockResolvedValue(mockFormData)
       wrapper.vm.FormRendererRef = {
         getFormData: getFormDataSpy
@@ -190,22 +190,22 @@ describe('[admin-external-storage]ExternalStorageProfilesCapture', () => {
         'storage-1',
         '1',
         {
-          useDocumentType: true,
-          documentType: ['pdf', 'doc'],
-          needConfirm: true,
-          confirmUser: ['user1', 'user2'],
-          confirmGroup: ['group1', 'group2']
+          use_document_type: true,
+          document_type: ['pdf', 'doc'],
+          need_confirm: true,
+          confirm_user: ['user1', 'user2'],
+          confirm_group: ['group1', 'group2']
         }
       )
       expect(ElMessage.success).toHaveBeenCalledWith('dpMsg_success')
       expect(wrapper.emitted('update')).toBeTruthy()
     })
 
-    it('should call API with correct params when useDocumentType is false', async () => {
-      const formDataWithoutDocumentType = {
-        useDocumentType: false
+    it('should call API with correct params when use_document_type is false', async () => {
+      const formDataWithoutdocument_type = {
+        use_document_type: false
       }
-      const getFormDataSpy = vi.fn().mockResolvedValue(formDataWithoutDocumentType)
+      const getFormDataSpy = vi.fn().mockResolvedValue(formDataWithoutdocument_type)
       wrapper.vm.FormRendererRef = {
         getFormData: getFormDataSpy
       }
@@ -218,17 +218,17 @@ describe('[admin-external-storage]ExternalStorageProfilesCapture', () => {
         'storage-1',
         '1',
         {
-          useDocumentType: false
+          use_document_type: false
         }
       )
     })
 
-    it('should filter out group&&&& prefix from confirmUser and create confirmGroup', async () => {
+    it('should filter out group&&&& prefix from confirm_user and create confirm_group', async () => {
       const formDataWithGroups = {
-        useDocumentType: true,
-        documentType: ['pdf'],
-        needConfirm: true,
-        confirmUser: ['user1', 'group&&&&group1', 'user2', 'group&&&&group2']
+        use_document_type: true,
+        document_type: ['pdf'],
+        need_confirm: true,
+        confirm_user: ['user1', 'group&&&&group1', 'user2', 'group&&&&group2']
       }
       const getFormDataSpy = vi.fn().mockResolvedValue(formDataWithGroups)
       wrapper.vm.FormRendererRef = {
@@ -243,11 +243,11 @@ describe('[admin-external-storage]ExternalStorageProfilesCapture', () => {
         'storage-1',
         '1',
         {
-          useDocumentType: true,
-          documentType: ['pdf'],
-          needConfirm: true,
-          confirmUser: ['user1', 'user2'],
-          confirmGroup: ['group1', 'group2']
+          use_document_type: true,
+          document_type: ['pdf'],
+          need_confirm: true,
+          confirm_user: ['user1', 'user2'],
+          confirm_group: ['group1', 'group2']
         }
       )
     })
@@ -320,21 +320,21 @@ describe('[admin-external-storage]ExternalStorageProfilesCapture', () => {
       const apiCall = adminApi.api.patchExternalstorageIdProfilesProfileidCapture.mock.calls[0]
       const params = apiCall[2]
 
-      expect(params.useDocumentType).toBe(true)
-      expect(params.documentType).toEqual(['pdf', 'doc'])
-      expect(params.needConfirm).toBe(true)
-      expect(params.confirmUser).toEqual(['user1', 'user2'])
-      expect(params.confirmGroup).toEqual(['group1', 'group2'])
+      expect(params.use_document_type).toBe(true)
+      expect(params.document_type).toEqual(['pdf', 'doc'])
+      expect(params.need_confirm).toBe(true)
+      expect(params.confirm_user).toEqual(['user1', 'user2'])
+      expect(params.confirm_group).toEqual(['group1', 'group2'])
     })
 
-    it('should handle empty confirmUser array', async () => {
-      const formDataWithEmptyConfirmUser = {
-        useDocumentType: true,
-        documentType: ['pdf'],
-        needConfirm: true,
-        confirmUser: []
+    it('should handle empty confirm_user array', async () => {
+      const formDataWithEmptyconfirm_user = {
+        use_document_type: true,
+        document_type: ['pdf'],
+        need_confirm: true,
+        confirm_user: []
       }
-      const getFormDataSpy = vi.fn().mockResolvedValue(formDataWithEmptyConfirmUser)
+      const getFormDataSpy = vi.fn().mockResolvedValue(formDataWithEmptyconfirm_user)
       wrapper.vm.FormRendererRef = {
         getFormData: getFormDataSpy
       }
@@ -347,11 +347,11 @@ describe('[admin-external-storage]ExternalStorageProfilesCapture', () => {
         'storage-1',
         '1',
         {
-          useDocumentType: true,
-          documentType: ['pdf'],
-          needConfirm: true,
-          confirmUser: [],
-          confirmGroup: []
+          use_document_type: true,
+          document_type: ['pdf'],
+          need_confirm: true,
+          confirm_user: [],
+          confirm_group: []
         }
       )
     })
@@ -402,10 +402,10 @@ describe('[admin-external-storage]ExternalStorageProfilesCapture', () => {
 
     it('should handle form data with only users (no groups)', async () => {
       const formDataWithOnlyUsers = {
-        useDocumentType: true,
-        documentType: ['pdf'],
-        needConfirm: true,
-        confirmUser: ['user1', 'user2'] // No group&&&& items
+        use_document_type: true,
+        document_type: ['pdf'],
+        need_confirm: true,
+        confirm_user: ['user1', 'user2'] // No group&&&& items
       }
       const getFormDataSpy = vi.fn().mockResolvedValue(formDataWithOnlyUsers)
       wrapper.vm.FormRendererRef = {
@@ -420,21 +420,21 @@ describe('[admin-external-storage]ExternalStorageProfilesCapture', () => {
         'storage-1',
         '1',
         {
-          useDocumentType: true,
-          documentType: ['pdf'],
-          needConfirm: true,
-          confirmUser: ['user1', 'user2'],
-          confirmGroup: []
+          use_document_type: true,
+          document_type: ['pdf'],
+          need_confirm: true,
+          confirm_user: ['user1', 'user2'],
+          confirm_group: []
         }
       )
     })
 
     it('should handle form data with only groups (no users)', async () => {
       const formDataWithOnlyGroups = {
-        useDocumentType: true,
-        documentType: ['pdf'],
-        needConfirm: true,
-        confirmUser: ['group&&&&group1', 'group&&&&group2'] // Only group&&&& items
+        use_document_type: true,
+        document_type: ['pdf'],
+        need_confirm: true,
+        confirm_user: ['group&&&&group1', 'group&&&&group2'] // Only group&&&& items
       }
       const getFormDataSpy = vi.fn().mockResolvedValue(formDataWithOnlyGroups)
       wrapper.vm.FormRendererRef = {
@@ -449,11 +449,11 @@ describe('[admin-external-storage]ExternalStorageProfilesCapture', () => {
         'storage-1',
         '1',
         {
-          useDocumentType: true,
-          documentType: ['pdf'],
-          needConfirm: true,
-          confirmUser: [],
-          confirmGroup: ['group1', 'group2']
+          use_document_type: true,
+          document_type: ['pdf'],
+          need_confirm: true,
+          confirm_user: [],
+          confirm_group: ['group1', 'group2']
         }
       )
     })

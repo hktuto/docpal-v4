@@ -109,6 +109,7 @@ function convertId(options: any) {
 
 // From the select array, convert permissions to objects. format: { "user": ["joshua"], "group": ['group_IT'], "role": ['role_cxv']}
 export const convertPermissionObjectByPermissions = (permissions: any) => {
+  if(!permissions) return {}
   const item: {} = {}
   permissions.forEach((key: string) => {
     const match = key.match(/^(user|role|group)_(.+)$/)

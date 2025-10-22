@@ -164,8 +164,8 @@ const dialogVisible = ref(false)
 const isEdit = ref(false)
 const outputOptioins = inject('outputOptioins')
 const {
-  documentTypeOpts,
   outputFormatOpts,
+  documentTypeOpts,
   fileTypeOpts,
   resolutionOpts,
   colorOpts,
@@ -234,10 +234,10 @@ function handleOutputFormatChange(value: string) {
 }
 const pathInput = ref<any>(null)
 const fileNameInput = ref<any>(null)
-function handleVariableSelect(variable: string, attr = 'fileName') {
+function handleVariableSelect(variable: string, attr = 'file_name') {
   if(!form.value[attr]) form.value[attr] = ''
   // 识别当前光标位置
-  const input = attr === 'fileName' ? fileNameInput.value.input : pathInput.value.input
+  const input = attr === 'file_name' ? fileNameInput.value.input : pathInput.value.input
   const start = input.selectionStart
   const end = input.selectionEnd
   form.value[attr] = form.value[attr].substring(0, start) + variable + form.value[attr].substring(end)
