@@ -513,7 +513,6 @@ export const bpmnElement: BpmnElement = {
             ['attr_flowable:delegateExpression']: '${generateDocumentDelegate}',
             extensionElements: {
               ['flowable:field']: [
-                { attr_name: 'parentPath', 'flowable:expression': { '__cdata': '' } },
                 { attr_name: 'storeValue', 'flowable:expression': { '__cdata': '' } },
                 { attr_name: 'documentName', 'flowable:expression': { '__cdata': '' } },
                 { attr_name: 'documentType', 'flowable:expression': { '__cdata': 'File' } },
@@ -529,7 +528,6 @@ export const bpmnElement: BpmnElement = {
             ['attr_flowable:delegateExpression']: '${generateDocumentDelegate}',
             extensionElements: {
               ['flowable:field']: [
-                { attr_name: 'parentPath', 'flowable:expression': { '__cdata': '' } },
                 { attr_name: 'storeValue', 'flowable:expression': { '__cdata': '' } },
                 { attr_name: 'documentName', 'flowable:expression': { '__cdata': '' } },
                 { attr_name: 'documentType', 'flowable:expression': { '__cdata': 'File' } },

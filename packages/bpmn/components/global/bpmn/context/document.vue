@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { adminApi } from 'api'
 import type { Node } from '@antv/x6'
+import { QuestionFilled } from '@element-plus/icons-vue'
 
 const editorProvider = inject(EDITOR_PROVIDER)
 if (!editorProvider) {
@@ -28,13 +29,23 @@ const stringFields = computed(() => {
     }
   })
 })
+const staticStringFields = computed(() => {
+  if (!bpmnGlobalRules.value || bpmnGlobalRules.value.length === 0) return []
+
+  return bpmnGlobalRules.value.filter((item: any) => item.validationRule.type === 'text').map((item: any) => {
+    return {
+      id: '${variables:get(' + item.id + ')}',
+      name: item.name
+    }
+  })
+})
+
 
 const state = reactive({
   status: true
 })
 
 const allDocumentTemplates = ref<any[]>([])
-const folderCabinetRootId = ref('')
 
 const form = ref({
   parentPath: '',
@@ -92,7 +103,6 @@ function getForm() {
         break
     }
   })
-  console.log(222,form.value)
 }
 
 function updateFieldData(key: string, newVal: string) {
@@ -169,17 +179,31 @@ onMounted(async () => {
               <el-option v-for="item in stringFields" :key="item.id" :label="item.name" :value="item.id" />
             </el-select>
           </el-form-item>
-          <el-form-item v-else label="Parent Path" required>
-            <el-select v-model="form.parentPath" :placeholder="t('common_selectedIsRequiredMsg')" clearable
+          <el-form-item v-else>
+            <template #label>
+              <div style="display: flex; align-items: center; gap: 4px;">
+                <label class="label"> {{ t('Parent Path') }}</label>
+                <el-popover width="300" title="Info" placement="top"
+                            content="Only path formats are supported. 'folder/folder'">
+                  <template #reference>
+                    <el-icon style="cursor: pointer; color: #909399;">
+                      <QuestionFilled />
+                    </el-icon>
+                  </template>
+                </el-popover>
+              </div>
+            </template>
+
+            <el-select v-model="form.parentPath" :placeholder="t('common_selectedIsRequiredMsg')"
                        @change="(val:any) => updateFieldData('parentPath', val)">
               <el-option v-for="item in stringFields" :key="item.id" :label="item.name" :value="item.id" />
             </el-select>
           </el-form-item>
 
           <el-form-item label="Document Name" required>
-            <el-select v-model="form.documentName" :placeholder="t('common_selectedIsRequiredMsg')" clearable
+            <el-select v-model="form.documentName" :placeholder="t('common_selectedIsRequiredMsg')"
                        @change="(val:any) => updateFieldData('documentName', val)">
-              <el-option v-for="item in stringFields" :key="item.id" :label="item.name" :value="item.id" />
+              <el-option v-for="item in staticStringFields" :key="item.id" :label="item.name" :value="item.id" />
             </el-select>
           </el-form-item>
           <el-form-item label="Document Type" required>
@@ -198,7 +222,7 @@ onMounted(async () => {
 
         <BpmnSidebarTemplateVariable v-if="form.templateId && ''!= form.templateId" :node="node"
                                      :templateCData="form.variables" :allFields="stringFields"
-                                     :templateId="form.templateId"
+                                     :templateId="form.templateId" :disabled="editorProvider.readonly.value"
                                      @updateCData="(val:string) => updateFieldData('variables', val)" />
       </div>
     </div>
@@ -209,5 +233,12 @@ onMounted(async () => {
 .fromContainer {
   overflow: auto;
 }
+
+.label::before {
+  content: "*";
+  color: var(--el-color-danger);
+  margin-right: 4px;
+}
+
 </style>
 

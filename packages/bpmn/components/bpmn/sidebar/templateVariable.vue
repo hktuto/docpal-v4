@@ -7,7 +7,8 @@ const props = defineProps<{
   node: Node,
   templateCData: string
   templateId: string
-  allFields: any[]
+  allFields: any[],
+  disabled: boolean
 }>()
 const emits = defineEmits(['updateCData'])
 const { templateId } = toRefs(props)
@@ -88,13 +89,13 @@ watch(templateId, () => {
 
 <template>
   <div class="templateVariableContainer">
-    <ElForm v-if="!isEmptyObj(variableList)" label-position="top" style="width:100%;">
+    <ElForm v-if="!isEmptyObj(variableList)" label-position="top" style="width:100%;" :disabled="disabled">
       <el-divider />
       <span>Variables</span>
 
       <ElFormItem v-for="(value, key) in variableList" :key="value.id" :label="value.name">
         <ElSelect v-model="value.value" @change="updateData" clearable filterable>
-          <ElOption v-for="item in allFields" :key="item.name" :label="item.name" :value="item.name" />
+          <ElOption v-for="item in allFields" :key="item.id" :label="item.name" :value="item.id" />
         </ElSelect>
       </ElFormItem>
     </ElForm>
