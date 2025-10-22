@@ -81,9 +81,10 @@ describe('[admin-document-type]DocTypeDetail', () => {
   describe('Initial State', () => {
     it('should have correct initial state', () => {
       expect(wrapper.vm.state.docTypeDetail).toEqual({})
-      expect(wrapper.vm.state.lanLoading).toBe(false)
       expect(wrapper.vm.state.activeTabName).toBe('metadata')
       expect(wrapper.vm.state.form).toEqual({
+        permission: [],
+        acls: [],
         docpalTypeName: '',
         category: '',
         isFolder: false
@@ -102,7 +103,12 @@ describe('[admin-document-type]DocTypeDetail', () => {
         docpalTypeName: 'Test Document Type',
         category: 'Test Category',
         isFolder: 'Yes',
-        dataType: 'string'
+        dataType: 'string',
+        permission: {
+          user: [],
+          role: [],
+          group: []
+        }
       }
 
       await wrapper.vm.initDocType(detail)
@@ -120,7 +126,8 @@ describe('[admin-document-type]DocTypeDetail', () => {
       expect(wrapper.vm.state.form).toEqual({
         docpalTypeName: 'Test Document Type',
         category: 'Test Category',
-        isFolder: true
+        isFolder: true,
+        permission: [],
       })
     })
 
@@ -129,7 +136,12 @@ describe('[admin-document-type]DocTypeDetail', () => {
         docpalTypeName: 'Test Document Type',
         category: 'Test Category',
         isFolder: 'No',
-        dataType: 'string'
+        dataType: 'string',
+        permission: {
+          user: [],
+          role: [],
+          group: []
+        }
       }
 
       await wrapper.vm.initDocType(detail)
@@ -149,7 +161,8 @@ describe('[admin-document-type]DocTypeDetail', () => {
       wrapper.vm.state.form = {
         docpalTypeName: 'Test Document Type',
         category: 'Test Category',
-        isFolder: true
+        isFolder: true,
+        permission: ['user_1', 'role_1', 'group_1']
       }
       wrapper.vm.state.docTypeDetail = {
         docpalTypeName: 'Test Document Type',
@@ -165,9 +178,14 @@ describe('[admin-document-type]DocTypeDetail', () => {
         name: 'Test Document Type',
         category: 'Test Category',
         isFolder: true,
-        id: 'test-id'
+        id: 'test-id',
+        permission: {
+          user: ['1'],
+          role: ['1'],
+          group: ['1']
+        }
       })
-      expect(ElMessage.success).toHaveBeenCalledWith(expect.stringContaining('dpMsg_success'))
+      expect(mockRouterProvider.message.success).toHaveBeenCalledWith(expect.stringContaining('dpMsg_success'))
     })
 
     it('should handle form submission error', async () => {

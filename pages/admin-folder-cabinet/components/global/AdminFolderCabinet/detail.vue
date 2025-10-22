@@ -36,11 +36,12 @@ function handleAddChild(data: any, isFolder: boolean) {
   FolderCabinetAddChildDialogRef.value.handleOpen(data, data.children, isFolder)
 }
 async function handleDeleteChild(setting: any) {
+  let noti: any
   try {
     const action = await ElMessageBox.confirm(`${t('msg_confirmWhetherToDelete')}`)
     if (action !== 'confirm') return
     console.log(action)
-    const noti = ElNotification({
+    noti = ElNotification({
       title: t('dpTip_delete'),
       icon: Loading,
       dangerouslyUseHTMLString: true,
@@ -66,7 +67,7 @@ async function handleDeleteChild(setting: any) {
       duration: 2000
     })
   } finally {
-    noti.close()
+    if (noti) noti.close()
   }
 }
 

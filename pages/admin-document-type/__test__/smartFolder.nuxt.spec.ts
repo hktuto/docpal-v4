@@ -3,7 +3,7 @@ import { describe, it, test, vi, expect, beforeEach, afterEach } from 'vitest'
 import { adminApi } from './mock/api'
 import { VxeGrid } from 'vxe-table'
 import { mockRouterProvider } from './util'
-import { SmartFolderPage, SmartFolderDetail, SmartFolderInfoDialog, ResponsiveFilter } from '#components'
+import { AdminSmartFolderPage, AdminSmartFolderDetail, SmartFolderInfoDialog, ResponsiveFilter } from '#components'
 import { ElMessageBox, ElNotification, ElMessage } from 'element-plus'
 import { mockQuery } from './setup'
 vi.mock('element-plus', () => ({
@@ -41,12 +41,12 @@ const SearchGroupTable = {
     initBar: vi.fn()
   }
 }
-describe('[admin-smart-folder]SmartFolderPage', () => {
+describe('[admin-smart-folder]AdminAdminSmartFolderPage', () => {
   let wrapper: any
   const mockTabProvider = {}
 
   beforeEach(async () => {
-    wrapper = mount(SmartFolderPage, {
+    wrapper = mount(AdminSmartFolderPage, {
       props: {
         docType: { name: 'Test Document Type' }
       },
@@ -87,7 +87,7 @@ describe('[admin-smart-folder]SmartFolderPage', () => {
     ElMessageBox.confirm.mockResolvedValue('confirm')
     await wrapper.vm.handleDelete(id)
     expect(adminApi.api.deleteNuxeoSfolderId).toHaveBeenCalledWith(id)
-    expect(mockRouterProvider.message.success).toHaveBeenCalledWith(expect.stringContaining('tip_deleteSuccessMsg'))
+    expect(mockRouterProvider.message.success).toHaveBeenCalledWith(expect.stringContaining('tip_deleteSuccessMessage'))
     expect(mockQuery).toHaveBeenCalledWith()
   })
 
@@ -108,12 +108,12 @@ describe('[admin-smart-folder]SmartFolderPage', () => {
     expect(mockRouterProvider.navigateTo).toHaveBeenCalledWith(expect.anything(), false)
   })
 })
-describe('[admin-smart-folder]SmartFolderDetail', () => {
+describe('[admin-smart-folder]AdminSmartFolderDetail', () => {
   let wrapper: any
   const mockTabProvider = {}
 
   beforeEach(async () => {
-    wrapper = shallowMount(SmartFolderDetail, {
+    wrapper = shallowMount(AdminSmartFolderDetail, {
       props: {
         id: 'sm'
       },
