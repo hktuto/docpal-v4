@@ -2552,6 +2552,14 @@
   "retention_donePreview": "预览文件",
   "retention_pending": "待决清单",
   "retention_policies": "政策管理",
+  "retention_status":{
+    "approve": "批准",
+    "completed": "已完成",
+    "pendingApproval": "待审批",
+    "reject": "拒绝",
+    "submitted": "已提交",
+    "underApproval": "审批中"
+  },
   "revert": "还原",
   "rightClick": {
     "download": "下载",

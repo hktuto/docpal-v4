@@ -546,6 +546,7 @@
   "common_selectedIsRequiredMsg": "One of the options must be selected.",
   "common_send": "Send",
   "common_status": "Status",
+  
   "common_submit": "Submit",
   "common_today": "Due today",
   "common_viewFolder": "View Folder",
@@ -2552,6 +2553,14 @@
   "retention_donePreview": "Preview File",
   "retention_pending": "Pending List",
   "retention_policies": "Retention Management",
+  "retention_status":{
+    "approve": "Approve",
+    "completed": "Completed",
+    "pendingApproval": "Pending Approval",
+    "reject": "Reject",
+    "submitted": "Submitted",
+    "underApproval": "Under Approval"
+  },
   "revert": "Revert",
   "rightClick": {
     "download": "Download",
