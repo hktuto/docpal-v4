@@ -73,7 +73,6 @@ function handleEdit() {
 
 async function getInfo() {
   state.info = await adminApi.api.getPersonalDashboardId(id).then((res) => res.data)
-  console.log('getInfo', state.info)
   if (!state.info || !state.info.styleJson) {
     return
   }
@@ -99,7 +98,7 @@ onMounted(() => {
         <span class="template-title"> {{ state.info.name }} </span>
         <Icon id="WorkPanel__Detail__Edit" name="material-symbols:edit-square" class="normal cursor-pointer" @click="handleEdit"></Icon>
       </div>
-      <el-button type="danger" size="small" @click="handleClear">{{ $t('common_clear') }}</el-button>
+      <el-button v-if="state.layout.length > 0" type="danger" size="small" @click="handleClear">{{ $t('common_clear') }}</el-button>
     </div>
     <div class="template-main-container">
       <DashboardDetail
