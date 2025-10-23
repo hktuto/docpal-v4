@@ -54,6 +54,8 @@ function addSignature(){
 
 function removeSignature(signatureIndex:number) {
   if(signatureIndex !== -1) {
+    // block remove last item
+    if(modelValue.value.length === 1) return 
     modelValue.value.splice(signatureIndex, 1)
   }else{
     console.error('index not exist', {modelValue:modelValue.value} )
@@ -84,6 +86,7 @@ async function getCompanyList(){
 
 onMounted(async () => {
   await getCompanyList()
+
 })
 
 </script>
