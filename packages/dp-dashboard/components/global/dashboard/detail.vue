@@ -22,7 +22,7 @@
     <el-splitter-panel>
       <div ref="wrapper" style="position: relative; height: 100%; overflow: auto" @drop="handleDrop" @dragover="handleDragOver">
         <div v-if="layout.length === 0 && editMode" class="dashboard-null-placeholder">
-          drag to here
+          {{ $t('dashboard.dragToHere') }}
         </div>
         <GridLayout
           ref="gridLayout"

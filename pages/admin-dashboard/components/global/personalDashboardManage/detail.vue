@@ -42,7 +42,7 @@ function handleDelete(i: string) {
 }
 async function handleClear() {
   try {
-    const action = await ElMessageBox.confirm(t('common_confirmClear'), t('common_confirm'))
+    const action = await ElMessageBox.confirm(t('tip_cleanMsg', {name: state.info.name }))
     if (action !== 'confirm') return
     state.layout = []
     handleSave()
