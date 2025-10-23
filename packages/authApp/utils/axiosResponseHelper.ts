@@ -150,7 +150,8 @@ export const responseErrorHelper = async (error: any, axiosInstance: AxiosInstan
         {
           headers: {
             Authorization: 'Bearer ' + refreshToken
-          }
+          },
+          baseURL:'/api'
         }
       )
       console.log('retry', data)
