@@ -673,6 +673,14 @@
     "caseListPlaceHolder": "Please add the case to be displayed",
     "workflowListPlaceHolder": "Please add the workflow to be displayed"
   },
+  "dashboardType": {
+    "case": "@:adminMenu.caseManagement",
+    "default": "Common",
+    "document": "Document",
+    "documentCount": "File Statistics",
+    "workflow": "Workflow",
+    "workflowCount": "Workflow Statistics"
+  },
   "dashboard_accessUserGroup": "Access by User Group",
   "dashboard_content": "Edit Dashboard Content",
   "dashboard_create": "Create New Dashboard",
