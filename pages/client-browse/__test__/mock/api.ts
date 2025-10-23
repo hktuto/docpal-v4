@@ -22,6 +22,7 @@ export const clientApi = {
     ),
     getWatermarkDocumentPreview: vi.fn(() => Promise.resolve(bolb)),
     postNuxeoShareNew: vi.fn(),
+    postNuxeoSharePrepareDownload: vi.fn(),
     postNuxeoGetspecificversion: vi.fn(),
     postNuxeoDocumentBreadcrumb: vi.fn(),
     getWatermarkTemplatesId: vi.fn(() =>
@@ -73,3 +74,5 @@ export const clientApi = {
     postWorkflowFormSubmit: vi.fn(),
   }
 }
+
+export const globalApi = clientApi

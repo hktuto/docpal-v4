@@ -24,7 +24,7 @@ export const FormRendererRef = {
   }
 };
 export const MetaFormRef = {
-  init: (setting) => {
+  init: (setting: any) => {
     return setting;
   },
   getData: () => {
@@ -35,6 +35,7 @@ export const mockRouterProvider = {
   navigateTo: vi.fn(),
   updateProps: vi.fn(),
   addToHistory: vi.fn(),
+  back: vi.fn(),
   menuSymbol: 'mockMenuSymbol',
   message: {
     success: vi.fn(),
