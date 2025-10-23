@@ -1,19 +1,12 @@
 <script lang="ts" setup>
 import dayjs from 'dayjs'
-import { ElMessage } from 'element-plus'
-import type {
-  DashboardWidgetSetting,
-  DashboardWidget
-} from '#imports'
-import {
-  dashboardWidgetSetting,
-  getNormalizeSetting,
-  getWidgetSetting
-} from '#imports'
+import { ElMessage, ElMessageBox } from 'element-plus'
+import type { DashboardWidgetSetting, DashboardWidget } from '#imports'
+import { dashboardWidgetSetting, getNormalizeSetting, getWidgetSetting, getDashboardWidgetByType } from '#imports'
 import { adminApi } from 'api'
 const routerProvider = inject(MenuRouterKey)
 const { id } = defineProps<{
-  id: number;
+  id: number
 }>()
 const { t } = useI18n()
 const state = reactive({
@@ -23,25 +16,21 @@ const state = reactive({
   layout: [] as DashboardWidgetSetting[],
   loading: false,
   saveLoading: false,
-  dates: [
-    dayjs().startOf('year').format('YYYY-MM-DD'),
-    dayjs(new Date()).format('YYYY-MM-DD')
-  ]
+  dates: [dayjs().startOf('year').format('YYYY-MM-DD'), dayjs(new Date()).format('YYYY-MM-DD')]
 })
-
+let dashboardWidgetByType = getDashboardWidgetByType()
 function handleRefresh(layoutSetting: any) {
   const index = state.layout.findIndex((item) => item.i === layoutSetting.i)
   state.layout[index] = deepCopy(layoutSetting)
   handleSave()
 }
 
-function handleAdd(command: DashboardWidget) {
-  const item = getWidgetSetting(command)
+function handleAdd(data: any) {
   state.layout.push({
     x: (state.layout.length * 2) % 4,
     y: state.layout.length + 4, // puts it at the bottom
     i: new Date().valueOf().toString(),
-    ...item
+    ...data
   })
   handleSave()
 }
@@ -51,9 +40,18 @@ function handleDelete(i: string) {
   state.layout.splice(index, 1)
   handleSave()
 }
-
+async function handleClear() {
+  try {
+    const action = await ElMessageBox.confirm(t('common_confirmClear'), t('common_confirm'))
+    if (action !== 'confirm') return
+    state.layout = []
+    handleSave()
+  } catch (error) {
+    console.log('error', error)
+  } finally {
+  }
+}
 async function handleSave() {
-
   try {
     state.saveLoading = true
     await adminApi.api.putPersonalDashboardUpdate({
@@ -74,7 +72,7 @@ function handleEdit() {
 }
 
 async function getInfo() {
-  state.info = await adminApi.api.getPersonalDashboardId(id).then(res => res.data)
+  state.info = await adminApi.api.getPersonalDashboardId(id).then((res) => res.data)
   console.log('getInfo', state.info)
   if (!state.info || !state.info.styleJson) {
     return
@@ -99,41 +97,9 @@ onMounted(() => {
     <div class="flex-x-between">
       <div class="flex-x-between">
         <span class="template-title"> {{ state.info.name }} </span>
-        <Icon id="WorkPanel__Detail__Edit" name="material-symbols:edit-square" class="normal cursor-pointer"
-              @click="handleEdit"></Icon>
+        <Icon id="WorkPanel__Detail__Edit" name="material-symbols:edit-square" class="normal cursor-pointer" @click="handleEdit"></Icon>
       </div>
-      <div>
-        <el-dropdown id="WorkPanel__Detail__Add" trigger="click" @command="handleAdd">
-          <el-button type="primary">
-            {{ $t('common_add') }}
-          </el-button>
-          <template #dropdown>
-            <el-dropdown-menu>
-              <template v-for="(item, key) in dashboardWidgetSetting" :key="key">
-                <!-- || item.feature === 'personal' -->
-                <el-dropdown-item
-                  v-if="
-                    (!item.feature || checkLicenseFeatures(item.feature)) &&
-                    item.type === 'personal'
-                  "
-                  :command="key"
-                  :divided="item.divided"
-                >
-                  {{ $t(`dashboard.${item.label}`) }}
-                </el-dropdown-item>
-              </template>
-            </el-dropdown-menu>
-          </template>
-        </el-dropdown>
-
-        <!-- <el-button
-          class="el-icon--right"
-          type="primary"
-          :loading="state.saveLoading"
-          @click="handleSave"
-          >{{ $t("common_save") }}</el-button
-        > -->
-      </div>
+      <el-button type="danger" size="small" @click="handleClear">{{ $t('common_clear') }}</el-button>
     </div>
     <div class="template-main-container">
       <DashboardDetail
@@ -142,6 +108,9 @@ onMounted(() => {
         :resizable="true"
         :draggable="true"
         :dates="state.dates"
+        :dashboardSettingList="dashboardWidgetByType"
+        :editMode="true"
+        @add="handleAdd"
         @save="handleSave"
         @delete="handleDelete"
         @refreshSetting="handleRefresh"

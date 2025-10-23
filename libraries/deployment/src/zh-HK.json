@@ -672,6 +672,14 @@
     "caseListPlaceHolder": "請新增需要顯示的案例",
     "workflowListPlaceHolder": "請新增需要顯示的工作流程"
   },
+  "dashboardType": {
+    "case": "@:adminMenu.caseManagement",
+    "default": "普通",
+    "document": "文件",
+    "documentCount": "文件統計",
+    "workflow": "工作流",
+    "workflowCount": "工作流程統計"
+  },
   "dashboard_accessUserGroup": "Access by User Group",
   "dashboard_content": "Edit Dashboard Content",
   "dashboard_create": "Create New Dashboard",
