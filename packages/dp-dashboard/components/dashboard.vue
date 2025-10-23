@@ -12,7 +12,7 @@
         </template>
         <template v-else-if="state.editMode">
           <div class="template-container--header__buttons">
-            <el-button type="danger" @click="handleClear">{{ $t('common_clear') }}</el-button>
+            <el-button v-if="currentHome.layout.length > 0" type="danger" @click="handleClear">{{ $t('common_clear') }}</el-button>
             <el-button id="Dashboard__Home__Finish" class="el-icon--right" type="primary" @click="handleFinish">
               {{ $t('dpButtom_finish') }}
             </el-button>
