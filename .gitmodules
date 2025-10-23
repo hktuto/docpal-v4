@@ -4,3 +4,6 @@
 [submodule "libraries/tiptap-extension-pagination"]
 	path = libraries/tiptap-extension-pagination
 	url = https://gitea.wclsolution.com/DocPal/ui-tiptap-extension-pagination.git
+[submodule "libraries/V-form"]
+	path = libraries/V-form
+	url = https://gitea.wclsolution.com/DocPal/V-form.git
