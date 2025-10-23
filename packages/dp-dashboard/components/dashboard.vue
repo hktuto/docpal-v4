@@ -111,7 +111,7 @@ async function handleSave() {
 
 async function handleClear() {
   try {
-    const action = await ElMessageBox.confirm(t('common_confirmClear'), t('common_confirm'))
+    const action = await ElMessageBox.confirm(t('tip_cleanMsg', {name: currentHome.value.name}))
     if (action !== 'confirm') return
     currentHome.value.layout = []
     handleSave()

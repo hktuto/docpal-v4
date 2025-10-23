@@ -546,7 +546,6 @@
   "common_selectedIsRequiredMsg": "One of the options must be selected.",
   "common_send": "Send",
   "common_status": "Status",
-  
   "common_submit": "Submit",
   "common_today": "Due today",
   "common_viewFolder": "View Folder",
@@ -648,6 +647,7 @@
     "docTypeSizeChart": "Doc-Type Size Chart",
     "documentPercent": "Document Percentage",
     "documentSize": "Document Size",
+    "dragToHere": "Drag to here",
     "fileSizes": "Files Size Chart",
     "newCount": "New Workflow",
     "newFiles": "Files Count Chart",
@@ -700,12 +700,12 @@
     "params": "Parameter configuration",
     "setting": "Data configuration",
     "type": {
+      "caseInfo": "@:adminMenu.caseManagement",
       "contact": "@:adminMenu.contactBook",
       "group": "User group",
       "masterTable": "Master table ",
       "masterTableColumn": "Master table record",
-      "user": "User",
-      "caseInfo": "@:adminMenu.caseManagement"
+      "user": "User"
     }
   },
   "dataFieldUg": {
@@ -2561,7 +2561,7 @@
   "retention_donePreview": "Preview File",
   "retention_pending": "Pending List",
   "retention_policies": "Retention Management",
-  "retention_status":{
+  "retention_status": {
     "approve": "Approve",
     "completed": "Completed",
     "pendingApproval": "Pending Approval",
@@ -2999,6 +2999,7 @@
     "upload": "Upload"
   },
   "tip_SelectedMsg": "Selected ",
+  "tip_cleanMsg": "Are you sure you want to clean {name}?",
   "tip_createdMsg": "{modelName} {name} has been created.",
   "tip_createdSuccessMsg": "The new {modelName} {name} has been created successfully.",
   "tip_deleteMsg": "Confirm to delete selected {modelName} {name}?",
