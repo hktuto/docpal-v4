@@ -513,7 +513,6 @@ export const bpmnElement: BpmnElement = {
             ['attr_flowable:delegateExpression']: '${generateDocumentDelegate}',
             extensionElements: {
               ['flowable:field']: [
-                { attr_name: 'parentPath', 'flowable:expression': { '__cdata': '' } },
                 { attr_name: 'storeValue', 'flowable:expression': { '__cdata': '' } },
                 { attr_name: 'documentName', 'flowable:expression': { '__cdata': '' } },
                 { attr_name: 'documentType', 'flowable:expression': { '__cdata': 'File' } },
@@ -529,7 +528,6 @@ export const bpmnElement: BpmnElement = {
             ['attr_flowable:delegateExpression']: '${generateDocumentDelegate}',
             extensionElements: {
               ['flowable:field']: [
-                { attr_name: 'parentPath', 'flowable:expression': { '__cdata': '' } },
                 { attr_name: 'storeValue', 'flowable:expression': { '__cdata': '' } },
                 { attr_name: 'documentName', 'flowable:expression': { '__cdata': '' } },
                 { attr_name: 'documentType', 'flowable:expression': { '__cdata': 'File' } },
@@ -548,7 +546,16 @@ export const bpmnElement: BpmnElement = {
         dropData: (id: string) => ({
           id,
           ...bpmnElement.serviceTask.nodeStyle({
-            ['attr_flowable:delegateExpression']: '${sendNotificationDelegate}'
+            ['attr_flowable:delegateExpression']: '${sendNotificationDelegate}',
+            extensionElements: {
+              ['flowable:field']: [
+                { attr_name: 'notificationType', 'flowable:string': { __cdata: '' } },
+                { attr_name: 'tos', 'flowable:expression': { __cdata: '' } },
+                { attr_name: 'ccs', 'flowable:expression': { __cdata: '' } },
+                { attr_name: 'bcc', 'flowable:expression': { __cdata: '' } },
+                { attr_name: 'attachmentsFilePath', 'flowable:expression': { __cdata: '' } }
+              ]
+            }
           }),
           label: 'New Email',
           data: bpmnElement.serviceTask.newNodeData(id, 'New Email', {
@@ -559,12 +566,11 @@ export const bpmnElement: BpmnElement = {
             ['attr_flowable:exclusive']: false,
             extensionElements: {
               ['flowable:field']: [
-                {
-                  attr_name: 'notificationType',
-                  'flowable:string': {
-                    __cdata: ''
-                  }
-                }
+                { attr_name: 'notificationType', 'flowable:string': { __cdata: '' } },
+                { attr_name: 'tos', 'flowable:expression': { __cdata: '' } },
+                { attr_name: 'ccs', 'flowable:expression': { __cdata: '' } },
+                { attr_name: 'bcc', 'flowable:expression': { __cdata: '' } },
+                { attr_name: 'attachmentsFilePath', 'flowable:expression': { __cdata: '' } }
               ]
             }
           })
