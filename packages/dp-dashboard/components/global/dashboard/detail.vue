@@ -1,33 +1,72 @@
 <template>
-  <Splitpanes class="default-theme" @resized="
-    (e) => {
-      leftSize = e[0].size;
-      rightSize = e[1].size;
-    }
-  ">
-    <Pane v-if="dashboardSettingList && editMode" max-size="20" min-size="2" :size="leftSize" class="dp-left-pane">
-      <el-icon class="cursorPointer" color="var(--app-primary-color)" @click="handleEditMode">
-        <Setting />
-      </el-icon>
-      <el-collapse v-if="leftSize > 10" v-model="activeNames">
-        <el-collapse-item v-for="(item, key) in dashboardSettingList" :key="key" :title="key" :name="key">
-          <div class="dashboard-item-widget" v-for="(c, ckey) in item" :key="ckey" draggable="true" unselectable="on"
-            @dragstart="(e) => dragStart(c)" @drag="drag" @dragend="dragEnd">
-            <SvgIcon v-if="c.icon" class="el-icon--left" :src="`/icons/dashboard/${c.icon}.svg`"
-              style="--icon-size: 12px" />
+  <el-splitter>
+    <el-splitter-panel v-if="editMode" collapsible size="20%" :min="200">
+      <el-collapse v-model="activeNames">
+        <el-collapse-item v-for="(item, key) in dashboardSettingList" :key="key" :title="$t(`dashboardType.${key}`)" :name="key">
+          <div
+            class="dashboard-item-widget"
+            v-for="(c, ckey) in item"
+            :key="ckey"
+            draggable="true"
+            unselectable="on"
+            @dragstart="handleDragStart($event, c)"
+            @dragend="handleDragEnd"
+            @dblclick="emits('add', c)"
+          >
+            <SvgIcon v-if="c.icon" class="el-icon--left" :src="`/icons/dashboard/${c.icon}.svg`" style="--icon-size: 12px" />
             {{ $t(`dashboard.${c.label}`) }}
           </div>
         </el-collapse-item>
       </el-collapse>
-    </Pane>
-    <Pane :size="rightSize">
-      <div ref="wrapper" style="height: 100%; overflow: auto">
-        <GridLayout ref="gridLayout" :style="`--grid-row-height: ${rowHeight}px; --grid-row-margin: 20px;`"
-          :class="{ 'vue-grid-layout--edit': editMode }" v-model:layout="layout" :col-num="colNum" :margin="[12, 12]"
-          :row-height="rowHeight" :is-draggable="draggable" :is-resizable="resizable" :responsive="true"
-          :verticalCompact="true" :preventCollision="false" :use-css-transforms="true">
-          <GridItem v-for="(item, index) in layout" :key="item.i" class="dashboard-item" v-bind="item"
-            drag-ignore-from=".no-drag" @resize="chartResize(item)">
+    </el-splitter-panel>
+    <el-splitter-panel>
+      <div ref="wrapper" style="position: relative; height: 100%; overflow: auto" @drop="handleDrop" @dragover="handleDragOver">
+        <div v-if="layout.length === 0 && editMode" class="dashboard-null-placeholder">
+          {{ $t('dashboard.dragToHere') }}
+        </div>
+        <GridLayout
+          ref="gridLayout"
+          :style="`--grid-row-height: ${rowHeight}px; --grid-row-margin: 20px;`"
+          :class="{ 'vue-grid-layout--edit': editMode }"
+          v-model:layout="layout"
+          :col-num="colNum"
+          :margin="[12, 12]"
+          :row-height="rowHeight"
+          :is-draggable="draggable"
+          :is-resizable="resizable"
+          :responsive="true"
+          :verticalCompact="true"
+          :preventCollision="false"
+          :use-css-transforms="true"
+        >
+          <!-- 拖拽占位符 -->
+          <GridItem
+            v-if="placeholder.show"
+            :x="placeholder.x"
+            :y="placeholder.y"
+            :w="placeholder.w"
+            :h="placeholder.h"
+            :i="'placeholder'"
+            :is-draggable="false"
+            :is-resizable="false"
+            :static="true"
+            class="dashboard-placeholder"
+          >
+            <div class="placeholder-content">
+              <el-icon class="placeholder-icon"><Plus /></el-icon>
+              <span class="placeholder-text">{{ $t('common_add') }}</span>
+            </div>
+          </GridItem>
+
+          <GridItem
+            v-for="(item, index) in layout"
+            :key="item.i"
+            class="dashboard-item"
+            v-bind="item"
+            drag-ignore-from=".no-drag"
+            @resize="chartResize(item)"
+            @moved="emits('save')"
+          >
             <NuxtErrorBoundary>
               <template v-if="!componentMap[item.component]">
                 <el-card class="custom-card" shadow="always">
@@ -44,11 +83,22 @@
                   </div>
                 </el-card>
               </template>
-              <component v-else :is="componentMap[item.component]" :ref="(el) => {
-                sheetRefs[item.i] = el;
-              }
-                " :id="item.component" :key="item.i" :setting="item.setting" :hideSetting="hideSetting" :dates="dates"
-                @delete="handleDelete(item)" @refreshSetting="(setting) => handleRefreshSetting(setting, item)">
+              <component
+                v-else
+                :is="componentMap[item.component]"
+                :ref="
+                  (el) => {
+                    sheetRefs[item.i] = el
+                  }
+                "
+                :id="item.component"
+                :key="item.i"
+                :setting="item.setting"
+                :hideSetting="hideSetting"
+                :dates="dates"
+                @delete="handleDelete(item)"
+                @refreshSetting="(setting) => handleRefreshSetting(setting, item)"
+              >
               </component>
               <template #error="{ error, clearError }">
                 <div class="errorBoundaryContainer dashboard">
@@ -70,33 +120,34 @@
           </GridItem>
         </GridLayout>
       </div>
-    </Pane>
-  </Splitpanes>
+    </el-splitter-panel>
+  </el-splitter>
 </template>
 
 <script lang="ts" setup>
-import { Refresh } from '@element-plus/icons-vue';
-import { Setting } from '@element-plus/icons-vue';
-import { Pane, Splitpanes } from 'splitpanes';
-import 'splitpanes/dist/splitpanes.css';
+import { Refresh, Plus } from '@element-plus/icons-vue'
+import { Setting } from '@element-plus/icons-vue'
+import { Pane, Splitpanes } from 'splitpanes'
+import 'splitpanes/dist/splitpanes.css'
 // import { GridLayout, GridItem } from "vue3-grid-layout-next";
-import { GridItem, GridLayout } from 'grid-layout-plus';
-import type { DashboardWidgetSetting } from '~/utils/dashboardWidgetHelper';
-import { widgetComponent } from '~/utils/dashboardWidgetHelper';
-import { useDebounceFn } from '@vueuse/core';
+import { GridItem, GridLayout } from 'grid-layout-plus'
+import type { DashboardWidgetSetting } from '~/utils/dashboardWidgetHelper'
+import { widgetComponent } from '~/utils/dashboardWidgetHelper'
+import { useDebounceFn } from '@vueuse/core'
+import { useDashboardDrag } from '~/utils/dashboardDragHelper'
 
 const props = withDefaults(
   defineProps<{
     // layout: DashboardWidgetSetting[],
-    resizable?: boolean;
-    draggable?: boolean;
-    hideSetting?: boolean;
-    colNum?: number;
-    rowHeight?: number;
-    dates?: any;
-    editMode?: boolean;
-    dashboardSettingList?: any;
-    componentMap?: any;
+    resizable?: boolean
+    draggable?: boolean
+    hideSetting?: boolean
+    colNum?: number
+    rowHeight?: number
+    dates?: any
+    editMode?: boolean
+    dashboardSettingList?: any
+    componentMap?: any
   }>(),
   {
     // layout: [],
@@ -107,145 +158,53 @@ const props = withDefaults(
     rowHeight: 100,
     componentMap: widgetComponent
   }
-);
-const activeNames = ref(['default', '2', '3', '4']);
-const leftSize = ref(15);
-const rightSize = ref(100);
-const layout = defineModel<DashboardWidgetSetting>('layout');
-// const layout = computed({
-//   get() {
-//         return props.layout
-//     },
-//     set(val) {
-//         emits('update:layout', val)
-//     }
-// })
-const emits = defineEmits(['refreshSetting', 'delete', 'update:layout', 'save']);
+)
+const activeNames = ref([])
+const leftSize = ref(15)
+const rightSize = ref(100)
+const layout = defineModel<DashboardWidgetSetting>('layout')
 
-const sheetRefs = ref<any>({});
+const emits = defineEmits(['refreshSetting', 'delete', 'update:layout', 'save', 'add'])
 
-function handleEditMode() {
-  if (leftSize.value > 10) leftSize.value = 2;
-  else leftSize.value = 20;
-}
+const sheetRefs = ref<any>({})
 
 function handleDelete(row: any) {
-  emits('delete', row.i);
+  emits('delete', row.i)
 }
 
 function handleRefreshSetting(setting: any, row: any) {
-  row.setting = setting;
-  emits('refreshSetting', row);
+  row.setting = setting
+  emits('refreshSetting', row)
 }
 
 const chartResize = useDebounceFn(
   (row: any) => {
     if (sheetRefs.value[row.i] && sheetRefs.value[row.i].resize) {
-      sheetRefs.value[row.i].resize();
+      sheetRefs.value[row.i].resize()
     }
-    emits('save');
+    emits('save')
   },
   1000,
   { maxWait: 5000 }
-);
+)
 
-const dropId = 'drop';
-let dragItem = { x: -1, y: -1, w: 2, h: 2, i: '' };
-const defaultSize = {
-  w: 2,
-  h: 2
-};
-const mouseAt = { x: -1, y: -1 };
+const wrapper = ref<HTMLElement>()
+const gridLayout = ref()
 
-function syncMousePosition(event: MouseEvent) {
-  mouseAt.x = event.clientX;
-  mouseAt.y = event.clientY;
-}
-
+// 初始化拖拽功能
+const { handleDragStart, handleDragOver, handleDrop, handleDragEnd, placeholder } = useDashboardDrag({
+  wrapper,
+  layout: layout as Ref<DashboardWidgetSetting[]>,
+  colNum: props.colNum,
+  rowHeight: props.rowHeight,
+  onAdd: (item) => {
+    // 触发保存事件
+    emits('save')
+  }
+})
 onMounted(() => {
-  document.addEventListener('dragover', syncMousePosition);
-});
-
-onDeactivated(() => {
-  document.removeEventListener('dragover', syncMousePosition);
-});
-const wrapper = ref<HTMLElement>();
-const gridLayout = ref();
-
-function dragStart(c) {
-  dragItem = JSON.parse(JSON.stringify(c));
-}
-
-const drag = () => {
-  // dragItem = JSON.parse(JSON.stringify(item));
-  const parentRect = wrapper.value?.getBoundingClientRect();
-
-  if (!parentRect || !gridLayout.value) return;
-
-  const mouseInGrid = mouseAt.x > parentRect.left && mouseAt.x < parentRect.right && mouseAt.y > parentRect.top && mouseAt.y < parentRect.bottom;
-
-  if (mouseInGrid && !layout.value.find((item) => item.i === dropId)) {
-    layout.value.push({
-      x: (layout.value.length * 2) % 12,
-      y: layout.value.length + 12, // puts it at the bottom
-      w: defaultSize.w,
-      h: defaultSize.h,
-      i: dropId
-    });
-  }
-
-  const index = layout.value.findIndex((item) => item.i === dropId);
-  if (index !== -1) {
-    const item = gridLayout.value.getItem(dropId);
-
-    if (!item) return;
-
-    try {
-      item.wrapper.style.display = 'none';
-    } catch (e) {
-    }
-
-    Object.assign(item.state, {
-      top: mouseAt.y - parentRect.top,
-      left: mouseAt.x - parentRect.left
-    });
-    const newPos = item.calcXY(mouseAt.y - parentRect.top, mouseAt.x - parentRect.left);
-
-    if (mouseInGrid) {
-      gridLayout.value.dragEvent('dragstart', dropId, newPos.x, newPos.y, defaultSize.h, defaultSize.w);
-      // dragItem.i = String(index);
-      dragItem.x = layout.value[index].x;
-      dragItem.y = layout.value[index].y;
-    } else {
-      gridLayout.value.dragEvent('dragend', dropId, newPos.x, newPos.y, defaultSize.h, defaultSize.w);
-
-      layout.value = layout.value.filter((item) => item.i !== dropId);
-    }
-  }
-};
-
-function dragEnd() {
-  const parentRect = wrapper.value?.getBoundingClientRect();
-  if (!parentRect || !gridLayout.value) return;
-  const mouseInGrid = mouseAt.x > parentRect.left && mouseAt.x < parentRect.right && mouseAt.y > parentRect.top && mouseAt.y < parentRect.bottom;
-  if (mouseInGrid) {
-    // alert(`Dropped element props:\n${JSON.stringify(dragItem, ['x', 'y', 'w', 'h'], 2)}`)
-    gridLayout.value.dragEvent('dragend', dropId, dragItem.x, dragItem.y, defaultSize.h, defaultSize.w);
-    const newLayout = layout.value.filter((item) => item.i !== dropId);
-    newLayout.push({
-      ...dragItem,
-      w: defaultSize.w,
-      h: defaultSize.h,
-      i: new Date().valueOf().toString()
-    });
-    emits('update:layout', newLayout);
-    return;
-  } else {
-    const newLayout = layout.value.filter((item) => item.i !== dropId);
-    emits('update:layout', newLayout);
-    return;
-  }
-}
+  activeNames.value = Object.keys(props.dashboardSettingList)
+})
 </script>
 
 <style lang="scss" scoped>
@@ -279,6 +238,46 @@ function dragEnd() {
   }
 }
 
+.dashboard-placeholder {
+  background: transparent !important;
+  pointer-events: none;
+  z-index: 9999;
+
+  .placeholder-content {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    border: 2px dashed var(--el-color-primary);
+    border-radius: 8px;
+    background: rgba(64, 158, 255, 0.05);
+    animation: placeholderPulse 1.5s ease-in-out infinite;
+
+    .placeholder-icon {
+      font-size: 32px;
+      color: var(--el-color-primary);
+    }
+
+    .placeholder-text {
+      font-size: 14px;
+      color: var(--el-color-primary);
+      font-weight: 500;
+    }
+  }
+}
+
+@keyframes placeholderPulse {
+  0%,
+  100% {
+    opacity: 0.6;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
 :deep(.setting-man-made) {
   --icon-size: 1.14rem;
   --icon-color: #8796a4;
@@ -307,7 +306,8 @@ function dragEnd() {
     /* 背景颜色 */
     background-size: calc((100% - 20px) / 12) calc(var(--grid-row-height) + var(--grid-row-margin));
     /* 网格大小 */
-    background-image: linear-gradient(to right, var(--app-grey-950) var(--b-gap), transparent var(--b-gap)),
+    background-image:
+      linear-gradient(to right, var(--app-grey-950) var(--b-gap), transparent var(--b-gap)),
       linear-gradient(to bottom, var(--app-grey-950) var(--b-gap), transparent var(--b-gap));
   }
 }
@@ -333,5 +333,29 @@ function dragEnd() {
   border: 1px solid #e8e9eb;
   border-radius: 4px;
   padding: 0 8px;
+  transition: all 0.2s ease;
+  user-select: none;
+
+  &:hover {
+    border-color: var(--el-color-primary);
+    box-shadow: 0 2px 8px rgba(64, 158, 255, 0.2);
+    transform: translateY(-1px);
+  }
+
+  &:active {
+    cursor: grabbing;
+    opacity: 0.8;
+  }
+}
+.dashboard-null-placeholder {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: var(--app-font-size-xxl);
+}
+:deep(.el-collapse-item__header) ,
+:deep(.el-collapse-item__wrap) {
+  padding-left: var(--app-space-xs);
 }
 </style>
