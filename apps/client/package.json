@@ -98,7 +98,7 @@
     "sql.js": "^1.13.0",
     "tippy.js": "^6.3.7",
     "tiptap-extension-pagination": "workspace:*",
-    "v-code-diff": "^1.13.1",
+    "v-code-diff": "1.13.1",
     "v-form": "file:../../libraries/V-form/v-form.tgz",
     "v-viewer": "^3.0.22",
     "vcard-parser": "^1.0.0",
