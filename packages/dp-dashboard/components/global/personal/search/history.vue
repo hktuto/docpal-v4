@@ -32,6 +32,9 @@ const props = withDefaults(
     hideSetting: false
   }
 )
+const { searchOptions, searchOptionsLoading } = useSearchOptions()
+provide('searchOptions', searchOptions)
+provide('searchOptionsLoading', searchOptionsLoading)
 const listRef = ref()
 const { cardRef, refresh, loading } = useDashboardCard({
   props,
