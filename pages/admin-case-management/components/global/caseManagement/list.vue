@@ -132,10 +132,6 @@ async function handleAfterNewOrSaveAs(data: any) {
   // reload();
 }
 
-function handleRefresh(){
-  tableRef.value.reload()
-}
-
 provide(CaseManagementListProviderKey, {
   getListApi: (params: any) => {
     let filters: any = undefined
@@ -176,7 +172,7 @@ provide(CaseManagementListProviderKey, {
             inputKey="name"
             inputPlaceHolder="caseManagement_filter"
           />
-          <el-button id="CaseManagement__CreateNewCaseTemplate" type="primary" @click="openNewCaseDialog" @refresh="handleRefresh">
+          <el-button id="CaseManagement__CreateNewCaseTemplate" type="primary" @click="openNewCaseDialog" @refresh="reload">
             {{ $t('caseManagement_create') }}
           </el-button>
         </div>
