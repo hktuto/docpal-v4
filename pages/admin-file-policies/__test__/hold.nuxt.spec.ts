@@ -179,7 +179,7 @@ describe('[admin-hold]HoldDialog', () => {
     await wrapper.vm.handleSubmit()
 
     expect(adminApi.api.postPolicyHolds).toHaveBeenCalledWith(mockFormData)
-    expect(ElMessage.success).toHaveBeenCalledWith('tip_createdSuccessMsg')
+    expect(ElMessage.success).toHaveBeenCalledWith('tip_createdMsg')
     expect(wrapper.vm.state.visible).toBe(false)
   })
   it('submits form data for editing', async () => {
@@ -200,7 +200,7 @@ describe('[admin-hold]HoldDialog', () => {
       ...wrapper.vm.state.setting,
       ...mockFormData
     })
-    expect(ElMessage.success).toHaveBeenCalledWith('tip_updateSuccessMsg')
+    expect(ElMessage.success).toHaveBeenCalledWith('tip_updateMsg')
     expect(wrapper.vm.state.visible).toBe(false)
   })
   it('does not submit if form data is not valid', async () => {

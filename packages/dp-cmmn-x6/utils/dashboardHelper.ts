@@ -1,23 +1,14 @@
-
-
-
-
 import type { DashboardWidgetSetting } from '../../dp-dashboard/utils/dashboardWidgetHelper'
-import Action from  '../components/dashboard/action.vue'
-import BasicInfo from  '../components/dashboard/basicInfo.vue'
-import Activity from  '../components/dashboard/activity.vue'
-import Process from  '../components/dashboard/process.vue'
-import TaskPage from  '../components/dashboard/taskPage.vue'
-import WorkflowPage from  '../components/dashboard/workflowPage.vue'
-import DocumentRoot  from  '../components/dashboard/documentRoot.vue'
-export type CmmnDashboardWidget = 'Action' | 
-'BasicInfo' | 
-'Process'  | 
-'TaskPage' | 
-'WorkflowPage' | 
-'Activity' |
-'DocumentRoot'
-export const CmmnDashboardWidgetSetting: { [key in CmmnDashboardWidget] : DashboardWidgetSetting } = {
+import Action from '../components/dashboard/action.vue'
+import BasicInfo from '../components/dashboard/basicInfo.vue'
+import Activity from '../components/dashboard/activity.vue'
+import Process from '../components/dashboard/process.vue'
+import TaskPage from '../components/dashboard/taskPage.vue'
+import WorkflowPage from '../components/dashboard/workflowPage.vue'
+import DocumentRoot from '../components/dashboard/documentRoot.vue'
+import RelatedCase from '../components/dashboard/relatedCase/index.vue'
+export type CmmnDashboardWidget = 'Action' | 'BasicInfo' | 'Process' | 'TaskPage' | 'WorkflowPage' | 'Activity' | 'DocumentRoot' | 'RelatedCase'
+export const CmmnDashboardWidgetSetting: { [key in CmmnDashboardWidget]: DashboardWidgetSetting } = {
   BasicInfo: {
     label: 'cmmnBasicInfo',
     minW: 2,
@@ -27,7 +18,7 @@ export const CmmnDashboardWidgetSetting: { [key in CmmnDashboardWidget] : Dashbo
     w: 2,
     h: 2,
     component: 'BasicInfo',
-    setting : {
+    setting: {
       layout: [],
       defaultValue: {}
     }
@@ -41,9 +32,7 @@ export const CmmnDashboardWidgetSetting: { [key in CmmnDashboardWidget] : Dashbo
     w: 2,
     h: 3,
     component: 'Activity',
-    setting : {
-      
-    }
+    setting: {}
   },
   Action: {
     label: 'cmmnAction',
@@ -54,9 +43,7 @@ export const CmmnDashboardWidgetSetting: { [key in CmmnDashboardWidget] : Dashbo
     w: 2,
     h: 2,
     component: 'Action',
-    setting : {
-      
-    }
+    setting: {}
   },
   Process: {
     label: 'cmmnProcess',
@@ -67,7 +54,7 @@ export const CmmnDashboardWidgetSetting: { [key in CmmnDashboardWidget] : Dashbo
     w: 2,
     h: 2,
     component: 'Process',
-    setting : {
+    setting: {
       layout: []
     }
   },
@@ -80,9 +67,7 @@ export const CmmnDashboardWidgetSetting: { [key in CmmnDashboardWidget] : Dashbo
     w: 2,
     h: 3,
     component: 'TaskPage',
-    setting : {
-      
-    }
+    setting: {}
   },
   WorkflowPage: {
     label: 'cmmnWorkflowPage',
@@ -93,9 +78,7 @@ export const CmmnDashboardWidgetSetting: { [key in CmmnDashboardWidget] : Dashbo
     w: 8,
     h: 4,
     component: 'WorkflowPage',
-    setting : {
-      
-    }
+    setting: {}
   },
   DocumentRoot: {
     label: 'cmmnDocumentRoot',
@@ -106,8 +89,24 @@ export const CmmnDashboardWidgetSetting: { [key in CmmnDashboardWidget] : Dashbo
     w: 8,
     h: 4,
     component: 'DocumentRoot',
-    setting : {
+    setting: {
       home: ''
+    }
+  },
+  RelatedCase: {
+    label: 'cmmnRelatedCase',
+    minW: 4,
+    minH: 4,
+    maxW: 12,
+    maxH: 12,
+    w: 4,
+    h: 4,
+    component: 'RelatedCase',
+    setting: {
+      caseId: '',
+      caseLabel: '',
+      newButtonLabel: 'common_add',
+      displayColumns: []
     }
   }
 }
@@ -115,21 +114,22 @@ export const CmmnDashboardWidgetSetting: { [key in CmmnDashboardWidget] : Dashbo
 export function getCmmnWidgetSetting(widget: CmmnDashboardWidget) {
   return CmmnDashboardWidgetSetting[widget]
 }
-export const getCmmnNormalizeSetting= (setting: CmmnDashboardWidget) => {
+export const getCmmnNormalizeSetting = (setting: CmmnDashboardWidget) => {
   const item = getCmmnWidgetSetting(setting)
   return {
-      minW: item.minW,
-      minH: item.minH,
-      maxW: item.maxW,
-      maxH: item.maxH,
+    minW: item.minW,
+    minH: item.minH,
+    maxW: item.maxW,
+    maxH: item.maxH
   }
 }
 export const CmmnWidgetComponent = {
-  'BasicInfo': BasicInfo,
-  'Action': Action,
-  'Activity': Activity,
-  'Process': Process,
-  'TaskPage': TaskPage,
-  'WorkflowPage': WorkflowPage,
-  'DocumentRoot': DocumentRoot
+  BasicInfo: BasicInfo,
+  Action: Action,
+  Activity: Activity,
+  Process: Process,
+  TaskPage: TaskPage,
+  WorkflowPage: WorkflowPage,
+  DocumentRoot: DocumentRoot,
+  RelatedCase: RelatedCase
 }

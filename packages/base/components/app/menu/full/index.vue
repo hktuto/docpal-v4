@@ -4,7 +4,8 @@ const tabProvider = inject(TabManagerKey)
 if(!tabProvider) {
     throw createError('tab manger not found on menu')
 }
-const menuStyle = defineModel('menuStyle')
+const menuStyle = useMenuStyle()
+const menuState = useFullMenuState()
 const props = defineProps<{
   displayMenu: any[]
 }>()
@@ -13,7 +14,7 @@ const hightLightPanel = useCurrentTargetPanel()
 const { t} = useI18n()
 function toggleMenuStyle(){
   menuStyle.value = 'stack'
-  localStorage.setItem('docPalMenuStyle','full')
+  localStorage.setItem('docPalMenuStyle','stack')
 }
 const selectedMenuItem = ref<TabItem | undefined>()
 
@@ -27,22 +28,26 @@ watch(() => [layout, hightLightPanel], () => {
     setSelectedMenuItem(selectedMenuItem, props.displayMenu )
 },{
     deep:true,
+    immediate:true
 })
 
 
 </script>
 
 <template>
-<div class="fullMenuContainer">
+<div v-if="menuState === 'float'" class="floatPositionLock">
+
+</div>
+<div :class="{fullMenuContainer:true, [menuState]:true}">
   <div class="menuHeader">
     <img class="logo"  src="/icons/logo-withName-light.svg" />
   </div>
   <div class="menuBody">
+    <AppMenuSearch menuMode="expand"/>
     <AppMenuFullItem  v-for="(item, index) in displayMenu" :key="index" :item="item" :selectedMenuItem="selectedMenuItem" @click="handleSelect"/>
   </div>
   <div class="menuFooter">
     <div class="toggleContainer">
-
       <Icon name="mdi:arrow-expand-left" @click="toggleMenuStyle" />
     </div>
     <AuthUser menuMode="expand" /> 
@@ -52,6 +57,10 @@ watch(() => [layout, hightLightPanel], () => {
 
 
 <style lang="scss" scoped>
+.floatPositionLock{
+  width: var(--app-space-s);
+  height: 100%;;
+}
 .toggleContainer{
   cursor: pointer;
   color: var(--app-grey-300);
@@ -72,9 +81,28 @@ watch(() => [layout, hightLightPanel], () => {
   justify-content: flex-start;
   align-items: flex-start;
   padding:0;
+  &.float {
+    position: absolute;
+    left: 0;
+    top: var(--app-space-xs);
+    height: calc( 100dvh - var(--app-space-xs) * 2);
+    transform: translateX(-220px);
+    transition: all 0.2s ease-in-out;
+    z-index: 2;
+    border-radius: var(--app-border-radius-m);
+    background-image: linear-gradient(to bottom, rgba(255,255,255,0.5) 0%, var(--app-primary-alpha-10) 2%, var(--app-primary-alpha-30) 98%, hsla(var(--app-primary-h), var(--app-primary-s), calc(var(--app-primary-l) *  0.1), 0.1 ) 100%);
+    box-shadow: 10px 4px 30px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.31);
+    &:hover, &:focus, &:focus-within {
+      transform: translateX(0);
+    }
+
+  }
 }
 .menuBody{
-  min-height: calc(100vh - 100px);
+  min-height: calc(100vh - 120px);
   overflow: auto;
   width: 100%;
   padding: var(--app-space-s);
@@ -83,6 +111,7 @@ watch(() => [layout, hightLightPanel], () => {
   justify-content: flex-start;
   align-items: flex-start;
   gap: var(--app-space-xs);
+
 }
 .menuFooter{
   width:100%;

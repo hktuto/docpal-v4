@@ -3,7 +3,7 @@
 const props = defineProps<{
     displayMenu: any[]
 }>()
-const menuStyle = defineModel('menuStyle')
+const menuStyle = useMenuStyle()
 const layout = useTabLayout()
 const hightLightPanel = useCurrentTargetPanel()
 const tabProvider = inject(TabManagerKey)
@@ -59,7 +59,7 @@ watch(() => [layout, hightLightPanel], () => {
 
 function toggleMenuStyle(){
   menuStyle.value = 'full'
-  localStorage.setItem('docPalMenuStyle','stack')
+  localStorage.setItem('docPalMenuStyle','full')
 }
 
 // get local storage memory to set menu mode

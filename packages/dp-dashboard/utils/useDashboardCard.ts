@@ -1,25 +1,25 @@
 import { useEventListener, watchDebounced } from '@vueuse/core'
 import * as echarts from 'echarts'
 export type useDashboardCardParams = {
-  initStyleAction?: (cardRef, chartRef) => void
+  initStyleAction?: (cardRef: any, chartRef: any) => void
   initStyleActionExtend?: (pHeight: number, pWidth: number) => void
-  resizeAction?: (instance) => void
+  resizeAction?: (instance: any) => void
   resizeActionExtend?: () => void
-  onClick?: (instance) => void
+  onClick?: (instance: any) => void
 
-  handleInitCardAction?: (chartSetting) => void
-  handleRefreshAction?: (chartSetting) => void
-  getOptions?: (chartSetting) => any
+  handleInitCardAction?: (chartSetting: any) => void
+  handleRefreshAction?: (chartSetting: any) => void
+  getOptions?: (chartSetting: any) => any
   options?: any
 
   props: any
 }
 export const useDashboardCard = (params: useDashboardCardParams) => {
   const props = params.props
-  let echartInstance
-  const chartRef = ref()
-  const cardRef = ref()
-  const settingRef = ref()
+  let echartInstance: any
+  const chartRef = ref<any>()
+  const cardRef = ref<any>()
+  const settingRef = ref<any>()
   const loading = ref(false)
 
   const initStyle = () => {
@@ -35,7 +35,7 @@ export const useDashboardCard = (params: useDashboardCardParams) => {
     }
   }
 
-  const initChart = (_options) => {
+  const initChart = (_options: any) => {
     if (echartInstance) echartInstance.clear()
     if (chartRef.value && _options) {
       echartInstance = echarts.init(chartRef.value)

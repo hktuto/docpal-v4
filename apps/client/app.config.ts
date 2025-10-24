@@ -9,15 +9,14 @@ export default defineAppConfig({
         }
       ]
     },
+
     // browse
     {
       name: 'client-browse',
       icon: 'dp-icon:browse-outline',
       hoverIcon: 'dp-icon:browse-fill',
       children:[
-        {
-          name: 'client-search'
-        },
+        
         {
           name: 'client-browse',
         },
@@ -37,6 +36,9 @@ export default defineAppConfig({
         
       ]
     }, 
+    {
+      name: 'client-search'
+    },
     {
       label:"share.share",
       icon: 'lucide:share-2',
@@ -80,9 +82,9 @@ export default defineAppConfig({
     {
       name: 'client-master-table'
     },
-    {
-      name: 'client-dashboard'
-    },
+    // {
+    //   name: 'client-dashboard'
+    // },
     
     {
       name: 'client-easy-form'
@@ -214,9 +216,9 @@ export default defineAppConfig({
     {
       name: 'admin-case-management'
     },
-    {
-      name: 'admin-dashboard'
-    },
+    // {
+    //   name: 'admin-dashboard'
+    // },
     {
       label: 'adminMenu.policy',
       icon: 'lucide:book-lock',

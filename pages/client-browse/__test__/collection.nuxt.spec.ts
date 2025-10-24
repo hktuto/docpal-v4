@@ -224,7 +224,7 @@ describe('[client-browse-collection]CollectionAddCollectionDialog', () => {
       name: mockData.name,
       description: null
     })
-    expect(ElMessage.success).toHaveBeenCalledWith('tip_createdSuccessMsg')
+    expect(ElMessage.success).toHaveBeenCalledWith('tip_createdMsg')
     expect(wrapper.vm.state.visible).toBe(false)
     expect(wrapper.vm.FormRendererRef.vFormRenderRef.resetForm).toHaveBeenCalled()
   })
@@ -308,7 +308,7 @@ describe('[client-browse-collection]CollectionEditCollectionDialog', () => {
       name: mockData.name,
       description: null
     })
-    expect(ElMessage.success).toHaveBeenCalledWith('tip_updateSuccessMsg')
+    expect(ElMessage.success).toHaveBeenCalledWith('tip_updateMsg')
     expect(wrapper.vm.state.visible).toBe(false)
     expect(wrapper.vm.FormRendererRef.vFormRenderRef.resetForm).toHaveBeenCalled()
     expect(wrapper.vm.state.data).toEqual(mockResponse.data) // 确保数据被更新

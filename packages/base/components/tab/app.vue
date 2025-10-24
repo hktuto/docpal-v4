@@ -263,7 +263,10 @@ function generateMenu(admin: boolean){
                 return null; // Skip if not visible
             }
             // Add to search list
-            menuSearchList.push(createSearchItem(menuItem, parentLabel || ""))
+            // if item is a inline item, skip from search
+            if(!menuItem.inlineComponent){
+              menuSearchList.push(createSearchItem(menuItem, parentLabel || ""))
+            }
             
             // If this item has no children, return it directly without processing children
             if(!item.children || item.children.length === 0) {

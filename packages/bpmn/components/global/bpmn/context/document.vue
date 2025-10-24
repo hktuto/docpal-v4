@@ -1,7 +1,13 @@
 <script lang="ts" setup>
 import { adminApi } from 'api'
 import type { Node } from '@antv/x6'
+import { QuestionFilled } from '@element-plus/icons-vue'
 
+const editorProvider = inject(EDITOR_PROVIDER)
+if (!editorProvider) {
+  throw createError('editor provider not found')
+}
+const { bpmnGlobalRules } = editorProvider.BpmnRule
 const { t } = useI18n()
 const { node } = defineProps<{
   node: Node
@@ -12,165 +18,150 @@ if (!graphProvider) {
   throw new Error('Missing provider')
 }
 
-const allDocumentTemplates = ref<any[]>([])
-const flatCabinetList = ref<any[]>([])
-const folderCabinetRootId = ref('')
+const documentTypeList = ref<any[]>([])
+const stringFields = computed(() => {
+  if (!bpmnGlobalRules.value || bpmnGlobalRules.value.length === 0) return []
 
-const form = ref<{
-  [key: string]: any
-}>({
-  templateId: '',
-  folderCabinetId: '',
-  variables: ''
+  return bpmnGlobalRules.value.filter((item: any) => item.validationRule.type === 'text').map((item: any) => {
+    return {
+      id: item.id,
+      name: item.name
+    }
+  })
 })
-const { getMetaSetting } = useDocumentType()
-const allFields = computed(() => {
-  return Object.keys(graphProvider.allFormField.value).map((key: string) => {
-    return graphProvider.allFormField.value[key]
+const staticStringFields = computed(() => {
+  if (!bpmnGlobalRules.value || bpmnGlobalRules.value.length === 0) return []
+
+  return bpmnGlobalRules.value.filter((item: any) => item.validationRule.type === 'text').map((item: any) => {
+    return {
+      id: '${variables:get(' + item.id + ')}',
+      name: item.name
+    }
   })
 })
 
-async function loopChildren(all: any[], item: any, level = 0, title = '') {
-  const meta = await getMetaSetting(item.documentType) as any
-  title = (title ? title + '/' : '') + item.label
-  if (!item.children) {
-    all.push({
-      ...item,
-      level,
-      displayMeta: meta && meta.displayMataTags ? meta.displayMataTags : [],
-      title
-    })
-  }
 
-  if (item.children) {
-    level++
-    for (const child of item.children) {
-      all = await loopChildren(all, child, level, title)
-    }
-  }
-  return all
-}
+const state = reactive({
+  status: true
+})
 
-async function getAllTemplate() {
-  const { data } = await adminApi.api.getTemplateDocumentAll()
-  if (!data) return
-  allDocumentTemplates.value = data.map((item: any) => {
+const allDocumentTemplates = ref<any[]>([])
+
+const form = ref({
+  parentPath: '',
+  storeValue: '',
+  documentName: '',
+  documentType: '',
+  templateId: '',
+  variables: ''
+})
+
+async function init() {
+  const documentTypeData: any = await adminApi.api.getTypesActive().then(res => res.data)
+  documentTypeList.value = documentTypeData.filter((item: any) => !item.isFolder)
+
+  const documentData: any = await adminApi.api.getTemplateDocumentAll().then(r => r.data)
+  allDocumentTemplates.value = documentData.map((item: any) => {
     return {
       id: item.id,
       name: item.name,
       value: item
     }
   })
-  const id = graphProvider?.bpmnJson.value.definitions.process.attr_id
-  const cell = graphProvider?.graph.value?.getCellById(id) as any
-  const rootCellDate = cell.getData()
-  if (rootCellDate && rootCellDate.data && rootCellDate.data.extensionElements['flowable:folderCabinetMapping']) {
-    folderCabinetRootId.value = rootCellDate.data.extensionElements['flowable:folderCabinetMapping'][0].attr_id
 
-    const { data } = await adminApi.api.getCabinetTemplateId(folderCabinetRootId.value)
-    flatCabinetList.value = await loopChildren([], data, 0, '')
-    // flatCabinetList.value = props.bpmnJson.definitions.process['flowable:folderCabinetMapping'][0]
-  }
-  await getForm()
+  const index = node.getData().data.extensionElements['flowable:field'].findIndex((f: any) => f.attr_name === 'storeValue')
+  state.status = index != -1
+
+  getForm()
 }
 
-async function getForm() {
-  const nodeData = node.getData()
-  if (!nodeData.data || !nodeData.data.extensionElements) {
-    form.value = {
-      templateId: '',
-      folderCabinetId: '',
-      variables: ''
-    }
-
+function getForm() {
+  const fields: any = node.data.data.extensionElements['flowable:field']
+  if (fields && fields.lenght < 1) {
     return
   }
-  // get templateId
-  const index = nodeData.data.extensionElements['flowable:field'].findIndex((item: any) => item.attr_name === 'templateId')
-  const templateIdItem = nodeData.data.extensionElements['flowable:field'][index]
 
-  if (templateIdItem) {
-    form.value.templateId = templateIdItem['flowable:expression']['__cdata']
-
-  } else {
-    form.value.templateId = ''
-  }
-  // get folderCabinetId
-  const folderCabinetIdItem = nodeData.data.extensionElements['flowable:field'].find((item: any) => item.attr_name === 'folderCabinetId')
-  if (folderCabinetIdItem) {
-    form.value.folderCabinetId = folderCabinetIdItem['flowable:expression']['__cdata'] || ''
-  } else {
-    nodeData.data.extensionElements['flowable:field'].push({
-      'attr_name': 'folderCabinetId',
-      'flowable:expression': {
-        '__cdata': ''
-      }
-    })
-    form.value.folderCabinetId = ''
-  }
-
-  // get variables
-  const variablesItem = nodeData.data.extensionElements['flowable:field'].find((item: any) => item.attr_name === 'variables')
-  if (variablesItem) {
-    form.value.variables = variablesItem['flowable:expression']['__cdata'] || ''
-  } else {
-    nodeData.data.extensionElements['flowable:field'].push({
-      'attr_name': 'variables',
-      'flowable:expression': {
-        '__cdata': ''
-      }
-    })
-    form.value.variables = ''
-  }
+  fields.forEach((item: any) => {
+    switch (item.attr_name) {
+      case 'storeValue':
+        form.value.storeValue = item['flowable:expression'].__cdata
+        break
+      case 'parentPath':
+        form.value.parentPath = item['flowable:expression'].__cdata
+        break
+      case 'documentName':
+        form.value.documentName = item['flowable:expression'].__cdata
+        break
+      case 'documentType':
+        form.value.documentType = item['flowable:expression'].__cdata
+        break
+      case 'templateId':
+        form.value.templateId = item['flowable:expression'].__cdata
+        break
+      case 'variables':
+        form.value.variables = item['flowable:expression'].__cdata
+        break
+    }
+  })
 }
 
-function updateField(key: string, value: any) {
+function updateFieldData(key: string, newVal: string) {
+  graphProvider?.graph.value?.startBatch('update-new-document-field-data')
+
   const nodeData = node.getData()
-  let newData = JSON.parse(JSON.stringify(nodeData))
-  if (!nodeData || !nodeData.data || !nodeData.data.extensionElements) {
-
-    newData.data.extensionElements['flowable:field'] = [
-      {
-        'attr_name': key,
-        'flowable:expression': {
-          '__cdata': value
-        }
-      }
-    ]
+  const newData = {
+    ...nodeData,
+    version: (nodeData.version || 0) + 1
   }
-  let index = nodeData.data.extensionElements['flowable:field'].findIndex((item: any) => item.attr_name === key)
-  if (index === -1) {
-    newData.data.extensionElements['flowable:field'].push({
-      'attr_name': key,
-      'flowable:expression': {
-        '__cdata': value
-      }
-    })
-  } else {
 
-    newData.data.extensionElements['flowable:field'][index]['flowable:expression']['__cdata'] = value
-  }
+  const index = newData.data.extensionElements['flowable:field'].findIndex((f: any) => f.attr_name === key)
+  newData.data.extensionElements['flowable:field'][index]['flowable:expression'].__cdata = newVal || ''
+
   node.setData(newData, { overwrite: true, deep: true })
-  form.value[key] = value
+  graphProvider?.graph.value?.stopBatch('update-new-document-field-data')
 }
 
 function setUpListener() {
   graphProvider?.graph.value?.on('history:undo', () => {
-    refreshData()
+    getForm()
   })
   graphProvider?.graph.value?.on('history:redo', () => {
-    refreshData()
+    getForm()
   })
 }
 
-function refreshData() {
-  getForm()
+function handleStatus() {
+  const nodeData = node.getData()
+  const newData = {
+    ...nodeData,
+    version: (nodeData.version || 0) + 1
+  }
+  const name = state.status ? 'storeValue' : 'parentPath'
+
+  const index = newData.data.extensionElements['flowable:field'].findIndex((f: any) => f.attr_name === name)
+  if (index == -1) {
+    newData.data.extensionElements['flowable:field'].push(
+      { 'attr_name': name, 'flowable:expression': { '__cdata': '' } })
+  }
+
+  const dName = state.status ? 'parentPath' : 'storeValue'
+  newData.data.extensionElements['flowable:field'] = newData.data.extensionElements['flowable:field'].filter((f: any) => f.attr_name !== dName)
+
+  node.setData(newData, { overwrite: true, deep: true })
 }
 
+watch(() => node, async () => {
+  if (node && node.data) {
+    getForm()
+  }
+}, {
+  immediate: true,
+  deep: true
+})
+
 onMounted(async () => {
-  await getAllTemplate()
+  await init()
   setUpListener()
-  refreshData()
 })
 </script>
 
@@ -178,36 +169,76 @@ onMounted(async () => {
   <div class="fromContainer">
     <BpmnSidebarEditLabel :node="node" />
     <div class="formContainer">
-      <div v-if="folderCabinetRootId" class="generateDocumentFormContainer">
-        <ElForm label-position="top">
-          <ElFormItem label="Folder Cabinet location" required>
-            <ElSelect v-model="form.folderCabinetId" placeholder="Folder Cabinet location"
-                      @change="(val:any) => updateField('folderCabinetId', val)">
-              <ElOption v-for="item in flatCabinetList" :key="item.id" :label="item.title" :value="item.id" />
-            </ElSelect>
-          </ElFormItem>
-          <ElFormItem label="Document Template" required>
-            <ElSelect v-model="form.templateId" placeholder="Document Template"
-                      @change="(val:any) => updateField('templateId', val)">
-              <ElOption v-for="item in allDocumentTemplates" :key="item.id" :label="item.name" :value="item.id" />
-            </ElSelect>
-          </ElFormItem>
-        </ElForm>
-        <BpmnSidebarTemplateVariable :node="node" :templateCData="form.variables" :allFields="allFields"
-                                     :templateId="form.templateId"
-                                     @updateCData="(val:string) => updateField('variables', val)" />
-      </div>
-      <div v-else>
-        please select folder cabinet first
+      <div class="generateDocumentFormContainer">
+        <el-form label-position="top" :disabled="editorProvider.readonly.value">
+          <el-switch v-model="state.status" active-text="Store Value" inactive-text="Parent Path"
+                     @change="handleStatus" />
+          <el-form-item v-if="state.status" label="Store Value" required>
+            <el-select v-model="form.storeValue" :placeholder="t('common_selectedIsRequiredMsg')" clearable
+                       @change="(val:any) => updateFieldData('storeValue', val)">
+              <el-option v-for="item in stringFields" :key="item.id" :label="item.name" :value="item.id" />
+            </el-select>
+          </el-form-item>
+          <el-form-item v-else>
+            <template #label>
+              <div style="display: flex; align-items: center; gap: 4px;">
+                <label class="label"> {{ t('Parent Path') }}</label>
+                <el-popover width="300" title="Info" placement="top"
+                            content="Only path formats are supported. 'folder/folder'">
+                  <template #reference>
+                    <el-icon style="cursor: pointer; color: #909399;">
+                      <QuestionFilled />
+                    </el-icon>
+                  </template>
+                </el-popover>
+              </div>
+            </template>
+
+            <el-select v-model="form.parentPath" :placeholder="t('common_selectedIsRequiredMsg')"
+                       @change="(val:any) => updateFieldData('parentPath', val)">
+              <el-option v-for="item in stringFields" :key="item.id" :label="item.name" :value="item.id" />
+            </el-select>
+          </el-form-item>
+
+          <el-form-item label="Document Name" required>
+            <el-select v-model="form.documentName" :placeholder="t('common_selectedIsRequiredMsg')"
+                       @change="(val:any) => updateFieldData('documentName', val)">
+              <el-option v-for="item in staticStringFields" :key="item.id" :label="item.name" :value="item.id" />
+            </el-select>
+          </el-form-item>
+          <el-form-item label="Document Type" required>
+            <el-select v-model="form.documentType" :placeholder="t('common_selectedIsRequiredMsg')" filterable
+                       @change="(val:any) => updateFieldData('documentType', val)">
+              <el-option v-for="item in documentTypeList" :key="item.name" :label="item.name" :value="item.name" />
+            </el-select>
+          </el-form-item>
+          <el-form-item label="Document Template" required>
+            <el-select v-model="form.templateId" :placeholder="t('common_selectedIsRequiredMsg')" filterable
+                       @change="(val:any) => updateFieldData('templateId', val)">
+              <el-option v-for="item in allDocumentTemplates" :key="item.id" :label="item.name" :value="item.id" />
+            </el-select>
+          </el-form-item>
+        </el-form>
+
+        <BpmnSidebarTemplateVariable v-if="form.templateId && ''!= form.templateId" :node="node"
+                                     :templateCData="form.variables" :allFields="stringFields"
+                                     :templateId="form.templateId" :disabled="editorProvider.readonly.value"
+                                     @updateCData="(val:string) => updateFieldData('variables', val)" />
       </div>
     </div>
   </div>
 </template>
 
-
 <style lang="scss" scoped>
 .fromContainer {
   overflow: auto;
 }
+
+.label::before {
+  content: "*";
+  color: var(--el-color-danger);
+  margin-right: 4px;
+}
+
 </style>
 

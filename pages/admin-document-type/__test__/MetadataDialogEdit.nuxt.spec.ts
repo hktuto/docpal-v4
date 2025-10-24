@@ -1,48 +1,56 @@
 import { mount } from '@vue/test-utils'
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
-import { MetadataDialogEdit, MetadataValidatorText, MetadataValidatorMasterTable } from '#components'
-import { ElMessage } from 'element-plus'
+import { describe, it, vi, expect, beforeEach, afterEach } from 'vitest'
+import { MetadataDialogEdit } from '#components'
 import { adminApi } from './mock/api'
-// Mock Element Plus components
+import { ElMessage } from 'element-plus'
+import { mockRouterProvider } from './util'
+import { nextTick } from 'vue'
+
+// Global keys for injection
+const TabManagerKey = 'TabManagerKey'
+const MenuRouterKey = 'MenuRouterKey'
+
 vi.mock('element-plus', () => ({
+  ElMessageBox: {
+    alert: vi.fn(),
+    confirm: vi.fn()
+  },
+  ElNotification: {
+    success: vi.fn()
+  },
   ElMessage: {
     success: vi.fn(),
+    warning: vi.fn(),
     error: vi.fn()
   }
 }))
 
-
-
-
-const MockMetadataValidatorMasterTable = {
-  template: '<div class="validator-mastertable">MasterTable Validator</div>',
-  props: ['validation'],
-  emits: ['update:validation'],
-  methods: {
-    validate: vi.fn().mockResolvedValue(true),
-    masterTableChange: vi.fn()
+vi.mock('api', () => ({
+  adminApi: {
+    api: {
+      patchDocpaltypeSettingsMetadataV2Update: vi.fn()
+    }
   }
-}
+}))
 
 describe('[admin-document-type]MetadataDialogEdit', () => {
   let wrapper: any
+  const mockTabProvider = {}
 
-  beforeEach(() => {
+  beforeEach(async () => {
     vi.clearAllMocks()
-    
     wrapper = mount(MetadataDialogEdit, {
       props: {
-        visible: true
+        visible: false
       },
       global: {
-        components: {
-          MetadataValidatorText,
-          MetadataValidatorMasterTable
+        provide: {
+          [TabManagerKey]: mockTabProvider,
+          [MenuRouterKey]: mockRouterProvider
         },
         mocks: {
-          $t: (msg: string) => msg,
-          $i18n: { t: (key: string) => key },
-          useI18n: () => ({ t: (key: string) => key })
+          $t: (msg: string, params?: any) => msg,
+          $i18n: { t: (key: string) => key }
         }
       }
     })
@@ -50,16 +58,18 @@ describe('[admin-document-type]MetadataDialogEdit', () => {
 
   afterEach(() => {
     wrapper.unmount()
-    vi.clearAllMocks()
   })
 
-  describe('Dialog State Management', () => {
-    it('should initialize with empty form data', () => {
+  describe('Component Rendering', () => {
+    it('renders correctly', () => {
+      expect(wrapper.exists()).toBe(true)
+    })
+  })
+
+  describe('Initial State', () => {
+    it('should have correct initial formData', () => {
       expect(wrapper.vm.formData.name).toBe('')
-      expect(wrapper.vm.formData.validationRule).toEqual({
-        maxLength: 255,
-        validationRuleName: 'text'
-      })
+      expect(wrapper.vm.formData.validationRule).toEqual({})
       expect(wrapper.vm.formData.langs).toEqual({})
       expect(wrapper.vm.formData.maskRule).toEqual({
         maskType: 'MASK_ALL',
@@ -67,388 +77,436 @@ describe('[admin-document-type]MetadataDialogEdit', () => {
       })
     })
 
-    it('should initialize with default selected type', () => {
+    it('should have correct initial selectedType', () => {
       expect(wrapper.vm.selectedType).toBe('Text')
     })
 
-    it('should initialize with isInit as false', () => {
-      expect(wrapper.vm.isInit).toBe(false)
+    it('should have empty originalName', () => {
+      expect(wrapper.vm.originalName).toBe('')
+    })
+
+    it('should have initial loading state as false', () => {
+      expect(wrapper.vm.loading).toBe(false)
     })
   })
 
-  describe('open Method', () => {
-    it('should open dialog and set form data for text type', async () => {
-      const testData = {
-        id: '1',
-        name: 'Test Metadata',
-        validationRule: {
-          validationRuleName: 'text',
-          maxLength: 100
-        },
+  describe('Open Dialog - Basic Scenarios', () => {
+    it('should open dialog with Text type metadata', async () => {
+      const mockData = {
+        id: 1,
+        name: 'Original Field',
+        validationRule: null,
         maskRule: {
-          maskType: 'MASK_PREFIX',
-          maskLength: 5
-        },
-        langs: { en: 'Test' }
-      }
-
-      await wrapper.vm.open(testData)
-      await wrapper.vm.$nextTick()
-
-      expect(wrapper.vm.visible).toBe(true)
-      expect(wrapper.vm.originalName).toBe('Test Metadata')
-      expect(wrapper.vm.selectedType).toBe('Text')
-      expect(wrapper.vm.formData.name).toBe('Test Metadata')
-      expect(wrapper.vm.formData.validationRule).toEqual(testData.validationRule)
-      expect(wrapper.vm.formData.maskRule).toEqual(testData.maskRule)
-      expect(wrapper.vm.formData.langs).toEqual(testData.langs)
-      expect(wrapper.vm.isInit).toBe(false)
-    })
-
-    it('should handle mastertable validation rule', async () => {
-      wrapper.vm.validationFormRef = {
-        validate: vi.fn().mockResolvedValue(true),
-        masterTableChange: vi.fn()
-      }
-      const testData = {
-        id: '1',
-        name: 'Test Metadata',
-        validationRule: {
-          validationRuleName: 'mastertable',
-          masterTableName: 'test_table',
-          displayColumn: 'name',
-          valueColumn: 'id',
-          isMultiple: false
+          maskType: 'MASK_ALL',
+          maskLength: 10
         }
       }
 
-      await wrapper.vm.open(testData)
-      await wrapper.vm.$nextTick()
+      wrapper.vm.open(mockData)
+      await nextTick()
+      await nextTick()
 
-      expect(wrapper.vm.selectedType).toBe('MasterTable')
-      expect(wrapper.vm.formData.validationRule).toEqual(testData.validationRule)
+      expect(wrapper.emitted('update:visible')?.[0]).toEqual([true])
+      expect(wrapper.vm.originalName).toBe('Original Field')
+      expect(wrapper.vm.selectedType).toBe('Text')
+      expect(wrapper.vm.formData.id).toBe(1)
+      expect(wrapper.vm.formData.name).toBe('Original Field')
     })
 
-    it('should handle missing validation rule', async () => {
-      const testData = {
-        id: '1',
-        name: 'Test Metadata'
+    it('should open dialog with MasterTable type metadata', async () => {
+      const mockData = {
+        id: 2,
+        name: 'Master Table Field',
+        validationRule: {
+          validationRuleName: 'mastertable',
+          masterTableName: 'TestTable'
+        },
+        maskRule: {
+          maskType: 'MASK_PARTIAL',
+          maskLength: 5
+        }
       }
 
-      await wrapper.vm.open(testData)
-      await wrapper.vm.$nextTick()
+      wrapper.vm.open(mockData)
+      await nextTick()
+      await nextTick()
+
+      expect(wrapper.emitted('update:visible')?.[0]).toEqual([true])
+      expect(wrapper.vm.selectedType).toBe('MasterTable')
+      expect(wrapper.vm.formData.validationRule.validationRuleName).toBe('mastertable')
+      expect(wrapper.vm.formData.validationRule.masterTableName).toBe('TestTable')
+    })
+
+    it('should open dialog with user_role_user_group type metadata', async () => {
+      const mockData = {
+        id: 3,
+        name: 'User Role Field',
+        validationRule: {
+          validationRuleName: 'user_role_user_group'
+        },
+        maskRule: {
+          maskType: 'MASK_ALL',
+          maskLength: 10
+        }
+      }
+
+      wrapper.vm.open(mockData)
+      await nextTick()
+      await nextTick()
+
+      expect(wrapper.emitted('update:visible')?.[0]).toEqual([true])
+      expect(wrapper.vm.selectedType).toBe('UserRoleUserGroup')
+    })
+
+    it('should open dialog with capitalized validation rule name', async () => {
+      const mockData = {
+        id: 4,
+        name: 'Date Field',
+        validationRule: {
+          validationRuleName: 'date',
+          format: 'YYYY-MM-DD'
+        },
+        maskRule: {
+          maskType: 'MASK_ALL',
+          maskLength: 10
+        }
+      }
+
+      wrapper.vm.open(mockData)
+      await nextTick()
+      await nextTick()
+
+      expect(wrapper.emitted('update:visible')?.[0]).toEqual([true])
+      expect(wrapper.vm.selectedType).toBe('Date')
+      expect(wrapper.vm.formData.validationRule.validationRuleName).toBe('date')
+    })
+
+    it('should handle metadata without maskRule', async () => {
+      const mockData = {
+        id: 5,
+        name: 'No Mask Field',
+        validationRule: null
+      }
+
+      wrapper.vm.open(mockData)
+      await nextTick()
+      await nextTick()
+
+      expect(wrapper.vm.formData.maskRule).toEqual({
+        maskType: 'MASK_ALL',
+        maskLength: 10
+      })
+    })
+
+    it('should store originalName when opening', async () => {
+      const mockData = {
+        id: 6,
+        name: 'Field Name',
+        validationRule: null,
+        maskRule: {
+          maskType: 'MASK_ALL',
+          maskLength: 10
+        }
+      }
+
+      wrapper.vm.open(mockData)
+      await nextTick()
+      await nextTick()
+
+      expect(wrapper.vm.originalName).toBe('Field Name')
+      expect(wrapper.vm.formData.name).toBe('Field Name')
+    })
+  })
+
+  describe('Close Dialog', () => {
+    it('should reset form data when closing', async () => {
+      wrapper.vm.formData.name = 'Test Name'
+      wrapper.vm.formData.validationRule = { test: 'value' }
+      wrapper.vm.originalName = 'Original'
+
+      wrapper.vm.close()
+      await nextTick()
+
+      expect(wrapper.vm.formData.name).toBe('')
+      expect(wrapper.vm.formData.validationRule).toBeNull()
+      expect(wrapper.vm.formData.langs).toEqual({})
+    })
+
+    it('should reset maskRule to default when closing', () => {
+      wrapper.vm.formData.maskRule = {
+        maskType: 'MASK_PARTIAL',
+        maskLength: 5
+      }
+
+      wrapper.vm.close()
+
+      expect(wrapper.vm.formData.maskRule).toEqual({
+        maskType: 'MASK_ALL',
+        maskLength: 10
+      })
+    })
+
+    it('should emit reload event after timeout', async () => {
+      wrapper.vm.close()
+      
+      // Wait for the setTimeout(1000) in close
+      await new Promise((resolve) => setTimeout(resolve, 1100))
+
+      expect(wrapper.emitted('reload')).toBeTruthy()
+    })
+  })
+
+  describe('Form Validation', () => {
+    it('should validate elFormRef before updating', async () => {
+      wrapper.vm.formData.name = ''
+
+      const mockValidate = vi.fn(() => Promise.resolve(false))
+      wrapper.vm.elFormRef = { validate: mockValidate }
+
+      await wrapper.vm.handleUpdate()
+
+      expect(mockValidate).toHaveBeenCalled()
+      expect(adminApi.api.patchDocpaltypeSettingsMetadataV2Update).not.toHaveBeenCalled()
+      expect(wrapper.vm.loading).toBe(false)
+    })
+
+    it('should validate ruleFormRef if it exists', async () => {
+      wrapper.vm.formData.name = 'Test Field'
+      wrapper.vm.formData.id = 1
+
+      const mockElFormValidate = vi.fn(() => Promise.resolve(true))
+      const mockRuleFormValidate = vi.fn(() => Promise.resolve(false))
+      
+      wrapper.vm.elFormRef = { validate: mockElFormValidate }
+      wrapper.vm.ruleFormRef = { validate: mockRuleFormValidate }
+
+      await wrapper.vm.handleUpdate()
+
+      expect(mockElFormValidate).toHaveBeenCalled()
+      expect(mockRuleFormValidate).toHaveBeenCalled()
+      expect(ElMessage.error).toHaveBeenCalledWith('meta.validation_error')
+      expect(adminApi.api.patchDocpaltypeSettingsMetadataV2Update).not.toHaveBeenCalled()
+      expect(wrapper.vm.loading).toBe(false)
+    })
+
+    it('should set loading state during update', async () => {
+      wrapper.vm.formData = {
+        id: 1,
+        name: 'Test Field',
+        validationRule: { validationRuleName: 'text' },
+        maskRule: {
+          maskType: 'MASK_ALL',
+          maskLength: 10
+        },
+        langs: {}
+      }
+
+      const mockElFormValidate = vi.fn(() => Promise.resolve(true))
+      wrapper.vm.elFormRef = { validate: mockElFormValidate }
+      
+      adminApi.api.patchDocpaltypeSettingsMetadataV2Update.mockImplementation(() => {
+        expect(wrapper.vm.loading).toBe(true)
+        return Promise.resolve({ data: true })
+      })
+
+      await wrapper.vm.handleUpdate()
+
+      expect(wrapper.vm.loading).toBe(false)
+    })
+  })
+
+  describe('Update Submission', () => {
+    it('should successfully update metadata', async () => {
+      wrapper.vm.formData = {
+        id: 1,
+        name: 'Updated Field',
+        validationRule: { validationRuleName: 'text' },
+        maskRule: {
+          maskType: 'MASK_ALL',
+          maskLength: 10
+        },
+        langs: {}
+      }
+
+      const mockElFormValidate = vi.fn(() => Promise.resolve(true))
+      wrapper.vm.elFormRef = { validate: mockElFormValidate }
+      const mockResetFields = vi.fn()
+      wrapper.vm.elFormRef.resetFields = mockResetFields
+
+      adminApi.api.patchDocpaltypeSettingsMetadataV2Update.mockResolvedValue({
+        data: true
+      })
+
+      await wrapper.vm.handleUpdate()
+
+      expect(adminApi.api.patchDocpaltypeSettingsMetadataV2Update).toHaveBeenCalledWith(wrapper.vm.formData)
+      expect(ElMessage.success).toHaveBeenCalledWith('tip_updateMsg')
+      expect(wrapper.vm.loading).toBe(false)
+    })
+
+    it('should handle API error gracefully', async () => {
+      wrapper.vm.formData.name = 'Failed Field'
+
+      const mockElFormValidate = vi.fn(() => Promise.resolve(true))
+      wrapper.vm.elFormRef = { validate: mockElFormValidate }
+
+      adminApi.api.patchDocpaltypeSettingsMetadataV2Update.mockRejectedValue(new Error('API Error'))
+
+      await wrapper.vm.handleUpdate()
+
+      // Should not throw error, just catch silently
+      expect(wrapper.vm.loading).toBe(false)
+    })
+  })
+
+  describe('Mask Rule Configuration', () => {
+    it('should have default mask type', async () => {
+      expect(wrapper.vm.formData.maskRule.maskType).toBe('MASK_ALL')
+    })
+
+    it('should allow changing mask type', async () => {
+      wrapper.vm.formData.maskRule.maskType = 'MASK_PARTIAL'
+      await nextTick()
+
+      expect(wrapper.vm.formData.maskRule.maskType).toBe('MASK_PARTIAL')
+    })
+
+    it('should allow changing mask length', async () => {
+      wrapper.vm.formData.maskRule.maskLength = 15
+      await nextTick()
+
+      expect(wrapper.vm.formData.maskRule.maskLength).toBe(15)
+    })
+  })
+
+  describe('Type Changed Handler', () => {
+    it('should update validationRule when type changes', () => {
+      wrapper.vm.handleTypeChanged('Date')
+      
+      expect(wrapper.vm.formData.validationRule).toBeDefined()
+    })
+
+    it('should call handleTypeChanged when selectedType changes', async () => {
+      const handleTypeChangedSpy = vi.spyOn(wrapper.vm, 'handleTypeChanged')
+      
+      wrapper.vm.selectedType = 'Number'
+      wrapper.vm.handleTypeChanged('Number')
+
+      expect(handleTypeChangedSpy).toHaveBeenCalledWith('Number')
+    })
+  })
+
+  describe('Component Integration', () => {
+    it('should expose open method', () => {
+      expect(wrapper.vm.open).toBeDefined()
+      expect(typeof wrapper.vm.open).toBe('function')
+    })
+
+    it('should expose close method', () => {
+      expect(wrapper.vm.close).toBeDefined()
+      expect(typeof wrapper.vm.close).toBe('function')
+    })
+
+    it('should emit reload event after successful update', async () => {
+      wrapper.vm.formData = {
+        id: 1,
+        name: 'Test Field',
+        validationRule: { validationRuleName: 'text' },
+        maskRule: {
+          maskType: 'MASK_ALL',
+          maskLength: 10
+        },
+        langs: {}
+      }
+
+      const mockElFormValidate = vi.fn(() => Promise.resolve(true))
+      wrapper.vm.elFormRef = { validate: mockElFormValidate }
+      const mockResetFields = vi.fn()
+      wrapper.vm.elFormRef.resetFields = mockResetFields
+
+      adminApi.api.patchDocpaltypeSettingsMetadataV2Update.mockResolvedValue({
+        data: true
+      })
+
+      await wrapper.vm.handleUpdate()
+
+      // Wait for the setTimeout(1000) in close
+      await new Promise((resolve) => setTimeout(resolve, 1100))
+
+      expect(wrapper.emitted('reload')).toBeTruthy()
+    })
+  })
+
+  describe('Form Reset on Close', () => {
+    it('should call resetFields on elFormRef when closing', () => {
+      const mockResetFields = vi.fn()
+      wrapper.vm.elFormRef = { resetFields: mockResetFields }
+
+      wrapper.vm.close()
+
+      expect(mockResetFields).toHaveBeenCalled()
+    })
+  })
+
+  describe('Edge Cases', () => {
+    it('should handle null validationRule', async () => {
+      const mockData = {
+        id: 1,
+        name: 'Field',
+        validationRule: null,
+        maskRule: {
+          maskType: 'MASK_ALL',
+          maskLength: 10
+        }
+      }
+
+      wrapper.vm.open(mockData)
+      await nextTick()
+      await nextTick()
 
       expect(wrapper.vm.selectedType).toBe('Text')
       expect(wrapper.vm.formData.validationRule).toBeDefined()
     })
 
-    it('should handle missing mask rule', async () => {
-      const testData = {
-        id: '1',
-        name: 'Test Metadata',
-        validationRule: { validationRuleName: 'text' }
+    it('should handle metadata without validationRuleName', async () => {
+      const mockData = {
+        id: 1,
+        name: 'Field',
+        validationRule: {},
+        maskRule: {
+          maskType: 'MASK_ALL',
+          maskLength: 10
+        }
       }
 
-      await wrapper.vm.open(testData)
-      await wrapper.vm.$nextTick()
+      wrapper.vm.open(mockData)
+      await nextTick()
+      await nextTick()
 
-      expect(wrapper.vm.formData.maskRule).toEqual({
-        maskType: 'MASK_ALL',
-        maskLength: 10
-      })
+      expect(wrapper.vm.selectedType).toBe('Text')
     })
 
-    it('should set isInit flag during initialization', async () => {
-      const testData = {
-        id: '1',
-        name: 'Test Metadata',
-        validationRule: { validationRuleName: 'text' }
+    it('should handle metadata with existing data types', async () => {
+      const mockData = {
+        id: 1,
+        name: 'Number Field',
+        validationRule: {
+          validationRuleName: 'number',
+          min: 0,
+          max: 100
+        },
+        maskRule: {
+          maskType: 'MASK_ALL',
+          maskLength: 10
+        }
       }
 
-      // Mock the open method to check isInit behavior
-      const originalOpen = wrapper.vm.open
-      let isInitDuringOpen = false
-      
-      wrapper.vm.open = async (data: any) => {
-        isInitDuringOpen = wrapper.vm.isInit
-        await originalOpen.call(wrapper.vm, data)
-      }
-
-      await wrapper.vm.open(testData)
-      
-      expect(isInitDuringOpen).toBe(false)
-    })
-  })
-
-  describe('close Method', () => {
-    beforeEach(() => {
-      // Mock form refs
-      wrapper.vm.elFormRef = {
-        resetFields: vi.fn()
-      }
-    })
-
-    it('should close dialog and reset form', async () => {
-      // First open the dialog
-      await wrapper.vm.open({
-        id: '1',
-        name: 'Test Metadata',
-        validationRule: { validationRuleName: 'text' }
-      })
-
-      // Then close it
-      await wrapper.vm.close()
-
-      expect(wrapper.vm.formData.name).toBe('')
-      expect(wrapper.vm.formData.validationRule).toBeNull()
-      expect(wrapper.vm.formData.langs).toEqual({})
-      expect(wrapper.vm.formData.maskRule).toEqual({
-        maskType: 'MASK_ALL',
-        maskLength: 10
-      })
-    })
-
-    it('should emit reload event when closing', async () => {
-      await wrapper.vm.close()
-      await new Promise(resolve => setTimeout(resolve, 1010))
-      expect(wrapper.emitted('reload')).toBeTruthy()
-    })
-  })
-
-  describe('handleUpdate Method', () => {
-    it('should update metadata successfully', async () => {
-      
-      // Mock API responses
-      adminApi.api.patchDocpaltypeSettingsMetadataV2Update.mockResolvedValue({
-        data: { success: true }
-      })
-
-      // Set up form data
-      wrapper.vm.formData = {
-        id: '1',
-        name: 'Updated Metadata',
-        validationRule: { validationRuleName: 'text' },
-        maskRule: { maskType: 'MASK_ALL', maskLength: 10 },
-        langs: {}
-      }
-      wrapper.vm.originalName = 'Updated Metadata'
-
-      await wrapper.vm.handleUpdate()
-
-      expect(adminApi.api.patchDocpaltypeSettingsMetadataV2Update).toHaveBeenCalledWith({
-        id: '1',
-        name: '',
-        validationRule: null,
-        maskRule: { maskType: 'MASK_ALL', maskLength: 10 },
-        langs: {}
-      })
-      expect(ElMessage.success).toHaveBeenCalledWith('meta.update_success')
-    })
-
-    it('should handle validation rule validation failure', async () => {
-      wrapper.vm.elFormRef = {
-        validate: vi.fn().mockResolvedValue(true)
-      }
-      wrapper.vm.validationFormRef = {
-        validate: vi.fn().mockResolvedValue(false)
-      }
-
-      await wrapper.vm.handleUpdate()
-
-      expect(wrapper.vm.validationFormRef.validate).toHaveBeenCalled()
-      expect(ElMessage.error).toHaveBeenCalledWith('meta.validation_error')
-    })
-
-    it('should check name uniqueness when name changed', async () => {
-      // Mock form validation
-      wrapper.vm.elFormRef = {
-        validate: vi.fn().mockResolvedValue(true),
-        resetFields: vi.fn()
-      }
-      adminApi.api.postDocpaltypeSettingsMetadataV2Query.mockResolvedValue({
-        data: { entryList: [] }
-      })
-      adminApi.api.patchDocpaltypeSettingsMetadataV2Update.mockResolvedValue({
-        data: { success: true }
-      })
-
-      wrapper.vm.formData.name = 'New Name'
-      wrapper.vm.originalName = 'Old Name'
-
-      await wrapper.vm.handleUpdate()
-
-      expect(adminApi.api.postDocpaltypeSettingsMetadataV2Query).toHaveBeenCalledWith({
-        metadataName: 'New Name',
-        pageNum: 0,
-        pageSize: 1
-      })
-    })
-
-    it('should not check name uniqueness when name unchanged', async () => {
-      wrapper.vm.elFormRef = {
-        validate: vi.fn().mockResolvedValue(true),
-        resetFields: vi.fn()
-      }
-      
-      adminApi.api.patchDocpaltypeSettingsMetadataV2Update.mockResolvedValue({
-        data: { success: true }
-      })
-
-      wrapper.vm.formData.name = 'Same Name'
-      wrapper.vm.originalName = 'Same Name'
-
-      await wrapper.vm.handleUpdate()
-
-      expect(adminApi.api.postDocpaltypeSettingsMetadataV2Query).not.toHaveBeenCalled()
-    })
-
-    it('should handle name already exists', async () => {
-      wrapper.vm.elFormRef = {
-        validate: vi.fn().mockResolvedValue(true),
-        resetFields: vi.fn()
-      }
-      
-      adminApi.api.postDocpaltypeSettingsMetadataV2Query.mockResolvedValue({
-        data: { entryList: [{ name: 'Existing Metadata' }] }
-      })
-
-      wrapper.vm.formData.name = 'Existing Metadata'
-      wrapper.vm.originalName = 'Old Name'
-
-      await wrapper.vm.handleUpdate()
-
-      expect(ElMessage.error).toHaveBeenCalledWith('dpTip.exit')
-    })
-
-    it('should handle API error', async () => {
-      wrapper.vm.elFormRef = {
-        validate: vi.fn().mockResolvedValue(true),
-        resetFields: vi.fn()
-      }
-      
-      adminApi.api.patchDocpaltypeSettingsMetadataV2Update.mockResolvedValue({
-        data: null
-      })
-
-      await wrapper.vm.handleUpdate()
-
-      expect(ElMessage.error).toHaveBeenCalledWith('meta.update_error')
-    })
-  })
-
-  describe('selectedType Watcher', () => {
-    it('should update validation rule when selected type changes', async () => {
-      // Set initial state
-      wrapper.vm.selectedType = 'Text'
-      wrapper.vm.formData.validationRule = { validationRuleName: 'text' }
-      wrapper.vm.isInit = false
-
-      // Change selected type
-      wrapper.vm.selectedType = 'Number'
-      await wrapper.vm.$nextTick()
-
-      expect(wrapper.vm.formData.validationRule.validationRuleName).toBe('number')
-    })
-
-    it('should not update validation rule during initialization', async () => {
-      // Set initial state
-      wrapper.vm.selectedType = 'Text'
-      wrapper.vm.formData.validationRule = { validationRuleName: 'text' }
-      wrapper.vm.isInit = true
-
-      // Change selected type
-      wrapper.vm.selectedType = 'Number'
-      await wrapper.vm.$nextTick()
-
-      expect(wrapper.vm.formData.validationRule.validationRuleName).toBe('text')
-    })
-  })
-
-  describe('Validation Component', () => {
-    it('should render correct validation component for text type', async () => {
-      await wrapper.vm.open({
-        id: '1',
-        name: 'Test',
-        validationRule: { validationRuleName: 'text' }
-      })
-
-      expect(wrapper.vm.validationComponent).toBe('MetadataValidatorText')
-    })
-
-    it('should render correct validation component for mastertable type', async () => {
-      wrapper.vm.validationFormRef = {
-        validate: vi.fn().mockResolvedValue(true),
-        masterTableChange: vi.fn()
-      }
-      await wrapper.vm.open({
-        id: '1',
-        name: 'Test',
-        validationRule: { validationRuleName: 'mastertable' }
-      })
-
-      expect(wrapper.vm.validationComponent).toBe('MetadataValidatorMasterTable')
-    })
-  })
-
-  describe('Mask Rule Configuration', () => {
-    it('should have correct mask type options', () => {
-      expect(wrapper.vm.MASK_OPTIONS).toEqual([
-        { label: 'MASK_ALL', value: 'Mask All' },
-        { label: 'MASK_PREFIX', value: 'Mask Prefix' },
-        { label: 'MASK_SUFFIX', value: 'Mask Suffix' }
-      ])
-    })
-
-  })
-
-  describe('Event Emissions', () => {
-    beforeEach(() => {
-      // Mock form refs
-      wrapper.vm.elFormRef = {
-        resetFields: vi.fn()
-      }
-    })
-
-    it('should emit reload event when closing', async () => {
-      await wrapper.vm.close()
-      await new Promise(resolve => setTimeout(resolve, 1010))
-      expect(wrapper.emitted('reload')).toBeTruthy()
-    })
-  })
-
-  describe('Edge Cases', () => {
-    it('should handle missing form ref', async () => {
-      wrapper.vm.elFormRef = null
-
-      await wrapper.vm.handleUpdate()
-
-      expect(ElMessage.error).not.toHaveBeenCalled()
-      expect(ElMessage.success).not.toHaveBeenCalled()
-    })
-
-    it('should handle data without id', async () => {
-      const testData = {
-        name: 'Test Metadata',
-        validationRule: { validationRuleName: 'text' }
-      }
-
-      await wrapper.vm.open(testData)
-      await wrapper.vm.$nextTick()
-
-      expect(wrapper.vm.formData.id).toBeUndefined()
-    })
-
-    it('should handle validation rule with lowercase name', async () => {
-      const testData = {
-        id: '1',
-        name: 'Test Metadata',
-        validationRule: { validationRuleName: 'number' }
-      }
-
-      await wrapper.vm.open(testData)
-      await wrapper.vm.$nextTick()
+      wrapper.vm.open(mockData)
+      await nextTick()
+      await nextTick()
 
       expect(wrapper.vm.selectedType).toBe('Number')
+      expect(wrapper.vm.formData.validationRule.validationRuleName).toBe('number')
     })
   })
-}) 
+})

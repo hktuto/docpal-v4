@@ -124,6 +124,7 @@ const dialogProps = computed(() => {
 <template>
   <el-dialog
     v-bind="dialogProps"
+    class="big"
     @close="handleClose"
     @open="handleOpen"
     @opened="handleOpened"

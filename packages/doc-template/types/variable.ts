@@ -14,7 +14,7 @@ export type BaseType =
   | { type: 'GeoPoint' }
   | { type: 'Custom' }
 
-export type VariableType = 'text' | 'list' | 'table' | 'link' | 'image'
+export type VariableType = 'text' | 'list' | 'table' | 'link' | 'image' | 'signature'
 
 export interface Variable {
   id: string
