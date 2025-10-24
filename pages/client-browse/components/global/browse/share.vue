@@ -120,7 +120,7 @@ async function handleDblclick(row: any) {
 function isValidateEmail(emailList) {
   let isValidate = true
   const emailRef = FormRendererRef.value.vFormRenderRef?.getWidgetRef?.('emailList')
-  const contactList = emailRef?.getOptionItems()
+  let contactList = emailRef?.getOptionItems()
   const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
   emailList.forEach((item: any) => {
     if (!emailRegex.test(item) && !isInContactList(item)) {
