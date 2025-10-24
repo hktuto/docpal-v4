@@ -6,6 +6,7 @@
   "scripts": {
     "build": "tsc",
     "watch": "tsc -w",
+    "dev": "tsc && concurrently \"tsc -w\" \"electron .\"",
     "lint": "eslint -c .eslintrc --ext .ts ./src",
     "start": "npm run build && electron .",
     "pack": "electron-builder --dir",
@@ -16,6 +17,7 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "concurrently": "^9.1.0",
     "electron": "^32.3.3",
     "electron-builder": "^24.13.3",
     "electron-log": "^5.4.3",
