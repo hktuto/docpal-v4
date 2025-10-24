@@ -120,6 +120,9 @@ async function importFields() {
         params.type = 'mastertable'
         params.isMultiple = false
       }
+      if(item.maxLength) {
+        params.maxLength = item.maxLength
+      }
       return {
         id: item.columnName,
         name: item.columnName,
