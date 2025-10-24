@@ -129,7 +129,12 @@ onMounted(() => {
     overflow: auto;
   }
 }
-
+:deep(.el-dropdown-link) {
+  display: flex;
+  padding-bottom: var(--app-space-xs);
+  font-size: var(--app-font-size-l);
+  font-weight: bold;
+}
 .case-dashboard-main {
   :deep(.el-card) {
     height: 100%;
