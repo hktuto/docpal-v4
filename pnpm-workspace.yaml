@@ -1,7 +1,19 @@
 packages:
-  - 'apps/*'
-  - 'packages/*'
-  - 'pages/*'
-  - 'libraries/*'
-  - 'dev-tools/*'
-  - 'demo/*'
+  - apps/*
+  - packages/*
+  - pages/*
+  - libraries/*
+  - dev-tools/*
+  - demo/*
+
+ignoredBuiltDependencies:
+  - '@vue-office/excel'
+  - core-js
+  - electron
+  - esbuild
+  - fsevents
+  - highlight.js
+  - v-code-diff
+
+onlyBuiltDependencies:
+  - puppeteer
