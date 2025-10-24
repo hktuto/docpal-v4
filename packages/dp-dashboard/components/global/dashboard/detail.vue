@@ -203,7 +203,7 @@ const { handleDragStart, handleDragOver, handleDrop, handleDragEnd, placeholder 
   }
 })
 onMounted(() => {
-  activeNames.value = Object.keys(props.dashboardSettingList)
+  if(props.dashboardSettingList) activeNames.value = Object.keys(props.dashboardSettingList)
 })
 </script>
 
