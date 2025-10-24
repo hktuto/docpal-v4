@@ -325,7 +325,7 @@ importers:
         specifier: workspace:*
         version: link:../../libraries/tiptap-extension-pagination
       v-code-diff:
-        specifier: ^1.13.1
+        specifier: 1.13.1
         version: 1.13.1(vue@3.5.22(typescript@5.9.3))
       v-form:
         specifier: file:../../libraries/V-form/v-form.tgz
