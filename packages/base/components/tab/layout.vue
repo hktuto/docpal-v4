@@ -8,6 +8,15 @@ const props = defineProps<{
 const {layout} = toRefs(props)
 const emits = defineEmits(['ready'])
 
+const menuStyle = useMenuStyle()
+const fullMenuState = useFullMenuState()
+
+function toggleMenuState(){
+  fullMenuState.value = fullMenuState.value === 'stack' ? 'float' : 'stack'
+
+  localStorage.setItem(fullMenuStorageKey, fullMenuState.value)
+}
+
 const containerSize = ref(0)
 function setMinSize() {
     const appContent = document.querySelector('.appContent');
@@ -39,7 +48,10 @@ watch(layout, () => {
 
 onMounted(() => {
     emits('ready')
-
+    const localFullMenuState = localStorage.getItem(fullMenuStorageKey) as any
+    if(localFullMenuState && fullMenuOption.includes(localFullMenuState) ){
+      fullMenuState.value = localFullMenuState
+    }
 })
 
 </script>
@@ -48,7 +60,17 @@ onMounted(() => {
     <div class="layoutContainer" :style="`--panel-min-size: ${setMinSize()}px`">
         <splitpanes vertical ref="splitRef" @resized="paneResized" :push-other-panes="false" @ready="layoutReadyHandler">
             <Pane v-for="(tab, index) in layout" :key="tab.id" :minSize="panelMinWidth" >
-                <TabPanel :panel="tab" :index="index"/>
+                <TabPanel :panel="tab" :index="index">
+                  
+                    <template #prefix>
+                      <template v-if="index === 0 && menuStyle === 'full'">
+                        <div class="toggleMenuContainer">
+
+                          <Icon :name="fullMenuState === 'stack' ?'lucide:panel-left-close' : 'lucide:panel-left-open'" @click="toggleMenuState"/>
+                        </div>
+                      </template>
+                  </template>
+                </TabPanel>
             </Pane>
         </splitpanes>
     </div>
@@ -56,6 +78,10 @@ onMounted(() => {
 </template>
 
 <style lang="scss" scoped>
+.toggleMenuContainer{
+  padding: var(--app-space-xs);
+  cursor: pointer;
+}
 .layoutContainer{
     --panel-border-radius: var(--app-border-radius-m);
     height: 100%;

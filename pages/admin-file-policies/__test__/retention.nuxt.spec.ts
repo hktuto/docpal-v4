@@ -109,7 +109,7 @@ describe('[admin-azure]AdminRetentionPage', () => {
 
     expect(ElMessageBox.confirm).toHaveBeenCalled()
     expect(adminApi.api.deletePolicyRetentionsId).toHaveBeenCalledWith(1)
-    expect(mockRouterProvider.message.success).toHaveBeenCalledWith('tip_deleteSuccessMsg')
+    expect(mockRouterProvider.message.success).toHaveBeenCalledWith('tip_deleteSuccessMessage')
   })
   it('does not delete if confirmation is canceled', async () => {
     ElMessageBox.confirm.mockResolvedValueOnce('cancel')

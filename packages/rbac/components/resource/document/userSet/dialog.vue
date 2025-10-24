@@ -2,9 +2,9 @@
   <el-dialog
     v-loading="loading"
     v-model="dialogVisible"
-    class="scroll-dialog"
+    class="scroll-dialog big"
     :title="permissionId ? $t('rbac.permission.editUserSet') : $t('rbac.permission.addUserSet')"
-    width="80%"
+    
     append-to-body
     destroy-on-close
     center

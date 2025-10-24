@@ -6,17 +6,23 @@ import { mockRouterProvider } from './util'
 import { MasterTableSettingName, MasterTableSettingPermission, MasterTableSettingAddPermissionDialog, MasterTableSettingActive,ResponsiveFilter } from '#components'
 import { ElMessageBox, ElNotification, ElMessage } from 'element-plus'
 import { mockQuery, mockTable } from './setup'
-vi.mock('element-plus', () => ({
-  ElMessageBox: {
-    alert: vi.fn(),
-    confirm: vi.fn()
-  },
-  ElNotification: vi.fn(),
-  ElMessage: {
-    success: vi.fn(),
-    warning: vi.fn()
+
+vi.mock('element-plus', () => {
+  const mockConfirm = vi.fn()
+  mockConfirm.mockResolvedValue('confirm')
+  
+  return {
+    ElMessageBox: {
+      alert: vi.fn(),
+      confirm: mockConfirm
+    },
+    ElNotification: vi.fn(),
+    ElMessage: {
+      success: vi.fn(),
+      warning: vi.fn()
+    }
   }
-}))
+})
 const Icon = {
   template: '<div class="Icon">Icon</div>',
   methods: {}
@@ -67,7 +73,9 @@ describe('[admin-master-table]MasterTableSettingName', () => {
     // logRef.refresh = vi.fn();
   })
   afterEach(() => {
-    wrapper.unmount()
+    if (wrapper) {
+      wrapper.unmount()
+    }
     vi.clearAllMocks()
   })
   it('renders correctly', () => {
@@ -124,7 +132,9 @@ describe('[admin-master-table]MasterTableSettingPermission', () => {
     // logRef.refresh = vi.fn();
   })
   afterEach(() => {
-    wrapper.unmount()
+    if (wrapper) {
+      wrapper.unmount()
+    }
     vi.clearAllMocks()
   })
 
@@ -137,7 +147,6 @@ describe('[admin-master-table]MasterTableSettingPermission', () => {
   })
   it('removes a permission', async () => {
     const row = { masterTableId: '123', userId: '456', masterTableName: 'Test Table', loading: false }
-    ElMessageBox.confirm.mockResolvedValue('confirm')
     await wrapper.vm.handleRemove(row)
     expect(mockRouterProvider.message.success).toHaveBeenCalledWith('masterTable_settingRemoveSuccessMsg')
   })
@@ -197,7 +206,9 @@ describe('[admin-master-table]MasterTableSettingAddPermissionDialog', () => {
     // logRef.refresh = vi.fn();
   })
   afterEach(() => {
-    wrapper.unmount()
+    if (wrapper) {
+      wrapper.unmount()
+    }
     vi.clearAllMocks()
   })
   it('opens the dialog', async () => {
@@ -215,7 +226,7 @@ describe('[admin-master-table]MasterTableSettingAddPermissionDialog', () => {
       name: '123'
     })
     
-    expect(ElMessage.success).toHaveBeenCalledWith('tip_createdSuccessMsg')
+    expect(ElMessage.success).toHaveBeenCalledWith('tip_createdMsg')
     expect(wrapper.vm.state.visible).toBe(false)
   })
   it('handles submit error', async () => {
@@ -254,7 +265,9 @@ describe('[admin-master-table]MasterTableSettingActive', () => {
     // logRef.refresh = vi.fn();
   })
   afterEach(() => {
-    wrapper.unmount()
+    if (wrapper) {
+      wrapper.unmount()
+    }
     vi.clearAllMocks()
   })
   it('renders correctly', () => {

@@ -253,7 +253,7 @@ describe('[admin-document-type]DocTypeDialogAddDisplayMeta', () => {
           readOnlyPermissions: []
         }
       })
-      expect(ElMessage.success).toHaveBeenCalledWith('dpMsg_success')
+      expect(mockRouterProvider.message.success).toHaveBeenCalledWith('tip_updateMsg')
       expect(wrapper.vm.state.visible).toBe(false)
       expect(wrapper.emitted('refresh')).toBeTruthy()
     })

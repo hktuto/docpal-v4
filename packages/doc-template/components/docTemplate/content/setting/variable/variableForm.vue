@@ -42,6 +42,7 @@ import VariableValueList from './VariableValueList.vue'
 import VariableValueTable from './VariableValueTable.vue'
 import VariableValueLink from './VariableValueLink.vue'
 import VariableValueImage from './VariableValueImage.vue'
+import VariableValueSignature from './VariableValueSignature.vue'
 
 interface CreateVariableInput {
   id: string
@@ -70,7 +71,7 @@ const form = ref<CreateVariableInput | DocTemplateVariable>({
   value: ''
 })
 
-const variableTypes: VariableType[] = ['text', 'list', 'table', 'link']
+const variableTypes: VariableType[] = ['text', 'list', 'table', 'link', 'signature']
 
 const namePattern = /^[A-Za-z0-9_]+$/
 
@@ -116,6 +117,8 @@ const valueEditorComponent = computed(() => {
       return VariableValueLink
     case 'image':
       return VariableValueImage
+    case 'signature':
+      return VariableValueSignature
     default:
       return VariableValueText
   }

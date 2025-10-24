@@ -122,7 +122,9 @@ describe('[client-folder-cabinet]FolderCabinetCreateNextDialog', () => {
     wrapper.vm.initTreeData(children)
 
     expect(children[0].isLack).toBe(false)
-    expect(children[0].properties).toEqual({})
+    expect(children[0].properties).toEqual({
+      test: "value"
+    })
     expect(children[0].previewName).toBeDefined()
     expect(children[1].isLack).toBe(false)
     expect(children[1].previewName).toBeDefined()

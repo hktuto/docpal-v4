@@ -119,10 +119,9 @@ async function handleDblclick(row: any) {
 }
 function isValidateEmail(emailList) {
   let isValidate = true
-  const emailRef = FormRendererRef.value.vFormRenderRef.getWidgetRef('emailList')
-  const contactList = emailRef.getOptionItems()
+  const emailRef = FormRendererRef.value.vFormRenderRef?.getWidgetRef?.('emailList')
+  let contactList = emailRef?.getOptionItems()
   const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
-
   emailList.forEach((item: any) => {
     if (!emailRegex.test(item) && !isInContactList(item)) {
       ElMessage.error(t('tip.enterValidEmail') + ' 【' + item + '】')
@@ -131,6 +130,7 @@ function isValidateEmail(emailList) {
   })
   return isValidate
   function isInContactList(email: string) {
+    if (!contactList) contactList = []
     return contactList.some((item: any) => item.value === email)
   }
 }
@@ -149,13 +149,14 @@ async function handleSubmit() {
     }
     const response = await clientApi.api.postNuxeoShareNew(param).then((res) => res.data)
     routerProvider?.message.success(t('share_success'))
+    console.log('share_success', '=================share_success=================', updateShareList)
     updateShareList([])
     const item = createBrowseListPageParams({
       idOrPath: props.backPath
     })
     routerProvider?.back(item)
   } catch (error: any) {
-    console.log(error.message)
+    console.error(error.message)
     routerProvider?.message.error(error.message)
   } finally {
     state.loading = false
@@ -190,6 +191,7 @@ async function handleDiscard(row: any) {
   try {
     const action = await ElMessageBox.confirm(`${t('tip.confirmWhetherToDiscardShareQueue')}`)
     if (action !== 'confirm') return
+    console.log(row, '=================row=================')
     const index = state.minTypeShareList.findIndex((item: any) => row.id === item.id)
     state.minTypeShareList.splice(index, 1)
     if (!!state.interval) clearInterval(state.interval)

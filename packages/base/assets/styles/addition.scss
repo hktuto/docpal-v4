@@ -13,6 +13,11 @@ h1, h2, h3, h4, h5, h6 {
 .vxe-grid--table-container{
   --vxe-ui-layout-background-color: var(--app-paper) !important;
 }
+.vxe-grid{
+  &.is--maximize{
+    background-color: var(--app-paper) !important;
+  }
+}
 // // vxe table context menu
 // .vxe-table--context-menu-wrapper{
 //   border-radius: var(--app-border-radius-m);

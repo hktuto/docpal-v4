@@ -22,9 +22,20 @@ const useRuntimeConfig = vi.fn(() => {
 
 vi.stubGlobal('useIsLDAP', () => false);
 vi.stubGlobal('MenuRouterKey', 'MenuRouterKey');
+vi.stubGlobal('TabManagerKey', 'TabManagerKey');
 vi.stubGlobal('useUserId', useUserId);
 vi.stubGlobal('useRuntimeConfig', useRuntimeConfig);
 // vi.stubGlobal('useVxeTable', useVxeTable);
+
+const useRBAC = vi.fn(() => {
+  return {
+    getRoleTree: vi.fn(),
+    roleTree: { value: [] },
+    flatRole: { value: [] },
+    loading: { value: false }
+  };
+});
+vi.stubGlobal('useRBAC', useRBAC);
 
 export const mockReload = vi.fn()
 export const mockQuery = vi.fn()

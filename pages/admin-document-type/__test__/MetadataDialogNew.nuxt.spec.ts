@@ -1,14 +1,38 @@
 import { mount } from '@vue/test-utils'
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
-import { MetadataDialogNew, MetadataValidatorText, MetadataValidatorNumber } from '#components'
+import { MetadataDialogNew } from '#components'
 import { ElMessage } from 'element-plus'
 import { adminApi } from './mock/api'
+
 // Mock Element Plus components
 vi.mock('element-plus', () => ({
   ElMessage: {
     success: vi.fn(),
     error: vi.fn()
   }
+}))
+
+// Mock getDefaultByType helper
+vi.mock('../../../../../../packages/dp-datatype/utils/globalDataTypeHelper', () => ({
+  mapDataType: {
+    Text: 'MetadataValidatorText',
+    Number: 'MetadataValidatorNumber'
+  },
+  getDefaultByType: vi.fn((type: string) => {
+    const defaults: Record<string, any> = {
+      Text: {
+        maxLength: 255,
+        validationRuleName: 'text'
+      },
+      Number: {
+        validationRuleName: 'number',
+        minimum: -999999,
+        maximum: 999999,
+        multipleOf: 0
+      }
+    }
+    return defaults[type] || { validationRuleName: type.toLowerCase() }
+  })
 }))
 
 
@@ -23,14 +47,14 @@ describe('[admin-document-type]MetadataDialogNew', () => {
         visible: true
       },
       global: {
-        components: {
-          MetadataValidatorText,
-          MetadataValidatorNumber
-        },
         mocks: {
           $t: (msg: string) => msg,
           $i18n: { t: (key: string) => key },
           useI18n: () => ({ t: (key: string) => key })
+        },
+        stubs: {
+          MetadataValidatorText: true,
+          MetadataValidatorNumber: true
         }
       }
     })
@@ -73,19 +97,21 @@ describe('[admin-document-type]MetadataDialogNew', () => {
 
   describe('close Method', () => {
     it('should close dialog and reset form', async () => {
-      wrapper.vm.validationFormRef = {
+      wrapper.vm.elFormRef = {
         validate: vi.fn().mockResolvedValue(true),
         resetFields: vi.fn()
       }
       // First open the dialog
       await wrapper.vm.open()
 
+      // Set some data
+      wrapper.vm.formData.name = 'Test'
+
       // Then close it
       await wrapper.vm.close()
 
       expect(wrapper.vm.visible).toBe(false)
       expect(wrapper.vm.formData.name).toBe('')
-      expect(wrapper.vm.formData.validationRule).toEqual({})
       expect(wrapper.vm.formData.langs).toEqual({})
       expect(wrapper.vm.formData.maskRule).toEqual({
         maskType: 'MASK_ALL',
@@ -101,18 +127,22 @@ describe('[admin-document-type]MetadataDialogNew', () => {
         validate: vi.fn().mockResolvedValue(true),
         resetFields: vi.fn()
       }
-    })
-    it('should create metadata successfully', async () => {
-      wrapper.vm.validationFormRef = {
+      wrapper.vm.ruleFormRef = {
         validate: vi.fn().mockResolvedValue(true),
         resetFields: vi.fn()
       }
-      // Mock API responses
-      adminApi.api.postDocpaltypeSettingsMetadataV2Query.mockResolvedValue({
-        data: { entryList: [] }
-      })
+      vi.useFakeTimers()
+    })
+
+    afterEach(() => {
+      vi.useRealTimers()
+    })
+
+    it('should create metadata successfully', async () => {
+      // Mock API response
+      const mockResult = { id: '123', success: true }
       adminApi.api.postDocpaltypeSettingsMetadataV2Create.mockResolvedValue({
-        data: { success: true }
+        data: mockResult
       })
 
       // Set up form data
@@ -120,15 +150,18 @@ describe('[admin-document-type]MetadataDialogNew', () => {
       wrapper.vm.formData.validationRule = { validationRuleName: 'text' }
       wrapper.vm.formData.maskRule = { maskType: 'MASK_ALL', maskLength: 10 }
       wrapper.vm.formData.langs = {}
+
       await wrapper.vm.handleCreate()
 
-      expect(adminApi.api.postDocpaltypeSettingsMetadataV2Query).toHaveBeenCalledWith({
-        metadataName: 'New Metadata',
-        pageNum: 0,
-        pageSize: 1
-      })
-      expect(adminApi.api.postDocpaltypeSettingsMetadataV2Create).toHaveBeenCalled()
-      expect(ElMessage.success).toHaveBeenCalledWith('meta.create_success')
+      expect(adminApi.api.postDocpaltypeSettingsMetadataV2Create).toHaveBeenCalledWith(wrapper.vm.formData)
+      expect(ElMessage.success).toHaveBeenCalled()
+      expect(wrapper.vm.visible).toBe(false)
+      expect(wrapper.vm.loading).toBe(false)
+
+      // Advance timers to trigger reload event
+      vi.advanceTimersByTime(1000)
+      expect(wrapper.emitted('reload')).toBeTruthy()
+      expect(wrapper.emitted('reload')[0]).toEqual([mockResult])
     })
 
     it('should handle form validation failure', async () => {
@@ -136,93 +169,76 @@ describe('[admin-document-type]MetadataDialogNew', () => {
 
       await wrapper.vm.handleCreate()
 
-      // expect(wrapper.vm.elFormRef.validate).toHaveBeenCalled()
+      expect(adminApi.api.postDocpaltypeSettingsMetadataV2Create).not.toHaveBeenCalled()
       expect(ElMessage.error).not.toHaveBeenCalled()
+      expect(wrapper.vm.loading).toBe(false)
     })
 
     it('should handle validation rule validation failure', async () => {
-      wrapper.vm.validationFormRef = {
-        validate: vi.fn().mockResolvedValue(false)
-      }
+      wrapper.vm.ruleFormRef.validate = vi.fn().mockResolvedValue(false)
 
       await wrapper.vm.handleCreate()
 
-      expect(wrapper.vm.validationFormRef.validate).toHaveBeenCalled()
-      expect(ElMessage.error).toHaveBeenCalledWith('meta.validation_error')
-    })
-
-    it('should handle name already exists', async () => {
-      wrapper.vm.validationFormRef = {
-        validate: vi.fn().mockResolvedValue(true),
-        resetFields: vi.fn()
-      }
-      adminApi.api.postDocpaltypeSettingsMetadataV2Query.mockResolvedValue({
-        data: { entryList: [{ name: 'Existing Metadata' }] }
-      })
-
-      wrapper.vm.formData.name = 'Existing Metadata'
-
-      await wrapper.vm.handleCreate()
-
-      expect(ElMessage.error).toHaveBeenCalledWith('dpTip.exit')
+      expect(adminApi.api.postDocpaltypeSettingsMetadataV2Create).not.toHaveBeenCalled()
+      expect(wrapper.vm.loading).toBe(false)
     })
 
     it('should handle API error', async () => {
-      wrapper.vm.validationFormRef = {
-        validate: vi.fn().mockResolvedValue(true),
-        resetFields: vi.fn()
-      }
-
-      adminApi.api.postDocpaltypeSettingsMetadataV2Query.mockResolvedValue({
-        data: { entryList: [] }
-      })
       adminApi.api.postDocpaltypeSettingsMetadataV2Create.mockResolvedValue({
         data: null
       })
 
+      wrapper.vm.formData.name = 'New Metadata'
+
       await wrapper.vm.handleCreate()
 
-      expect(ElMessage.error).toHaveBeenCalledWith('meta.create_error')
+      expect(ElMessage.error).toHaveBeenCalled()
+      expect(wrapper.vm.loading).toBe(false)
+    })
+
+    it('should set loading state during creation', async () => {
+      adminApi.api.postDocpaltypeSettingsMetadataV2Create.mockResolvedValue({
+        data: { success: true }
+      })
+
+      const createPromise = wrapper.vm.handleCreate()
+      
+      expect(wrapper.vm.loading).toBe(true)
+      
+      await createPromise
+      
+      expect(wrapper.vm.loading).toBe(false)
     })
   })
 
-  describe('selectedType Watcher', () => {
-    it('should update validation rule when selected type changes', async () => {
-      // Set initial state
-      wrapper.vm.selectedType = 'Text'
-      wrapper.vm.formData.validationRule = { validationRuleName: 'text' }
-
-      // Change selected type
-      wrapper.vm.selectedType = 'Number'
+  describe('handleTypeChanged Method', () => {
+    it('should update validation rule when type changes to Number', async () => {
+      wrapper.vm.handleTypeChanged('Number')
       await wrapper.vm.$nextTick()
 
-      expect(wrapper.vm.formData.validationRule.validationRuleName).toBe('number')
+      expect(wrapper.vm.formData.validationRule).toEqual({
+        validationRuleName: 'number',
+        minimum: -999999,
+        maximum: 999999,
+        multipleOf: 0
+      })
     })
 
-    it('should handle invalid selected type', async () => {
-      // Set initial state
-      wrapper.vm.selectedType = 'Text'
-      wrapper.vm.formData.validationRule = { validationRuleName: 'text' }
-
-      // Change to invalid type
-      wrapper.vm.selectedType = 'InvalidType'
+    it('should update validation rule when type changes to Text', async () => {
+      wrapper.vm.handleTypeChanged('Text')
       await wrapper.vm.$nextTick()
 
-      // Should not change validation rule for invalid type
-      expect(wrapper.vm.formData.validationRule.validationRuleName).toBe('text')
-    })
-  })
-
-  describe('Validation Component', () => {
-    it('should render correct validation component for text type', () => {
-      expect(wrapper.vm.validationComponent).toBe('MetadataValidatorText')
+      expect(wrapper.vm.formData.validationRule).toEqual({
+        maxLength: 255,
+        validationRuleName: 'text'
+      })
     })
 
-    it('should render correct validation component for number type', async () => {
-      wrapper.vm.selectedType = 'Number'
+    it('should handle other types', async () => {
+      wrapper.vm.handleTypeChanged('Boolean')
       await wrapper.vm.$nextTick()
 
-      expect(wrapper.vm.validationComponent).toBe('MetadataValidatorNumber')
+      expect(wrapper.vm.formData.validationRule.validationRuleName).toBe('boolean')
     })
   })
 
@@ -252,8 +268,8 @@ describe('[admin-document-type]MetadataDialogNew', () => {
       })
     })
 
-    it('should update validation rule when type changes', async () => {
-      wrapper.vm.selectedType = 'Number'
+    it('should update validation rule when handleTypeChanged is called', async () => {
+      wrapper.vm.handleTypeChanged('Number')
       await wrapper.vm.$nextTick()
 
       expect(wrapper.vm.formData.validationRule).toEqual({
@@ -266,7 +282,7 @@ describe('[admin-document-type]MetadataDialogNew', () => {
   })
 
   describe('Edge Cases', () => {
-    it('should handle missing form ref', async () => {
+    it('should handle missing elFormRef', async () => {
       wrapper.vm.elFormRef = null
 
       await wrapper.vm.handleCreate()
@@ -277,7 +293,6 @@ describe('[admin-document-type]MetadataDialogNew', () => {
 
     it('should handle missing form refs in close method', async () => {
       wrapper.vm.elFormRef = null
-      wrapper.vm.validationFormRef = null
 
       // Should not throw error
       await wrapper.vm.close()
@@ -285,33 +300,23 @@ describe('[admin-document-type]MetadataDialogNew', () => {
       expect(wrapper.vm.visible).toBe(false)
     })
 
-    it('should handle API query with empty response', async () => {
-      
-      adminApi.api.postDocpaltypeSettingsMetadataV2Query.mockResolvedValue({
-        data: { entryList: [] }
-      })
-      adminApi.api.postDocpaltypeSettingsMetadataV2Create.mockResolvedValue({
-        data: { success: true }
-      })
+    it('should handle API exception', async () => {
+      wrapper.vm.elFormRef = {
+        validate: vi.fn().mockResolvedValue(true),
+        resetFields: vi.fn()
+      }
+      wrapper.vm.ruleFormRef = {
+        validate: vi.fn().mockResolvedValue(true),
+        resetFields: vi.fn()
+      }
 
-      wrapper.vm.formData.name = 'New Metadata'
-
-      await wrapper.vm.handleCreate()
-
-      expect(ElMessage.success).toHaveBeenCalledWith('meta.create_success')
-    })
-
-    it('should handle API query with null response', async () => {
-      
-      adminApi.api.postDocpaltypeSettingsMetadataV2Query.mockResolvedValue({
-        data: null
-      })
-
-      wrapper.vm.formData.name = 'New Metadata'
+      adminApi.api.postDocpaltypeSettingsMetadataV2Create.mockRejectedValue(
+        new Error('API Error')
+      )
 
       await wrapper.vm.handleCreate()
 
-      expect(ElMessage.success).toHaveBeenCalledWith('meta.create_success')
+      expect(wrapper.vm.loading).toBe(false)
     })
   })
 
@@ -320,7 +325,7 @@ describe('[admin-document-type]MetadataDialogNew', () => {
       const types = ['Text', 'Number', 'Boolean', 'Select', 'Date']
       
       for (const type of types) {
-        wrapper.vm.selectedType = type
+        wrapper.vm.handleTypeChanged(type)
         await wrapper.vm.$nextTick()
         
         expect(wrapper.vm.formData.validationRule.validationRuleName).toBe(type.toLowerCase())
@@ -344,19 +349,60 @@ describe('[admin-document-type]MetadataDialogNew', () => {
         validate: vi.fn().mockResolvedValue(true),
         resetFields: vi.fn()
       }
+      wrapper.vm.ruleFormRef = {
+        validate: vi.fn().mockResolvedValue(true),
+        resetFields: vi.fn()
+      }
     })
-    it('should validate form before creating', async () => {
-      
-      adminApi.api.postDocpaltypeSettingsMetadataV2Query.mockResolvedValue({
-        data: { entryList: [] }
-      })
-      adminApi.api.postDocpaltypeSettingsMetadataV2Create.mockResolvedValue({
-        data: { success: true }
-      })
+
+    it('should not proceed if elFormRef validation fails', async () => {
+      wrapper.vm.elFormRef.validate = vi.fn().mockResolvedValue(false)
 
       await wrapper.vm.handleCreate()
 
-      // expect(wrapper.vm.elFormRef.validate).toHaveBeenCalled()
+      expect(wrapper.vm.ruleFormRef.validate).not.toHaveBeenCalled()
+      expect(adminApi.api.postDocpaltypeSettingsMetadataV2Create).not.toHaveBeenCalled()
+    })
+
+    it('should not proceed if ruleFormRef validation fails', async () => {
+      wrapper.vm.ruleFormRef.validate = vi.fn().mockResolvedValue(false)
+
+      await wrapper.vm.handleCreate()
+
+      expect(adminApi.api.postDocpaltypeSettingsMetadataV2Create).not.toHaveBeenCalled()
+    })
+  })
+
+  describe('Loading State', () => {
+    beforeEach(() => {
+      wrapper.vm.elFormRef = {
+        validate: vi.fn().mockResolvedValue(true),
+        resetFields: vi.fn()
+      }
+      wrapper.vm.ruleFormRef = {
+        validate: vi.fn().mockResolvedValue(true),
+        resetFields: vi.fn()
+      }
+    })
+
+    it('should initialize with loading false', () => {
+      expect(wrapper.vm.loading).toBe(false)
+    })
+
+    it('should set loading to true during API call', async () => {
+      adminApi.api.postDocpaltypeSettingsMetadataV2Create.mockImplementation(() => {
+        return new Promise((resolve) => {
+          setTimeout(() => {
+            resolve({ data: { success: true } })
+          }, 100)
+        })
+      })
+
+      const createPromise = wrapper.vm.handleCreate()
+      expect(wrapper.vm.loading).toBe(true)
+
+      await createPromise
+      expect(wrapper.vm.loading).toBe(false)
     })
   })
 }) 

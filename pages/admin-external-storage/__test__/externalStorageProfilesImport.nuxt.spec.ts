@@ -100,9 +100,11 @@ describe('[admin-external-storage]ExternalStorageProfilesImport', () => {
         path: '/new/path',
         enabled: false,
         recursive: true,
-        errorFolder: '/error',
-        finishFolder: '/finish',
-        processingFolder: '/processing',
+        file_type: '',
+        include_folder: true,
+        error_folder: '/error',
+        finish_folder: '/finish',
+        processing_folder: '/processing',
       })
     })
 
