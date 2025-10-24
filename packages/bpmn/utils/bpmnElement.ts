@@ -472,6 +472,11 @@ export const bpmnElement: BpmnElement = {
             type = 'Send Notification'
             color = '#7B61FF'
             break
+          case '${startCaseInstanceDelegate}':
+            icon = '/bpmn/icons/case.svg'
+            type = 'Case Task'
+            color = '#7B61FF'
+            break
         }
       }
 
@@ -981,6 +986,36 @@ export const bpmnElement: BpmnElement = {
             }
           })
         })
+      },
+      {
+        icon: 'bpmn:case',
+        label: 'Case Task',
+        group: '',
+        order: 0,
+        dropData: (id: string) => ({
+          id,
+          ...bpmnElement.serviceTask.nodeStyle({
+            ['attr_flowable:delegateExpression']: '${startCaseInstanceDelegate}',
+            extensionElements: {
+              'flowable:newCase': {
+                attr_caseTypeId: '',
+                attr_name: ''
+              }
+            }
+          }),
+          label: 'New Case Task',
+          data: bpmnElement.serviceTask.newNodeData(id, 'New Case Task', {
+            attr_id: id,
+            attr_name: 'New Case Task',
+            ['attr_flowable:delegateExpression']: '${startCaseInstanceDelegate}',
+            extensionElements: {
+              'flowable:newCase': {
+                attr_caseTypeId: '',
+                attr_name: ''
+              }
+            }
+          })
+        })
       }
     ],
     newNodeData: (id, label, data) => ({
@@ -1025,6 +1060,8 @@ export const bpmnElement: BpmnElement = {
           return 'LazyBpmnContextFolderCabinet'
         case '${docpalNotificationDelegate}':
           return 'LazyBpmnContextMessage'
+        case '${startCaseInstanceDelegate}':
+          return 'LazyBpmnContextCase'
         default:
           return 'LazyBpmnContextCustomeService'
       }
