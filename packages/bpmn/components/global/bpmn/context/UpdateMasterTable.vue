@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { adminApi } from 'api'
 import type { Node } from '@antv/x6'
+import { ElMessage } from 'element-plus'
 const { t } = useI18n()
 const { node } = defineProps<{
   node: Node
@@ -10,7 +11,9 @@ const graphProvider = inject(BPMN_PROVIDER)
 if (!graphProvider) {
   throw new Error('Missing provider')
 }
-
+const editorProvider = inject(EDITOR_PROVIDER)
+const { setBpmnRules, getBpmnRuleType, bpmnGlobalRules } = editorProvider.BpmnRule
+const masterTableFields = ref([])
 const allFields = computed(() => {
   if (!graphProvider.allFormField.value) return []
 
@@ -66,6 +69,7 @@ async function masterTableIdChange(newId) {
   if (newId) {
     // get all columns from master table
     const { data } = await adminApi.api.getMasterTablesId(newId)
+    masterTableFields.value = data.fields
     const fields = [...data.fields].filter((item) => !ignoreList.includes(item.columnName))
     form.value.field = fields.map((column) => {
       return {
@@ -79,7 +83,11 @@ async function masterTableIdChange(newId) {
   }
   refreshData()
 }
-
+async function getMasterTableFields() {
+  const { data } = await adminApi.api.getMasterTablesId(form.value.attr_masterTableId)
+  masterTableFields.value = data.fields
+  return data
+}
 function updateData() {
   const data = node.getData()
   const newData = {
@@ -94,6 +102,44 @@ function updateData() {
     }
   }
   node.setData(newData, { overwrite: true, deep: true })
+}
+async function importFields() {
+  if (masterTableFields.value.length === 0) {
+    await getMasterTableFields()
+  }
+  const defaultFields = ['id', 'modified_by', 'modified_date', 'created_by', 'created_date', 'status']
+  const rules = masterTableFields.value
+    .filter((item) => !defaultFields.includes(item.columnName))
+    .filter((item) => bpmnGlobalRules.value.findIndex((rule) => rule.id === item.columnName) === -1)
+    .map((item) => {
+      const params: any = {}
+      if (item.relationTable) {
+        params.masterTableName = item.relationTable
+        params.displayColumn = item.displayField
+        params.valueColumn = item.relationField
+        params.type = 'mastertable'
+        params.isMultiple = false
+      }
+      return {
+        id: item.columnName,
+        name: item.columnName,
+        type: getBpmnRuleType(item.type),
+        ...params
+      }
+    })
+  if (rules.length === 0) {
+    ElMessage.info(t('dpMsg_noDataUpdate'))
+    return
+  }
+  await setBpmnRules(rules)
+  form.value.field = bpmnGlobalRules.value.map((column) => {
+    return {
+      attr_formProperty: column.id,
+      attr_tableColumn: column.id
+    }
+  })
+
+  refreshData()
 }
 
 onMounted(async () => {
@@ -127,7 +173,10 @@ onMounted(async () => {
           </ElSelect>
         </ElFormItem>
         <ElDivider />
-        <h4>Fields</h4>
+        <h4>
+          Fields
+          <el-button v-if="form.attr_masterTableId" size="small" type="primary" @click="importFields">Auto Import</el-button>
+        </h4>
         <ElFormItem v-for="item in form.field" :key="item.attr_tableColumn" :label="item.attr_tableColumn">
           <ElSelect v-model="item.attr_formProperty" placeholder="Field" @change="updateData">
             <ElOption v-for="item in allFields" :key="item.attr_id" :label="item.attr_name" :value="item.attr_id" />
