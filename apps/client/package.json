@@ -123,5 +123,10 @@
   "engines": {
     "pnpm": ">=8.5.0",
     "node": ">=19.0.0"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "v-code-diff"
+    ]
   }
 }
