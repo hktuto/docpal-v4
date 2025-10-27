@@ -60,11 +60,15 @@ function handlePickerSelect(variable: DocTemplateVariable) {
     case 'link':
       nodeType = 'variableLink'
       break
+    case 'signature':
+      nodeType = 'variableSignature'
+      break
     default:
       state.insertVariableVisible = false
       return
   }
   const { to } = editor.value.state.selection
+  console.log(nodeType, variable)
   editor.value.commands.insertContent({
     type: nodeType,
     attrs: { ...variable }
