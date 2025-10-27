@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import type { SignatureSetting } from './type';
-
+import { adminApi } from 'api';
 const props = defineProps<{
   index:number
   setting?: SignatureSetting
@@ -29,11 +29,30 @@ function companyChange(newCompany:string) {
     ...props.setting,
     company:newCompany
   }
+  if(newCompany){
+    getCompanyChopList(newCompany)
+  }
   emits('update',newData)
 }
+const companyChopList = ref<any[]>([])
+async function getCompanyChopList(companyId:string){
+  const { data } = await adminApi.api.getCompanyprofilesCompanyidChops(companyId,{
+    requestDTO: {
+      pageNum: 1,
+      pageSize: 1000,
+      status: 'A'
+    }
+  })
 
-async function getCompanyChopList(){
+  companyChopList.value = data || []
+}
 
+function companyChopChange(newChop:string){
+  const newData = {
+    ...props.setting,
+    signatureId:newChop
+  }
+  emits('update',newData)
 }
 
 function remove(){
@@ -55,17 +74,23 @@ function addVariable(variable: typeof templateVariableOption[number]){
         </div>
   </div>
   <ElForm>
-    <ElFormItem>
-
+    <ElFormItem label="Type">
       <ElSelect :model-value="setting?.type" @change="changeType">
         <ElOption label="Personal" value="personal" />
         <ElOption label="Company" value="company" />
       </ElSelect>
     </ElFormItem>
   <template v-if="setting?.type === 'company'">
-    <ElSelect :model-value="setting?.company" @change="companyChange">
-      <ElOption v-for="company in companyListOptions" :label="company.name" :value="company.id" />
-    </ElSelect>
+    <ElFormItem label="Company">
+      <ElSelect :model-value="setting?.company" @change="companyChange">
+          <ElOption v-for="company in companyListOptions" :label="company.name" :value="company.id" />
+        </ElSelect>
+    </ElFormItem>
+    <ElFormItem label="Company Chop">
+      <ElSelect :model-value="setting?.signatureId" @change="companyChopChange">
+        <ElOption v-for="chop in companyChopList" :label="chop.name" :value="chop.id" />
+      </ElSelect>
+    </ElFormItem>
   </template>
   </ElForm>
 </div>
