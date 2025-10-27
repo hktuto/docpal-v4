@@ -1,4 +1,5 @@
 <template>
+    <div class="templateViewerContainer">
     <template v-if="!state.url" >
         <div v-if="id">{{$t('file.NoExist')}}</div>
     </template>
@@ -35,6 +36,7 @@
             {{ $t('msg_thisFormatFileIsNotSupported') }}
         </h2>
     </template>
+    </div>
 </template>
 
 <script lang="ts" setup>
@@ -72,3 +74,14 @@ watch(() => props.blob, (newBlob:Blob) => {
 }, { immediate: true })
 defineExpose({ handleDownload })
 </script>
+
+
+<style lang="scss" scoped>
+
+.templateViewerContainer{
+    width: 100%;
+    height: 100%;
+    position: relative;
+    overflow: hidden;
+}
+</style>

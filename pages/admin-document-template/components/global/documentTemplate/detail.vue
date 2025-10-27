@@ -68,9 +68,11 @@ async function getPreviewFile() {
 }
 
 async function getVariables() {
+  console.log("getVariables", id)
   try {
     // const date = new Date().valueOf()
     const { data: res } = await adminApi.api.getTemplateDocumentRefreshId(id) as any
+    console.log("res", res)
     if (!res.templateVariable) return
     const templateVariable = [...new Set(JSON.parse(res.templateVariable))]
     state.variables = []
@@ -251,6 +253,7 @@ async function convertJsonToBlob(jsonData: any): Promise<Blob> {
 
 async function updateVariables(newData: any) {
   variables.value = newData
+  console.log("updateVariables", variables.value)
   templateVariablesRendererRef.value.setVariables(deepCopy(variables.value))
 }
 
@@ -393,7 +396,7 @@ onBeforeMount(async () => {
 
       <el-divider />
 
-      <div v-if="state.pageLoading">
+      <div v-if="state.pageLoading" class="reader-container">
         <template v-if="state.info.fileType === 'Word'">
           <div class="doc-template-viewer-container" v-loading="state.saveLoading">
             <DocTemplateViewer ref="templateViewerRef" v-if="!state.isEdit" :options="documentOptions"
@@ -494,7 +497,8 @@ onBeforeMount(async () => {
   font-weight: bold;
   line-height: 1.2;
   letter-spacing: 0px;
-  color: #606266;
+  color: var(--app-grey-300);
+  padding-left: var(--app-space-xs);
 }
 
 .save-or-exit-icon-container {
