@@ -14,6 +14,9 @@
             </el-dropdown-menu>
           </template>
         </el-dropdown>
+        <!-- <el-button type="danger" @click="handleClear">
+          {{ $t('common_clear') }}
+        </el-button> -->
         <el-button
           id="CaseManagement__Detail__CaseDashboardView__ViewLayout__Save"
           class="el-icon--right"
@@ -77,7 +80,10 @@ function handleDelete(i) {
   const index = state.layout.findIndex((item) => item.i === i)
   state.layout.splice(index, 1)
 }
-
+function handleClear() {
+  state.layout = []
+  handleSave()
+}
 async function handleSave() {
   try {
     state.saveLoading = true
