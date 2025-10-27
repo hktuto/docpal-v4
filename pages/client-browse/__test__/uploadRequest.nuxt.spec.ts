@@ -1,7 +1,7 @@
 import { shallowMount, mount } from '@vue/test-utils'
 import { describe, it, test, vi, expect, beforeEach, afterEach } from 'vitest'
 import { UploadRequestDetail, UploadRequestPage } from '#components'
-import { adminApi, clientApi } from './mock/api'
+import { clientApi } from './mock/api'
 import { VxeGrid } from 'vxe-table'
 import { ElMessageBox, ElMessage, ElSwitch } from 'element-plus'
 import { mockRouterProvider } from './util'

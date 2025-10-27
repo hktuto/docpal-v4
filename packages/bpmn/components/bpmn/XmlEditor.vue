@@ -8,7 +8,7 @@
     destroy-on-close
     append-to-body
     center
-    class="xml-editor-dialog"
+    class="xml-editor-dialog big"
   >
     <div class="adminXmlEditor">
       <div class="adminXmlEditor__header">

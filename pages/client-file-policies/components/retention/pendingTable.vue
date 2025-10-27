@@ -19,7 +19,7 @@
         </template>
         <template v-else>
           <el-button id="RetentionList__RetentionPendingList__PendingApproval" text :disabled="true">
-            {{ $t('status.pendingApproval') }}
+            {{ t('retention_statuspendingApproval') }} 
           </el-button>
         </template>
       </template>
@@ -61,6 +61,7 @@ const initParams = {
 
 const events = ref<any>({})
 const userId: string = useUserId().value
+
 const { tableConfig, tableEvent, tableRef, reload, query } = useVxeTable({
   id: 'clientRetentionPendingList',
   api: async (pageParams: any) => {
@@ -92,7 +93,6 @@ const { tableConfig, tableEvent, tableRef, reload, query } = useVxeTable({
     { field: 'applyApprovedBy', title: 'retention_approvedBy' },
     {
       title: 'tableHeader_actions',
-      field: 'commonActions',
       slots: {
         default: 'commonActions'
       },

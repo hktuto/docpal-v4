@@ -647,6 +647,7 @@
     "docTypeSizeChart": "Doc-Type Size Chart",
     "documentPercent": "文件百分比",
     "documentSize": "文件大小",
+    "dragToHere": "拖到这里",
     "fileSizes": "文件大小图表",
     "newCount": "新工作流程",
     "newFiles": "文件计数图表",
@@ -672,6 +673,14 @@
     "caseListPlaceHolder": "请新增需要显示的案例",
     "workflowListPlaceHolder": "请新增需要显示的工作流程"
   },
+  "dashboardType": {
+    "case": "@:adminMenu.caseManagement",
+    "default": "普通",
+    "document": "文件",
+    "documentCount": "文件统计",
+    "workflow": "工作流",
+    "workflowCount": "工作流统计"
+  },
   "dashboard_accessUserGroup": "Access by User Group",
   "dashboard_content": "Edit Dashboard Content",
   "dashboard_create": "Create New Dashboard",
@@ -691,12 +700,12 @@
     "params": "参数配置",
     "setting": "数据配置",
     "type": {
+      "caseInfo": "@:adminMenu.caseManagement",
       "contact": "@:adminMenu.contactBook",
       "group": "用户组",
       "masterTable": "主表格",
       "masterTableColumn": "主表格记录",
-      "user": "用户",
-      "caseInfo": "@:adminMenu.caseManagement"
+      "user": "用户"
     }
   },
   "dataFieldUg": {
@@ -2552,6 +2561,14 @@
   "retention_donePreview": "预览文件",
   "retention_pending": "待决清单",
   "retention_policies": "政策管理",
+  "retention_status": {
+    "approve": "批准",
+    "completed": "已完成",
+    "pendingApproval": "待审批",
+    "reject": "拒绝",
+    "submitted": "已提交",
+    "underApproval": "审批中"
+  },
   "revert": "还原",
   "rightClick": {
     "download": "下载",
@@ -2982,6 +2999,7 @@
     "upload": "上传"
   },
   "tip_SelectedMsg": "所选的",
+  "tip_cleanMsg": "您确定要清空 {name} 吗？",
   "tip_createdMsg": "{modelName} {name} 已创建。",
   "tip_createdSuccessMsg": "新 {modelName} {name} 已成功创建",
   "tip_deleteMsg": "确定要删除所选 {modelName} {name} 吗？",

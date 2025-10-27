@@ -161,4 +161,7 @@ onMounted(() => {})
     grid-area: 2 / 1 / 3 / 3;
   }
 }
+.list-drag-item, .canDrag {
+  cursor: move;
+}
 </style>

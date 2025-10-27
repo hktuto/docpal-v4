@@ -82,9 +82,9 @@ export default defineAppConfig({
     {
       name: 'client-master-table'
     },
-    {
-      name: 'client-dashboard'
-    },
+    // {
+    //   name: 'client-dashboard'
+    // },
     
     {
       name: 'client-easy-form'
@@ -216,9 +216,9 @@ export default defineAppConfig({
     {
       name: 'admin-case-management'
     },
-    {
-      name: 'admin-dashboard'
-    },
+    // {
+    //   name: 'admin-dashboard'
+    // },
     {
       label: 'adminMenu.policy',
       icon: 'lucide:book-lock',

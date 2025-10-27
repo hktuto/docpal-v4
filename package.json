@@ -17,13 +17,14 @@
     "dev": "pnpm -F client dev",
     "build": "nuxt build",
     "testw": "vitest run --workspace",
-    "test:reports": "pnpm -r --stream --if-present --no-bail test:report"
+    "test:reports": "pnpm -r --stream --if-present --no-bail test:report",
+    "report": "pnpm -F report start"
   },
   "dependencies": {
     "@vueuse/core": "^11.3.0",
     "cross-env": "^7.0.3",
-    "element-plus": "2.9.6",
-    "keycloak-js": "^26.2.0",
+    "element-plus": "^2.11.5",
+    "keycloak-js": "26.2.0",
     "nuxt": "3.17.7",
     "nuxt-auth-utils": "^0.3.9",
     "vue": "3.5.6",
@@ -44,5 +45,5 @@
     "vite-tsconfig-paths": "^5.1.4",
     "vitest": "3.1.4"
   },
-  "packageManager": "pnpm@8.14.3+sha1.872b21adeaae4e71acd5c551ba848d927d6aa446"
+  "packageManager": "pnpm@10.19.0"
 }
