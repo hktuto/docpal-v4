@@ -52,6 +52,7 @@ async function getInfo() {
 }
 
 async function getPreviewFile() {
+  console.log("getPreviewFile", state.info.documentId)
   state.previewFile.loading = true
   try {
     state.previewFile.blob = await adminApi.api.postNuxeoDocumentPreview({ idOrPath: state.info.documentId }, {
@@ -170,6 +171,7 @@ function handleEdit() {
 }
 
 function handleRefresh(state: any) {
+  console.log("handleRefresh", state)
   if (!state || state.info) getInfo()
   if (!state || state.variables) getVariables()
   if (!state || state.preview) getPreviewFile()
@@ -346,7 +348,7 @@ onBeforeMount(async () => {
         </div>
         <div class="flex-x-between">
           <SvgIcon v-if="state.info.fileType !== 'Word'" class="el-icon--left" src="/icons/file/file-refresh.svg"
-                   round :content="t('common_refresh')" @click="handleRefresh({})" />
+                   round :content="t('common_refresh')" @click="handleRefresh()" />
 
           <template v-if="state.info.fileType === 'Word'">
             <SvgIcon v-if="!state.isEdit" src="/icons/file/edit.svg" class="el-icon--right" round
@@ -388,7 +390,7 @@ onBeforeMount(async () => {
           </template>
 
           <BrowseActionsOffice v-if="state.info.fileType !== 'Word'" :doc="{...state.info, id: state.info.documentId}"
-                               @refresh="handleRefresh({})" />
+                               @refresh="handleRefresh()" />
           <TemplateReplaceButton v-if="state.info.fileType !== 'Word'" :templateInfo="state.info"
                                  class="el-icon--right" @refresh="handleRefresh({ variables: true, preview: true })" />
         </div>
