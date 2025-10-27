@@ -1,13 +1,17 @@
 <script lang="ts" setup>
 import type { SignatureSetting } from './type';
 import { adminApi } from 'api';
+
 const props = defineProps<{
-  index:number
-  setting?: SignatureSetting
-  companyListOptions?:any[]
+  index: number
+  companyListOptions?: any[]
 }>()
 
-const emits = defineEmits(['update','delete'])
+const emits = defineEmits(['delete'])
+
+const form = defineModel<SignatureSetting>('modelValue', {
+  required: true
+})
 
 const templateVariableOption = [
   'username',
@@ -16,27 +20,10 @@ const templateVariableOption = [
   'signDate(yyyy-mm-dd)',
 ] as const
 
-function changeType(newType:"personal" | "company"){
-  const newData = {
-    ...props.setting,
-    type:newType
-  }
-  emits('update',newData)
-}
-
-function companyChange(newCompany:string) {
-  const newData = {
-    ...props.setting,
-    company:newCompany
-  }
-  if(newCompany){
-    getCompanyChopList(newCompany)
-  }
-  emits('update',newData)
-}
 const companyChopList = ref<any[]>([])
-async function getCompanyChopList(companyId:string){
-  const { data } = await adminApi.api.getCompanyprofilesCompanyidChops(companyId,{
+
+async function getCompanyChopList(companyId: string) {
+  const { data } = await adminApi.api.getCompanyprofilesCompanyidChops(companyId, {
     requestDTO: {
       pageNum: 1,
       pageSize: 1000,
@@ -47,53 +34,122 @@ async function getCompanyChopList(companyId:string){
   companyChopList.value = data || []
 }
 
-function companyChopChange(newChop:string){
-  const newData = {
-    ...props.setting,
-    signatureId:newChop
+function handleCompanyChange(newCompany: string) {
+  if (newCompany) {
+    getCompanyChopList(newCompany)
   }
-  emits('update',newData)
 }
 
-function remove(){
+function handleRemove() {
   emits('delete')
 }
 
-function addVariable(variable: typeof templateVariableOption[number]){
-
+function addVariable(variable: typeof templateVariableOption[number], type: "prefix" | "suffix") {
+  if (form.value) {
+    form.value[type] = (form.value[type] || '') + "{{" + variable + "}}"
+  }
 }
+
+watch(() => form.value?.company, (newCompany) => {
+  if (newCompany) {
+    getCompanyChopList(newCompany)
+  }
+})
+
+onMounted(() => {
+  if (form.value?.company) {
+    getCompanyChopList(form.value.company)
+  }
+})
 
 </script>
 
 <template>
-<div class="templateEditorContainer">
-  <div class="header">
-    <div class="label">Signature Setting</div>
-    <div class="removeBtnContainer">
-          <Icon name="lucide:trash-2" @click="remove" />
-        </div>
+  <div class="templateEditorContainer">
+    <div class="header">
+      <div class="label">Signature Setting</div>
+      <div class="removeBtnContainer">
+        <Icon name="lucide:trash-2" @click="handleRemove" />
+      </div>
+    </div>
+
+    <ElForm label-position="top">
+      <ElRow :gutter="20">
+        <ElCol :span="24">
+          <ElFormItem label="Prefix Text">
+            <ElInput v-model="form.prefix" />
+            <div class="variableTextContainer">
+              <ElButton 
+                v-for="variable in templateVariableOption" 
+                :key="variable" 
+                type="link" 
+                @click="addVariable(variable, 'prefix')"
+              >
+                {{ variable }}
+              </ElButton>
+            </div>
+          </ElFormItem>
+        </ElCol>
+      </ElRow>
+      <ElRow :gutter="20">
+        <ElCol :span="24">
+          <ElFormItem label="Type">
+            <ElSelect v-model="form.type">
+              <ElOption label="Personal" value="personal" />
+              <ElOption label="Company" value="company" />
+            </ElSelect>
+          </ElFormItem>
+        </ElCol>
+      </ElRow>
+     
+      <template v-if="form?.type === 'company'">
+        <ElRow :gutter="20">
+          <ElCol :span="12">
+            <ElFormItem label="Company">
+              <ElSelect v-model="form.company" @change="handleCompanyChange">
+                <ElOption 
+                  v-for="company in companyListOptions" 
+                  :key="company.id"
+                  :label="company.name" 
+                  :value="company.id" 
+                />
+              </ElSelect>
+            </ElFormItem>
+          </ElCol>
+          <ElCol :span="12">
+            <ElFormItem label="Company Chop">
+              <ElSelect v-model="form.signatureId">
+                <ElOption 
+                  v-for="chop in companyChopList" 
+                  :key="chop.id"
+                  :label="chop.name" 
+                  :value="chop.id" 
+                />
+              </ElSelect>
+            </ElFormItem>
+          </ElCol>
+        </ElRow>
+      </template>
+
+      <ElRow :gutter="20">
+        <ElCol :span="24">
+          <ElFormItem label="Suffix Text">
+            <ElInput v-model="form.suffix" />
+            <div class="variableTextContainer">
+              <ElButton 
+                v-for="variable in templateVariableOption" 
+                :key="variable" 
+                type="link" 
+                @click="addVariable(variable, 'suffix')"
+              >
+                {{ variable }}
+              </ElButton>
+            </div>
+          </ElFormItem>
+        </ElCol>
+      </ElRow>
+    </ElForm>
   </div>
-  <ElForm>
-    <ElFormItem label="Type">
-      <ElSelect :model-value="setting?.type" @change="changeType">
-        <ElOption label="Personal" value="personal" />
-        <ElOption label="Company" value="company" />
-      </ElSelect>
-    </ElFormItem>
-  <template v-if="setting?.type === 'company'">
-    <ElFormItem label="Company">
-      <ElSelect :model-value="setting?.company" @change="companyChange">
-          <ElOption v-for="company in companyListOptions" :label="company.name" :value="company.id" />
-        </ElSelect>
-    </ElFormItem>
-    <ElFormItem label="Company Chop">
-      <ElSelect :model-value="setting?.signatureId" @change="companyChopChange">
-        <ElOption v-for="chop in companyChopList" :label="chop.name" :value="chop.id" />
-      </ElSelect>
-    </ElFormItem>
-  </template>
-  </ElForm>
-</div>
 </template>
 
 <style lang="css" scoped>
@@ -101,7 +157,7 @@ function addVariable(variable: typeof templateVariableOption[number]){
   width: 100%;
   padding: var(--app-space-s);
   position: relative;
-  border-radius: var(--app-border-radius-s);
+  border-radius: var(--app-border-radius-m);
   border: 1px solid var(--app-grey-900);
 }
 .header{

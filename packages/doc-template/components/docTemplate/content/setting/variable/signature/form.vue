@@ -1,14 +1,13 @@
 <template>
   <div class="variable_editor">
     <TemplateEditor 
-          v-for="(signature, signatureIndex) in modelValue"
-          :key="signature.id"
-          :index="signatureIndex"
-          :setting="signature" 
-          :companyListOptions="companyOptions" 
-          @update="(newVal:any) => updateSignatureSetting(signatureIndex, newVal)" 
-          @delete="removeSignature(signatureIndex)"
-        />
+      v-for="(signature, signatureIndex) in modelValue"
+      :key="signature.id"
+      v-model="modelValue[signatureIndex]"
+      :index="signatureIndex"
+      :companyListOptions="companyOptions" 
+      @delete="removeSignature(signatureIndex)"
+    />
 
     <template v-if="modelValue.length <= SignatureMaxLength">
       <ElButton @click="addSignature">Add</ElButton>
@@ -17,7 +16,6 @@
 </template>
 <script setup lang="ts">
 import { adminApi } from 'api'
-import { ref, watch, defineProps, defineEmits } from 'vue'
 import type { SignatureSetting } from './type'
 import TemplateEditor from './templateEditor.vue'
 const { t } = useI18n()
@@ -27,7 +25,7 @@ const modelValue = defineModel<SignatureSetting[]>('modelValue',{default:[]})
 const linkTypeList = ['String', 'Document', 'Workflow', 'Case']
 
 
-const companyOptions = ref([])
+const companyOptions = ref<any[]>([])
 
 
 const defaultValue:SignatureSetting = {
@@ -52,25 +50,13 @@ function addSignature(){
   })
 }
 
-function removeSignature(signatureIndex:number) {
-  if(signatureIndex !== -1) {
+function removeSignature(signatureIndex: number) {
+  if (signatureIndex !== -1) {
     // block remove last item
-    if(modelValue.value.length === 1) return 
+    if (modelValue.value.length === 1) return 
     modelValue.value.splice(signatureIndex, 1)
-  }else{
-    console.error('index not exist', {modelValue:modelValue.value} )
-  }
-}
-
-function updateSignatureSetting(signatureIndex:number, newValue:any) {
-  if(signatureIndex !== -1) {
-    if(modelValue.value[signatureIndex] ){
-      modelValue.value[signatureIndex] = JSON.parse(JSON.stringify(newValue))
-    }else{
-      console.error('updateSignatureSetting fail', modelValue.value, newValue)
-    }
-  }else{
-    console.error('updateSignatureSetting fail', 'index not valid', signatureIndex, modelValue.value)
+  } else {
+    console.error('index not exist', { modelValue: modelValue.value })
   }
 }
 
@@ -95,5 +81,6 @@ onMounted(async () => {
   display: flex;
   flex-direction: column;
   width:100%;
+  gap: var(--app-space-xs);
 }
 </style> 
