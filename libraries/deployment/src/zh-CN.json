@@ -552,6 +552,7 @@
   "common_years": "年",
   "commons_error": "失败",
   "commons_success": "成功",
+  "common_title": "标题",
   "companyProfile": {
     "chopCreate": "添加印章",
     "chopEdit": "编辑印章",

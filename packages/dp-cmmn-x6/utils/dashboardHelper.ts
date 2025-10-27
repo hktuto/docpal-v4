@@ -7,7 +7,8 @@ import TaskPage from '../components/dashboard/taskPage.vue'
 import WorkflowPage from '../components/dashboard/workflowPage.vue'
 import DocumentRoot from '../components/dashboard/documentRoot.vue'
 import RelatedCase from '../components/dashboard/relatedCase/index.vue'
-export type CmmnDashboardWidget = 'Action' | 'BasicInfo' | 'Process' | 'TaskPage' | 'WorkflowPage' | 'Activity' | 'DocumentRoot' | 'RelatedCase'
+import RelatedMaster from '../components/dashboard/relatedMaster/index.vue'
+export type CmmnDashboardWidget = 'Action' | 'BasicInfo' | 'Process' | 'TaskPage' | 'WorkflowPage' | 'Activity' | 'DocumentRoot' | 'RelatedCase' | 'RelatedMaster'
 export const CmmnDashboardWidgetSetting: { [key in CmmnDashboardWidget]: DashboardWidgetSetting } = {
   BasicInfo: {
     label: 'cmmnBasicInfo',
@@ -108,6 +109,22 @@ export const CmmnDashboardWidgetSetting: { [key in CmmnDashboardWidget]: Dashboa
       newButtonLabel: 'common_add',
       displayColumns: []
     }
+  },
+  RelatedMaster: {
+    label: 'cmmnRelatedMaster',
+    minW: 4,
+    minH: 4,
+    maxW: 12,
+    maxH: 12,
+    w: 4,
+    h: 4,
+    component: 'RelatedMaster',
+    setting: {
+      masterTableId: '',
+      label: '',
+      relatedField: '',
+      displayColumns: []
+    }
   }
 }
 
@@ -131,5 +148,6 @@ export const CmmnWidgetComponent = {
   TaskPage: TaskPage,
   WorkflowPage: WorkflowPage,
   DocumentRoot: DocumentRoot,
-  RelatedCase: RelatedCase
+  RelatedCase: RelatedCase,
+  RelatedMaster: RelatedMaster
 }
