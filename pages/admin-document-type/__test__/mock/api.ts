@@ -2,6 +2,8 @@
 import { vi } from 'vitest';
 export const adminApi = {
   api: {
+    postAclRoleList: vi.fn(() => Promise.resolve({ data: [] })),
+    getPermissionSelectOption: vi.fn(() => Promise.resolve({ data: [] })),
     postDocpaltypeSettingsPage: vi.fn(() => Promise.resolve({ data: [] })),
     patchDocpaltypeSettingsActive: vi.fn(() => Promise.resolve({ data: true })),
     getDocpaltypeSettingsNameName: vi.fn(() => Promise.resolve({ data: true })),
@@ -58,6 +60,8 @@ export const adminApi = {
 
 export const clientApi = {
   api: {
+    postAclRoleList: vi.fn(() => Promise.resolve({ data: [] })),
+    postNuxeoIdentityGroups: vi.fn(() => Promise.resolve({ data: [] })),
     postNuxeoIdentityUsers: vi.fn(() => Promise.resolve({ 
       data: [
         { userId: 'user1', username: 'User One' },

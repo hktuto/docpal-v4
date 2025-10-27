@@ -30,14 +30,14 @@ function filterOption(item: any) {
     }
   })
   // Exclude used options
-  return filteredList.filter(item => {
-    let includeItem = true;
-    set.forEach((name) => {
+  return filteredList.filter((item: any) => {
+    let includeItem = true
+    set.forEach((name: string) => {
       if (item.id === name) {
-        includeItem = false;
+        includeItem = false
       }
-    });
-    return includeItem;
+    })
+    return includeItem
   })
 }
 
@@ -54,15 +54,15 @@ function fileFieldOption(item: any) {
   })
 
   if (props.allField) {
-    const filteredData =  bpmnGlobalRules.value.filter((item: any) => item.validationRule.type === 'text')
-    return filteredData.filter(item => {
-      let includeItem = true;
+    const filteredData = bpmnGlobalRules.value.filter((item: any) => item.validationRule.type === 'text')
+    return filteredData.filter((item: any) => {
+      let includeItem = true
       set.forEach((name) => {
         if (item.id === name) {
-          includeItem = false;
+          includeItem = false
         }
-      });
-      return includeItem;
+      })
+      return includeItem
     })
   }
   return {}
@@ -142,14 +142,14 @@ function setFieldsList(item: any) {
             <div class="content">
               <ElForm label-position="top" @sumit.stop :disabled="!item.check">
                 <div>
-                  {{$t('Folder name rule')}}:
+                  {{ $t('Folder name rule') }}:
                   <template v-for="(i, index) in getLabelList(item.rule)" :key="index">
                     <el-tag v-if="i.metadata">{{ $t(i.metadata) }}</el-tag>
                     <template v-if="index !== getLabelList(item.rule).length - 1"> -</template>
                   </template>
                 </div>
                 <ElFormItem v-for="metaField in setFieldsList(item)" :key="metaField.metadata"
-                            :label="metaField.attr_metadata">
+                            :label="metaField.attr_metadata" :required="'folderCabinetId'===metaField.attr_metadata">
                   <ElSelect v-model="metaField.attr_formProperty" :disabled="editorProvider.readonly.value" clearable
                             @change="handleUpdateField(item)">
                     <ElOption v-for="option in filterOption(metaField)" :key="option.id" :label="option.name"

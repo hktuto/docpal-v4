@@ -47,13 +47,12 @@ export async function notiHandleView(row: any, tabProvider: any) {
     tabProvider?.openTab(newItem, true)
   } else if(row.content.caseInstanceId) {
     // TODO: get case instance
-    const caseInstance = await clientApi.api.getCaseInstanceCaseinstanceidVariables(row.content.caseInstanceId).then((res) => res.data)
-    console.log(caseInstance)
-    // const newItem = caseManageDashboardPage({
-    //   instanceId: row.content.caseInstanceId,
-    //   versionId: row.content.versionId
-    // })
-    // tabProvider?.openTab(newItem, true)
+    const caseInstance = await clientApi.api.getCaseInstanceCaseidCaseid(row.content.caseInstanceId).then((res) => res.data)
+    const newItem = caseManageDashboardPage({
+      instanceId: row.content.caseInstanceId,
+      versionId: caseInstance?.cmmnVersionId
+    })
+    tabProvider?.openTab(newItem, true)
   } else if (row.content.uploadId) {
     const status = row.content.notiStatus === 'FAIL' ? 'Error' : 'Ready'
     // router.push(`/AIUpload/${row.content.uploadId}?status=${status}`)

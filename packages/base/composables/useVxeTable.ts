@@ -512,7 +512,6 @@ export const useVxeTable = (params: UseVxeTableParams) => {
     tablePageParams.value.total = data.page.total
     tablePageParams.value.currentPage += 1
     tableConfig.loading = false
-    console.log('data', tablePageParams)
   }
 
   function setupPagingnation() {

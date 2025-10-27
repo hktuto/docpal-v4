@@ -20,10 +20,10 @@ describe('[admin-external-storage]ExternalStorageProfilesGenerate', () => {
     id: '1',
     name: 'Test Profile',
     status: 'A',
-    batchIdSetting: {
+    batch_id_setting: {
       prefix: 'TEST',
       digit: 5,
-      startNumber: 1
+      start_number: 1
     }
   }
 
@@ -32,7 +32,7 @@ describe('[admin-external-storage]ExternalStorageProfilesGenerate', () => {
     status: true,
     prefix: 'TEST',
     digit: 5,
-    startNumber: 1
+    start_number: 1
   }
 
   beforeEach(async () => {
@@ -98,10 +98,10 @@ describe('[admin-external-storage]ExternalStorageProfilesGenerate', () => {
         settings: {
           name: 'New Profile',
           status: 'D',
-          batchIdSetting: {
+          batch_id_setting: {
             prefix: 'NEW',
             digit: 10,
-            startNumber: 100
+            start_number: 100
           }
         }
       })
@@ -113,11 +113,11 @@ describe('[admin-external-storage]ExternalStorageProfilesGenerate', () => {
         status: false, // 'D' should be converted to false
         prefix: 'NEW',
         digit: 10,
-        startNumber: 100
+        start_number: "100"
       })
     })
 
-    it('should handle settings with missing batchIdSetting', async () => {
+    it('should handle settings with missing batch_id_setting', async () => {
       const setFormDataSpy = vi.fn()
       wrapper.vm.FormRendererRef = {
         vFormRenderRef: {
@@ -129,7 +129,7 @@ describe('[admin-external-storage]ExternalStorageProfilesGenerate', () => {
         settings: {
           name: 'Test Profile',
           status: 'A'
-          // Missing batchIdSetting
+          // Missing batch_id_setting
         }
       })
 
@@ -140,7 +140,7 @@ describe('[admin-external-storage]ExternalStorageProfilesGenerate', () => {
         status: true, // 'A' should be converted to true
         prefix: undefined,
         digit: undefined,
-        startNumber: undefined
+        start_number: "undefined"
       })
     })
 
@@ -181,10 +181,10 @@ describe('[admin-external-storage]ExternalStorageProfilesGenerate', () => {
         {
           name: 'Test Profile',
           status: 'A', // true should be converted to 'A'
-          batchIdSetting: {
+          batch_id_setting: {
             prefix: 'TEST',
             digit: 5,
-            startNumber: 1
+            start_number: 1
           }
         }
       )
@@ -209,10 +209,10 @@ describe('[admin-external-storage]ExternalStorageProfilesGenerate', () => {
         {
           name: 'Test Profile',
           status: 'D', // false should be converted to 'D'
-          batchIdSetting: {
+          batch_id_setting: {
             prefix: 'TEST',
             digit: 5,
-            startNumber: 1
+            start_number: 1
           }
         }
       )
@@ -350,7 +350,7 @@ describe('[admin-external-storage]ExternalStorageProfilesGenerate', () => {
         status: false,
         prefix: '',
         digit: 0,
-        startNumber: 0
+        start_number: 0
       }
       const getFormDataSpy = vi.fn().mockResolvedValue(emptyFormData)
       wrapper.vm.FormRendererRef = {
@@ -367,10 +367,10 @@ describe('[admin-external-storage]ExternalStorageProfilesGenerate', () => {
         {
           name: '',
           status: 'D',
-          batchIdSetting: {
+          batch_id_setting: {
             prefix: '',
             digit: 0,
-            startNumber: 0
+            start_number: 0
           }
         }
       )

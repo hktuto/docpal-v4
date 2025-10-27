@@ -46,7 +46,7 @@ const mockElDatePicker = {
 }
 
 const mockElCascader = {
-  template: '<div class="el-cascader"><slot /></div>',
+  template: '<div class="el-cascader"><slot :node="{}" :data="{ label: \'test\' }" /></div>',
   props: ['model-value', 'props', 'size'],
   emits: ['update:model-value', 'change']
 }

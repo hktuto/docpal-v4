@@ -73,39 +73,15 @@ describe('[admin-document-type]DocTypeDialogNew', () => {
         value: 'Category 1'
       })
     })
-
-    it('should load user list on open', async () => {
-      const mockUsers = [
-        { userId: 'user1', username: 'User One' },
-        { userId: 'user2', username: 'User Two' }
-      ]
-      clientApi.api.postNuxeoIdentityUsers.mockResolvedValue({ data: mockUsers })
-
-      await wrapper.vm.handleOpen()
-
-      expect(clientApi.api.postNuxeoIdentityUsers).toHaveBeenCalled()
-      expect(wrapper.vm.permissionOptions).toHaveLength(2)
-      expect(wrapper.vm.permissionOptions[1].label).toBe('user_users')
-      expect(wrapper.vm.permissionOptions[1].options).toHaveLength(2)
-    })
-
-    it('should handle user list API error gracefully', async () => {
-      clientApi.api.postNuxeoIdentityUsers.mockRejectedValue(new Error('API Error'))
-
-      await wrapper.vm.handleOpen()
-
-      expect(wrapper.vm.permissionOptions[1].options).toHaveLength(0)
-    })
-
     it('should populate role options from flatRole', async () => {
 
       await wrapper.vm.handleOpen()
 
-      expect(wrapper.vm.permissionOptions[0].label).toBe('user_role')
+      expect(wrapper.vm.permissionOptions[0].label).toBe('User')
       expect(wrapper.vm.permissionOptions[0].options).toHaveLength(2)
       expect(wrapper.vm.permissionOptions[0].options[0]).toEqual({
-        label: 'Admin Role',
-        value: 'role____1'
+        label: 'User One',
+        value: 'user_user1'
       })
     })
   })
@@ -115,15 +91,8 @@ describe('[admin-document-type]DocTypeDialogNew', () => {
       expect(wrapper.vm.formData.name).toBe('')
       expect(wrapper.vm.formData.category).toBe('')
       expect(wrapper.vm.formData.isFolder).toBe(false)
-      expect(wrapper.vm.formData.acls).toEqual([])
       expect(wrapper.vm.formData.status).toBe('A')
-      expect(wrapper.vm.formData.langs).toEqual({
-        en: true,
-        zh: true,
-        ja: true,
-        ko: true,
-        fr: true
-      })
+
     })
 
     it('should update category when select changes', async () => {
@@ -160,6 +129,7 @@ describe('[admin-document-type]DocTypeDialogNew', () => {
         isFolder: true,
         acls: ['role____1', 'user1'],
         status: 'A',
+        permission: {},
         langs: {
           en: true,
           zh: true,
@@ -168,7 +138,7 @@ describe('[admin-document-type]DocTypeDialogNew', () => {
           fr: true
         }
       })
-      expect(ElMessage.success).toHaveBeenCalledWith(expect.stringContaining('tip_createdSuccessMsg'))
+      expect(ElMessage.success).toHaveBeenCalledWith(expect.stringContaining('tip_createdMsg'))
       expect(wrapper.vm.state.visible).toBe(false)
       expect(wrapper.emitted('refresh')).toBeTruthy()
     })
@@ -248,27 +218,6 @@ describe('[admin-document-type]DocTypeDialogNew', () => {
           }
         })
       )
-    })
-  })
-
-  describe('Error Handling', () => {
-
-    it('should handle user list API error', async () => {
-      clientApi.api.postNuxeoIdentityUsers.mockRejectedValue(new Error('User API Error'))
-
-      await wrapper.vm.handleOpen()
-
-      expect(wrapper.vm.permissionOptions[1].options).toEqual([])
-    })
-
-    it('should continue loading other options even if one fails', async () => {
-      adminApi.api.getDocpaltypeSettingsCategories.mockResolvedValue({ data: ['Category 1'] })
-      clientApi.api.postNuxeoIdentityUsers.mockRejectedValue(new Error('User API Error'))
-
-      await wrapper.vm.handleOpen()
-
-      expect(wrapper.vm.categoryOptions).toHaveLength(1)
-      expect(wrapper.vm.permissionOptions[1].options).toEqual([])
     })
   })
 

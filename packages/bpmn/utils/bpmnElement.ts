@@ -472,6 +472,11 @@ export const bpmnElement: BpmnElement = {
             type = 'Send Notification'
             color = '#7B61FF'
             break
+          case '${startCaseInstanceDelegate}':
+            icon = '/bpmn/icons/case.svg'
+            type = 'Case Task'
+            color = '#7B61FF'
+            break
         }
       }
 
@@ -513,12 +518,11 @@ export const bpmnElement: BpmnElement = {
             ['attr_flowable:delegateExpression']: '${generateDocumentDelegate}',
             extensionElements: {
               ['flowable:field']: [
-                {
-                  attr_name: 'notificationType',
-                  'flowable:string': {
-                    __cdata: ''
-                  }
-                }
+                { attr_name: 'storeValue', 'flowable:expression': { '__cdata': '' } },
+                { attr_name: 'documentName', 'flowable:expression': { '__cdata': '' } },
+                { attr_name: 'documentType', 'flowable:expression': { '__cdata': 'File' } },
+                { attr_name: 'templateId', 'flowable:expression': { '__cdata': '' } },
+                { attr_name: 'variables', 'flowable:expression': { '__cdata': '' } }
               ]
             }
           }),
@@ -529,12 +533,11 @@ export const bpmnElement: BpmnElement = {
             ['attr_flowable:delegateExpression']: '${generateDocumentDelegate}',
             extensionElements: {
               ['flowable:field']: [
-                {
-                  attr_name: 'notificationType',
-                  'flowable:string': {
-                    __cdata: ''
-                  }
-                }
+                { attr_name: 'storeValue', 'flowable:expression': { '__cdata': '' } },
+                { attr_name: 'documentName', 'flowable:expression': { '__cdata': '' } },
+                { attr_name: 'documentType', 'flowable:expression': { '__cdata': 'File' } },
+                { attr_name: 'templateId', 'flowable:expression': { '__cdata': '' } },
+                { attr_name: 'variables', 'flowable:expression': { '__cdata': '' } }
               ]
             }
           })
@@ -548,7 +551,16 @@ export const bpmnElement: BpmnElement = {
         dropData: (id: string) => ({
           id,
           ...bpmnElement.serviceTask.nodeStyle({
-            ['attr_flowable:delegateExpression']: '${sendNotificationDelegate}'
+            ['attr_flowable:delegateExpression']: '${sendNotificationDelegate}',
+            extensionElements: {
+              ['flowable:field']: [
+                { attr_name: 'notificationType', 'flowable:string': { __cdata: '' } },
+                { attr_name: 'tos', 'flowable:expression': { __cdata: '' } },
+                { attr_name: 'ccs', 'flowable:expression': { __cdata: '' } },
+                { attr_name: 'bcc', 'flowable:expression': { __cdata: '' } },
+                { attr_name: 'attachmentsFilePath', 'flowable:expression': { __cdata: '' } }
+              ]
+            }
           }),
           label: 'New Email',
           data: bpmnElement.serviceTask.newNodeData(id, 'New Email', {
@@ -559,12 +571,11 @@ export const bpmnElement: BpmnElement = {
             ['attr_flowable:exclusive']: false,
             extensionElements: {
               ['flowable:field']: [
-                {
-                  attr_name: 'notificationType',
-                  'flowable:string': {
-                    __cdata: ''
-                  }
-                }
+                { attr_name: 'notificationType', 'flowable:string': { __cdata: '' } },
+                { attr_name: 'tos', 'flowable:expression': { __cdata: '' } },
+                { attr_name: 'ccs', 'flowable:expression': { __cdata: '' } },
+                { attr_name: 'bcc', 'flowable:expression': { __cdata: '' } },
+                { attr_name: 'attachmentsFilePath', 'flowable:expression': { __cdata: '' } }
               ]
             }
           })
@@ -975,6 +986,36 @@ export const bpmnElement: BpmnElement = {
             }
           })
         })
+      },
+      {
+        icon: 'bpmn:case',
+        label: 'Case Task',
+        group: '',
+        order: 0,
+        dropData: (id: string) => ({
+          id,
+          ...bpmnElement.serviceTask.nodeStyle({
+            ['attr_flowable:delegateExpression']: '${startCaseInstanceDelegate}',
+            extensionElements: {
+              'flowable:newCase': {
+                attr_caseTypeId: '',
+                attr_name: ''
+              }
+            }
+          }),
+          label: 'New Case Task',
+          data: bpmnElement.serviceTask.newNodeData(id, 'New Case Task', {
+            attr_id: id,
+            attr_name: 'New Case Task',
+            ['attr_flowable:delegateExpression']: '${startCaseInstanceDelegate}',
+            extensionElements: {
+              'flowable:newCase': {
+                attr_caseTypeId: '',
+                attr_name: ''
+              }
+            }
+          })
+        })
       }
     ],
     newNodeData: (id, label, data) => ({
@@ -1019,6 +1060,8 @@ export const bpmnElement: BpmnElement = {
           return 'LazyBpmnContextFolderCabinet'
         case '${docpalNotificationDelegate}':
           return 'LazyBpmnContextMessage'
+        case '${startCaseInstanceDelegate}':
+          return 'LazyBpmnContextCase'
         default:
           return 'LazyBpmnContextCustomeService'
       }

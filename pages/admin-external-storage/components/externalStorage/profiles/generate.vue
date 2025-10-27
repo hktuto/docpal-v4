@@ -21,7 +21,7 @@ async function handleSave() {
       batch_id_setting: {
         prefix: data.prefix,
         digit: data.digit,
-        start_number: Number(data.start_number),
+        start_number: isNaN(Number(data.start_number)) ? 1 : Number(data.start_number),
       }
     }
     await adminApi.api.patchExternalstorageIdProfilesProfileidGeneral(props.storageId, props.id, params)

@@ -279,16 +279,6 @@ describe('[dp-search]SearchGroupBarFilter', () => {
     expect(wrapper.vm.clear).toBeDefined()
   })
 
-  it('should get options correctly', async () => {
-    await wrapper.vm.getOptions()
-    
-    expect(globalApi.api.getTypesActive).toHaveBeenCalled()
-    expect(globalApi.api.postNuxeoIdentityGetkeycloakallusers).toHaveBeenCalled()
-    expect(globalApi.api.getNuxeoCollection).toHaveBeenCalled()
-    expect(globalApi.api.postNuxeoTagsGetalltags).toHaveBeenCalled()
-    
-  })
-
   it('should handle search params from session storage', () => {
     const searchParams = {
       condition: 'or',

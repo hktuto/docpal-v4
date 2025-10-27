@@ -232,7 +232,7 @@ describe('[admin-document-type]MetadataList', () => {
         confirmButtonClass: 'el-button el-button--warning',
       })
       expect(adminApi.api.deleteDocpaltypeSettingsMetadataV2DeleteMetadataid).toHaveBeenCalledWith('1')
-      expect(ElMessage.success).toHaveBeenCalledWith('metadata.remove_success')
+      expect(ElMessage.success).toHaveBeenCalledWith('tip_deleteSuccessMessage')
       expect(mockReload).toHaveBeenCalled()
     })
 

@@ -127,7 +127,7 @@ async function handleDuplicate() {
       if (!formValid) {
         return
       }
-
+      console.log('=====', ruleFormRef)
       // check if the validationRule is valid
       if (ruleFormRef.value) {
         const isValid = await ruleFormRef.value.validate()

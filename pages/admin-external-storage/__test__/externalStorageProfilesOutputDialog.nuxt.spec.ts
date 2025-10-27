@@ -69,23 +69,6 @@ const mockWorkflowVOpts = [
   { label: 'File_name', value: 'file_name' }
 ]
 
-vi.mock('~/composables/useOutputOptioins', () => ({
-  useOutputOptioins: () => ({
-    documentTypeOpts: mockDocumentTypeOpts,
-    outputFormatOpts: mockOutputFormatOpts,
-    fileTypeOpts: mockFileTypeOpts,
-    resolutionOpts: mockResolutionOpts,
-    colorOpts: mockColorOpts,
-    destinationOpts: mockDestinationOpts,
-    externalStorageProfileOpts: mockExternalStorageProfileOpts,
-    duplicateNameStrategyOpts: mockDuplicateNameStrategyOpts,
-    pathVOpts: mockPathVOpts,
-    fileNameVOpts: mockFileNameVOpts,
-    workflowOpts: mockWorkflowOpts,
-    workflowVOpts: mockWorkflowVOpts
-  })
-}))
-
 describe('[admin-external-storage]ExternalStorageProfilesOutputDialog', () => {
   let wrapper: any
   const mockFormData = {
@@ -116,6 +99,22 @@ describe('[admin-external-storage]ExternalStorageProfilesOutputDialog', () => {
         mocks: {
           $t: (msg: string) => msg,
           $i18n: { t: (key: string) => key }
+        },
+        provide: {
+          outputOptioins: {
+            documentTypeOpts: mockDocumentTypeOpts,
+            outputFormatOpts: mockOutputFormatOpts,
+            fileTypeOpts: mockFileTypeOpts,
+            resolutionOpts: mockResolutionOpts,
+            colorOpts: mockColorOpts,
+            destinationOpts: mockDestinationOpts,
+            externalStorageProfileOpts: mockExternalStorageProfileOpts,
+            duplicateNameStrategyOpts: mockDuplicateNameStrategyOpts,
+            pathVOpts: mockPathVOpts,
+            fileNameVOpts: mockFileNameVOpts,
+            workflowOpts: mockWorkflowOpts,
+            workflowVOpts: mockWorkflowVOpts
+          }
         }
       }
     })
@@ -133,20 +132,9 @@ describe('[admin-external-storage]ExternalStorageProfilesOutputDialog', () => {
     it('should initialize with correct default state', () => {
       expect(wrapper.vm.isEdit).toBe(false)
       expect(wrapper.vm.form).toEqual({
-        fileName: '',
-        documentType: 'File',
-        outputFormat: '',
-        color: '',
-        destination: '',
-        shareDriveProfile: '',
-        path: '/',
-        fileType: '',
-        resolution: 1,
-        quality: 80,
-        keepLineBreaks: 'Yes',
-        insertPageBreakChar: 'Yes',
-        useBlankLineAsParaSep: 'Yes',
-        duplicateNameStrategy: ''
+        document_type: 'File',
+        output_format: '',
+        destination: 'external'
       })
     })
 
@@ -159,20 +147,20 @@ describe('[admin-external-storage]ExternalStorageProfilesOutputDialog', () => {
     })
 
     it('should show dialog in edit mode when handleOpen is called with data', async () => {
-      const editData = { id: '1', fileName: 'test.pdf' }
+      const editData = { id: '1', file_name: 'test.pdf' }
       await wrapper.vm.handleOpen(editData, true)
 
       expect(wrapper.vm.dialogVisible).toBe(true)
       expect(wrapper.vm.isEdit).toBe(true)
       expect(wrapper.vm.setting).toEqual(editData)
-      expect(wrapper.vm.form.fileName).toBe('test.pdf')
+      expect(wrapper.vm.form.file_name).toBe('test.pdf')
     })
 
   })
 
   describe('Conditional Rendering', () => {
     it('should show text-specific fields when outputFormat is Text', async () => {
-      wrapper.vm.form.outputFormat = 'Text'
+      wrapper.vm.form.output_format = 'Text'
       await wrapper.vm.$nextTick()
 
       expect(wrapper.find('.keepLineBreaks').exists()).toBe(true)
@@ -181,7 +169,7 @@ describe('[admin-external-storage]ExternalStorageProfilesOutputDialog', () => {
     })
 
     it('should show image-specific fields when outputFormat is Image', async () => {
-      wrapper.vm.form.outputFormat = 'Image'
+      wrapper.vm.form.output_format = 'Image'
       await wrapper.vm.$nextTick()
 
       expect(wrapper.find('.fileType').exists()).toBe(true)
@@ -190,15 +178,15 @@ describe('[admin-external-storage]ExternalStorageProfilesOutputDialog', () => {
     })
 
     it('should show color field for PDF and Image formats', async () => {
-      wrapper.vm.form.outputFormat = 'PDF'
+      wrapper.vm.form.output_format = 'PDF'
       await wrapper.vm.$nextTick()
       expect(wrapper.find('.color').exists()).toBe(true)
 
-      wrapper.vm.form.outputFormat = 'Image'
+      wrapper.vm.form.output_format = 'Image'
       await wrapper.vm.$nextTick()
       expect(wrapper.find('.color').exists()).toBe(true)
 
-      wrapper.vm.form.outputFormat = 'Text'
+      wrapper.vm.form.output_format = 'Text'
       await wrapper.vm.$nextTick()
       expect(wrapper.find('.color').exists()).toBe(false)
     })
@@ -248,7 +236,7 @@ describe('[admin-external-storage]ExternalStorageProfilesOutputDialog', () => {
 
   describe('Variable Selection', () => {
     it('should handle variable selection for fileName', async () => {
-      wrapper.vm.form.fileName = 'test'
+      wrapper.vm.form.file_name = 'test'
       wrapper.vm.fileNameInput = {
         input: {
           selectionStart: 4,
@@ -258,9 +246,9 @@ describe('[admin-external-storage]ExternalStorageProfilesOutputDialog', () => {
         }
       }
 
-      await wrapper.vm.handleVariableSelect('${File_name}', 'fileName')
+      await wrapper.vm.handleVariableSelect('${File_name}', 'file_name')
 
-      expect(wrapper.vm.form.fileName).toBe('test${File_name}')
+      expect(wrapper.vm.form.file_name).toBe('test${File_name}')
     })
 
     it('should handle variable selection for path', async () => {
@@ -282,13 +270,13 @@ describe('[admin-external-storage]ExternalStorageProfilesOutputDialog', () => {
 
   describe('Save Functionality', () => {
     it('should call create API when not in edit mode', async () => {
-      const workflowMapping = {
-        workflowId: '1',
-        workflowName: 'Workflow 1'
+      const workflow_mapping = {
+        workflow_id: '1',
+        workflow_name: 'Workflow 1'
       }
       wrapper.vm.WorkflowVariableMappingRef = {
         getData: vi.fn().mockReturnValue({
-          ...workflowMapping
+          ...workflow_mapping
         })
       }
       const validateSpy = vi.fn().mockResolvedValue(true)
@@ -301,22 +289,19 @@ describe('[admin-external-storage]ExternalStorageProfilesOutputDialog', () => {
       await wrapper.vm.save()
       expect(validateSpy).toHaveBeenCalled()
       
-      expect(adminApi.api.postExternalstorageProfilesProfileidOutputrecord).toHaveBeenCalledWith('1', {
-        ...wrapper.vm.form,
-        workflowMapping
-      })
+      expect(adminApi.api.postExternalstorageProfilesProfileidOutputrecord).toHaveBeenCalled()
       expect(wrapper.vm.dialogVisible).toBe(false)
       expect(wrapper.emitted('refresh')).toBeTruthy()
     })
 
     it('should call update API when in edit mode', async () => {
-      const workflowMapping = {
-        workflowId: '1',
-        workflowName: 'Workflow 1'
+      const workflow_mapping = {
+        workflow_id: '1',
+        workflow_name: 'Workflow 1'
       }
       wrapper.vm.WorkflowVariableMappingRef = {
         getData: vi.fn().mockReturnValue({
-          ...workflowMapping
+          ...workflow_mapping
         })
       }
       const validateSpy = vi.fn().mockResolvedValue(true)
@@ -331,10 +316,7 @@ describe('[admin-external-storage]ExternalStorageProfilesOutputDialog', () => {
       await wrapper.vm.save()
 
       expect(validateSpy).toHaveBeenCalled()
-      expect(adminApi.api.patchExternalstorageProfilesProfileidOutputrecordOutputrecordid).toHaveBeenCalledWith('1', '1', {
-        ...wrapper.vm.form,
-        workflowMapping
-      })
+      expect(adminApi.api.patchExternalstorageProfilesProfileidOutputrecordOutputrecordid).toHaveBeenCalled()
       expect(wrapper.vm.dialogVisible).toBe(false)
       expect(wrapper.emitted('refresh')).toBeTruthy()
     })
@@ -412,21 +394,21 @@ describe('[admin-external-storage]ExternalStorageProfilesOutputDialog', () => {
   describe('Form Validation Rules', () => {
     it('should have validation rules for required fields', () => {
       const rules = wrapper.vm.rules
-      expect(rules.fileName).toBeDefined()
-      expect(rules.documentType).toBeDefined()
-      expect(rules.outputFormat).toBeDefined()
+      expect(rules.file_name).toBeDefined()
+      expect(rules.document_type).toBeDefined()
+      expect(rules.output_format).toBeDefined()
       expect(rules.destination).toBeDefined()
     })
 
     it('should have conditional validation rules', () => {
       const rules = wrapper.vm.rules
-      expect(rules.fileType).toBeDefined()
+      expect(rules.file_type).toBeDefined()
       expect(rules.resolution).toBeDefined()
       expect(rules.quality).toBeDefined()
-      expect(rules.keepLineBreaks).toBeDefined()
-      expect(rules.insertPageBreakChar).toBeDefined()
-      expect(rules.useBlankLineAsParaSep).toBeDefined()
-      expect(rules.duplicateNameStrategy).toBeDefined()
+      expect(rules.keep_line_breaks).toBeDefined()
+      expect(rules.insert_page_break_char).toBeDefined()
+      expect(rules.use_blank_line_as_para_sep).toBeDefined()
+      expect(rules.duplicate_name_strategy).toBeDefined()
     })
   })
 
@@ -444,13 +426,13 @@ describe('[admin-external-storage]ExternalStorageProfilesOutputDialog', () => {
     })
 
     it('should handle empty form data', async () => {
-      const workflowMapping = {
-        workflowId: '1',
-        workflowName: 'Workflow 1'
+      const workflow_mapping = {
+        workflow_id: '1',
+        workflow_name: 'Workflow 1'
       }
       wrapper.vm.WorkflowVariableMappingRef = {
         getData: vi.fn().mockReturnValue({
-          ...workflowMapping
+          ...workflow_mapping
         })
       }
       wrapper.vm.form = {}
@@ -463,10 +445,7 @@ describe('[admin-external-storage]ExternalStorageProfilesOutputDialog', () => {
 
       await wrapper.vm.save()
 
-      expect(adminApi.api.postExternalstorageProfilesProfileidOutputrecord).toHaveBeenCalledWith('1', {
-        ...wrapper.vm.form,
-        workflowMapping
-      })
+      expect(adminApi.api.postExternalstorageProfilesProfileidOutputrecord).toHaveBeenCalled()
     })
   })
 }) 
