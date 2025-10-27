@@ -64,5 +64,6 @@ export default defineNuxtPlugin((nuxtApp) => {
             }
         ]
     }
-    actionList.value.push(newAction)
+    // TODO : fix this workflow action
+    // actionList.value.push(newAction)
 })
