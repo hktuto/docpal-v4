@@ -8,7 +8,8 @@ import WorkflowPage from '../components/dashboard/workflowPage.vue'
 import DocumentRoot from '../components/dashboard/documentRoot.vue'
 import RelatedCase from '../components/dashboard/relatedCase/index.vue'
 import RelatedMaster from '../components/dashboard/relatedMaster/index.vue'
-export type CmmnDashboardWidget = 'Action' | 'BasicInfo' | 'Process' | 'TaskPage' | 'WorkflowPage' | 'Activity' | 'DocumentRoot' | 'RelatedCase' | 'RelatedMaster'
+import MasterTableInfo from '../components/dashboard/masterTableInfo/index.vue'
+export type CmmnDashboardWidget = 'Action' | 'BasicInfo' | 'Process' | 'TaskPage' | 'WorkflowPage' | 'Activity' | 'DocumentRoot' | 'RelatedCase' | 'RelatedMaster' | 'MasterTableInfo'
 export const CmmnDashboardWidgetSetting: { [key in CmmnDashboardWidget]: DashboardWidgetSetting } = {
   BasicInfo: {
     label: 'cmmnBasicInfo',
@@ -125,7 +126,23 @@ export const CmmnDashboardWidgetSetting: { [key in CmmnDashboardWidget]: Dashboa
       relatedField: '',
       displayColumns: []
     }
-  }
+  },
+  MasterTableInfo: {
+    label: 'cmmnMasterTableInfo',
+    minW: 2,
+    minH: 2,
+    maxW: 12,
+    maxH: 12,
+    w: 2,
+    h: 2,
+    component: 'MasterTableInfo',
+    setting: {
+      layout: [],
+      masterTableId: '',
+      masterTableName: '',
+      relatedField: '',
+    }
+  },
 }
 
 export function getCmmnWidgetSetting(widget: CmmnDashboardWidget) {
@@ -149,5 +166,6 @@ export const CmmnWidgetComponent = {
   WorkflowPage: WorkflowPage,
   DocumentRoot: DocumentRoot,
   RelatedCase: RelatedCase,
-  RelatedMaster: RelatedMaster
+  RelatedMaster: RelatedMaster,
+  MasterTableInfo: MasterTableInfo
 }
