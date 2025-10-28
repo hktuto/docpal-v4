@@ -154,7 +154,8 @@ onMounted(() => {
   font-weight: bold;
   line-height: 1.2;
   letter-spacing: 0px;
-  color: #606266;
+  color: var(--app-grey-300);
+  padding-left: var(--app-space-xs);
 }
 
 .flex-x-between {
