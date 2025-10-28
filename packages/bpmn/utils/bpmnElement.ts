@@ -935,7 +935,7 @@ export const bpmnElement: BpmnElement = {
             extensionElements: {
               ['flowable:field']: [
                 {
-                  attr_name: 'message',
+                  attr_name: 'system_notification_message',
                   'flowable:string': { __cdata: '{"templateId": "notification.workflow.custom","level": "success","eventType": "common","additionalContent": "","showNotification": true,"notiStatus":"SUCCESS"}' }
                 },
                 {
