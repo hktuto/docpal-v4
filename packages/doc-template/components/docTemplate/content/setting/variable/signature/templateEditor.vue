@@ -77,7 +77,12 @@ onMounted(() => {
       <ElRow :gutter="20">
         <ElCol :span="24">
           <ElFormItem label="Prefix Text">
-            <ElInput v-model="form.prefix" />
+            <ElInput 
+              v-model="form.prefix" 
+              type="textarea" 
+              :rows="3"
+              :autosize="{ minRows: 3, maxRows: 6 }"
+            />
             <div class="variableTextContainer">
               <ElButton 
                 v-for="variable in templateVariableOption" 
@@ -97,12 +102,12 @@ onMounted(() => {
             <ElSelect v-model="form.type">
               <ElOption label="Personal" value="personal" />
               <ElOption label="Company" value="company" />
+              <ElOption label="Both" value="both" />
             </ElSelect>
           </ElFormItem>
         </ElCol>
       </ElRow>
-     
-      <template v-if="form?.type === 'company'">
+      <template v-if="form?.type === 'company' || form?.type === 'both'">
         <ElRow :gutter="20">
           <ElCol :span="12">
             <ElFormItem label="Company">
@@ -134,7 +139,12 @@ onMounted(() => {
       <ElRow :gutter="20">
         <ElCol :span="24">
           <ElFormItem label="Suffix Text">
-            <ElInput v-model="form.suffix" />
+            <ElInput 
+              v-model="form.suffix" 
+              type="textarea" 
+              :rows="3"
+              :autosize="{ minRows: 3, maxRows: 6 }"
+            />
             <div class="variableTextContainer">
               <ElButton 
                 v-for="variable in templateVariableOption" 
