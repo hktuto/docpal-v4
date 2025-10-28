@@ -3,7 +3,7 @@
     v-model="state.visible"
     :title="state.isEdit ? $t('caseManagement.editPermission') : $t('caseManagement.addPermission')"
     :close-on-click-modal="false"
-    class="scroll-dialog"
+    class="scroll-dialog big"
     append-to-body
   >
     <el-form ref="FormRef" style="--icon-size: 1.2rem" label-position="top" :model="form">
