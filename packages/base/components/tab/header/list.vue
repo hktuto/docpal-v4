@@ -54,8 +54,8 @@ onUnmounted(() => {
 function newTab() {
     const newDate = new Date().getTime()
     const defaultTab = useAppDefaultTab()
-    if(defaultTab){
-        const newItem:any = {...defaultTab}
+    if(defaultTab.value){
+        const newItem:any = {...(defaultTab.value as any)}
         newItem.parent = panel.id
         newItem.id = 'tabpanel-' + newDate
         addTabToPanel(panel.id, newItem)
