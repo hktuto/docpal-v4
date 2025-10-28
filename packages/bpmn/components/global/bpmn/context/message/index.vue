@@ -92,7 +92,7 @@ function fieldMappingUpdate(newVal: any | string, name: string) {
   const index = newData.data.extensionElements['flowable:field'].findIndex((f: any) => f.attr_name === name)
   if ('notificationUserFromVariables' === name) {
     newData.data.extensionElements['flowable:field'][index]['flowable:expression'].__cdata = newVal || ''
-  } else if ('message' === name) {
+  } else if ('system_notification_message' === name) {
     newData.data.extensionElements['flowable:field'][index]['flowable:string'].__cdata = newVal || ''
   }
 
@@ -101,6 +101,7 @@ function fieldMappingUpdate(newVal: any | string, name: string) {
 }
 
 function handelMessageObject() {
+  console.log(22,state.messageObject)
   state.message = JSON.stringify(state.messageObject)
   fieldMappingUpdate(state.message, 'system_notification_message')
 }
