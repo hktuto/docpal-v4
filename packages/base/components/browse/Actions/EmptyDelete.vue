@@ -32,6 +32,7 @@ async function deleteItem(doc: any, deleteType?: 'folder' | 'file') {
     dangerouslyUseHTMLString: true,
     confirmButtonText: t('common_confirmDelete')
   }).catch(action => action)
+  if (action !== 'confirm') return
   const noti = ElNotification({
     title: t('dpTip_delete'),
     icon: Loading,
@@ -42,7 +43,6 @@ async function deleteItem(doc: any, deleteType?: 'folder' | 'file') {
     duration: 0,
     position: 'bottom-right'
   })
-  if (action !== 'confirm') return
   try {
     const response = await clientApi.api.deleteNuxeoDocumentTrash([{ idOrPath }])
     if (deleteType === 'file') {
