@@ -736,6 +736,7 @@ export const bpmnElement: BpmnElement = {
                 attr_masterTableId: '',
                 attr_workflowInfo: '',
                 attr_tableColumn: '',
+                attr_masterTableReturnId:'',
                 field: []
               }
             }
@@ -751,6 +752,7 @@ export const bpmnElement: BpmnElement = {
                 attr_masterTableId: '',
                 attr_workflowInfo: '',
                 attr_tableColumn: '',
+                attr_masterTableReturnId:'',
                 field: []
               }
             }
