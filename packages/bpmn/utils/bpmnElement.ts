@@ -102,6 +102,12 @@ export type BpmnElement = {
     }
     clickHandler: (args: { node: Cell; view: Cell }) => void
     contextMenuComponent?: string | Function
+    validator?: (args: {
+      attr_name: string,
+      attr_id:string,
+      extensionElements?: any,
+      [key: string]: any
+    }) => Promise<boolean>
   }
 }
 
@@ -148,7 +154,6 @@ export const bpmnElement: BpmnElement = {
     }),
     embed: false,
     toolbar: [],
-
     newNodeData: (id, label, data) => ({
       id,
       name: label,
@@ -282,6 +287,15 @@ export const bpmnElement: BpmnElement = {
         return 'LazyBpmnContextSignature'
       }
       return 'LazyBpmnContextUserTask'
+    },
+    validator: async (nodeData) => {
+      // check if candidate or assignee is set
+      const candidate = nodeData['attr_flowable:candidateGroups'] 
+      const assignee = nodeData.extensionElements['flowable:taskListener']?.['flowable:field']?.['flowable:expression']?.['__cdata']
+      if(!candidate && !assignee) {
+        throw new Error(`Candidate or assignee is required on ${nodeData.attr_name}` );
+      }
+      return true;
     }
   },
   exclusiveGateway: {
@@ -722,6 +736,7 @@ export const bpmnElement: BpmnElement = {
                 attr_masterTableId: '',
                 attr_workflowInfo: '',
                 attr_tableColumn: '',
+                attr_masterTableReturnId:'',
                 field: []
               }
             }
@@ -737,6 +752,7 @@ export const bpmnElement: BpmnElement = {
                 attr_masterTableId: '',
                 attr_workflowInfo: '',
                 attr_tableColumn: '',
+                attr_masterTableReturnId:'',
                 field: []
               }
             }
@@ -903,7 +919,7 @@ export const bpmnElement: BpmnElement = {
             extensionElements: {
               ['flowable:field']: [
                 {
-                  attr_name: 'message',
+                  attr_name: 'system_notification_message',
                   'flowable:string': { __cdata: '{"templateId": "notification.workflow.custom","level": "success","eventType": "common","additionalContent": "","showNotification": true,"notiStatus":"SUCCESS"}' }
                 },
                 {
@@ -921,7 +937,7 @@ export const bpmnElement: BpmnElement = {
             extensionElements: {
               ['flowable:field']: [
                 {
-                  attr_name: 'message',
+                  attr_name: 'system_notification_message',
                   'flowable:string': { __cdata: '{"templateId": "notification.workflow.custom","level": "success","eventType": "common","additionalContent": "","showNotification": true,"notiStatus":"SUCCESS"}' }
                 },
                 {
