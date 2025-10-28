@@ -71,6 +71,7 @@ async function initForm() {
         break
     }
   })
+  if (!state.message || '' == state.message) return
 
   // message Field to Level and Type and Content
   const messageObj = JSON.parse(state.message)
