@@ -166,8 +166,6 @@ function setFieldsList(item: any) {
                               :value="option.id" />
                   </ElSelect>
                 </ElFormItem>
-
-               
               </ElForm>
             </div>
           </div>
