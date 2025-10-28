@@ -12,10 +12,10 @@ if (!graphProvider || !editorProvider) {
 }
 const { bpmnGlobalRules } = editorProvider.BpmnRule
 
-const stringFields = computed(() => {
+const allFields = computed(() => {
   if (!bpmnGlobalRules.value || bpmnGlobalRules.value.length === 0) return []
 
-  return bpmnGlobalRules.value.filter((item: any) => item.validationRule.type === 'text')
+  return bpmnGlobalRules.value
 })
 
 const form = ref<any>({
@@ -159,7 +159,7 @@ onMounted(async () => {
       <template v-loading="loading" v-for="item in caseOptionList">
         <el-form-item :label="item.name">
           <el-select v-model="item.formProperty" clearable @change="handleCaseField(item)">
-            <el-option v-for="field in stringFields" :key="field.id" :label="field.name" :value="field.id" />
+            <el-option v-for="field in allFields" :key="field.id" :label="field.name" :value="field.id" />
           </el-select>
         </el-form-item>
       </template>
