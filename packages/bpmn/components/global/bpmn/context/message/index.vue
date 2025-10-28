@@ -66,7 +66,7 @@ async function initForm() {
       case 'notificationUserFromVariables':
         state.userField = item['flowable:expression'].__cdata
         break
-      case 'message':
+      case 'system_notification_message':
         state.message = item['flowable:string'].__cdata
         break
     }
@@ -101,7 +101,7 @@ function fieldMappingUpdate(newVal: any | string, name: string) {
 
 function handelMessageObject() {
   state.message = JSON.stringify(state.messageObject)
-  fieldMappingUpdate(state.message, 'message')
+  fieldMappingUpdate(state.message, 'system_notification_message')
 }
 
 watch(() => node, async () => {
