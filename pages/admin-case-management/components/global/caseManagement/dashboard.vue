@@ -72,6 +72,7 @@ function createDashboard(command: CmmnDashboardWidget) {
 }
 
 function handleRefresh(layoutSetting: any) {
+  console.log('handleRefresh', layoutSetting)
   const index = state.layout.findIndex((item) => item.i === layoutSetting.i)
   state.layout[index] = deepCopy(layoutSetting)
 }
