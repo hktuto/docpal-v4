@@ -104,7 +104,7 @@ export type BpmnElement = {
     contextMenuComponent?: string | Function
     validator?: (args: {
       attr_name: string,
-      attr_id:string,
+      attr_id: string,
       extensionElements?: any,
       [key: string]: any
     }) => Promise<boolean>
@@ -290,12 +290,12 @@ export const bpmnElement: BpmnElement = {
     },
     validator: async (nodeData) => {
       // check if candidate or assignee is set
-      const candidate = nodeData['attr_flowable:candidateGroups'] 
+      const candidate = nodeData['attr_flowable:candidateGroups']
       const assignee = nodeData.extensionElements['flowable:taskListener']?.['flowable:field']?.['flowable:expression']?.['__cdata']
-      if(!candidate && !assignee) {
-        throw new Error(`Candidate or assignee is required on ${nodeData.attr_name}` );
+      if (!candidate && !assignee) {
+        throw new Error(`Candidate or assignee is required on ${nodeData.attr_name}`)
       }
-      return true;
+      return true
     }
   },
   exclusiveGateway: {
@@ -736,7 +736,7 @@ export const bpmnElement: BpmnElement = {
                 attr_masterTableId: '',
                 attr_workflowInfo: '',
                 attr_tableColumn: '',
-                attr_masterTableReturnId:'',
+                attr_masterTableReturnId: '',
                 field: []
               }
             }
@@ -752,7 +752,7 @@ export const bpmnElement: BpmnElement = {
                 attr_masterTableId: '',
                 attr_workflowInfo: '',
                 attr_tableColumn: '',
-                attr_masterTableReturnId:'',
+                attr_masterTableReturnId: '',
                 field: []
               }
             }
@@ -1015,7 +1015,8 @@ export const bpmnElement: BpmnElement = {
             extensionElements: {
               'flowable:newCase': {
                 attr_caseTypeId: '',
-                attr_name: ''
+                attr_name: '',
+                attr_systemCaseInstanceId: ''
               }
             }
           }),
@@ -1027,7 +1028,8 @@ export const bpmnElement: BpmnElement = {
             extensionElements: {
               'flowable:newCase': {
                 attr_caseTypeId: '',
-                attr_name: ''
+                attr_name: '',
+                attr_systemCaseInstanceId: ''
               }
             }
           })
@@ -1125,6 +1127,7 @@ export const bpmnElement: BpmnElement = {
         }),
         label: 'New Script Task',
         data: bpmnElement.scriptTask.newNodeData(id, 'New Script Task', {
+          ['attr_flowable:async']: true,
           attr_id: id,
           attr_name: 'Script Task',
           attr_scriptFormat: 'javascript',
