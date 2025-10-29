@@ -2,6 +2,7 @@
 import { adminApi } from 'api'
 import type { Node } from '@antv/x6'
 
+const { t } = useI18n()
 const { node } = defineProps<{
   node: Node
 }>()
@@ -18,9 +19,16 @@ const allFields = computed(() => {
   return bpmnGlobalRules.value
 })
 
+const stringFields = computed(() => {
+  if (!bpmnGlobalRules.value || bpmnGlobalRules.value.length === 0) return []
+
+  return bpmnGlobalRules.value.filter((item: any) => item.validationRule.type === 'text')
+})
+
 const form = ref<any>({
   attr_caseTypeId: '',
   attr_name: '',
+  attr_systemCaseInstanceId: '',
   field: []
 })
 const loading = ref(false)
@@ -49,6 +57,7 @@ async function init() {
 
   form.value.attr_caseTypeId = extensionElements['flowable:newCase'].attr_caseTypeId
   form.value.attr_name = extensionElements['flowable:newCase'].attr_name
+  form.value.attr_systemCaseInstanceId = extensionElements['flowable:newCase'].attr_systemCaseInstanceId
 
   await getCaseOption()
 
@@ -97,6 +106,12 @@ async function handleCase(caseId: string) {
   form.value.field = []
   await getCaseOption()
   setData()
+}
+
+function handleCaseReturnId() {
+  if (form.value.attr_systemCaseInstanceId && '' !== form.value.attr_systemCaseInstanceId) {
+    setData()
+  }
 }
 
 function handleCaseField(item: any) {
@@ -148,9 +163,16 @@ onMounted(async () => {
   <div>
     <BpmnSidebarEditLabel :node="node" />
     <el-form label-position="top" :disabled="editorProvider.readonly.value">
-      <el-form-item label="Case">
+      <el-form-item label="Case" required>
         <el-select v-model="form.attr_caseTypeId" @change="handleCase">
           <el-option v-for="item in caseList" :key="item.id" :label="item.name" :value="item.id" />
+        </el-select>
+      </el-form-item>
+
+      <el-form-item label="Case Return Column ID" required>
+        <el-select v-model="form.attr_systemCaseInstanceId" :placeholder="t('common_selectOccupancyContent')"
+                   @change="handleCaseReturnId">
+          <el-option v-for="item in stringFields" :key="item.id" :label="item.name" :value="item.id" />
         </el-select>
       </el-form-item>
 
