@@ -12,7 +12,9 @@
     </template>
     <draggable class="list-drag" :list="dragList" group="people" :itemKey="itemKey">
       <template #item="{ element, index }">
-        <el-tag class="list-drag-item">{{ $t(`${element[itemLabel] ? element[itemLabel] : element[itemKey]}`) }}</el-tag>
+        <el-tag class="list-drag-item" >
+          {{ $t(`${element[itemLabel] ? element[itemLabel] : element[itemKey]}`) }}
+        </el-tag>
       </template>
     </draggable>
     <draggable class="list-drop" :list="dropList" group="people" :itemKey="itemKey" handle=".canDrag" @change="() => emit('change', { dropList, dragList })">
@@ -21,9 +23,10 @@
           <!-- <span v-if="element.prefixSymbol" class="list-drop-item--divider" >{{element.prefixSymbol}}</span> -->
           <!-- <DragSelectTag :element="element" @close="handleClose"/> -->
           <!-- <span v-if="element.suffixSymbol" class="list-drop-item--divider">{{element.suffixSymbol}}</span> -->
-          <el-tag ref="tagRef" :class="{ 'el-tag-normal': !element.noDelete, 'el-tag-drop': true }" :closable="!element.noDelete" @close="handleClose(element)">
+          <el-tag ref="tagRef" :class="{ 'el-tag-normal': !element.noDelete, 'el-tag-drop': true }" :closable="!element.noDelete"  :title="element[itemKey]" @close="handleClose(element)">
             <el-icon v-if="!element.noDelete" class="canDrag"><Rank /></el-icon>
-            {{ $t(`${element[itemLabel] ? element[itemLabel] : element[itemKey]}`) }}
+            {{ element.title ? element.title : $t(`${element[itemLabel] ? element[itemLabel] : element[itemKey]}`) }}
+            <slot name="buttons" :element="element" :index="index" />
           </el-tag>
           <span class="list-drop-item--divider">{{ joiner }}</span>
         </span>
@@ -161,7 +164,8 @@ onMounted(() => {})
     grid-area: 2 / 1 / 3 / 3;
   }
 }
-.list-drag-item, .canDrag {
+.list-drag-item,
+.canDrag {
   cursor: move;
 }
 </style>
