@@ -491,6 +491,11 @@ export const bpmnElement: BpmnElement = {
             type = 'Case Task'
             color = '#7B61FF'
             break
+          case '${updateCaseInstanceInfoDelegate}':
+            icon = '/bpmn/icons/case.svg'
+            type = 'Update Case Data Task'
+            color = '#7B61FF'
+            break
         }
       }
 
@@ -1034,6 +1039,36 @@ export const bpmnElement: BpmnElement = {
             }
           })
         })
+      },
+      {
+        icon: 'bpmn:case',
+        label: 'Update Case Data Task',
+        group: '',
+        order: 0,
+        dropData: (id: string) => ({
+          id,
+          ...bpmnElement.serviceTask.nodeStyle({
+            ['attr_flowable:delegateExpression']: '${updateCaseInstanceInfoDelegate}',
+            extensionElements: {
+              'flowable:newCase': {
+                attr_caseTypeId: '',
+                attr_name: ''
+              }
+            }
+          }),
+          label: 'New Update Case Data Task',
+          data: bpmnElement.serviceTask.newNodeData(id, 'New Update Case Data Task', {
+            attr_id: id,
+            attr_name: 'Update Case Data Task',
+            ['attr_flowable:delegateExpression']: '${updateCaseInstanceInfoDelegate}',
+            extensionElements: {
+              'flowable:newCase': {
+                attr_caseTypeId: '',
+                attr_name: ''
+              }
+            }
+          })
+        })
       }
     ],
     newNodeData: (id, label, data) => ({
@@ -1080,6 +1115,8 @@ export const bpmnElement: BpmnElement = {
           return 'LazyBpmnContextMessage'
         case '${startCaseInstanceDelegate}':
           return 'LazyBpmnContextCase'
+        case '${updateCaseInstanceInfoDelegate}':
+          return 'LazyBpmnContextCaseUpdate'
         default:
           return 'LazyBpmnContextCustomeService'
       }
