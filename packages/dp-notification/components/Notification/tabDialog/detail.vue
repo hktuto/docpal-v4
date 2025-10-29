@@ -146,6 +146,9 @@ function handleMessage(message: any) {
             msg = content.additionalContent
           }
           break
+        case 'caseDashboard':
+          msg = 'Open Case Dashboard.'
+          break
         default:
           msg = content.additionalContent
       }

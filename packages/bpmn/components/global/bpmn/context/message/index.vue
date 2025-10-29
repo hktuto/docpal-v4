@@ -26,9 +26,14 @@ const levelList = ref([
   { label: 'Warning', value: 'warning' },
   { label: 'Error', value: 'error' }])
 
+/**
+ * Calendar => JSON String {"title":"","data":""}
+ * Case DashBoard => JSON String { "instanceId":"","versionId":"" }
+ */
 const typeList = ref([
   { label: 'Calendar Event', value: 'calendar' },
-  { label: 'Common Event', value: 'common' }
+  { label: 'Case Dashboard Event', value: 'caseDashboard' },
+  { label: 'Common Event', value: 'common' },
 ])
 
 const state = reactive({
