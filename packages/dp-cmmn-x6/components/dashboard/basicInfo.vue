@@ -25,7 +25,7 @@
 import { useEventBus, EventType } from 'eventbus'
 
 import { set, watchDebounced } from '@vueuse/core'
-import { adminApi, clientApi, globalApi } from 'api'
+import { clientApi, globalApi } from 'api'
 const platform = useAppPlatform()
 
 const props = withDefaults(
@@ -115,7 +115,7 @@ async function getCDBasciInfo() {
     } else if (versionId) {
       // in admin platform
       state.mode = 'develop'
-      const { data: form }: any = await adminApi.api.getCaseDashboardVersionVersionidPrimaryform(versionId)
+      const { data: form }: any = await globalApi.api.getCaseDashboardVersionVersionidPrimaryform(versionId)
       form.rows = form.fields.reduce((prev: any, item: any) => {
         let value = item.type
         if (item.type === 'date') value = '2024-01-01'

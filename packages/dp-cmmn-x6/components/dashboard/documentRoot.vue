@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { clientApi, adminApi } from 'api'
+import { clientApi, globalApi } from 'api'
 import { CaseManagementDashboardKey } from '../../utils/caseProvider'
 import { inject, provide, ref } from 'vue';
 const props = withDefaults(
@@ -34,7 +34,7 @@ async function getCDBasciInfo() {
       const { data } = await clientApi.api.getCaseDashboardInstanceCaseidPrimaryformData(id)
       caseData = data
     } else if (versionId) {
-      const { data } = await adminApi.api.getCaseDashboardVersionVersionidPrimaryform(versionId)
+      const { data } = await globalApi.api.getCaseDashboardVersionVersionidPrimaryform(versionId)
       caseData = data
     } else {
       caseData = {
