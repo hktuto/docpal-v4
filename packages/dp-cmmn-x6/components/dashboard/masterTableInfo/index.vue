@@ -25,7 +25,7 @@
 import { useEventBus, EventType } from 'eventbus'
 
 import { set, watchDebounced } from '@vueuse/core'
-import { adminApi, clientApi, globalApi } from 'api'
+import { clientApi, globalApi } from 'api'
 const platform = useAppPlatform()
 
 const props = withDefaults(

@@ -31,7 +31,7 @@
 </template>
 <script lang="ts" setup>
 import { watchDebounced } from '@vueuse/core'
-import { adminApi } from 'api'
+import { globalApi } from 'api'
 const props = withDefaults(
   defineProps<{
     dates?: any
@@ -96,10 +96,10 @@ async function getCDProcess() {
     const id = CMDProvider?.instanceId?.value || null
     const versionId = CMDProvider?.versionId?.value || null
     if (id) {
-      const { data } = await adminApi.api.getCaseDashboardInstanceCaseidStages(id)
+      const { data } = await globalApi.api.getCaseDashboardInstanceCaseidStages(id)
       state.allList = data
     } else if (versionId) {
-      const { data: caseTypeData } = await adminApi.api.getCaseDashboardVersionVersionidStages(versionId)
+      const { data: caseTypeData } = await globalApi.api.getCaseDashboardVersionVersionidStages(versionId)
       state.allList = caseTypeData
     }
   } catch (error) {
