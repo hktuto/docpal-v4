@@ -107,15 +107,21 @@ async function handleCase(caseId: string) {
 }
 
 function handleCaseField(item: any) {
-  const index = form.value.field.findIndex((item: any) => item.attr_metadata === item.metadata)
-  if (index != -1) {
-    form.value.field[index].attr_formProperty = item.formProperty
+  const { formProperty, id, type } = item;
+  const field = form.value.field;
+  if (!formProperty) {
+    form.value.field = field.filter((formItem: any) => formItem.attr_metadata !== id);
   } else {
-    form.value.field.push({
-      attr_formProperty: item.formProperty,
-      attr_metadata: item.id,
-      attr_dataType: item.type
-    })
+    const index = field.findIndex((formItem: any) => formItem.attr_metadata === id);
+    if (index !== -1) {
+      field[index].attr_formProperty = formProperty;
+    } else {
+      field.push({
+        attr_formProperty: formProperty,
+        attr_metadata: id,
+        attr_dataType: type
+      });
+    }
   }
   setData()
 }
