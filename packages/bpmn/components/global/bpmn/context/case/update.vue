@@ -107,20 +107,20 @@ async function handleCase(caseId: string) {
 }
 
 function handleCaseField(item: any) {
-  const { formProperty, id, type } = item;
-  const field = form.value.field;
+  const { formProperty, id, type } = item
+  const field = form.value.field
   if (!formProperty) {
-    form.value.field = field.filter((formItem: any) => formItem.attr_metadata !== id);
+    form.value.field = field.filter((formItem: any) => formItem.attr_metadata !== id)
   } else {
-    const index = field.findIndex((formItem: any) => formItem.attr_metadata === id);
+    const index = field.findIndex((formItem: any) => formItem.attr_metadata === id)
     if (index !== -1) {
-      field[index].attr_formProperty = formProperty;
+      field[index].attr_formProperty = formProperty
     } else {
       field.push({
         attr_formProperty: formProperty,
         attr_metadata: id,
         attr_dataType: type
-      });
+      })
     }
   }
   setData()
@@ -170,7 +170,7 @@ onMounted(async () => {
       <el-divider v-if="caseOptionList.length > 0" />
 
       <template v-loading="loading" v-for="item in caseOptionList">
-        <el-form-item :label="item.name">
+        <el-form-item :label="item.name" :required="'case_id'===item.id">
           <el-select v-model="item.formProperty" clearable @change="handleCaseField(item)">
             <el-option v-for="field in allFields" :key="field.id" :label="field.name" :value="field.id" />
           </el-select>
