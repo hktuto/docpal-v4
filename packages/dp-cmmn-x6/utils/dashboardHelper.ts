@@ -9,7 +9,8 @@ import DocumentRoot from '../components/dashboard/documentRoot.vue'
 import RelatedCase from '../components/dashboard/relatedCase/index.vue'
 import RelatedMaster from '../components/dashboard/relatedMaster/index.vue'
 import MasterTableInfo from '../components/dashboard/masterTableInfo/index.vue'
-export type CmmnDashboardWidget = 'Action' | 'BasicInfo' | 'Process' | 'TaskPage' | 'WorkflowPage' | 'Activity' | 'DocumentRoot' | 'RelatedCase' | 'RelatedMaster' | 'MasterTableInfo'
+import RelatedCaseInfo from '../components/dashboard/relatedCaseInfo/index.vue'
+export type CmmnDashboardWidget = 'Action' | 'BasicInfo' | 'Process' | 'TaskPage' | 'WorkflowPage' | 'Activity' | 'DocumentRoot' | 'RelatedCase' | 'RelatedMaster' | 'MasterTableInfo' | 'RelatedCaseInfo'
 export const CmmnDashboardWidgetSetting: { [key in CmmnDashboardWidget]: DashboardWidgetSetting } = {
   BasicInfo: {
     label: 'cmmnBasicInfo',
@@ -29,7 +30,7 @@ export const CmmnDashboardWidgetSetting: { [key in CmmnDashboardWidget]: Dashboa
     label: 'cmmnActivity',
     minW: 2,
     minH: 2,
-    maxW: 4,
+    maxW: 10,
     maxH: 12,
     w: 2,
     h: 3,
@@ -137,10 +138,29 @@ export const CmmnDashboardWidgetSetting: { [key in CmmnDashboardWidget]: Dashboa
     h: 2,
     component: 'MasterTableInfo',
     setting: {
+      title: '',
       layout: [],
       masterTableId: '',
       masterTableName: '',
       relatedField: '',
+    }
+  },
+  RelatedCaseInfo: {
+    label: 'cmmnRelatedCaseInfo',
+    minW: 2,
+    minH: 2,
+    maxW: 12,
+    maxH: 12,
+    w: 2,
+    h: 2,
+    component: 'RelatedCaseInfo',
+    setting: {
+      title: '',
+      layout: [],
+      caseId: '',
+      caseLabel: '',
+      caseVersionId: '', // 初始化 case list
+      relatedCaseField: '',
     }
   },
 }
@@ -166,6 +186,7 @@ export const CmmnWidgetComponent = {
   WorkflowPage: WorkflowPage,
   DocumentRoot: DocumentRoot,
   RelatedCase: RelatedCase,
+  RelatedCaseInfo: RelatedCaseInfo,
   RelatedMaster: RelatedMaster,
   MasterTableInfo: MasterTableInfo
 }
