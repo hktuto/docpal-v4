@@ -115,15 +115,21 @@ function handleCaseReturnId() {
 }
 
 function handleCaseField(item: any) {
-  const index = form.value.field.findIndex((item: any) => item.attr_metadata === item.metadata)
-  if (index != -1) {
-    form.value.field[index].attr_formProperty = item.formProperty
+  const { formProperty, id, type } = item
+  const field = form.value.field
+  if (!formProperty) {
+    form.value.field = field.filter((formItem: any) => formItem.attr_metadata !== id)
   } else {
-    form.value.field.push({
-      attr_formProperty: item.formProperty,
-      attr_metadata: item.id,
-      attr_dataType: item.type
-    })
+    const index = field.findIndex((formItem: any) => formItem.attr_metadata === id)
+    if (index !== -1) {
+      field[index].attr_formProperty = formProperty
+    } else {
+      field.push({
+        attr_formProperty: formProperty,
+        attr_metadata: id,
+        attr_dataType: type
+      })
+    }
   }
   setData()
 }
@@ -170,7 +176,7 @@ onMounted(async () => {
       </el-form-item>
 
       <el-form-item label="Case Return Column ID" required>
-        <el-select v-model="form.attr_systemCaseInstanceId" :placeholder="t('common_selectOccupancyContent')"
+        <el-select v-model="form.attr_systemCaseInstanceId" :placeholder="t('common_selectedIsRequiredMsg')"
                    @change="handleCaseReturnId">
           <el-option v-for="item in stringFields" :key="item.id" :label="item.name" :value="item.id" />
         </el-select>
