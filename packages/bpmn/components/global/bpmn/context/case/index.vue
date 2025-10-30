@@ -83,7 +83,7 @@ async function getCaseOption() {
       caseOptionList.value = []
       return
     }
-    const excludeList = ['created_date', 'created_by', 'modified_by']
+    const excludeList = ['created_date', 'created_by', 'modified_by', 'case_id']
 
     caseOptionList.value = caseData[caseData.length - 1].fields.filter((item: any) => !excludeList.includes(item.id))
       .map((item: any) => {
