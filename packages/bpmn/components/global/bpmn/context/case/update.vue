@@ -84,7 +84,6 @@ async function init() {
 function handleUpdateField() {
   handleInitUpdateField()
   form.value.field = form.value.field.filter((item: any) => fieldsList.value.includes(item.attr_metadata))
-  setData()
 }
 
 function handleInitUpdateField() {
