@@ -111,10 +111,11 @@ async function getMasterTableData() {
     const { data } = await clientApi.api.getCaseDashboardInstanceCaseidPrimaryformData(instanceIdId)
     state.caseRecord = data
     const masterTableRecordId = state.caseRecord.rows.find((item: any) => item.id === props.setting.relatedField)?.value
+    if (!masterTableRecordId) throw new Error('Master table record not found')
     const { data: masterTableRecord } = await clientApi.api.postMasterTablesRecordPageNonpermission({
       name: props.setting.masterTableName,
       where: {
-        id: props.setting.relatedField
+        id: masterTableRecordId
       }
     })
     state.masterTableRecord = masterTableRecord[0]

@@ -46,9 +46,10 @@ function goBack() {
 }
 
 async function getLayout(layoutId: string, row: any) {
+  // layoutId = '4ddd2f48-f1b3-4659-88c7-42f515bf7ee4' // company
+  // layoutId = '30bda628-a371-44dd-bd79-996aa6c54993' // case
   caseTypeId.value = row.caseTypeId
   caseDefinitionKey.value = row.caseDefinitionKey
-  console.log(caseTypeId, caseDefinitionKey, instanceId, versionId)
 
   try {
     state.loading = true
