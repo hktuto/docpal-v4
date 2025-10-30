@@ -92,20 +92,7 @@ const filterList = computed(() => {
     })
     .filter((item: any) => !state.setting.layout.find((l: any) => item.name === l.name))
 })
-async function handleMasterTableChange(value: string, isInit: boolean = false) {
-  const curItem = state.masterTables.find((item: any) => item.value === value)
-  if (!!curItem) state.setting.masterTableName = curItem.label
-  const { data } = await adminApi.api.getMasterTablesId(value)
-  state.masterTableFields = data.fields
-    .map((item: any) => ({
-      ...item,
-      name: item.columnName,
-      label: item.columnName,
-      width: '50%'
-    }))
-    .sort((a: any, b: any) => a.label.localeCompare(b.label))
-  if (!isInit) state.setting.layout = state.setting.layout.filter((item: any) => state.masterTableFields.find((l: any) => l.name === item.name))
-}
+
 const widthList = [
   { width: '25%', label: '25%' },
   { width: '33%', label: '33%' },
@@ -160,6 +147,23 @@ async function getCaseFields() {
       }))
       .sort((a: any, b: any) => a.label.localeCompare(b.label))
   }
+}
+async function handleMasterTableChange(value: string, isInit: boolean = false) {
+  const curItem = state.masterTables.find((item: any) => item.value === value)
+  if (!!curItem) {
+    state.setting.masterTableName = curItem.label
+    state.setting.title = curItem.label
+  }
+  const { data } = await adminApi.api.getMasterTablesId(value)
+  state.masterTableFields = data.fields
+    .map((item: any) => ({
+      ...item,
+      name: item.columnName,
+      label: item.columnName,
+      width: '100%'
+    }))
+    .sort((a: any, b: any) => a.label.localeCompare(b.label))
+  if (!isInit) state.setting.layout = state.setting.layout.filter((item: any) => state.masterTableFields.find((l: any) => l.name === item.name))
 }
 function handleOpen(setting: any) {
   state.visible = true
