@@ -144,6 +144,7 @@ async function handleCase(caseId: string) {
   form.value.field = []
   await getCaseOption()
   setData()
+  handleInitUpdateField()
 }
 
 function handleCaseField(item: any) {
@@ -207,14 +208,16 @@ onMounted(async () => {
         </el-select>
       </el-form-item>
 
-      <el-divider v-if="caseOptionList.length > 0" />
-      <span>Fields</span>
-      <div style="display: flex; align-items: center; justify-content: space-between;">
-        <el-select v-model="fieldsList" :placeholder="t('common_selectOccupancyContent')" multiple collapse-tags
-                   collapse-tags-tooltip @change="handelFieldsList">
-          <el-option v-for="item in caseOptionList" :key="item.id" :label="item.name" :value="item.id" />
-        </el-select>
-        <el-button @click="handleUpdateField">Update Field</el-button>
+      <div v-if="caseOptionList.length > 0">
+        <el-divider />
+        <span>Fields</span>
+        <div style="display: flex; align-items: center; justify-content: space-between;">
+          <el-select v-model="fieldsList" :placeholder="t('common_selectOccupancyContent')" multiple collapse-tags
+                     collapse-tags-tooltip @change="handelFieldsList">
+            <el-option v-for="item in caseOptionList" :key="item.id" :label="item.name" :value="item.id" />
+          </el-select>
+          <el-button @click="handleUpdateField">Update Field</el-button>
+        </div>
       </div>
 
       <template v-loading="loading" v-for="item in updateFieldsList">
