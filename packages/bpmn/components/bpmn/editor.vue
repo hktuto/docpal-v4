@@ -424,7 +424,7 @@ defineExpose({
         </template>
       </FormDesigner>
     </ElDialog>
-    <ElDialog v-model="formRenderVisible" width="90%" distory-on-close draggable>
+    <ElDialog v-model="formRenderVisible" class="big" distory-on-close draggable>
       <WorkflowDetailFormRender ref="fromRenderRef" />
     </ElDialog>
     <div class="actions">

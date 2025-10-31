@@ -159,7 +159,7 @@ function CalMax() {
   return Number(((40 / width) * 100).toFixed(0))
 }
 
-const handleMetaChange = async ({ fieldName, formModel, newValue, oldValue }) => {
+const handleMetaChange = async ({ fieldName, formModel, newValue, oldValue }: any) => {
   state.selectedDoc.properties = deepCopy(formModel)
   state.selectedDoc.fileType = formModel.documentType
   state.selectedDoc.docName = formModel.docName
@@ -185,13 +185,13 @@ function ocrPermission(doc): boolean {
   }
 }
 
-async function handleNodeClick(row) {
+async function handleNodeClick(row: any) {
   if (row.id === state.selectedDoc.id) return
   state.selectedDoc = row
   state.selectedDoc.canOcr = ocrPermission(row)
 
   if (row.aiAnalysisDocument && !row.aiAnalysis && row.aiAnalysisDocument.metaDatas) {
-    row.aiAnalysis = row.aiAnalysisDocument.metaDatas.reduce((prev: any, item) => {
+    row.aiAnalysis = row.aiAnalysisDocument.metaDatas.reduce((prev: any, item: any) => {
       if (item.label || item.value) {
         prev[item.name] = {}
         if (item.label) prev[item.name].label = item.label
@@ -235,7 +235,7 @@ function applyAllAi() {
   MetaFormRef.value.setData(properties)
 }
 
-async function handleDeleteFile(data) {
+async function handleDeleteFile(data: any) {
   try {
     const action = await ElMessageBox.confirm(`${t('msg_confirmWhetherToDelete')}`, {
       confirmButtonText: t('dpButtom_confirm'),
@@ -324,12 +324,18 @@ async function handleSubmit() {
       if (!!pValue && !['documentType', 'docName'].includes(key)) prev[key] = pValue
       return prev
     }, {})
+    const extraParams: any = {}
+    if (!nodeItem.isFolder) {
+      const item_names = nodeItem.name.split('.')
+      extraParams.fileSuffix = item_names.pop()
+    }
     prev.push({
       id: key,
       parentId: nodeItem.parentId,
       docName: nodeItem.docName || getFileName(nodeItem.name, nodeItem.isFolder),
       metadatas: JSON.stringify(properties),
-      documentType: nodeItem.fileType
+      documentType: nodeItem.fileType,
+      ...extraParams
     })
     docList.push({
       name: nodeItem.name,
@@ -355,7 +361,7 @@ async function handleSubmit() {
         relatedIdOrPath: data.parentId
       })
     } else throw new Error(t('dpMsg_503'))
-  } catch (error) {
+  } catch (error: any) {
     if (error.message) ElMessage.error(error.message)
   } finally {
     setTimeout(() => {
@@ -369,17 +375,19 @@ async function checkFailedListExist(fileConfirmDTOList: any[]): Promise<boolean>
     .postNuxeoDocumentCheckfileexist({
       uploadId: id,
       fileCheckList: fileConfirmDTOList.reduce((prev, item) => {
-        if (!item.parentId)
+        if (!item.parentId) {
           prev.push({
             id: item.id,
-            docName: item.docName
+            docName: item.docName,
+            fileSuffix: '.' + item.fileSuffix
           })
+        }
         return prev
       }, [])
     })
     .then((res: any) => res.data.checkFailedList)
   state.repearNameIdList = []
-  const fileNames = checkFailedList.reduce((prev, item) => {
+  const fileNames = checkFailedList.reduce((prev: any, item: any) => {
     prev.push(item.docName)
     state.repearNameIdList.push(item.id)
     return prev
@@ -406,7 +414,7 @@ async function init() {
     })
     .then((res) => res.data)
   console.log('docList', docList)
-  docList = docList.map((item) => ({
+  docList = docList.map((item: any) => ({
     ...item,
     isFolder: item.fileType === 'Folder'
   }))

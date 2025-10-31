@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { clientApi } from 'api'
 import { ElNotification } from 'element-plus'
+
 const routerProvider = inject(MenuRouterKey)
 const { t } = useI18n()
 const { docId } = defineProps<{
@@ -21,6 +22,7 @@ async function getTemplateList() {
   const { data } = (await clientApi.api.getWatermarkTemplatesAll()) as any
   templateList.value = data.sort((a, b) => a.name.localeCompare(b.name))
 }
+
 async function getWatermarkDetail() {
   // get document detail from route
   const data = await clientApi.api.postNuxeoDocument({ idOrPath: docId }).then((res) => res.data)
@@ -43,10 +45,12 @@ function cancel() {
   })
   routerProvider?.navigateTo(newItem)
 }
+
 const { getWatermarkTemplateDetail, createWatermarkTemplate } = useWatermark()
 const changeTemplateDialog = ref(false)
 
 const selectedTemplateId = ref('')
+
 async function templateChange(command: string) {
   changeTemplateDialog.value = true
   selectedTemplateId.value = command
@@ -86,6 +90,7 @@ const previewFile = reactive({
   }
 })
 const temTemplate = ref()
+
 async function preview() {
   // save template
 
@@ -126,6 +131,7 @@ async function saveNewVersion() {
 const newFileDialog = ref(false)
 
 const newFileForm = reactive<any>({})
+
 async function saveNewFile() {
   newFileForm.name = doc.value.name
   // get displayMeta
@@ -136,8 +142,10 @@ async function saveNewFile() {
     getDisplayMeta(doc.value.type || doc.value.documentType || doc.value.docpalType)
   })
 }
+
 const metaFormRef = ref()
 const pathFormRef = ref()
+
 async function getDisplayMeta(documentType: string) {
   await metaFormRef.value.init(documentType, { isFolder: false })
   metaFormRef.value.setData({ ...doc.value.properties, documentType })
@@ -149,44 +157,48 @@ function cancelSaveNewFile() {
 }
 
 async function confimSaveNewFile() {
-  // TODO : check name is duplicate
+  try {
   // TODO : check path is valid
-  const properties = await metaFormRef.value.getData()
-  const { path } = await pathFormRef.value.getData()
-  const idOrPath = path.pop()
+    const properties = await metaFormRef.value.getData()
+    const { path } = await pathFormRef.value.getData()
+    const idOrPath = path.pop()
+    const isDuplicate: any = await clientApi.api.postNuxeoDocumentDuplicateName({
+      parentPath: idOrPath,
+      name: newFileForm.name
+    }).then((res) => res.data)
 
-  const isDuplicate = await clientApi.api
-    .postNuxeoDocumentIsduplicatename({
-      path: idOrPath,
-      titles: [newFileForm.name]
+    if (isDuplicate.hasDuplicateTitle) {
+      routerProvider?.message.error(t('dpTip_duplicateError'))
+      return
+    }
+
+    const params = {
+      idOrPath,
+      name: newFileForm.name,
+      properties,
+      watermarkTemplateId: temTemplate.value.id,
+      originDocumentId: doc.value.id
+    }
+
+    const newFile = await clientApi.api.postNuxeoDocumentCopyWatermark(params).then(r => r.data)
+    const newItem = createDetailPageParams({
+      idOrPath: newFile.id,
+      docName: newFile.name,
+      ...newFile
     })
-    .then((res) => res.data)
-  if (isDuplicate[newFileForm.name]) {
-    ElNotification.error(t('dpTip_duplicateError'))
-    return
-  }
-  const params = {
-    idOrPath,
-    name: newFileForm.name,
-    properties,
-    watermarkTemplateId: temTemplate.value.id,
-    originDocumentId: doc.value.id
-  }
 
-  const { data: newFile } = (await clientApi.api.postNuxeoDocumentCopyWatermark(params)) as any
-  const newItem = createDetailPageParams({
-    idOrPath: newFile.id,
-    docName: newFile.name,
-    ...newFile
-  })
-  routerProvider?.navigateTo(newItem)
-  // router.push({
-  //     path: '/browse',
-  //     query: {
-  //         docId: newFile.id
-  //     }
-  // })
+    routerProvider?.navigateTo(newItem)
+    // router.push({
+    //     path: '/browse',
+    //     query: {
+    //         docId: newFile.id
+    //     }
+    // })
+  } catch (e) {
+    console.log(e)
+  }
 }
+
 onMounted(() => {
   watermarkDetail.value = {
     name: 'tem_' + new Date().getTime(),
@@ -211,12 +223,13 @@ onMounted(() => {
               <ElButton>Choose Template</ElButton>
               <template #dropdown>
                 <el-dropdown-menu>
-                  <ElDropdownItem v-for="item in templateList" :key="item.id" :command="item.id">{{ item.name }}</ElDropdownItem>
+                  <ElDropdownItem v-for="item in templateList" :key="item.id" :command="item.id">{{ item.name }}
+                  </ElDropdownItem>
                 </el-dropdown-menu>
               </template>
             </ElDropdown>
             <ElButton @click="cancel">Cancel</ElButton>
-            <ElButton type="primary"  @click="preview">Confirm</ElButton>
+            <ElButton type="primary" @click="preview">Confirm</ElButton>
           </div>
         </template>
       </WatermarkDetail>
@@ -271,6 +284,7 @@ onMounted(() => {
   position: relative;
   overflow: hidden;
 }
+
 .pageContainer {
   width: 100%;
   height: 100%;
@@ -278,6 +292,7 @@ onMounted(() => {
   position: relative;
   overflow: hidden;
 }
+
 .footerAction {
   width: 100%;
   display: flex;

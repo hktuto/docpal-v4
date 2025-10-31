@@ -25,63 +25,7 @@
         "automaticDropdown": false,
         "multiple": false,
         "multipleLimit": 0,
-        "optionItems": [
-          {
-            "value": "0fdb813b-e030-49bc-82b3-548715b51559",
-            "label": "Backup Personal info Case Definition",
-            "versionId": "10:19500907-55c6-40ae-9cde-f945b902b14e"
-          },
-          {
-            "value": "10c4ee08-2a29-4ce9-ba4e-77313d3d84b9",
-            "label": "customer",
-            "versionId": "3:48d900e1-dc42-4158-bd41-be090afbe556"
-          },
-          {
-            "value": "99789945-2d3a-4832-8306-a0ec8eae183f",
-            "label": "Customer Case",
-            "versionId": "5:91294115-547c-4b00-a3b2-70b60fd33db3"
-          },
-          {
-            "value": "86a599cc-44c1-4ff6-b900-ab19b8db4797",
-            "label": "Order Case",
-            "versionId": "4:500222c6-fd5d-482c-a2e0-c1f37f286bf0"
-          },
-          {
-            "value": "51cc6d59-7f89-49b5-b350-f73a7f6ccdcd",
-            "label": "ROC Parts",
-            "versionId": "3:b65a91e7-8498-40fb-af99-839693ade6d1"
-          },
-          {
-            "value": "903ce611-65bf-4b3a-a16b-d31469c819d0",
-            "label": "Single Case",
-            "versionId": "2:79ae30d0-d3f3-476e-b74a-d7fe43c39f8d"
-          },
-          {
-            "value": "1c7bcf0a-02e8-4608-8418-2ffc3bbd0f3f",
-            "label": "SoWa",
-            "versionId": "4:d670acc1-807f-4f47-84ef-24554dc503b3"
-          },
-          {
-            "value": "7ede7103-0766-45cc-a83e-1e6a349b4f2c",
-            "label": "Task Case",
-            "versionId": "26:9c7e92d8-5266-483d-b3ea-ff8441caef7d"
-          },
-          {
-            "value": "724a446b-510e-417d-9563-8058583315ef",
-            "label": "test data sync",
-            "versionId": "2:ef4111e8-0042-4e0e-9229-4006485e17d3"
-          },
-          {
-            "value": "77090c07-a635-42eb-8610-380ce49ccaca",
-            "label": "testOy",
-            "versionId": "16:c8bc702d-1cbd-4a74-ba39-20c1454c1812"
-          },
-          {
-            "value": "a1a71851-1f9b-45a5-9ed8-0a21854dcadb",
-            "label": "testOy2",
-            "versionId": "4:d0442b83-3be8-4d4f-ad82-2272a64ace35"
-          }
-        ],
+        "optionItems": [],
         "required": false,
         "requiredHint": "",
         "validation": "",

@@ -141,6 +141,16 @@ function setFieldsList(item: any) {
           <div style="width: 100%">
             <div class="content">
               <ElForm label-position="top" @sumit.stop :disabled="!item.check">
+               
+
+                <ElFormItem v-if="!item.attr_isFolder" label="File">
+                  <ElSelect v-model="item.field[item.field.length - 1].attr_formProperty" clearable
+                            :disabled="editorProvider.readonly.value" @change="handleUpdateField(item)">
+                    <ElOption v-for="option in fileFieldOption(item.field[item.field.length - 1])"
+                              :key="option.id" :label="option.name" :value="option.id" />
+                  </ElSelect>
+                </ElFormItem>
+                <el-divider v-if="!item.attr_isFolder" />
                 <div>
                   {{ $t('Folder name rule') }}:
                   <template v-for="(i, index) in getLabelList(item.rule)" :key="index">
@@ -154,16 +164,6 @@ function setFieldsList(item: any) {
                             @change="handleUpdateField(item)">
                     <ElOption v-for="option in filterOption(metaField)" :key="option.id" :label="option.name"
                               :value="option.id" />
-                  </ElSelect>
-                </ElFormItem>
-
-                <el-divider v-if="!item.attr_isFolder" />
-
-                <ElFormItem v-if="!item.attr_isFolder" label="File">
-                  <ElSelect v-model="item.field[item.field.length - 1].attr_formProperty" clearable
-                            :disabled="editorProvider.readonly.value" @change="handleUpdateField(item)">
-                    <ElOption v-for="option in fileFieldOption(item.field[item.field.length - 1])"
-                              :key="option.id" :label="option.name" :value="option.id" />
                   </ElSelect>
                 </ElFormItem>
               </ElForm>
