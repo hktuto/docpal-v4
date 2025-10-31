@@ -7,7 +7,7 @@
   </el-form>
 </template>
 <script lang="ts" setup>
-import { ElMessage } from 'element-plus'
+
 import { Graph, Node } from '@antv/x6'
 const routerProvider = inject(MenuRouterKey)
 const props = withDefaults(defineProps<{
@@ -18,7 +18,7 @@ const props = withDefaults(defineProps<{
   options: [
     'requiredRule',
     'repetitionRule',
-    // 'manualActivationRule'
+    'manualActivationRule'
   ]
 })
 const { node } = toRefs(props)
@@ -63,11 +63,14 @@ watch(node, () => {
       if (itemControl.repetitionRule || itemControl.repetitionRule === '') form.value.repetitionRule = true
       if (itemControl.requiredRule || itemControl.requiredRule === '') form.value.requiredRule = true
     } catch (error) {
+      console.log(error)
     }
   }
 }, {
   immediate: true
 })
+
+
 </script>
 <style lang="scss" scoped>
 .el-form {
