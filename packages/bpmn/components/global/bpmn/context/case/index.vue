@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { adminApi } from 'api'
 import type { Node } from '@antv/x6'
-
+import { ElMessage } from 'element-plus'
 const { t } = useI18n()
 const { node } = defineProps<{
   node: Node
@@ -11,7 +11,8 @@ const editorProvider = inject(EDITOR_PROVIDER)
 if (!graphProvider || !editorProvider) {
   throw createError('graph provider not found')
 }
-const { bpmnGlobalRules } = editorProvider.BpmnRule
+
+const { setBpmnRules, getBpmnRuleType, bpmnGlobalRules } = editorProvider.BpmnRule
 
 const allFields = computed(() => {
   if (!bpmnGlobalRules.value || bpmnGlobalRules.value.length === 0) return []
@@ -45,7 +46,7 @@ async function getCaseLise() {
       }
     })
   } catch (e) {
-    console.log(e)
+    console.error(e)
   }
 }
 
@@ -77,7 +78,7 @@ async function init() {
 async function getCaseOption() {
   loading.value = true
   try {
-    const caseData: any = await adminApi.api.getCaseTypesIdStarttask(form.value.attr_caseTypeId).then(r => r.data)
+    const caseData: any = await adminApi.api.getCaseTypesIdStarttask(form.value.attr_caseTypeId).then((r) => r.data)
 
     if (caseData.length == 0) {
       caseOptionList.value = []
@@ -85,7 +86,8 @@ async function getCaseOption() {
     }
     const excludeList = ['created_date', 'created_by', 'modified_by', 'case_id']
 
-    caseOptionList.value = caseData[caseData.length - 1].fields.filter((item: any) => !excludeList.includes(item.id))
+    caseOptionList.value = caseData[caseData.length - 1].fields
+      .filter((item: any) => !excludeList.includes(item.id))
       .map((item: any) => {
         return {
           id: item.id,
@@ -158,11 +160,50 @@ function setData() {
   })
   graphProvider?.graph.value?.stopBatch('update-case-field-data')
 }
-
+async function importFields() {
+  const defaultFields = ['id', 'modified_by', 'modified_date', 'created_by', 'created_date', 'status']
+  const rules = caseOptionList.value
+    .filter((item: any) => !defaultFields.includes(item.name))
+    .filter((item: any) => bpmnGlobalRules.value.findIndex((rule: any) => rule.id === item.id.toLowerCase()) === -1)
+    .map((item: any) => {
+      const params: any = {
+        maxLength: item.maxLength || 200
+      }
+      return {
+        id: item.id.toLowerCase(),
+        name: item.name,
+        type: getType(item.type),
+        ...params
+      }
+    })
+  if (rules.length === 0) {
+    ElMessage.info(t('dpMsg_noDataUpdate'))
+    return
+  }
+  await setBpmnRules(rules)
+  caseOptionList.value.forEach((item: any) => {
+    item.formProperty = item.id.toLowerCase()
+    handleCaseField(item)
+  })
+  function getType(type: string) {
+    switch (type) {
+      case 'timestamp':
+      case 'date':
+        return 'date'
+      case 'boolean':
+        return 'boolean'
+      case 'bigint':
+      case 'decimal':
+      case 'number':
+        return 'long'
+      default:
+        return 'text'
+    }
+  }
+}
 onMounted(async () => {
   await init()
 })
-
 </script>
 
 <template>
@@ -176,25 +217,25 @@ onMounted(async () => {
       </el-form-item>
 
       <el-form-item label="Case Return Column ID" required>
-        <el-select v-model="form.attr_systemCaseInstanceId" :placeholder="t('common_selectedIsRequiredMsg')"
-                   @change="handleCaseReturnId">
+        <el-select v-model="form.attr_systemCaseInstanceId" :placeholder="t('common_selectedIsRequiredMsg')" @change="handleCaseReturnId">
           <el-option v-for="item in stringFields" :key="item.id" :label="item.name" :value="item.id" />
         </el-select>
       </el-form-item>
-
-      <el-divider v-if="caseOptionList.length > 0" />
-
-      <template v-loading="loading" v-for="item in caseOptionList">
-        <el-form-item :label="item.name">
-          <el-select v-model="item.formProperty" clearable @change="handleCaseField(item)">
-            <el-option v-for="field in allFields" :key="field.id" :label="field.name" :value="field.id" />
-          </el-select>
-        </el-form-item>
+      <template v-if="caseOptionList.length > 0">
+        <el-divider />
+        <el-button size="small" type="primary" @click="importFields">Auto Import </el-button>
       </template>
+      <div v-loading="loading">
+        <template v-for="item in caseOptionList" :key="item.id">
+          <el-form-item :label="item.name" >
+            <el-select v-model="item.formProperty" clearable @change="handleCaseField(item)">
+              <el-option v-for="field in allFields" :key="field.id" :label="field.name" :value="field.id" />
+            </el-select>
+          </el-form-item>
+        </template>
+      </div>
     </el-form>
   </div>
 </template>
 
-<style scoped lang="scss">
-
-</style>
+<style scoped lang="scss"></style>
