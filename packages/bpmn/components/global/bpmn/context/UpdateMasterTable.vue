@@ -146,7 +146,7 @@ async function importFields() {
       return {
         id: item.columnName,
         name: item.columnName,
-        type: getBpmnRuleType(item.type),
+        type: getType(item.type),
         ...params
       }
     })
@@ -163,6 +163,21 @@ async function importFields() {
   })
 
   refreshData()
+  function getType(type: string) {
+    switch (type) {
+      case 'timestamp':
+      case 'date':
+        return 'date'
+      case 'boolean':
+        return 'boolean'
+      case 'bigint':
+      case 'decimal':
+      case 'number':
+        return 'long'
+      default:
+        return 'text'
+    }
+  }
 }
 
 onMounted(async () => {
