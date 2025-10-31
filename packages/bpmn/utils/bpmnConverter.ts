@@ -2,6 +2,7 @@ import {XMLParser, XMLBuilder} from "fast-xml-parser";
 import type {Cell, Graph} from '@antv/x6'
 import type { BPMNJSON } from "./bpmnType";
 import { BpmnElementType, bpmnElement } from "./bpmnElement";
+import { ElMessage } from "element-plus";
 
 
 export const nodeXmltoJson = function(nodeXml: string) {
@@ -372,6 +373,35 @@ const normalizeToArray = (obj:any, key?:string):any[] => {
          return [obj]
     }
     return obj
+}
+
+
+export async function validateBpmnJson(bpmnJson:any)  {
+    const nodes = bpmnJson.cells
+    const promises:any[] = []
+    // loop BpmnElementType and check if validator is exist
+    for(let type of Object.values(BpmnElementType)) {
+      if(bpmnElement[type] && bpmnElement[type].validator) {
+        // get all nodes of type
+        const checkNodes = nodes.filter((node:any) => node.data.type === type)
+        checkNodes.forEach((node:any) => {
+          promises.push(bpmnElement[type]?.validator?.(node.data.data))
+        })
+      }
+    }
+    // check if all promises are resolved, if not , show all error message from promises
+    const results = await Promise.allSettled(promises);
+    let hasRejected = false
+    results.forEach((result:any) => {
+      if(result.status === 'rejected') {
+        hasRejected = true
+        ElMessage.error(result.reason.message);
+      }
+    })
+    if(hasRejected) {
+      throw new Error('Invalid BPMN');
+    }
+    return true;
 }
     
 

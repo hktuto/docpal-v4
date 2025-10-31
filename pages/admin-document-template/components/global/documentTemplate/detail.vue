@@ -52,6 +52,7 @@ async function getInfo() {
 }
 
 async function getPreviewFile() {
+  console.log("getPreviewFile", state.info.documentId)
   state.previewFile.loading = true
   try {
     state.previewFile.blob = await adminApi.api.postNuxeoDocumentPreview({ idOrPath: state.info.documentId }, {
@@ -68,9 +69,11 @@ async function getPreviewFile() {
 }
 
 async function getVariables() {
+  console.log("getVariables", id)
   try {
     // const date = new Date().valueOf()
     const { data: res } = await adminApi.api.getTemplateDocumentRefreshId(id) as any
+    console.log("res", res)
     if (!res.templateVariable) return
     const templateVariable = [...new Set(JSON.parse(res.templateVariable))]
     state.variables = []
@@ -168,6 +171,7 @@ function handleEdit() {
 }
 
 function handleRefresh(state: any) {
+  console.log("handleRefresh", state)
   if (!state || state.info) getInfo()
   if (!state || state.variables) getVariables()
   if (!state || state.preview) getPreviewFile()
@@ -251,6 +255,7 @@ async function convertJsonToBlob(jsonData: any): Promise<Blob> {
 
 async function updateVariables(newData: any) {
   variables.value = newData
+  console.log("updateVariables", variables.value)
   templateVariablesRendererRef.value.setVariables(deepCopy(variables.value))
 }
 
@@ -343,7 +348,7 @@ onBeforeMount(async () => {
         </div>
         <div class="flex-x-between">
           <SvgIcon v-if="state.info.fileType !== 'Word'" class="el-icon--left" src="/icons/file/file-refresh.svg"
-                   round :content="t('common_refresh')" @click="handleRefresh({})" />
+                   round :content="t('common_refresh')" @click="handleRefresh()" />
 
           <template v-if="state.info.fileType === 'Word'">
             <SvgIcon v-if="!state.isEdit" src="/icons/file/edit.svg" class="el-icon--right" round
@@ -385,7 +390,7 @@ onBeforeMount(async () => {
           </template>
 
           <BrowseActionsOffice v-if="state.info.fileType !== 'Word'" :doc="{...state.info, id: state.info.documentId}"
-                               @refresh="handleRefresh({})" />
+                               @refresh="handleRefresh()" />
           <TemplateReplaceButton v-if="state.info.fileType !== 'Word'" :templateInfo="state.info"
                                  class="el-icon--right" @refresh="handleRefresh({ variables: true, preview: true })" />
         </div>
@@ -393,7 +398,7 @@ onBeforeMount(async () => {
 
       <el-divider />
 
-      <div v-if="state.pageLoading">
+      <div v-if="state.pageLoading" class="reader-container">
         <template v-if="state.info.fileType === 'Word'">
           <div class="doc-template-viewer-container" v-loading="state.saveLoading">
             <DocTemplateViewer ref="templateViewerRef" v-if="!state.isEdit" :options="documentOptions"
@@ -472,7 +477,6 @@ onBeforeMount(async () => {
   display: grid;
   grid-template-rows: min-content 1fr;
   gap: var(--app-space-xs);
-  padding-top: var(--app-space-xs);
 }
 
 .template-interact-drawer {
@@ -495,8 +499,8 @@ onBeforeMount(async () => {
   font-weight: bold;
   line-height: 1.2;
   letter-spacing: 0px;
-  color: #606266;
-  padding-inline: var(--app-space-xs);
+  color: var(--app-grey-300);
+  padding-left: var(--app-space-xs);
 }
 
 .save-or-exit-icon-container {

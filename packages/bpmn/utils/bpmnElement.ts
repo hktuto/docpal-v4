@@ -102,6 +102,12 @@ export type BpmnElement = {
     }
     clickHandler: (args: { node: Cell; view: Cell }) => void
     contextMenuComponent?: string | Function
+    validator?: (args: {
+      attr_name: string,
+      attr_id: string,
+      extensionElements?: any,
+      [key: string]: any
+    }) => Promise<boolean>
   }
 }
 
@@ -148,7 +154,6 @@ export const bpmnElement: BpmnElement = {
     }),
     embed: false,
     toolbar: [],
-
     newNodeData: (id, label, data) => ({
       id,
       name: label,
@@ -282,6 +287,15 @@ export const bpmnElement: BpmnElement = {
         return 'LazyBpmnContextSignature'
       }
       return 'LazyBpmnContextUserTask'
+    },
+    validator: async (nodeData) => {
+      // check if candidate or assignee is set
+      const candidate = nodeData['attr_flowable:candidateGroups']
+      const assignee = nodeData.extensionElements['flowable:taskListener']?.['flowable:field']?.['flowable:expression']?.['__cdata']
+      if (!candidate && !assignee) {
+        throw new Error(`Candidate or assignee is required on ${nodeData.attr_name}`)
+      }
+      return true
     }
   },
   exclusiveGateway: {
@@ -475,6 +489,11 @@ export const bpmnElement: BpmnElement = {
           case '${startCaseInstanceDelegate}':
             icon = '/bpmn/icons/case.svg'
             type = 'Case Task'
+            color = '#7B61FF'
+            break
+          case '${updateCaseInstanceInfoDelegate}':
+            icon = '/bpmn/icons/case.svg'
+            type = 'Update Case Data Task'
             color = '#7B61FF'
             break
         }
@@ -722,6 +741,7 @@ export const bpmnElement: BpmnElement = {
                 attr_masterTableId: '',
                 attr_workflowInfo: '',
                 attr_tableColumn: '',
+                attr_masterTableReturnId: '',
                 field: []
               }
             }
@@ -737,6 +757,7 @@ export const bpmnElement: BpmnElement = {
                 attr_masterTableId: '',
                 attr_workflowInfo: '',
                 attr_tableColumn: '',
+                attr_masterTableReturnId: '',
                 field: []
               }
             }
@@ -903,7 +924,7 @@ export const bpmnElement: BpmnElement = {
             extensionElements: {
               ['flowable:field']: [
                 {
-                  attr_name: 'message',
+                  attr_name: 'system_notification_message',
                   'flowable:string': { __cdata: '{"templateId": "notification.workflow.custom","level": "success","eventType": "common","additionalContent": "","showNotification": true,"notiStatus":"SUCCESS"}' }
                 },
                 {
@@ -921,7 +942,7 @@ export const bpmnElement: BpmnElement = {
             extensionElements: {
               ['flowable:field']: [
                 {
-                  attr_name: 'message',
+                  attr_name: 'system_notification_message',
                   'flowable:string': { __cdata: '{"templateId": "notification.workflow.custom","level": "success","eventType": "common","additionalContent": "","showNotification": true,"notiStatus":"SUCCESS"}' }
                 },
                 {
@@ -999,7 +1020,8 @@ export const bpmnElement: BpmnElement = {
             extensionElements: {
               'flowable:newCase': {
                 attr_caseTypeId: '',
-                attr_name: ''
+                attr_name: '',
+                attr_systemCaseInstanceId: ''
               }
             }
           }),
@@ -1008,6 +1030,37 @@ export const bpmnElement: BpmnElement = {
             attr_id: id,
             attr_name: 'New Case Task',
             ['attr_flowable:delegateExpression']: '${startCaseInstanceDelegate}',
+            extensionElements: {
+              'flowable:newCase': {
+                attr_caseTypeId: '',
+                attr_name: '',
+                attr_systemCaseInstanceId: ''
+              }
+            }
+          })
+        })
+      },
+      {
+        icon: 'bpmn:case',
+        label: 'Update Case Data Task',
+        group: '',
+        order: 0,
+        dropData: (id: string) => ({
+          id,
+          ...bpmnElement.serviceTask.nodeStyle({
+            ['attr_flowable:delegateExpression']: '${updateCaseInstanceInfoDelegate}',
+            extensionElements: {
+              'flowable:newCase': {
+                attr_caseTypeId: '',
+                attr_name: ''
+              }
+            }
+          }),
+          label: 'New Update Case Data Task',
+          data: bpmnElement.serviceTask.newNodeData(id, 'New Update Case Data Task', {
+            attr_id: id,
+            attr_name: 'Update Case Data Task',
+            ['attr_flowable:delegateExpression']: '${updateCaseInstanceInfoDelegate}',
             extensionElements: {
               'flowable:newCase': {
                 attr_caseTypeId: '',
@@ -1062,6 +1115,8 @@ export const bpmnElement: BpmnElement = {
           return 'LazyBpmnContextMessage'
         case '${startCaseInstanceDelegate}':
           return 'LazyBpmnContextCase'
+        case '${updateCaseInstanceInfoDelegate}':
+          return 'LazyBpmnContextCaseUpdate'
         default:
           return 'LazyBpmnContextCustomeService'
       }
@@ -1109,6 +1164,7 @@ export const bpmnElement: BpmnElement = {
         }),
         label: 'New Script Task',
         data: bpmnElement.scriptTask.newNodeData(id, 'New Script Task', {
+          ['attr_flowable:async']: true,
           attr_id: id,
           attr_name: 'Script Task',
           attr_scriptFormat: 'javascript',

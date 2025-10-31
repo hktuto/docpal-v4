@@ -125,6 +125,7 @@ useEventListener(window, 'message', gotMessageFromIframe)
 .iframeContainer{
     width: 100%;
     margin: 0 auto;
+    height: 100%;
 }
 iframe {
         width: 100%;
