@@ -11,6 +11,7 @@ const conditionProvider = inject(CONDITION_PROVIDER)
 if(!graphProvider || !editorProvider || !conditionProvider) {
     throw createError('provider not found')
 }
+const { bpmnGlobalRules } = editorProvider.BpmnRule
 
 const typeOptions = computed(() => {
     if(!editorProvider.conditionSetting.value) return []
@@ -87,15 +88,11 @@ function typeChange(value:string) {
     }
 }
 
-const allFieldOptions = computed(() => {
-    if(!graphProvider.allFormField.value) return []
-    return Object.keys(graphProvider.allFormField.value).map((key) => {
-    return {
-      label: graphProvider.allFormField.value[key].attr_name,
-      value: graphProvider.allFormField.value[key].attr_id
-    }
-  })
-});
+const allFields = computed(() => {
+  if (!bpmnGlobalRules.value || bpmnGlobalRules.value.length === 0) return []
+
+  return bpmnGlobalRules.value
+})
 
 const masterTableLoading = ref(false)
 const selectedMasterTableOption = ref<any[]>([])
@@ -169,7 +166,7 @@ watch(form, () => {
             </ElFormItem>
             <ElFormItem label="Field" prop="attr_fieldName">
                 <ElSelect v-model="form.attr_fieldName" placeholder="Select form field" :disabled="editorProvider.readonly.value"  filterable clearable>
-                    <ElOption v-for="item in allFieldOptions" :key="item.value" :label="item.label" :value="item.value"></ElOption>
+                    <ElOption v-for="item in allFields"  :key="item.id" :label="item.name" :value="item.id" />
                 </ElSelect>
             </ElFormItem>
             <ElFormItem label="Condition" prop="attr_condition">

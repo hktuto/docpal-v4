@@ -4,7 +4,7 @@
     class="o-auto dp-dashboard--card__padding dp-dashboard--card__scroll"
     ref="cardRef"
     :hideSetting="hideSetting"
-    :title="$t('dashboard.cmmnBasicInfo')"
+    :title="setting.title || $t('dashboard.cmmnBasicInfo')"
     :setting="setting"
     :settingRef="settingRef"
     @delete="handleDelete"
@@ -12,13 +12,13 @@
   >
     <div class="flex-zoom">
       <div :style="`--field-width: ${item.width}`" class="list-group-item" v-for="item in state.layout">
-        <div class="header">{{ state.label[item.id] || renderLabel(item.name) }}</div>
+        <div class="header">{{ displayLabel(item.label) }}</div>
         <div :class="{ content: true, 'content--link': item.linkType }" @click="handleLink(item)">
           {{ displayValue(item) }}
         </div>
       </div>
     </div>
-    <DashboardBasicInfoSetting ref="settingRef" :allList="state.data.fields" @delete="handleDelete" @refresh="handleRefresh" />
+    <DashboardRelatedCaseInfoSetting ref="settingRef" @delete="handleDelete" @refresh="handleRefresh" />
   </DashboardCard>
 </template>
 <script lang="ts" setup>
@@ -50,23 +50,24 @@ const { t } = useI18n()
 const tabProvider = inject(TabManagerKey)
 function displayValue(item: any) {
   if (platform.value === 'admin') {
-    return state.defaultValue[item.id]
+    return item.defaultValue
   }
-  if (item.type === 'date') {
+  if (item.dataType === 'timestamp') {
     return formatDate(item.value)
   }
-  if (item.type === 'boolean') {
-    // TODO: translate later
+  if (item.dataType === 'bit') {
     return item.value ? 'Yes' : 'No'
   }
   return item.value || '--'
 }
+function displayLabel(label: any) {
+  let _label = label.split('_').join(' ')
+  return _label.toLowerCase().replace(/\b\w/g, (s) => s.toUpperCase())
+}
 const state = reactive<any>({
-  data: {},
-  layout: [],
-  defaultValue: {},
-  label: {},
-  mode: 'develop'
+  caseRecord: {},
+  masterTableRecord: {},
+  layout: []
 })
 // #region module: dialog
 
@@ -99,81 +100,39 @@ function renderLabel(label: any) {
   if (label.toUpperCase() === label) return label
   return label.toLowerCase().replace(/\b\w/g, (s) => s.toUpperCase())
 }
-
-async function getCDBasciInfo() {
+async function getCaseData() {
   try {
-    // remove this line, cause it will cause refresh data
-    // if (state.data?.fields?.length > 0) return state.data
-    const id = caseProvider.instanceId?.value || null
-    const versionId = caseProvider.versionId?.value || null
-    const appPlatform = useAppPlatform()
-    if (id) {
-      // in client platform
-      state.mode = 'normal'
-      const { data } = await globalApi.api.getCaseDashboardInstanceCaseidPrimaryformData(id)
-      state.data = data
-    } else if (versionId) {
-      // in admin platform
-      state.mode = 'develop'
-      const { data: form }: any = await globalApi.api.getCaseDashboardVersionVersionidPrimaryform(versionId)
-      form.rows = form.fields.reduce((prev: any, item: any) => {
-        let value = item.type
-        if (item.type === 'date') value = '2024-01-01'
-        else if (item.type === 'number') value = 100
-        else value = t(`virtual.${item.type}_${item.name}`)
-        prev.push({ ...item, value })
+    const instanceIdId = caseProvider.instanceId?.value || null
+    if (!instanceIdId)
+      return props.setting.layout.reduce((prev: any, item: any) => {
+        prev[item.name] = item.defaultValue
         return prev
-      }, [])
-      state.data = form
-    } else {
-      state.data = {
-        fields: [],
-        rows: []
-      }
-    }
+      }, {})
+    const { data } = await clientApi.api.getCaseDashboardInstanceCaseidPrimaryformData(instanceIdId)
+    state.caseRecord = data
+    const caseId = state.caseRecord.rows.find((item: any) => item.id === props.setting.relatedCaseField)?.value
+    if (!caseId) throw new Error('Case not found')
+    const { data: caseData } = await clientApi.api.getCaseDashboardInstanceCaseidPrimaryformData(caseId)
+    return caseData.rows.reduce((prev: any, item: any) => {
+      prev[item.id] = item.value
+      return prev
+    }, {})
   } catch (error) {
-    console.log('getCDBasciInfo error', error)
-    state.data = {
-      fields: [],
-      rows: []
-    }
-  } finally {
-    return state.data
+    console.error('error', error)
+    return null
   }
 }
 const { settingRef, cardRef, refresh, loading } = useDashboardCard({
   props,
   handleInitCardAction: async (setting: any) => {
-    const data = await getCDBasciInfo()
+    const data = await getCaseData()
     state.layout = setting.layout.reduce((prev: any, item: any) => {
-      const _item = data.rows.find((d: any) => d.id === item.id) // 获取 item.value
-
-      if (_item) {
-        if (!item.width) item.width = '50%'
-        prev.push({ ...item, ..._item })
-      } else {
-        prev.push({ ...item })
-      }
+      item.value = data[item.name]
+      prev.push(item)
       return prev
     }, [])
-    if (!setting.defaultValue) setting.defaultValue = {}
-    state.defaultValue = setting.defaultValue
-    state.label = setting.label || {}
   }
 })
-const refreshBus = useEventBus(EventType.CASE_NEED_REFRESH)
-onMounted(() => {
-  refreshBus.on(needRefresh)
-})
-onUnmounted(() => {
-  refreshBus.off(needRefresh)
-})
-function needRefresh(detail: any) {
-  const caseId = caseProvider.instanceId?.value || null
-  if (detail.caseId === caseId) {
-    refresh()
-  }
-}
 </script>
 <style lang="scss" scoped>
 :deep(.flex-zoom) {

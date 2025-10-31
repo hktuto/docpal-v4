@@ -2,6 +2,7 @@
 import { adminApi } from 'api'
 import type { Node } from '@antv/x6'
 import { ElMessage } from 'element-plus'
+
 const { t } = useI18n()
 const { node } = defineProps<{
   node: Node
@@ -15,12 +16,24 @@ const editorProvider = inject(EDITOR_PROVIDER)
 const { setBpmnRules, getBpmnRuleType, bpmnGlobalRules } = editorProvider.BpmnRule
 const masterTableFields = ref([])
 const allFields = computed(() => {
-  if (!graphProvider.allFormField.value) return []
+  if (!bpmnGlobalRules.value || bpmnGlobalRules.value.length === 0) return []
 
-  const allField = Object.fromEntries(Object.entries(graphProvider.allFormField.value).filter(([key, value]) => value.attr_type === 'string'))
+  return bpmnGlobalRules.value.map((item) => {
+    return {
+      name: item.name,
+      id: item.id
+    }
+  })
+})
 
-  return Object.keys(allField).map((key: string) => {
-    return graphProvider.allFormField.value[key]
+const stringFields = computed(() => {
+  if (!bpmnGlobalRules.value || bpmnGlobalRules.value.length === 0) return []
+
+  return bpmnGlobalRules.value.filter((item: any) => item.validationRule.type === 'text').map((item) => {
+    return {
+      name: item.name,
+      id: item.id
+    }
   })
 })
 
@@ -34,6 +47,7 @@ function setUpListener() {
 }
 
 const allMasterTables = ref([])
+
 async function getMasterTableList() {
   const { data } = await adminApi.api.postMasterTablesPage({
     pageSize: 100
@@ -49,6 +63,8 @@ const form = ref({
   attr_masterTableId: '',
   attr_workflowInfo: '',
   attr_tableColumn: '',
+  attr_masterTableReturnId: '',
+  attr_formProperty: '',
   field: []
 })
 
@@ -65,6 +81,7 @@ async function refreshData() {
 
 const ignoreList = ['id', 'created_date', 'created_by', 'modified_date', 'status', 'modified_by']
 const allColumnInMasterTable = ref([])
+
 async function masterTableIdChange(newId) {
   if (newId) {
     // get all columns from master table
@@ -83,11 +100,13 @@ async function masterTableIdChange(newId) {
   }
   refreshData()
 }
+
 async function getMasterTableFields() {
   const { data } = await adminApi.api.getMasterTablesId(form.value.attr_masterTableId)
   masterTableFields.value = data.fields
   return data
 }
+
 function updateData() {
   const data = node.getData()
   const newData = {
@@ -103,6 +122,7 @@ function updateData() {
   }
   node.setData(newData, { overwrite: true, deep: true })
 }
+
 async function importFields() {
   if (masterTableFields.value.length === 0) {
     await getMasterTableFields()
@@ -120,7 +140,7 @@ async function importFields() {
         params.type = 'mastertable'
         params.isMultiple = false
       }
-      if(item.maxLength) {
+      if (item.maxLength) {
         params.maxLength = item.maxLength
       }
       return {
@@ -156,7 +176,7 @@ onMounted(async () => {
   <div class="formContainer">
     <BpmnSidebarEditLabel :node="node" />
     <div class="formContainer">
-      <ElForm :model="form" label-position="top" ref="formRef">
+      <ElForm :model="form" label-position="top" ref="formRef" :disabled="editorProvider.readonly.value">
         <ElFormItem label="allow Update">
           <ElSwitch v-model="form.attr_allowUpdate" @change="updateData"></ElSwitch>
         </ElFormItem>
@@ -167,22 +187,31 @@ onMounted(async () => {
         </ElFormItem>
         <ElFormItem label="Workflow Info">
           <ElSelect v-model="form.attr_workflowInfo" placeholder="Workflow Info" @change="updateData">
-            <ElOption v-for="item in allFields" :key="item.attr_id" :label="item.attr_name" :value="item.attr_id" />
+            <el-option v-for="item in stringFields" :key="item.id" :label="item.name" :value="item.id" />
           </ElSelect>
         </ElFormItem>
         <ElFormItem label="Record Column">
-          <ElSelect v-model="form.attr_tableColumn" placeholder="Field" @change="updateData">
-            <ElOption v-for="item in allColumnInMasterTable" :key="item.columnName" :label="item.columnName" :value="item.columnName" />
+          <ElSelect v-model="form.attr_tableColumn" :placeholder="t('common_selectOccupancyContent')"
+                    @change="updateData">
+            <ElOption v-for="item in allColumnInMasterTable" :key="item.columnName" :label="item.columnName"
+                      :value="item.columnName" />
           </ElSelect>
         </ElFormItem>
+        <el-form-item label="Return Column ID">
+          <el-select v-model="form.attr_masterTableReturnId" :placeholder="t('common_selectOccupancyContent')"
+                     @change="updateData">
+            <el-option v-for="item in stringFields" :key="item.id" :label="item.name" :value="item.id" />
+          </el-select>
+        </el-form-item>
         <ElDivider />
         <h4>
           Fields
-          <el-button v-if="form.attr_masterTableId" size="small" type="primary" @click="importFields">Auto Import</el-button>
+          <el-button v-if="form.attr_masterTableId" size="small" type="primary" @click="importFields">Auto Import
+          </el-button>
         </h4>
         <ElFormItem v-for="item in form.field" :key="item.attr_tableColumn" :label="item.attr_tableColumn">
           <ElSelect v-model="item.attr_formProperty" placeholder="Field" @change="updateData">
-            <ElOption v-for="item in allFields" :key="item.attr_id" :label="item.attr_name" :value="item.attr_id" />
+            <el-option v-for="item in allFields" :key="item.id" :label="item.name" :value="item.id" />
           </ElSelect>
         </ElFormItem>
       </ElForm>

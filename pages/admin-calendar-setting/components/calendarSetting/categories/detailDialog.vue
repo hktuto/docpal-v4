@@ -36,7 +36,8 @@ async function generateDefWorkflow(name: string) {
   const params = {
     isDesc: true,
     name: 'Def Calendar Event By',
-    orderBy: 'modifiedDate'
+    orderBy: 'modifiedDate',
+    categories: ["business_processes", "system_processes"]
   }
 
   const {entryList} = await adminApi.api.postWorkflowProcessDefinitionDraftPage(params).then((r) => r.data)

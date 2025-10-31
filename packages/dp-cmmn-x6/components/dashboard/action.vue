@@ -14,7 +14,7 @@
 </template>
 <script lang="ts" setup>
 import { emitBus, EventType } from 'eventbus'
-import { adminApi , clientApi} from 'api'
+import { globalApi, clientApi} from 'api'
 const props = withDefaults(
   defineProps<{
     dates?: any
@@ -58,15 +58,15 @@ async function init() {
   const _versionId = CMDProvider?.versionId?.value || null
   const appPlatform = useAppPlatform()
   if (id) {
-    const { data: userAction } = appPlatform.value === 'admin' ? await adminApi.api.getCaseDashboardInstanceCaseidActions(id, { userId }) : await clientApi.api.getCaseDashboardInstanceCaseidActions(id, { userId })
+    const { data: userAction } = appPlatform.value === 'admin' ? await globalApi.api.getCaseDashboardInstanceCaseidActions(id, { userId }) : await clientApi.api.getCaseDashboardInstanceCaseidActions(id, { userId })
     state.data = userAction?.filter(filterActions).sort((a: any, b: any) => a.name.localeCompare(b.name))
   }
   // else if(_caseTypeId){
-  //   const { data: dashboardActions } = await adminApi.api.getCaseDashboardCasetypeCasetypeidActions(_caseTypeId)
+  //   const { data: dashboardActions } = await globalApi.api.getCaseDashboardCasetypeCasetypeidActions(_caseTypeId)
   //   state.data = dashboardActions?.filter(s => s.state !== 'completed')
   // }
   else if (_versionId) {
-    const { data: dashboardActions } = await adminApi.api.getCaseDashboardVersionVersionidActions(_versionId)
+    const { data: dashboardActions } = await globalApi.api.getCaseDashboardVersionVersionidActions(_versionId)
     state.data = dashboardActions?.filter(filterActions)
   }
 }

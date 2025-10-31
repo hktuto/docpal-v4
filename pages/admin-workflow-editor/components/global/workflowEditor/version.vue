@@ -48,6 +48,8 @@ async function promoteToProductionHandler(row: any) {
     }
   )
   let { data: json } = await adminApi.api.getWorkflowVersionJson({ draftId: row.draftId, versionNumber: row.versionNumber }, {})
+  const x6Json = JSON.parse(json)
+  await validateBpmnJson(x6Json)
   const xml = await blob.text()
   const form: any = new FormData()
   form.append('file', blob, 'workflow.bpmn.xml')

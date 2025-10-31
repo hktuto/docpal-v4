@@ -6,6 +6,7 @@ const { t } = useI18n()
 const { node } = defineProps<{
   node: Node
 }>()
+const routerProvider = inject(MenuRouterKey)
 const graphProvider = inject(BPMN_PROVIDER)
 const editorProvider = inject(EDITOR_PROVIDER)
 if (!graphProvider || !editorProvider) {
@@ -28,12 +29,13 @@ const stringFields = computed(() => {
 const form = ref<any>({
   attr_caseTypeId: '',
   attr_name: '',
-  attr_systemCaseInstanceId: '',
   field: []
 })
 const loading = ref(false)
 const caseList = ref()
 const caseOptionList = ref([])
+const fieldsList = ref<string[]>(['case_id'])
+const updateFieldsList = ref([])
 
 async function getCaseLise() {
   try {
@@ -57,14 +59,18 @@ async function init() {
 
   form.value.attr_caseTypeId = extensionElements['flowable:newCase'].attr_caseTypeId
   form.value.attr_name = extensionElements['flowable:newCase'].attr_name
-  form.value.attr_systemCaseInstanceId = extensionElements['flowable:newCase'].attr_systemCaseInstanceId
 
-  await getCaseOption()
+  if ('' !== form.value.attr_caseTypeId) {
+    await getCaseOption()
+  }
 
   if (extensionElements['flowable:newCase'].field.length === 0) return
 
   extensionElements['flowable:newCase'].field.forEach((item: any) => {
     const find: any = caseOptionList.value.find((caseItem: any) => caseItem.id === item.attr_metadata)
+    if ('case_id' != item.attr_metadata) {
+      fieldsList.value.push(item.attr_metadata)
+    }
     find.formProperty = item.attr_formProperty
     form.value.field.push({
       attr_formProperty: item.attr_formProperty,
@@ -72,6 +78,37 @@ async function init() {
       attr_dataType: item.attr_dataType
     })
   })
+  handleInitUpdateField()
+}
+
+function handleUpdateField() {
+  handleInitUpdateField()
+  form.value.field = form.value.field.filter((item: any) => fieldsList.value.includes(item.attr_metadata))
+}
+
+function handleInitUpdateField() {
+  const list: any = []
+
+  const caseId = caseOptionList.value.find((item: any) => item.id === 'case_id')
+  if (!caseId) {
+    routerProvider?.message.success('Please check your case settings; the case number field is missing.')
+    updateFieldsList.value = []
+  }
+
+  list.push(caseId)
+
+  if (fieldsList.value.length === 0) {
+    updateFieldsList.value = list
+  }
+
+  const filter = caseOptionList.value.filter((item: any) => fieldsList.value.includes(item.id))
+  updateFieldsList.value = list.concat(filter).filter((item: any, index, self: any) => index === self.findIndex((t: any) => t.id === item.id))
+}
+
+function handelFieldsList() {
+  if (fieldsList.value.length === 0 || !fieldsList.value.includes('case_id')) {
+    fieldsList.value.push('case_id')
+  }
 }
 
 async function getCaseOption() {
@@ -83,7 +120,7 @@ async function getCaseOption() {
       caseOptionList.value = []
       return
     }
-    const excludeList = ['created_date', 'created_by', 'modified_by', 'case_id']
+    const excludeList = ['created_date', 'created_by', 'modified_by']
 
     caseOptionList.value = caseData[caseData.length - 1].fields.filter((item: any) => !excludeList.includes(item.id))
       .map((item: any) => {
@@ -106,12 +143,7 @@ async function handleCase(caseId: string) {
   form.value.field = []
   await getCaseOption()
   setData()
-}
-
-function handleCaseReturnId() {
-  if (form.value.attr_systemCaseInstanceId && '' !== form.value.attr_systemCaseInstanceId) {
-    setData()
-  }
+  handleInitUpdateField()
 }
 
 function handleCaseField(item: any) {
@@ -175,18 +207,22 @@ onMounted(async () => {
         </el-select>
       </el-form-item>
 
-      <el-form-item label="Case Return Column ID" required>
-        <el-select v-model="form.attr_systemCaseInstanceId" :placeholder="t('common_selectedIsRequiredMsg')"
-                   @change="handleCaseReturnId">
-          <el-option v-for="item in stringFields" :key="item.id" :label="item.name" :value="item.id" />
-        </el-select>
-      </el-form-item>
+      <div v-if="caseOptionList.length > 0">
+        <el-divider />
+        <span>Fields</span>
+        <div style="display: flex; align-items: center; justify-content: space-between;">
+          <el-select v-model="fieldsList" :placeholder="t('common_selectOccupancyContent')" multiple collapse-tags
+                     collapse-tags-tooltip @change="handelFieldsList">
+            <el-option v-for="item in caseOptionList" :key="item.id" :label="item.name" :value="item.id" />
+          </el-select>
+          <el-button @click="handleUpdateField">Update Field</el-button>
+        </div>
+      </div>
 
-      <el-divider v-if="caseOptionList.length > 0" />
-
-      <template v-loading="loading" v-for="item in caseOptionList">
-        <el-form-item :label="item.name">
-          <el-select v-model="item.formProperty" clearable @change="handleCaseField(item)">
+      <template v-loading="loading" v-for="item in updateFieldsList">
+        <el-form-item :label="item.name" :required="'case_id'===item.id">
+          <el-select v-model="item.formProperty" clearable @change="handleCaseField(item)"
+                     :placeholder="t('common_selectOccupancyContent')">
             <el-option v-for="field in allFields" :key="field.id" :label="field.name" :value="field.id" />
           </el-select>
         </el-form-item>

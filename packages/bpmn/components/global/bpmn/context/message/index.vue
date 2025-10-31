@@ -26,9 +26,14 @@ const levelList = ref([
   { label: 'Warning', value: 'warning' },
   { label: 'Error', value: 'error' }])
 
+/**
+ * Calendar => JSON String {"title":"","data":""}
+ * Case DashBoard => JSON String { "instanceId":"","versionId":"" }
+ */
 const typeList = ref([
   { label: 'Calendar Event', value: 'calendar' },
-  { label: 'Common Event', value: 'common' }
+  { label: 'Case Dashboard Event', value: 'caseDashboard' },
+  { label: 'Common Event', value: 'common' },
 ])
 
 const state = reactive({
@@ -66,11 +71,12 @@ async function initForm() {
       case 'notificationUserFromVariables':
         state.userField = item['flowable:expression'].__cdata
         break
-      case 'message':
+      case 'system_notification_message':
         state.message = item['flowable:string'].__cdata
         break
     }
   })
+  if (!state.message || '' == state.message) return
 
   // message Field to Level and Type and Content
   const messageObj = JSON.parse(state.message)
@@ -91,7 +97,7 @@ function fieldMappingUpdate(newVal: any | string, name: string) {
   const index = newData.data.extensionElements['flowable:field'].findIndex((f: any) => f.attr_name === name)
   if ('notificationUserFromVariables' === name) {
     newData.data.extensionElements['flowable:field'][index]['flowable:expression'].__cdata = newVal || ''
-  } else if ('message' === name) {
+  } else if ('system_notification_message' === name) {
     newData.data.extensionElements['flowable:field'][index]['flowable:string'].__cdata = newVal || ''
   }
 
@@ -100,8 +106,9 @@ function fieldMappingUpdate(newVal: any | string, name: string) {
 }
 
 function handelMessageObject() {
+  console.log(22,state.messageObject)
   state.message = JSON.stringify(state.messageObject)
-  fieldMappingUpdate(state.message, 'message')
+  fieldMappingUpdate(state.message, 'system_notification_message')
 }
 
 watch(() => node, async () => {
