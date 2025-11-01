@@ -21,6 +21,7 @@ const additionalButton = ref<any[]>([])
 const vFormRef = ref()
 const inParameters = ref<any>({})
 const primaryForm = ref<any>([])
+
 async function setUpForm() {
   try {
     loading.value = true
@@ -31,10 +32,10 @@ async function setUpForm() {
 
     // get latest case detail
     const caseData = await clientApi.api.getCaseDashboardInstanceCaseidPrimaryformData(caseInstanceId)
-      .then(res => res.data) as any
+    .then(res => res.data) as any
     primaryForm.value = caseData.rows
     inParameters.value = stepDetail.inParameters as { [key: string]: string }
-    
+
     // get form xml
     const xml = await clientApi.api.getWorkflowVersionVersionidBpmnxml(stepDetail.processDefinitionVersionId)
     // get form data
@@ -76,7 +77,7 @@ function handelCancel() {
   routerProvider?.back(backItem)
 }
 
-function formKeyToCaseKey(formKey:string){
+function formKeyToCaseKey(formKey: string) {
   const item = Object.keys(inParameters.value).find(key => inParameters.value[key] === formKey)
   return item
 }
@@ -99,39 +100,36 @@ async function handleSubmit() {
     variables.user_creator_id = useUserId().value
   }
 
-  const additionButtonActions:any = []
-    additionalButtonRef.value.forEach(item => {
-      if(item && item.beforeSubmit) {
-        additionButtonActions.push(item.beforeSubmit())
-      }
-    })
-    const buttonResults = await Promise.all(additionButtonActions)
-    // after check all actions, if any addtional data need to set to from data, set it
-    buttonResults.forEach((item:any) => {
-      if(item && typeof item === 'object') {
-        Object.keys(item).forEach(updateKey => {
-          // find key in inParameters
-          const otherKeys = formKeyToCaseKey(updateKey)
-          if(otherKeys) {
-            variables[otherKeys] = item[updateKey]
-          }
-        })
-      }
-    })
-    // end addtional button actions
-    Object.keys(variables).forEach((key) => {
-      if(typeof variables[key] === 'object') {
-        variables[key] = JSON.stringify(variables[key])
-      }
-    })
-    console.log("before submit", {...variables})
-    // some data is not in form, but in formData , add to variables
-    Object.keys(formData.value).forEach((key) => {
-      if(!variables[key]) {
-        variables[key] = formData.value[key]
-      }
-    })
-    console.log("after submit", {...variables})
+  const additionButtonActions: any = []
+  additionalButtonRef.value.forEach(item => {
+    if (item && item.beforeSubmit) {
+      additionButtonActions.push(item.beforeSubmit())
+    }
+  })
+  const buttonResults = await Promise.all(additionButtonActions)
+  // after check all actions, if any addtional data need to set to from data, set it
+  buttonResults.forEach((item: any) => {
+    if (item && typeof item === 'object') {
+      Object.keys(item).forEach(updateKey => {
+        // find key in inParameters
+        const otherKeys = formKeyToCaseKey(updateKey)
+        if (otherKeys) {
+          variables[otherKeys] = item[updateKey]
+        }
+      })
+    }
+  })
+  // end addtional button actions
+  Object.keys(variables).forEach((key) => {
+    if (typeof variables[key] === 'object') {
+      variables[key] = JSON.stringify(variables[key])
+    }
+  })
+
+  // some data is not in form, but in formData , add to variables
+  variables = {...variables, ...data}
+  console.log("after submit", {...variables})
+
   await clientApi.api.postCaseInstanceProcessStart({
     id: actionStepId,
     variables
@@ -165,7 +163,8 @@ const loading = ref(false);
       <template #action>
         <div class="workflow-detail-pane--btns">
           <template v-for="(item,index) in additionalButton" :key="index">
-            <component :is="item.component" ref="additionalButtonRef" v-bind="{...item.props, formData}" @submit="additionSubmit"/>
+            <component :is="item.component" ref="additionalButtonRef" v-bind="{...item.props, formData}"
+                       @submit="additionSubmit"/>
           </template>
           <el-button id="CaseManagement__Detail__Form_Cancel" @click="handelCancel">
             {{ $t("cancelText") }}
