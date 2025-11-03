@@ -31,6 +31,8 @@ export async function getMasterTableDisplayOpts(masterTableId: string) {
 }
 const { flatRole } = useRBAC()
 export async function initUserRulesOpts() {
+  // @ts-ignore
+  const t = window.$t
   async function getGroupList() {
     try {
       return await adminApi.api.postNuxeoIdentityGroups({}).then((res) => res.data)
@@ -47,37 +49,47 @@ export async function initUserRulesOpts() {
       return []
     }
   }
-  // const groupList: any = await getGroupList()
-  // const userList: any = await getUserList()
+  const groupList: any = await getGroupList()
+  const userList: any = await getUserList()
   userRulesOpts.value = [
     {
-      label: 'user_role',
+      label: t('user_role'),
       value: 'userRole', // 1=User, 3=Group, 2=Role
       type: 'select',
       selectConfig: {
-        options: flatRole.value.map((item: any) => ({
-          label: item.name,
-          value: item.id
-        }))
+        options: flatRole.value
+          .map((item: any) => ({
+            label: item.name,
+            value: item.id
+          }))
+          .sort((a: any, b: any) => a.label.localeCompare(b.label))
+      }
+    },
+    {
+      label: t('user_UserGroup'),
+      value: 'userGroup',
+      type: 'select',
+      selectConfig: {
+        options: groupList
+          .map((item: any) => ({
+            label: item.name,
+            value: item.id
+          }))
+          .sort((a: any, b: any) => a.label.localeCompare(b.label))
+      }
+    },
+    {
+      label: t('User'),
+      value: 'user',
+      type: 'select',
+      selectConfig: {
+        options: userList
+          .map((item: any) => ({
+            label: item.username,
+            value: item.userId
+          }))
+          .sort((a: any, b: any) => a.label.localeCompare(b.label))
       }
     }
-    // {
-    //   label: 'user_groups',
-    //   value: 'userGroup',
-    //   type: 'select',
-    //   options: groupList.map((item: any) => ({
-    //     label: item.name,
-    //     value: item.id
-    //   }))
-    // },
-    // {
-    //   label: 'user_users',
-    //   value: 'user',
-    //   type: 'select',
-    //   options: userList.map((item: any) => ({
-    //     label: item.username,
-    //     value: item.userId
-    //   }))
-    // }
   ]
 }

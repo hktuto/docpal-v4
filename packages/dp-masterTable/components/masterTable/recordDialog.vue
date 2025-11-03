@@ -13,6 +13,8 @@
 <script lang="ts" setup>
 import { adminApi, clientApi } from 'api'
 import { ElMessage } from 'element-plus'
+const appPlatform = useAppPlatform()
+const api = appPlatform.value === 'admin' ? adminApi : clientApi
 
 const { t } = useI18n()
 const props = withDefaults(
@@ -41,7 +43,7 @@ async function handleSubmit() {
     if (!data) return
     let msg
     if (state.edit) {
-      await adminApi.api.putMasterTablesIdRecord(props.tableId, {
+      await api.api.putMasterTablesIdRecord(props.tableId, {
         data: [data],
         where: {
           id: state.setting.id
@@ -49,7 +51,7 @@ async function handleSubmit() {
       })
       msg = t('tip_updateMsg', { modelName: t('common_row'), name: null })
     } else {
-      await adminApi.api.postMasterTablesRecord({
+      await api.api.postMasterTablesRecord({
         id: props.tableId,
         data: [data]
       })

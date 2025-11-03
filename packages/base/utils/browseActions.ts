@@ -119,17 +119,17 @@ export const actions: BrowseActionItem[] = [
       return false;
     }
   },
-  // {
-  //   name: 'share',
-  //   showInFolder: false,
-  //   showInDetail: true,
-  //   showInShare: true,
-  //   permission: 'share',
-  //   needFeature: ['SHARE_EXTERNAL'],
-  //   component: BrowseActionsShare,
-  //   groupBy: 'other',
-  //   hideAfterClick: false
-  // },
+  {
+    name: 'share',
+    showInFolder: false,
+    showInDetail: true,
+    showInShare: true,
+    permission: 'share',
+    needFeature: ['SHARE_EXTERNAL'],
+    component: BrowseActionsShare,
+    groupBy: 'other',
+    hideAfterClick: false
+  },
   {
     name: 'collection',
     showInFolder: false,

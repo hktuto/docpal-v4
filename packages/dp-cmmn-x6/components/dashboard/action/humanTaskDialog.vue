@@ -12,7 +12,7 @@
 </template>
 <script lang="ts" setup>
 import { emitBus, EventType } from 'eventbus'
-import { adminApi } from 'api'
+import { globalApi } from 'api'
 const props = withDefaults(defineProps<{
   ignoreList: string[],
 }>(), {
@@ -22,7 +22,7 @@ const emits = defineEmits([
   'refresh', 'delete', 'submit'
 ])
 const { t } = useI18n()
-const state = reactive({
+const state = reactive<any>({
   loading: false,
   visible: false,
   setting: {},
@@ -40,7 +40,7 @@ async function handleSubmit() {
         }else {
             data = await MasterTableVariableFormRef.value.getData(true)
         }
-    await adminApi.api.postCaseInstanceTasksComplete({
+    await globalApi.api.postCaseInstanceTasksComplete({
       caseInstanceId: state.setting.caseInstanceId,
       taskId: state.setting.referenceId,
       variables: data
@@ -65,10 +65,10 @@ async function handleOpen(taskId, actionItem, actionList) {
   state.loading = true
   state.title = actionItem.name
   state.setting = actionItem
-  const { data } = await adminApi.api.getCaseInstanceTasksTaskidForm(taskId) as any
+  const { data } = await globalApi.api.getCaseInstanceTasksTaskidForm(taskId) as any
   // console.log(taskId,actionItem,CMDProvider?.versionId)
         // get cmmn xml
-  const fields = data.fields.reduce((prev,item) => {
+  const fields = data.fields.reduce((prev: any,item: any) => {
     prev.push({
       ...item,
       name: item.id,
@@ -78,11 +78,11 @@ async function handleOpen(taskId, actionItem, actionList) {
     })
     return prev
   }, [])
-  const initData = data.rows.reduce((prev,item) => {
+  const initData = data.rows.reduce((prev: any,item: any) => {
     if(item.value) prev[item.id] = item.value
     return prev
   }, {})
-  const form = await adminApi.api.getRelationQuery({
+  const form = await globalApi.api.getRelationQuery({
       processKey: CMDProvider?.caseDefinitionKey.value,
       userTaskId: actionItem.planItemDefinitionId,
       versionId: CMDProvider?.versionId.value
@@ -90,7 +90,7 @@ async function handleOpen(taskId, actionItem, actionList) {
   if(form.data[0]) {
       isWorkflowForm.value = true
       const json = JSON.parse(form.data[0].jsonValue || "{}")
-      const formData = data.rows.reduce((prev, item) => {
+      const formData = data.rows.reduce((prev: any, item: any) => {
         if(item.value) prev[item.id] = item.value
         return prev
       }, {})

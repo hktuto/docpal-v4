@@ -20,7 +20,18 @@ const dragHeader = [
 function handleSave() {
   const nodeData = props.node.data
   updateExtentionProperties(nodeData.data.casePlanModel, 'docpal:form', props.caseInformation, props.node.id)
+  updateStartTask(nodeData.data.casePlanModel)
   emits('save')
+}
+function updateStartTask(casePlanModel) {
+  try {
+    const startTask = casePlanModel.humanTask.find(item => item.extensionElements['docpal:isStartingTask'].attr_id)
+    if(startTask) {
+      updateExtentionProperties(startTask, 'docpal:form', props.caseInformation, props.node.id)
+    }
+  } catch (error) {
+    console.error("updateStartTask", error)
+  }
 }
 </script>
 <style lang="scss" scoped></style>
