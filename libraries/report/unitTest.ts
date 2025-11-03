@@ -1,4 +1,5 @@
 import * as XLSX from 'xlsx'
+import fs from 'fs'
 // import testReport from '../../.vitest-reporter-html/index.json'
 import dayjs from 'dayjs'
 // export function createTestReport() {
@@ -70,7 +71,11 @@ export function jsonToXlsx(exportArr, totalArr) {
   const date = new Date()
   const now = dayjs(date).format('MM.DD')
   const twoWeeksAgo = dayjs().subtract(2, 'week').format('MM.DD')
-  const name = `${twoWeeksAgo}-${now} unit-test.xlsx`
+  const name = `${twoWeeksAgo}-${now} unit-test_${date.getTime()}.xlsx`
+  // 检测是否存在report_unitTest文件夹，不存在则创建
+  if (!fs.existsSync('./report_unitTest')) {
+    fs.mkdirSync('./report_unitTest')
+  }
   XLSX.writeFile(wb, `./report_unitTest/${name}`)
   return name
 }
