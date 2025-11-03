@@ -6,7 +6,8 @@ const { node } = defineProps<{
 }>()
 
 const graphProvider = inject(BPMN_PROVIDER)
-if (!graphProvider) {
+const editorProvider = inject(EDITOR_PROVIDER)
+if (!graphProvider || !editorProvider) {
   throw createError('graph provider not found')
 }
 
@@ -26,14 +27,14 @@ function getForm() {
   }
 }
 
+const { bpmnGlobalRules } = editorProvider.BpmnRule
 const allBooleanInfo = computed(() => {
-  if (!graphProvider?.allFormField.value) return []
-  return Object.values(graphProvider?.allFormField.value).reduce((result: any, current: any) => {
-    if (current.attr_type === 'boolean') {
-      result.push(current)
+  return bpmnGlobalRules.value.filter((item: any) => item.validationRule.type === 'boolean').map((item: any) => {
+    return {
+      attr_id: item.id,
+      attr_name: item.name
     }
-    return result
-  }, [])
+  })
 })
 
 function setForm() {
