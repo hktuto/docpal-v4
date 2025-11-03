@@ -228,7 +228,7 @@ onMounted(async () => {
       <div v-loading="loading">
         <template v-for="item in caseOptionList" :key="item.id">
           <el-form-item :label="item.name" >
-            <el-select v-model="item.formProperty" clearable @change="handleCaseField(item)">
+            <el-select v-model="item.formProperty" filterable clearable @change="handleCaseField(item)">
               <el-option v-for="field in allFields" :key="field.id" :label="field.name" :value="field.id" />
             </el-select>
           </el-form-item>
