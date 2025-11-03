@@ -16,6 +16,7 @@ let where = ref({})
 const { t } = useI18n()
 const emits = defineEmits(['filter-change', 'refresh'])
 const routerProvider = inject(MenuRouterKey)
+const tabProvider = inject(TabManagerKey)
 type TableState = {
   columns: any
   where: any[]
@@ -49,7 +50,7 @@ const { tableConfig, tableEvent, tableRef, query, reload, cleanSelectedRows } = 
   dblClickAction: ({ row }) => {
     const newItem = caseManageDashboardPage({ ...row, id, instanceId: row.case_id, versionId: row.caseDefinitionVersionId, data: detail })
     console.log(newItem)
-    routerProvider?.navigateTo(newItem)
+    tabProvider?.openTab(newItem)
   },
   zoom: false,
   saveColumnOrder: false
