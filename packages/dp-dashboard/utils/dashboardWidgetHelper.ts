@@ -52,7 +52,7 @@ import PersonalShareExternal from '../components/global/personal/share/external.
 import PersonalShareInternalMe from '../components/global/personal/share/internalMe.vue'
 import PersonalShareInternalOther from '../components/global/personal/share/internalOther.vue'
 import PersonalPredefinedSearch from '../components/global/personal/predefinedSearch.vue'
-import PersonalWorkflowCreate from '../components/global/personal/workflow/create.vue'
+import PersonalWorkflowCreate from '../components/global/personal/workflow/create/index.vue'
 import PersonalWorkflow from '../components/global/personal/workflow/index.vue'
 import PersonalSearchHistory from '../components/global/personal/search/history.vue'
 import PersonalSearchDefine from '../components/global/personal/search/define.vue'

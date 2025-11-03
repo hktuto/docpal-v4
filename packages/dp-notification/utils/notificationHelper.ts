@@ -1,5 +1,5 @@
 import { clientApi } from 'api'
-import { routeCalendarManagement } from '#imports'
+import { caseManageDashboardPage, routeCalendarManagement } from '#imports'
 
 export function notiShowView(row: any) {
   if ('Workflow' === row.type && '' !== row.content?.message) {
@@ -45,7 +45,7 @@ export async function notiHandleView(row: any, tabProvider: any) {
       ...params
     })
     tabProvider?.openTab(newItem, true)
-  } else if(row.content.caseInstanceId) {
+  } else if (row.content.caseInstanceId) {
     // TODO: get case instance
     const caseInstance = await clientApi.api.getCaseInstanceCaseidCaseid(row.content.caseInstanceId).then((res) => res.data)
     const newItem = caseManageDashboardPage({
@@ -68,10 +68,26 @@ export async function notiHandleView(row: any, tabProvider: any) {
     const event = JSON.parse(row.content.message)
     // TODO：You need to jump to a different page according to the type of workflow message
     const eventType = event.eventType
+    let newItem: TabItem
     switch (eventType) {
       case 'calendar':
-        const newItem = routeCalendarManagement(event.processInstanceId, 'calendar')
+        newItem = routeCalendarManagement(event.processInstanceId, 'calendar')
         tabProvider?.openTab(newItem, true)
+        break
+      case 'caseDashboard':
+        try {
+          const content = JSON.parse(event.additionalContent)
+          const data = {
+            instanceId: content.instanceId,
+            versionId: content.versionId
+          }
+          newItem = caseManageDashboardPage(data)
+          tabProvider?.openTab(newItem, true)
+        } catch (e) {
+          return
+        }
+        break
+      default:
         break
     }
   }

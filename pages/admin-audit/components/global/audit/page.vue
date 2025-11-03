@@ -46,8 +46,9 @@ function reload() {
   tableRef.value.reload()
 }
 
+const { public: { endPoint } } = useRuntimeConfig();
 function goClientPath(path: string) {
-  window.open('https://' + config.public.endpoint?.docpal + '/browse?path=' + path, '_blank')
+  window.open( endPoint.clientUrl + '/browse?path=' + path, '_blank')
 }
 
 provide(AuditProviderKey, {

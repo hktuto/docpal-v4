@@ -113,6 +113,7 @@ async function promoteToProduction() {
   try {
     loading.value = true
     const { xml, x6Json } = WorkflowEditorRef.value.getData()
+    await validateBpmnJson(x6Json)
     const blob = new Blob([xml], { type: 'text/xml;charset=utf-8' })
     const form: any = new FormData()
     form.append('jsonValue', JSON.stringify(x6Json))
