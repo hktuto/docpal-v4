@@ -119,6 +119,14 @@ const config = {
             'accept-encoding': 'identity'
           }
         },
+        '/open-api/template':{
+          target: process.env.OPEN_PROXY,
+          changeOrigin: true,
+          prependPath: true,
+          headers: {
+            'accept-encoding': 'identity'
+          }
+        },
       }
       // routeRules: {
       //     '/dashboard/**': {

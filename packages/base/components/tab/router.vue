@@ -255,7 +255,7 @@ function reloadComponent() {
 }
 
 function handleErr(err){
-  console.log(err)
+  console.trace(err)
 }
 
 const historyClass = computed(() => {
