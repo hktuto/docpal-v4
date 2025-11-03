@@ -3,11 +3,8 @@ import type { SignatureSetting } from './type';
 import { adminApi } from 'api';
 
 const props = defineProps<{
-  index: number
   companyListOptions?: any[]
 }>()
-
-const emits = defineEmits(['delete'])
 
 const form = defineModel<SignatureSetting>('modelValue', {
   required: true
@@ -40,10 +37,6 @@ function handleCompanyChange(newCompany: string) {
   }
 }
 
-function handleRemove() {
-  emits('delete')
-}
-
 function addVariable(variable: typeof templateVariableOption[number], type: "prefix" | "suffix") {
   if (form.value) {
     form.value[type] = (form.value[type] || '') + "{{" + variable + "}}"
@@ -68,9 +61,6 @@ onMounted(() => {
   <div class="templateEditorContainer">
     <div class="header">
       <div class="label">Signature Setting</div>
-      <div class="removeBtnContainer">
-        <Icon name="lucide:trash-2" @click="handleRemove" />
-      </div>
     </div>
 
     <ElForm label-position="top">
@@ -175,8 +165,5 @@ onMounted(() => {
   display: flex;
   flex-flow: row nowrap;
   justify-content: space-between;
-}
-.removeBtnContainer{
-  cursor: pointer;
 }
 </style>
