@@ -147,6 +147,9 @@ defineExpose({ setVariables, getData })
           </el-form-item>
         </el-form>
       </div>
+      <div v-if="item.type==='signature'" class="variable-content">
+        {{ $t('docTemplate.variable.name') }}: {{ item.name }}
+      </div>
     </div>
   </div>
 
