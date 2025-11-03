@@ -171,7 +171,6 @@ function handleEdit() {
 }
 
 function handleRefresh(state: any) {
-  console.log("handleRefresh", state)
   if (!state || state.info) getInfo()
   if (!state || state.variables) getVariables()
   if (!state || state.preview) getPreviewFile()
@@ -179,6 +178,7 @@ function handleRefresh(state: any) {
 
 const documentOptions = ref({})
 const jsonData = ref({})
+
 
 function initWordEditor(json: any) {
   if (!json) {

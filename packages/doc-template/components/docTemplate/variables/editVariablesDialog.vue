@@ -51,7 +51,7 @@ defineExpose({ openVariablesDialog })
 </script>
 
 <template>
-  <el-dialog :title="t('docTemplate.variable.editVariables')" v-model="state.visible" width="1000px">
+  <el-dialog :title="t('docTemplate.variable.editVariables')" v-model="state.visible" class="big">
     <el-form ref="editFormRef" :model="state.editForm" :rules="rules">
       <el-form-item :label="t('dpTable.name')" disabled>
         <el-input v-model="state.editForm.name" />
