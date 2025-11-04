@@ -104,7 +104,9 @@ async function handleSubmit() {
     if (!variables.user_creator_id) {
       variables.user_creator_id = useUserId().value
     }
-
+    if (!data.user_creator_id) {
+      data.user_creator_id = useUserId().value
+    }
     const additionButtonActions: any = []
     additionalButtonRef.value.forEach((item) => {
       if (item && item.beforeSubmit) {
@@ -150,6 +152,9 @@ async function additionSubmit(formData: any) {
     prev[item] = formData[otherKeys]
     return prev
   }, {}) as any
+  if (!formData.user_creator_id) {
+    formData.user_creator_id = useUserId().value
+  }
   const res = await clientApi.api.postCaseInstanceProcessStart({
     id: actionStepId,
     workflowVariables: formData,
