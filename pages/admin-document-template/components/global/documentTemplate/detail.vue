@@ -138,8 +138,10 @@ async function handleTest(fileType: string) {
       blob = await templateApi.convert.postConvertDocx(dataJson, { format: 'blob' })
       const url = URL.createObjectURL(blob)
       const link = document.createElement('a')
+      const suffix = fileType == 'word' ? 'docx' : fileType
+
       link.href = url
-      link.download = `${state.info.name}.docx`
+      link.download = `${state.info.name}.${suffix}`
       document.body.appendChild(link)
       link.click()
       link.remove()
