@@ -64,7 +64,7 @@ export function createReport() {
     const fileName = jsonToXlsx(dataArr, totalArr)
     console.log(`[Unit test summary] Excel 文件已创建: ${fileName}`)
     console.log(`点击这里跳转文件：
-      file://${path.join(process.cwd(), '/report_unitTest'+fileName)}`)
+      file://${path.join(process.cwd(), '/report_unitTest/'+fileName)}`)
   })
 }
 function generateTotalArr(count, totalNum) {
