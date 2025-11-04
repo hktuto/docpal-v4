@@ -29,6 +29,7 @@ async function handleSubmit() {
   try {
     const data = await FormRendererRef.value.getFormData()
     state.setting.title = data.title
+    state.setting.type = data.type || 'primary'
     emits('refresh')
   } catch (error) {
     state.loading = false

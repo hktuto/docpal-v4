@@ -318,6 +318,7 @@
     "clearFilter": "Clear Filter",
     "clearSelected": "Clear Selected",
     "close": "Close",
+    "color": "Button Color",
     "copyPath": "Copy Path",
     "deleteSelected": "Delete Selected",
     "dismiss": "Dismiss",
@@ -1221,7 +1222,6 @@
       "listItemPlaceholder": "Enter list item...",
       "listItems": "List Items",
       "listStyle": "List Style",
-      "signatures": "Signatures",
       "listStyleBullet": "Bullet Points",
       "listStyleNone": "No Style",
       "listStyleNumbered": "Numbered",
@@ -1237,6 +1237,7 @@
         "warning": "The width of at least one column is the default"
       },
       "setHeaderColor": "Set Header Color",
+      "signatures": "Signatures",
       "striped": "Striped",
       "tableBordered": "Show Borders",
       "tableContent": "Table Content",

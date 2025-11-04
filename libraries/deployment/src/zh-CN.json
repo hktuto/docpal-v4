@@ -318,6 +318,7 @@
     "clearFilter": "清除",
     "clearSelected": "清除所选内容",
     "close": "关闭",
+    "color": "按钮颜色",
     "copyPath": "复制路径",
     "deleteSelected": "删除已选",
     "dismiss": "忽略",
@@ -1221,7 +1222,6 @@
       "listItemPlaceholder": "输入列表项...",
       "listItems": "列表项",
       "listStyle": "列表样式",
-      "signatures": "签名",
       "listStyleBullet": "项目符号",
       "listStyleNone": "无样式",
       "listStyleNumbered": "编号",
@@ -1237,6 +1237,7 @@
         "warning": "至少有一列的宽度是默认值"
       },
       "setHeaderColor": "设置标题颜色",
+      "signatures": "签名",
       "striped": "有条纹",
       "tableBordered": "显示边框",
       "tableContent": "表格内容",
