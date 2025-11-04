@@ -38,7 +38,16 @@ async function getTemplateVariableList() {
       item.value = rawValue.replace('${variables:get(', '').replace(')}', '')
       return item
     })
+
+    // File type used for template output
+    variable.splice(0, 0, {
+      id: 'system_output_file_type',
+      name: 'Output File Type',
+      type: 'text',
+      value: ''
+    })
     variableList.value = variable
+
   }
 
   const fullVarList = JSON.parse(data.templateVariable as any).reduce((prev: any, curr: any) => {
