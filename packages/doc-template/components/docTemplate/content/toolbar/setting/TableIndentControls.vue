@@ -77,7 +77,7 @@ function handleCreateTable() {
   </el-button>
 
   <!-- Create table dialog -->
-  <el-dialog v-model="state.createTablePopoverVisible" :title="t(t('docTemplate.table.createTable'))">
+  <el-dialog v-model="state.createTablePopoverVisible" :title="t(t('docTemplate.table.createTable'))" class="big">
     <VariableValueTable v-model="tableForm.value">
       {{ tableForm.value }}
     </VariableValueTable>
