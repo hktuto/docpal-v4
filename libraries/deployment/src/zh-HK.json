@@ -318,6 +318,7 @@
     "clearFilter": "清除",
     "clearSelected": "清除所選內容",
     "close": "關閉",
+    "color": "按鈕顏色",
     "copyPath": "複製路徑",
     "deleteSelected": "刪除已選",
     "dismiss": "忽略",
@@ -1221,7 +1222,6 @@
       "listItemPlaceholder": "輸入清單項目...",
       "listItems": "清單項目",
       "listStyle": "清單樣式",
-      "signatures": "簽名",
       "listStyleBullet": "項目符號",
       "listStyleNone": "無樣式",
       "listStyleNumbered": "編號",
@@ -1237,6 +1237,7 @@
         "warning": "至少有一列的寬度是預設值"
       },
       "setHeaderColor": "設置標題顔色",
+      "signatures": "簽名",
       "striped": "有條紋",
       "tableBordered": "顯示邊框",
       "tableContent": "表格內容",
