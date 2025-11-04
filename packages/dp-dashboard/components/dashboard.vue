@@ -8,9 +8,9 @@
           <DashboardDate class="el-icon--right" v-model="state.dates" />
         </span>
         <div class="template-container--header__buttons">
-          <template v-if="!state.editMode && currentHome.name === 'PERSONAL'">
-            <el-button type="primary" @click="handleExportPdf">{{ $t('common_downloadPdf') }}</el-button>
-            <el-button id="Dashboard__Home__Edit" @click="handleEdit" type="primary" :icon="Edit" circle />
+          <template v-if="!state.editMode">
+            <el-button :loading="exportLoading" type="primary" @click="handleExportPdf">{{ $t('dpTool_downloadPDF') }}</el-button>
+            <el-button v-if="currentHome.name === 'PERSONAL'" id="Dashboard__Home__Edit" @click="handleEdit" type="primary" :icon="Edit" circle />
           </template>
           <template v-else-if="state.editMode">
             <el-button v-if="currentHome.layout.length > 0" type="danger" @click="handleClear">{{ $t('common_clear') }}</el-button>
@@ -122,16 +122,16 @@ async function handleClear() {
   }
 }
 const DashboardDetailRef = ref()
+const exportLoading = ref(false)
 async function handleExportPdf() {
   try {
-    loading.value = true
+    exportLoading.value = true
     await divToPDF('Dashboard__Home__Main', currentHome.value.name)
-    ElMessage.success(t('common_exportSuccess'))
   } catch (error) {
     console.error('Export PDF error:', error)
-    ElMessage.error(t('common_exportFailed'))
+    ElMessage.error(t('dpTip.exportPDFFailed'))
   } finally {
-    loading.value = false
+    exportLoading.value = false
   }
 }
 onMounted(async () => {

@@ -1492,6 +1492,7 @@
     "embedCodeCopied": "嵌入程式碼已複製",
     "enterNumber": "请输入数字",
     "exit": "{name} 已存在",
+    "exportPDFFailed": "匯出PDF失敗",
     "filePreviewNotSupport": "不支援預覽該文件格式",
     "fillCollectionName": "請填寫收藏夹名稱",
     "fillValue": "填充值",
