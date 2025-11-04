@@ -326,7 +326,7 @@ defineExpose({
       :disabled="disabled"
       :rows="rows"
       @input="handleInput"
-      @keydown="handleKeydown"
+      @keydown.stop="handleKeydown"
     />
     
     <teleport to="body">
