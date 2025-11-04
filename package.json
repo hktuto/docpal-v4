@@ -17,7 +17,8 @@
     "dev": "pnpm -F client dev",
     "build": "nuxt build",
     "testw": "vitest run --workspace",
-    "test:reports": "pnpm -r --stream --if-present --no-bail test:report"
+    "test:reports": "pnpm -r --stream --if-present --no-bail test:report",
+    "jenkins:reports": "pnpm -r --stream --if-present --no-bail test:report || true"
   },
   "dependencies": {
     "@vueuse/core": "^11.3.0",
