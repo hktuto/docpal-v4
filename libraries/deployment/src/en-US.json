@@ -1148,6 +1148,11 @@
       "toggleHeaderColumn": "Toggle Header Column",
       "toggleHeaderRow": "Toggle Header Row"
     },
+    "test": {
+      "html": "Output HTML File",
+      "pdf": "Output PDF File",
+      "word": "Output Word File"
+    },
     "utils": {
       "HorizontalLine": "Horizontal Line",
       "TaskList": "Task List",
@@ -1221,7 +1226,6 @@
       "listItemPlaceholder": "Enter list item...",
       "listItems": "List Items",
       "listStyle": "List Style",
-      "signatures": "Signatures",
       "listStyleBullet": "Bullet Points",
       "listStyleNone": "No Style",
       "listStyleNumbered": "Numbered",
@@ -1237,6 +1241,7 @@
         "warning": "The width of at least one column is the default"
       },
       "setHeaderColor": "Set Header Color",
+      "signatures": "Signatures",
       "striped": "Striped",
       "tableBordered": "Show Borders",
       "tableContent": "Table Content",

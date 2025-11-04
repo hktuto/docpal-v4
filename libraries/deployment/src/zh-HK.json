@@ -1148,6 +1148,11 @@
       "toggleHeaderColumn": "切換標題列",
       "toggleHeaderRow": "切換標題行"
     },
+    "test": {
+      "html": "輸出 HTML 文檔",
+      "pdf": "輸出 PDF 文檔",
+      "word": "輸出 Word 文檔"
+    },
     "utils": {
       "HorizontalLine": "水平線",
       "TaskList": "工作清單",
@@ -1221,7 +1226,6 @@
       "listItemPlaceholder": "輸入清單項目...",
       "listItems": "清單項目",
       "listStyle": "清單樣式",
-      "signatures": "簽名",
       "listStyleBullet": "項目符號",
       "listStyleNone": "無樣式",
       "listStyleNumbered": "編號",
@@ -1237,6 +1241,7 @@
         "warning": "至少有一列的寬度是預設值"
       },
       "setHeaderColor": "設置標題顔色",
+      "signatures": "簽名",
       "striped": "有條紋",
       "tableBordered": "顯示邊框",
       "tableContent": "表格內容",
