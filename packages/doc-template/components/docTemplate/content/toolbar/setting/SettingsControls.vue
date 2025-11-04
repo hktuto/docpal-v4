@@ -69,10 +69,17 @@ function handlePickerSelect(variable: DocTemplateVariable) {
   }
   const { to } = editor.value.state.selection
   // variable signature need to add value as array
-  editor.value.commands.insertContent({
+  if (nodeType === 'variableSignature') {
+    editor.value.commands.insertContent({
+      type: nodeType,
+      attrs: { id: Date.now().toString(), name: variable.name, type: 'signature', value: [ variable ] }
+    })
+  }else{
+    editor.value.commands.insertContent({
       type: nodeType,
       attrs: { ...variable }
     })
+  }
   editor.value.commands.focus(to + 1)
   state.insertVariableVisible = false
 }

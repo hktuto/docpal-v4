@@ -39,7 +39,7 @@ function handleCompanyChange(newCompany: string) {
 
 function addVariable(variable: typeof templateVariableOption[number], type: "prefix" | "suffix") {
   if (form.value) {
-    form.value[type] = (form.value[type] || '') + "{{" + variable + "}}"
+    form.value[type] = (form.value[type] || '') + "${" + variable + "}"
   }
 }
 
