@@ -43,9 +43,16 @@ export async function divToPDF(divId: string, name: string) {
     const pdfHeight = 297; // A4高度
     const pageHeight = 297;
     
-    // 计算图片在PDF中的尺寸
-    const imgWidth = pdfWidth;
-    const imgHeight = (canvas.height * pdfWidth) / canvas.width;
+    // 添加左右边距（毫米）
+    const margin = 10;
+    const contentWidth = pdfWidth - (margin * 2);
+    
+    // 计算图片在PDF中的尺寸（考虑边距）
+    const imgWidth = contentWidth;
+    const imgHeight = (canvas.height * contentWidth) / canvas.width;
+    
+    // 计算水平居中的X坐标
+    const xOffset = margin;
     
     // 计算需要的页数
     let heightLeft = imgHeight;
@@ -53,14 +60,14 @@ export async function divToPDF(divId: string, name: string) {
     let page = 0;
 
     // 添加第一页
-    pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight, undefined, 'FAST');
+    pdf.addImage(imgData, 'PNG', xOffset, position, imgWidth, imgHeight, undefined, 'FAST');
     heightLeft -= pageHeight;
 
     // 如果内容超过一页，添加更多页面
     while (heightLeft > 0) {
       position = heightLeft - imgHeight;
       pdf.addPage();
-      pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight, undefined, 'FAST');
+      pdf.addImage(imgData, 'PNG', xOffset, position, imgWidth, imgHeight, undefined, 'FAST');
       heightLeft -= pageHeight;
       page++;
     }

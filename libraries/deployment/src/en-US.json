@@ -1492,6 +1492,7 @@
     "embedCodeCopied": "Embed Code is Copied",
     "enterNumber": "Please Enter Number",
     "exit": "{name} already exists",
+    "exportPDFFailed": "Export PDF failed.",
     "filePreviewNotSupport": "Preview of this file format is not supported",
     "fillCollectionName": "Please fill in the collection name",
     "fillValue": "Fill value",
