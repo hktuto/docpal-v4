@@ -133,8 +133,8 @@ async function handleSubmit() {
 
     await clientApi.api.postCaseInstanceProcessStart({
       id: actionStepId,
-      inputVariables: variables,
-      variables: data
+      workflowVariables: data,
+      variables
     })
     handelCancel()
   } catch (error) {
@@ -152,8 +152,8 @@ async function additionSubmit(formData: any) {
   }, {}) as any
   const res = await clientApi.api.postCaseInstanceProcessStart({
     id: actionStepId,
-    inputVariables: variables,
-    variables: formData
+    workflowVariables: formData,
+    variables
   })
   handelCancel()
 }
