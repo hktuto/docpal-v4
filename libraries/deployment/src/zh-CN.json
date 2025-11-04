@@ -1149,6 +1149,11 @@
       "toggleHeaderColumn": "切换标题列",
       "toggleHeaderRow": "切换标题行"
     },
+    "test": {
+      "html": "输出 HTML 文件",
+      "pdf": "输出 PDF 文件",
+      "word": "输出 Word 文件"
+    },
     "utils": {
       "HorizontalLine": "水平线",
       "TaskList": "任务列表",
