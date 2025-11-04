@@ -1149,6 +1149,11 @@
       "toggleHeaderColumn": "Toggle Header Column",
       "toggleHeaderRow": "Toggle Header Row"
     },
+    "test": {
+      "html": "Output HTML File",
+      "pdf": "Output PDF File",
+      "word": "Output Word File"
+    },
     "utils": {
       "HorizontalLine": "Horizontal Line",
       "TaskList": "Task List",
