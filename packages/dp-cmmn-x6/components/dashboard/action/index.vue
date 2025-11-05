@@ -48,6 +48,8 @@ const state = reactive<any>({
 function filterActions(action: any) {
   if (action.planItemDefinitionType === 'processtask') {
     return action.state === 'available' || action.state === 'enabled'
+  } else if (action.planItemDefinitionType === 'humantask') {
+    return !!action.referenceId
   }
   return action.state !== 'completed'
 }
