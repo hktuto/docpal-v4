@@ -44,7 +44,7 @@ const { tableConfig, tableEvent, tableRef, query, reload, cleanSelectedRows } = 
         totalSize: 0
       }
     }
-    return clientApi.api.postCaseTypesCasetypeidRecordsPage(id, { ...pageParams, ...extraParams })
+    return clientApi.api.postCaseTypesCasetypeidRecordsPage(id, { ...pageParams, ...params, ...extraParams })
   },
   columns: [],
   dblClickAction: ({ row }) => {
@@ -94,18 +94,26 @@ async function reorderColumn(fields: any) {
 const responsiveFilterRef = ref()
 function handleFilterFormChange(formModel) {
   if (formModel.q) {
-    extraParams.where.q = formModel.q
+    extraParams.where.caseId = formModel.q
   } else {
-    delete extraParams.where.q
+    delete extraParams.where.caseId
   }
   reload()
 }
-
+function filterActions(action: any) {
+  if (action.planItemDefinitionType === 'processtask') {
+    return action.state === 'available' || action.state === 'enabled'
+  } else if (action.planItemDefinitionType === 'humantask') {
+    return !!action.referenceId
+  }
+  return action.state !== 'completed'
+}
 async function getActions(row: any) {
   try {
     caseEvents.value = await clientApi.api
       .getCaseDashboardInstanceCaseidActions(row.case_id)
       .then((res) => res.data?.filter((s) => s.state !== 'completed').sort((a: any, b: any) => a.name.localeCompare(b.name)))
+    caseEvents.value = caseEvents.value.filter((s) => filterActions(s))
   } catch (error) {
     caseEvents.value = []
   }

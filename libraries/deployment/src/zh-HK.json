@@ -433,7 +433,7 @@
   "caseManagement_editFieldcaseManagement_editFieldcaseManagement_editField": "Edit Field",
   "caseManagement_editLatest": "編輯最新版本的案例範本",
   "caseManagement_editProduction": "編輯案例範本的製作版本",
-  "caseManagement_filter": "依案例範本名稱篩選",
+  "caseManagement_filter": "依案例範本Id篩選",
   "caseManagement_name": "案例範本名稱",
   "caseManagement_record": "記錄",
   "caseManagement_recordAll": "All Record",
