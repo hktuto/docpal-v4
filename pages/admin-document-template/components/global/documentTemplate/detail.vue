@@ -3,7 +3,7 @@ import { Download } from '@element-plus/icons-vue'
 import { ElNotification } from 'element-plus'
 import { adminApi, templateApi } from 'api'
 import InitWordEditCheckingDialog from '~/components/template/initWordEditCheckingDialog.vue'
-import { variablesSchema } from 'docpal-document-editor/src/client'
+import { getJsonConfig, variablesSchema } from 'docpal-document-editor/src/client'
 
 const routerProvider = inject(MenuRouterKey)
 const { t } = useI18n()
@@ -96,11 +96,10 @@ async function getVariables() {
       }
     })
     nextTick(() => {
-      templateVariablesRendererRef.value.setVariables(deepCopy(state.variables))
+      templateVariablesRendererRef.value.setVariables(c)
     })
 
   } catch (error) {
-
   }
 }
 
@@ -121,21 +120,15 @@ async function handleTest(fileType: string) {
   try {
     let blob
     if (state.info.fileType === 'Word') {
-      const variableList = JSON.parse(JSON.stringify(state.testVariables))
-      variableList.push({
+      const data = getJsonConfig(jsonData.value, documentOptions.value, state.testVariables)
+      data.variables.push({
         id: 'system_output_file_type',
         name: 'Output File Type',
         type: 'text',
         value: fileType
       })
-      const dataJson = {
-        json: {
-          options: documentOptions.value,
-          content: jsonData.value
-        },
-        variables: variableList
-      }
-      blob = await templateApi.convert.postConvertDocx(dataJson, { format: 'blob' })
+
+      blob = await templateApi.convert.postConvertDocx(data, { format: 'blob' })
       const url = URL.createObjectURL(blob)
       const link = document.createElement('a')
       const suffix = fileType == 'word' ? 'docx' : fileType
@@ -188,7 +181,6 @@ function handleRefresh(state: any) {
 
 const documentOptions = ref({})
 const jsonData = ref({})
-
 
 function initWordEditor(json: any) {
   if (!json) {
@@ -363,7 +355,6 @@ onBeforeMount(async () => {
           <template v-if="state.info.fileType === 'Word'">
             <SvgIcon v-if="!state.isEdit" src="/icons/file/edit.svg" class="el-icon--right" round
                      :content="t('Edit Word')" @click="handleEditEditor" />
-
             <div v-if="state.isEdit" class="save-or-exit-icon-container">
               <el-tooltip
                 class="box-item"
