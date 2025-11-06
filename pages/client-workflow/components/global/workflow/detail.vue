@@ -80,7 +80,7 @@ async function handleGetActivity() {
 
 // #region module: form
 const vFormRef = ref()
-
+const displayMode = ref<'form' | 'signature'>('')
 async function handleFormDataGet() {
   let formJson
   let formData
@@ -106,7 +106,6 @@ async function handleFormDataGet() {
       const properties = await clientApi.api.postWorkflowProperties({ taskId: id }).then((res) => res.data)
 
       formData = formDataGetFromProps(properties)
-      console.log('formData', formData)
       formJson = await formJsonGet(
         state.taskDetail.taskDefinitionKey,
         state.taskDetail.taskInstance.processDefinitionKey,
@@ -237,9 +236,14 @@ type AdditionalButton = {
 const additionalButton = ref<AdditionalButton[]>([])
 const additionalButtonRef = ref<any[]>([])
 
-function handleAdditionalSetting(xml: any, taskDetail: any, formData: any) {
-  const { buttons, components } = getBpmnAddtionalElement(xml, state.taskDetail.taskDefinitionKey, taskDetail, formData)
+async function handleAdditionalSetting(xml: any, taskDetail: any, formData: any) {
+  const { buttons, components, signatureSetting } = await getBpmnAddtionalElement(xml, state.taskDetail.taskDefinitionKey, taskDetail, formData)
   additionalButton.value = buttons
+  if(signatureSetting) {
+    displayMode.value = 'signature'
+  }else{
+    displayMode.value = 'form'
+  }
 }
 
 async function addtionalSubmit(formData: any) {
@@ -316,22 +320,32 @@ onMounted(() => {
                             @change="handleTaskInfoChange"></WorkflowDetailInfo>
       </el-tab-pane>
       <el-tab-pane class="workflow-detail-pane" :label="$t('workflow_form')" name="form" v-loading="state.loading">
-        <WorkflowDetailFormRender ref="vFormRef" :taskDetail="state.taskDetail">
-          <template #action>
-            <div class="workflow-detail-pane--btns" v-if="isAssigneeUser">
-              <template v-for="(item, index) in additionalButton" :key="index">
-                <component :is="item.component" ref="additionalButtonRef" v-bind="item.props"
-                           @submit="addtionalSubmit" />
-              </template>
-              <el-button id="Workflow__AvailableTask__Detail__Form__SaveDraft" :disabled="workflowType === 'completeTask'" @click="handleSave">
-                {{ $t('workflow_save') }}
-              </el-button>
-              <el-button id="Workflow__AvailableTask__Detail__Form__Submit" type="primary" :disabled="workflowType === 'completeTask'" @click="handleSubmit">
-                {{ $t('common_submit') }}
-              </el-button>
+          <div :class="{workflowFormContainer:true, [displayMode]:true ,glass: displayMode === 'signature'}">
+            <WorkflowDetailFormRender ref="vFormRef" :taskDetail="state.taskDetail">
+                <template #action>
+                  <div class="workflow-detail-pane--btns" v-if="isAssigneeUser">
+                    <template v-for="(item, index) in additionalButton" :key="index">
+                      <component :is="item.component" ref="additionalButtonRef" v-bind="item.props"
+                                @submit="addtionalSubmit" />
+                    </template>
+                    <el-button id="Workflow__AvailableTask__Detail__Form__SaveDraft" :disabled="workflowType === 'completeTask'" @click="handleSave">
+                      {{ $t('workflow_save') }}
+                    </el-button>
+                    <el-button id="Workflow__AvailableTask__Detail__Form__Submit" type="primary" :disabled="workflowType === 'completeTask'" @click="handleSubmit">
+                      {{ $t('common_submit') }}
+                    </el-button>
+                  </div>
+                </template>
+              </WorkflowDetailFormRender>
+          </div>
+          <template v-if="displayMode === 'signature'">
+            <!-- template viewer -->
+            <div class="templateViewerContainer">
+              <DocTemplateViewer ref="templateViewerRef" v-if="!state.isEdit" :options="documentOptions"
+                               :json="jsonData" />
             </div>
+
           </template>
-        </WorkflowDetailFormRender>
       </el-tab-pane>
       <el-tab-pane :label="$t('workflow_graph')" name="graph">
         <!-- need to use v-if for bpmn, if not  svg graph will not show -->
@@ -388,6 +402,18 @@ onMounted(() => {
     box-shadow: var(--el-box-shadow-light);
     padding: var(--app-space-s);
     // text-align: right;
+  }
+}
+
+.workflowFormContainer{
+  &.form{}
+  &.signature{
+    position: absolute;
+    top: var(--app-space-xs);
+    right: var(--app-space-xs);
+    width: clamp(220px, 40vw, 600px);
+    height: calc( 100% - var(--app-space-xs) * 2);
+    padding: var(--app-space-s);
   }
 }
 </style>
