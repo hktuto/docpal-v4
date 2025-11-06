@@ -63,7 +63,7 @@ async function setUpForm() {
         return res.data.length > 0 ? (res.data[0].jsonValue ? JSON.parse(res.data[0].jsonValue) : {}) : {}
       })
     // get additional element
-    const { buttons, components } = getBpmnAddtionalElement(xml, 'Start', stepDetail, formJson.value)
+    const { buttons, components } = await getBpmnAddtionalElement(xml, 'Start', stepDetail, formJson.value)
     additionalButton.value = buttons
     nextTick(() => {
       console.log('set form data', formData.value)

@@ -4,6 +4,7 @@ const booleanButtonComponent = 'LazyBpmnButtonBoolean'
 export function getBpmnAddtionalElement(xml:any,taskDefinitionKey:string, taskDetail: any, formData:any) {
     const xmlJson = bpmnStringToJson(xml)
     const currentTask = xmlJson.flatObj[taskDefinitionKey]
+    let signatureSetting:any = null
     // check generate document button 
     let buttons:any[] = []
     let components:any[] = []
@@ -59,8 +60,14 @@ export function getBpmnAddtionalElement(xml:any,taskDefinitionKey:string, taskDe
             })
         }
     }
+    if(currentTask.extensionElements && currentTask.extensionElements['docpal:signatureSetting']){
+      console.log('currentTask.extensionElements', currentTask.extensionElements['docpal:signatureSetting'])
+      signatureSetting = currentTask.extensionElements['docpal:signatureSetting']
+      // 
+    }
     return{
         buttons,
-        components
+        components,
+        signatureSetting
     }
 }
