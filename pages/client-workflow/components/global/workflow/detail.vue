@@ -113,7 +113,6 @@ async function handleFormDataGet() {
         state.taskDetail.processDefinitionVersionId
       )
       xml = await clientApi.api.getWorkflowVersionVersionidBpmnxml(state.taskDetail.processDefinitionVersionId)
-      console.log('formData', formData)
       vFormRef.value.setForm(formJson, formData, [], xml)
       handleAdditionalSetting(xml, state.taskDetail, formData)
       break

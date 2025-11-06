@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { ElButton } from 'element-plus';
-import { clientApi } from 'api';
+import { clientApi, templateApi } from 'api';
 
 const routerProvider = inject(MenuRouterKey)
 
@@ -28,6 +28,53 @@ const iframeUrl = ref('')
 
 const dialogHeight = ref(640);
 
+
+
+
+async function generateOldTemplate(templateId:string, map:any){
+  const res: any = await clientApi.api.postNuxeoTemplateSummitanddownloadfile({
+          templateId: templateId,
+          paramsMap: map
+      }, {
+          format: 'blob'
+  })
+  return res;
+}
+
+async function generateNewTemplatePreview(templateId: string, map:any){
+
+  try {
+    // try to get template detail 
+    const {data:templateDetail} = await clientApi.api.getNuxeoTemplateTemplateid(templateId)
+
+    if(!templateDetail) {
+      return
+    }
+    if(templateDetail.fileType !== 'Word') {
+      generateOldTemplate(templateId, map)
+    }
+    const res = await clientApi.api.postNuxeoDocumentPreview({
+      idOrPath: templateDetail.documentId
+    })
+    if(typeof res !== 'object') {
+      generateOldTemplate(templateId, map)
+    }
+    // now we confirm it is new template
+    // change map.system_output_file_type to pdf for preview
+    map.system_output_file_type = 'pdf'
+    const blob = await templateApi.convert.postConvertGeneratefilefromdata({
+      data: map,
+      template: res
+    },{
+      format: 'blob'
+    })
+    return blob;
+  }catch(e) {
+    console.log("e", e)
+    throw new Error("Generate Preview Error")
+  }
+}
+
 async function generatePreview(){
   try{
     loading.value = true;
@@ -46,9 +93,8 @@ async function generatePreview(){
       }
       return prev
     }, {})
-    console.log("mergeFormData", mergeFormData, latestFormData)
     // get template id
-    const templateId = targetTask.extensionElements['flowable:field'].find((field:any) => field.attr_name === "templateId")
+        const templateId = targetTask.extensionElements['flowable:field'].find((field:any) => field.attr_name === "templateId")
         const varible = targetTask.extensionElements['flowable:field'].find((field:any) => field.attr_name === "variables")
 
         if(!templateId || !varible) return;
@@ -60,6 +106,7 @@ async function generatePreview(){
         let map:any = {}
         Object.keys(varibleList).forEach((key:string) => {
             if(varibleList[key] ) {
+              console.log("key", key, varibleList[key])
                 const vari = varibleList[key].replace('${variables:get(','').replace(')}', '')
                 const value = mergeFormData[vari]
                 if(value) {
@@ -75,13 +122,9 @@ async function generatePreview(){
                 }
             }
         })
-        const res: any = await clientApi.api.postNuxeoTemplateSummitanddownloadfile({
-                templateId: templateIdValue,
-                paramsMap: map
-            }, {
-                format: 'blob'
-        })
-        return res;
+        console.log("map", map)
+        return await generateNewTemplatePreview(templateIdValue, map)
+        // 
   }catch(err){
     console.log(err)
     if(err.name !== "AxiosError"){
