@@ -80,7 +80,8 @@ async function handleGetActivity() {
 
 // #region module: form
 const vFormRef = ref()
-const displayMode = ref<'form' | 'signature'>('')
+const displayMode = ref<'form' | 'signature'>()
+const showForm = ref(true)
 async function handleFormDataGet() {
   let formJson
   let formData
@@ -116,6 +117,10 @@ async function handleFormDataGet() {
       handleAdditionalSetting(xml, state.taskDetail, formData)
       break
   }
+}
+
+function toggleShowForm() {
+  showForm.value = !showForm.value
 }
 
 function formDataGet(obj: any) {
@@ -171,8 +176,9 @@ async function handleSave() {
   } catch (error) {
     console.log(error)
     // routerProvider?.message.error(error)
+  }finally{
+    state.loading = false
   }
-  state.loading = false
 }
 
 async function handleSubmit() {
@@ -236,9 +242,13 @@ type AdditionalButton = {
 const additionalButton = ref<AdditionalButton[]>([])
 const additionalButtonRef = ref<any[]>([])
 const signatureDetail = ref<any>(null)
+const pageButtonSetting = ref<any>(null)
 async function handleAdditionalSetting(xml: any, taskDetail: any, formData: any) {
-  const { buttons, components, signatureSetting } = await getBpmnAddtionalElement(xml, state.taskDetail.taskDefinitionKey, taskDetail, formData)
+  const { buttons, components, signatureSetting, buttonSetting } = await getBpmnAddtionalElement(xml, state.taskDetail.taskDefinitionKey, taskDetail, formData)
   additionalButton.value = buttons
+  if(buttonSetting) {
+    pageButtonSetting.value = buttonSetting
+  }
   if(signatureSetting) {
     signatureDetail.value = signatureSetting
     nextTick(() => {
@@ -254,6 +264,7 @@ async function handleAdditionalSetting(xml: any, taskDetail: any, formData: any)
 }
 
 async function addtionalSubmit(formData: any) {
+  state.loading = true
   if (state.taskDetail?.assignee !== userId) {
     await clientApi.api.postWorkflowTaskClaim({ taskId: id, userId }).then((res) => res.data)
   }
@@ -271,6 +282,7 @@ async function addtionalSubmit(formData: any) {
     })
     routerProvider?.back(fallbackRoute)
   }
+  state.loading = false
 }
 
 const handleTaskInfoChange = async (taskDetailRes: any, isClaim: boolean) => {
@@ -327,8 +339,16 @@ onMounted(() => {
                             @change="handleTaskInfoChange"></WorkflowDetailInfo>
       </el-tab-pane>
       <el-tab-pane class="workflow-detail-pane" :label="$t('workflow_form')" name="form" v-loading="state.loading">
-          <div :class="{ workflowFormContainer:true, [displayMode]:true, glass: displayMode === 'signature' }"
+          <div :class="
+            { workflowFormContainer:true, 
+              [displayMode]:true, 
+              glass: displayMode === 'signature',
+              showForm
+             }"
                style="height: 100%; overflow-y: auto">
+               <div v-if="displayMode === 'signature'" class="toggleFormButton">
+                  <Icon :name="showForm ? 'tabler:arrow-right' : 'tabler:arrow-left'  " size="20" @click="toggleShowForm"/>
+               </div>
             <WorkflowDetailFormRender ref="vFormRef" :taskDetail="state.taskDetail">
                 <template #action>
                   <div class="workflow-detail-pane--btns" v-if="isAssigneeUser">
@@ -425,6 +445,11 @@ onMounted(() => {
     padding: var(--app-space-s);
     border-radius: var(--app-border-radius-m);
     z-index: 99;
+    transition: all 0.2s ease-in-out;
+    transform: translateX(90%);
+    &.showForm{
+      transform: translateX(0);
+    }
   }
 }
 </style>
