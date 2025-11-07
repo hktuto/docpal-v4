@@ -3935,6 +3935,8 @@ export interface BizPermissionDTO {
 
 /** Process Definition ResponseDTO */
 export interface ProcessDefinitionResponseDTO {
+    /** Process Definition ID */
+    id?: string;
     /** Process Definition Draft ID */
     draftId?: string;
     /** Process Definition Name */
@@ -4531,6 +4533,7 @@ export interface ProcessDefinitionDraft {
     productionVersion?: string;
     bytes?: string[];
     jsonValue?: string;
+    startFormProperties?: string;
     createdBy?: string;
     modifiedBy?: string;
     /** @format date-time */
@@ -14797,19 +14800,19 @@ export class Admin<SecurityDataType extends unknown> extends HttpClient<Security
          * No description
          *
          * @tags Workflow Process Definition Controller
-         * @name PostWorkflowProcessDefinitionValidation
+         * @name PostWorkflowProcessDefinitionValidate
          * @summary Validate BPMN 2.0 XML file whether process definition grammatical
-         * @request POST:/api/docpal/workflow/process/definition/validation
+         * @request POST:/api/docpal/workflow/process/definition/validate
          */
-        postWorkflowProcessDefinitionValidation: (
+        postWorkflowProcessDefinitionValidate: (
             query: {
                 /** @format binary */
                 file: File;
             },
             params: RequestParams = {},
         ) =>
-            this.request<ResultBoolean, Result | (ResultObject | Result | ResultString)>({
-                path: `/docpal/workflow/process/definition/validation`,
+            this.request<ResultObject, Result | (ResultObject | Result | ResultString)>({
+                path: `/docpal/workflow/process/definition/validate`,
                 method: "POST",
                 query: query,
                 ...params,
@@ -14893,6 +14896,28 @@ export class Admin<SecurityDataType extends unknown> extends HttpClient<Security
                 query: query,
                 body: data,
                 type: ContentType.FormData,
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags Workflow Process Definition Controller
+         * @name PostWorkflowProcessDefinitionParse
+         * @summary Validate BPMN 2.0 XML file whether process definition grammatical
+         * @request POST:/api/docpal/workflow/process/definition/parse
+         */
+        postWorkflowProcessDefinitionParse: (
+            query: {
+                /** @format binary */
+                file: File;
+            },
+            params: RequestParams = {},
+        ) =>
+            this.request<ResultBoolean, Result | (ResultObject | Result | ResultString)>({
+                path: `/docpal/workflow/process/definition/parse`,
+                method: "POST",
+                query: query,
                 ...params,
             }),
 
@@ -20564,6 +20589,26 @@ export class Admin<SecurityDataType extends unknown> extends HttpClient<Security
             this.request<ResultMapStringObject, Result | (ResultObject | Result | ResultString)>({
                 path: `/docpal/workflow/variables/${instanceId}`,
                 method: "GET",
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags Workflow
+         * @name GetWorkflowStartFormProperties
+         * @request GET:/api/docpal/workflow/start-form/properties
+         */
+        getWorkflowStartFormProperties: (
+            query: {
+                processKey: string;
+            },
+            params: RequestParams = {},
+        ) =>
+            this.request<ResultListFormPropertyDTO, Result | (ResultObject | Result | ResultString)>({
+                path: `/docpal/workflow/start-form/properties`,
+                method: "GET",
+                query: query,
                 ...params,
             }),
 

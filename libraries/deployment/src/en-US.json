@@ -318,6 +318,7 @@
     "clearFilter": "Clear Filter",
     "clearSelected": "Clear Selected",
     "close": "Close",
+    "color": "Button Color",
     "copyPath": "Copy Path",
     "deleteSelected": "Delete Selected",
     "dismiss": "Dismiss",
@@ -432,7 +433,7 @@
   "caseManagement_editFieldcaseManagement_editFieldcaseManagement_editField": "Edit Field",
   "caseManagement_editLatest": "Edit Latest Version of Case Template",
   "caseManagement_editProduction": "Edit Production Version of Case Template",
-  "caseManagement_filter": "Filter by Case Name",
+  "caseManagement_filter": "Filter by Case Id",
   "caseManagement_name": "Case Template Name",
   "caseManagement_record": "record",
   "caseManagement_recordAll": "All Record",
@@ -1148,6 +1149,11 @@
       "toggleHeaderColumn": "Toggle Header Column",
       "toggleHeaderRow": "Toggle Header Row"
     },
+    "test": {
+      "html": "Output HTML File",
+      "pdf": "Output PDF File",
+      "word": "Output Word File"
+    },
     "utils": {
       "HorizontalLine": "Horizontal Line",
       "TaskList": "Task List",
@@ -1177,6 +1183,7 @@
       "addErrorKeyRequired": "Variable key is required",
       "addListItem": "Add Item",
       "addRow": "Add Row",
+      "addSignature": "Add Signature",
       "addSuccess": "Variable added successfully",
       "addVariable": "Add Variable",
       "asc": "ASC",
@@ -1235,6 +1242,7 @@
         "warning": "The width of at least one column is the default"
       },
       "setHeaderColor": "Set Header Color",
+      "signatures": "Signatures",
       "striped": "Striped",
       "tableBordered": "Show Borders",
       "tableContent": "Table Content",
@@ -1484,6 +1492,7 @@
     "embedCodeCopied": "Embed Code is Copied",
     "enterNumber": "Please Enter Number",
     "exit": "{name} already exists",
+    "exportPDFFailed": "Export PDF failed.",
     "filePreviewNotSupport": "Preview of this file format is not supported",
     "fillCollectionName": "Please fill in the collection name",
     "fillValue": "Fill value",

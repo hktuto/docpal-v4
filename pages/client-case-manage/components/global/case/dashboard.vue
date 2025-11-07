@@ -9,8 +9,8 @@ import { MenuRouterKey } from '#imports'
 
 const routerProvider = inject(MenuRouterKey)
 const props = defineProps<{
-  instanceId: string;
-  versionId: string;
+  instanceId: string
+  versionId: string
 }>()
 const { instanceId, versionId } = toRefs(props)
 const caseTypeId = ref('')
@@ -26,9 +26,9 @@ const { t } = useI18n()
 
 async function getDashboardList() {
   try {
-    state.dashboardList = await clientApi.api.getCaseDashboardVersionCmmnversionidPermission(versionId.value).then(res => res.data)
+    state.dashboardList = await clientApi.api.getCaseDashboardVersionCmmnversionidPermission(versionId.value).then((res) => res.data)
     const dashboardId = sessionStorage.getItem('case-dashboard-id')
-    let index = state.dashboardList.findIndex(item => item.id === dashboardId)
+    let index = state.dashboardList.findIndex((item) => item.id === dashboardId)
     if (!index || index < 0) index = 0
     await getLayout(state.dashboardList[index].id, state.dashboardList[index])
   } catch (error) {
@@ -59,7 +59,7 @@ async function getLayout(layoutId: string, row: any) {
       return
     }
     sessionStorage.setItem('case-dashboard-id', layoutId)
-    const detail = await clientApi.api.getCaseDashboardId(layoutId).then(res => res.data)
+    const detail = await clientApi.api.getCaseDashboardId(layoutId).then((res) => res.data)
     if (!detail?.styleJson) throw new Error('')
     state.layout = JSON.parse(detail?.styleJson)
     row.layout = state.layout
@@ -73,7 +73,18 @@ async function getLayout(layoutId: string, row: any) {
     }, 200)
   }
 }
-
+const exportLoading = ref(false)
+async function handleExportPdf() {
+  try {
+    exportLoading.value = true
+    await divToPDF('CaseDashboard__Main', state.selectedDashboard.label)
+  } catch (error) {
+    console.error('Export PDF error:', error)
+    ElMessage.error(t('dpTip.exportPDFFailed'))
+  } finally {
+    exportLoading.value = false
+  }
+}
 provide(CaseManagementDashboardKey, {
   instanceId: instanceId,
   caseTypeId,
@@ -83,33 +94,36 @@ provide(CaseManagementDashboardKey, {
 onMounted(() => {
   getDashboardList()
 })
-
 </script>
 <template>
   <div class="pageContainer--padding case-dashboard">
-    <el-dropdown trigger="click">
-      <span class="el-dropdown-link">
-        <div class="ellipsis">{{ state.selectedDashboard.label }}</div>
-        <el-icon class="el-icon--right" v-if="state.dashboardList.length > 1">
-          <ArrowDown />
-        </el-icon>
-      </span>
-      <template #dropdown>
-        <el-dropdown-menu v-if="state.dashboardList.length > 1">
-          <el-dropdown-item
-            v-for="item in state.dashboardList"
-            :command="item.id"
-            :disabled="item.id === state.selectedDashboard.id"
-            @click="getLayout(item.id, item)"
-          >
-            {{ item.label }}
-          </el-dropdown-item>
-        </el-dropdown-menu>
-      </template>
-    </el-dropdown>
+    <div class="case-dashboard-header">
+      <el-dropdown trigger="click">
+        <span class="el-dropdown-link">
+          <div class="ellipsis">{{ state.selectedDashboard.label }}</div>
+          <el-icon class="el-icon--right" v-if="state.dashboardList.length > 1">
+            <ArrowDown />
+          </el-icon>
+        </span>
+        <template #dropdown>
+          <el-dropdown-menu v-if="state.dashboardList.length > 1">
+            <el-dropdown-item
+              v-for="item in state.dashboardList"
+              :command="item.id"
+              :disabled="item.id === state.selectedDashboard.id"
+              @click="getLayout(item.id, item)"
+            >
+              {{ item.label }}
+            </el-dropdown-item>
+          </el-dropdown-menu>
+        </template>
+      </el-dropdown>
+      <el-button :loading="exportLoading" type="primary" @click="handleExportPdf">{{ $t('dpTool_downloadPDF') }}</el-button>
+    </div>
     <div class="case-dashboard-main" v-loading="state.loading">
       <DashboardDetail
         v-if="!state.loading"
+        id="CaseDashboard__Main"
         ref="DashboardDetailRef"
         v-model:layout="state.layout"
         :componentMap="CmmnWidgetComponent"
@@ -141,5 +155,10 @@ onMounted(() => {
     height: 100%;
     overflow: auto;
   }
+}
+.case-dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 </style>

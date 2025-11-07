@@ -21,7 +21,6 @@ const containerSize = ref(0)
 function setMinSize() {
     const appContent = document.querySelector('.appContent');
     if(!appContent) {
-      console.log("no appContent")
       return window.innerWidth;
     }
     const appContentRect = appContent.getBoundingClientRect();

@@ -60,7 +60,7 @@ function initEditor(initOptions: TipTapOptions, json?: any) {
   if (variables.value.length > 0 && json && json.content) {
     json.content = replaceVariables(json.content, [...variables.value])
   }
-
+  console.log('json.content', json)
   let html = generateHtml(json, initOptions)
 
   editor.value = new Editor({

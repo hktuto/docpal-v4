@@ -32,6 +32,27 @@
                  :loading="state.loading" @click="handleSubmit">
         {{ $t('common_download') }}
       </el-button>
+<!--    TODO: Need to be consistent with the interface of document Temple -->
+<!--      <el-dropdown id="Workflow__PersonalWorkflow__Download" type="primary" v-if="state.canDownload"
+                   :loading="state.loading">
+        <el-button>
+          {{ t('common_download') }}
+        </el-button>
+        <template #dropdown>
+          <el-dropdown-menu>
+            <el-dropdown-item @click="handleSubmit('word')">
+              {{ t('docTemplate.test.word') }}
+            </el-dropdown-item>
+            <el-dropdown-item @click="handleSubmit('pdf')">
+              {{ t('docTemplate.test.pdf') }}
+            </el-dropdown-item>
+            <el-dropdown-item @click="handleSubmit('html')">
+              {{ t('docTemplate.test.html') }}
+            </el-dropdown-item>
+          </el-dropdown-menu>
+        </template>
+      </el-dropdown>-->
+
     </template>
   </DialogFullscreen>
 
@@ -116,7 +137,7 @@ async function generateFile() {
 }
 
 // #endregion
-async function handleSubmit() {
+async function handleSubmit(fileType: string) {
   state.loading = true
   try {
     let res
@@ -129,7 +150,6 @@ async function handleSubmit() {
       res = await templateApi.convert.postConvertGeneratedatatodocx(data, {
         format: 'blob'
       })
-
     } else {
       res = await generateFile()
       if (!res || res.errorCode) {
@@ -142,7 +162,7 @@ async function handleSubmit() {
     state.dialogVisible = false
   } catch (error) {
     console.log(error)
-    throw new Error(error)
+    throw error
   }
   state.loading = false
 }
@@ -201,10 +221,10 @@ async function templateParamGet(templatePath: string) {
 
 // @ts-ignore
 onMounted(async () => {
-  try{
+  try {
 
     state.templateList = await clientApi.api.postNuxeoTemplateGettemplatelist().then(res => res.data) || []
-  }catch(error){
+  } catch (error) {
     console.log(error)
     state.templateList = []
   }

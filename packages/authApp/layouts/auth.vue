@@ -27,7 +27,7 @@ const inited = ref(false)
 
 async function getTabsFromServer() {
   // check if new tab
-  console.log("getTabsFromServer", inited.value);
+  
   if(inited.value) return
   const tabStorageKey = appPlatform.value + '-app-tab'
   let storageTabs = localStorage.getItem(tabStorageKey);
@@ -36,7 +36,7 @@ async function getTabsFromServer() {
   // storageTabs = null
   try {
     if (storageTabs) {
-      console.log("storageTabs", storageTabs);
+      
       const newLayout = JSON.parse(storageTabs);
       // check and set layout
       newLayout.forEach((item:any) => {
@@ -97,7 +97,6 @@ async function saveTabsToLocalStorage(layout: TabPanel[]) {
   const saveData = JSON.parse(JSON.stringify(layout));
   // loop all panel and tabs to reset all initized to false
   saveData.forEach((panel: any) => {
-    console.log('panel', panel)
     panel.tabs.forEach((tab: any) => {
       tab.initized = false;
     });

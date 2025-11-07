@@ -3,7 +3,8 @@ import { Download } from '@element-plus/icons-vue'
 import { ElNotification } from 'element-plus'
 import { adminApi, templateApi } from 'api'
 import InitWordEditCheckingDialog from '~/components/template/initWordEditCheckingDialog.vue'
-import { variablesSchema } from 'docpal-document-editor/src/client'
+import { getJsonConfig, variablesSchema } from 'docpal-document-editor/src/client'
+import cloneDeep from 'lodash/cloneDeep'
 
 const routerProvider = inject(MenuRouterKey)
 const { t } = useI18n()
@@ -19,7 +20,6 @@ const state = reactive<any>({
   },
   oldVariables: [],
   variables: [],
-  testVariables: [],
   previewFile: {
     blob: null,
     name: '',
@@ -39,6 +39,7 @@ const state = reactive<any>({
   isEdit: false,
   openWordDialog: false
 })
+const exportVariables = ref<any[]>([])
 const InteractDrawerRef = ref()
 const docTemplateEditorRef = ref()
 const variables = ref([])
@@ -52,7 +53,7 @@ async function getInfo() {
 }
 
 async function getPreviewFile() {
-  console.log("getPreviewFile", state.info.documentId)
+  console.log('getPreviewFile', state.info.documentId)
   state.previewFile.loading = true
   try {
     state.previewFile.blob = await adminApi.api.postNuxeoDocumentPreview({ idOrPath: state.info.documentId }, {
@@ -69,11 +70,11 @@ async function getPreviewFile() {
 }
 
 async function getVariables() {
-  console.log("getVariables", id)
+  console.log('getVariables', id)
   try {
     // const date = new Date().valueOf()
     const { data: res } = await adminApi.api.getTemplateDocumentRefreshId(id) as any
-    console.log("res", res)
+    console.log('res', res)
     if (!res.templateVariable) return
     const templateVariable = [...new Set(JSON.parse(res.templateVariable))]
     state.variables = []
@@ -100,11 +101,10 @@ async function getVariables() {
     })
 
   } catch (error) {
-
   }
 }
 
-async function handleTest() {
+async function handleTest(fileType: string) {
   state.downloadLoading = true
 
   const testId = new Date().valueOf() + state.info.name
@@ -121,18 +121,22 @@ async function handleTest() {
   try {
     let blob
     if (state.info.fileType === 'Word') {
-      const dataJson = {
-        json: {
-          options: documentOptions.value,
-          content: jsonData.value
-        },
-        variables: state.testVariables
-      }
-      blob = await templateApi.convert.postConvertDocx(dataJson, { format: 'blob' })
+      const data = getJsonConfig(jsonData.value, documentOptions.value, exportVariables.value)
+      const deepData = cloneDeep(data)
+      deepData.variables.push({
+        id: 'system_output_file_type',
+        name: 'Output File Type',
+        type: 'text',
+        value: fileType
+      })
+
+      blob = await templateApi.convert.postConvertDocx(deepData, { format: 'blob' })
       const url = URL.createObjectURL(blob)
       const link = document.createElement('a')
+      const suffix = fileType == 'word' ? 'docx' : fileType
+
       link.href = url
-      link.download = `${state.info.name}.docx`
+      link.download = `${state.info.name}.${suffix}`
       document.body.appendChild(link)
       link.click()
       link.remove()
@@ -157,6 +161,7 @@ async function handleTest() {
       notification.close()
     }, 3000)
   } catch (error) {
+    console.log(error)
     notification.close()
     routerProvider?.message.error(error)
   } finally {
@@ -171,7 +176,6 @@ function handleEdit() {
 }
 
 function handleRefresh(state: any) {
-  console.log("handleRefresh", state)
   if (!state || state.info) getInfo()
   if (!state || state.variables) getVariables()
   if (!state || state.preview) getPreviewFile()
@@ -255,7 +259,7 @@ async function convertJsonToBlob(jsonData: any): Promise<Blob> {
 
 async function updateVariables(newData: any) {
   variables.value = newData
-  console.log("updateVariables", variables.value)
+  console.log('updateVariables', variables.value)
   templateVariablesRendererRef.value.setVariables(deepCopy(variables.value))
 }
 
@@ -273,6 +277,7 @@ async function getWordJsonFile() {
     }
     const dataJson = JSON.parse(isJson)
     initWordEditor(dataJson)
+    exportVariables.value = cloneDeep(variables.value)
   } catch (e) {
     console.log(e)
     wordEditCheckingDialogRef.value.openDialog(blob, state.info.name)
@@ -328,7 +333,7 @@ async function init() {
 }
 
 function handleTestVariable(variables: any) {
-  state.testVariables = variables
+  exportVariables.value = variables
 }
 
 onBeforeMount(async () => {
@@ -348,12 +353,11 @@ onBeforeMount(async () => {
         </div>
         <div class="flex-x-between">
           <SvgIcon v-if="state.info.fileType !== 'Word'" class="el-icon--left" src="/icons/file/file-refresh.svg"
-                   round :content="t('common_refresh')" @click="handleRefresh()" />
+                   round :content="t('common_refresh')" @click="handleRefresh" />
 
           <template v-if="state.info.fileType === 'Word'">
             <SvgIcon v-if="!state.isEdit" src="/icons/file/edit.svg" class="el-icon--right" round
                      :content="t('Edit Word')" @click="handleEditEditor" />
-
             <div v-if="state.isEdit" class="save-or-exit-icon-container">
               <el-tooltip
                 class="box-item"
@@ -418,7 +422,26 @@ onBeforeMount(async () => {
       <div class="template-title">{{ t('template.variable') }}</div>
       <DocTemplateVariablesRenderer ref="templateVariablesRendererRef" @update="handleTestVariable" />
 
-      <el-button class="template-test-button" id="DocumentTemplate__PreviewDocument__TestTemplateDownload"
+      <el-dropdown v-if="state.info.fileType === 'Word'" style="width: 100%"
+                   id="DocumentTemplate__PreviewDocument__TestTemplateDownload">
+        <el-button class="template-test-button" style="width: 100%">
+          {{ t('template.test') }}
+        </el-button>
+        <template #dropdown>
+          <el-dropdown-menu>
+            <el-dropdown-item @click="handleTest('word')">
+              {{ t('docTemplate.test.word') }}
+            </el-dropdown-item>
+            <el-dropdown-item @click="handleTest('pdf')">
+              {{ t('docTemplate.test.pdf') }}
+            </el-dropdown-item>
+            <el-dropdown-item @click="handleTest('html')">
+              {{ t('docTemplate.test.html') }}
+            </el-dropdown-item>
+          </el-dropdown-menu>
+        </template>
+      </el-dropdown>
+      <el-button v-else class="template-test-button" id="DocumentTemplate__PreviewDocument__TestTemplateDownload"
                  :loading="state.downloadLoading" @click="handleTest">{{ t('template.test') }}
       </el-button>
     </InteractDrawer>

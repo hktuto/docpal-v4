@@ -23,9 +23,9 @@ async function getTemplateVariableList() {
     variableList.value = []
     return
   }
-  variableList.value = {}
+  variableList.value = []
 
-  const { data } = await adminApi.api.getTemplateDocumentRefreshId(props.templateId)
+  const { data }: any = await adminApi.api.getTemplateDocumentRefreshId(props.templateId)
   state.fileType = data.fileType
   const cdata = props.templateCData ? JSON.parse(props.templateCData) : {}
   if (data.fileType === 'Word') {
@@ -33,12 +33,23 @@ async function getTemplateVariableList() {
     if (!variable) {
       return
     }
+
+    // File type used for template output
+    variable.splice(0, 0, {
+      id: 'system_output_file_type',
+      name: 'Output File Type',
+      type: 'text',
+      value: ''
+    })
+
     variable.map((item: any) => {
       const rawValue = cdata[item.id] || ''
       item.value = rawValue.replace('${variables:get(', '').replace(')}', '')
       return item
     })
+
     variableList.value = variable
+    return
   }
 
   const fullVarList = JSON.parse(data.templateVariable as any).reduce((prev: any, curr: any) => {
@@ -102,7 +113,6 @@ watch(templateId, () => {
     <div v-else>
       No variable
     </div>
-
   </div>
 </template>
 
