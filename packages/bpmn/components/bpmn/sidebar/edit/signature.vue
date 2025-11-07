@@ -78,8 +78,9 @@ function setUpListener() {
   })
 }
 const signatureVariable = ref<any[]>([])
-async function getTemplateVariableList(templateId: string) {
-  const { data } = await adminApi.api.getTemplateDocumentRefreshId(templateId)
+async function getTemplateVariableList(stepDefinitionKey: string) {
+  const selectedStep = allDocumentStep.value.find((item: any) => item.value === stepDefinitionKey)
+  const { data } = await adminApi.api.getTemplateDocumentRefreshId(selectedStep.templateId)
   if(data.fileType !== 'Word') {
     console.log('not word file')
     // reset form 
@@ -128,7 +129,7 @@ watch(form, () => {
     <ElForm :model="form" label-position="top" class="listItem">
       <ElFormItem label="Document Generate Step">
           <ElSelect v-model="form.attr_documentStepId" placeholder="Document Step" filterable clearable @change="getTemplateVariableList(form.attr_documentStepId)">
-              <ElOption v-for="item in allDocumentStep" :key="item.value" :label="item.label" :value="item.templateId" />
+              <ElOption v-for="item in allDocumentStep" :key="item.value" :label="item.label" :value="item.value" />
           </ElSelect>
         </ElFormItem>
         <ElFormItem label="Signature">

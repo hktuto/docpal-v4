@@ -235,14 +235,21 @@ type AdditionalButton = {
 }
 const additionalButton = ref<AdditionalButton[]>([])
 const additionalButtonRef = ref<any[]>([])
-
+const signatureDetail = ref<any>(null)
 async function handleAdditionalSetting(xml: any, taskDetail: any, formData: any) {
   const { buttons, components, signatureSetting } = await getBpmnAddtionalElement(xml, state.taskDetail.taskDefinitionKey, taskDetail, formData)
   additionalButton.value = buttons
   if(signatureSetting) {
-    displayMode.value = 'signature'
+    signatureDetail.value = signatureSetting
+    nextTick(() => {
+      displayMode.value = 'signature'
+    })
   }else{
-    displayMode.value = 'form'
+    signatureDetail.value = null
+    nextTick(() => {
+      displayMode.value = 'form'
+    })
+    
   }
 }
 
@@ -341,8 +348,9 @@ onMounted(() => {
           <template v-if="displayMode === 'signature'">
             <!-- template viewer -->
             <div class="templateViewerContainer">
-              <DocTemplateViewer ref="templateViewerRef" v-if="!state.isEdit" :options="documentOptions"
-                               :json="jsonData" />
+              <!-- {{ signatureDetail }} -->
+              <DocTemplateViewer ref="templateViewerRef" v-if="!state.isEdit && signatureDetail" :options="signatureDetail.templateDetail.json.options"
+                               :json="signatureDetail.templateDetail.json.content" />
             </div>
 
           </template>
@@ -414,6 +422,8 @@ onMounted(() => {
     width: clamp(220px, 40vw, 600px);
     height: calc( 100% - var(--app-space-xs) * 2);
     padding: var(--app-space-s);
+    border-radius: var(--app-border-radius-m);
+    z-index: 99;
   }
 }
 </style>
