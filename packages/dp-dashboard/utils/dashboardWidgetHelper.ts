@@ -66,9 +66,10 @@ import PersonalWorkflowSingle from '../components/global/personal/workflow/singl
 // import PersonalWorkflowSingleFilter from '../components/global/personal/workflow/singleFilter/index.vue'
 import '../assets/dashboard.scss'
 import Browse from '../components/global/personal/browse/index.vue'
-const enum dashboardType {
+export const enum DASHBOARD_TYPE {
   documentCount = 'documentCount',
   workflowCount = 'workflowCount',
+  caseCount = 'caseCount',
   document = 'document',
   workflow = 'workflow',
   case = 'case',
@@ -92,12 +93,12 @@ export type DashboardWidgetSetting = {
   layout?: DashboardWidgetSetting
   label: string
   feature?: string
-  type?: dashboardType
+  type?: DASHBOARD_TYPE
 }
 
 export const dashboardWidgetSetting: { [key in string]: DashboardWidgetSetting } = {
   DocSizeStatistics: {
-    type: dashboardType.documentCount,
+    type: DASHBOARD_TYPE.documentCount,
     label: 'docTypeSizeChart',
     minW: 2,
     minH: 2,
@@ -112,7 +113,7 @@ export const dashboardWidgetSetting: { [key in string]: DashboardWidgetSetting }
     }
   },
   DocTypeCount: {
-    type: dashboardType.documentCount,
+    type: DASHBOARD_TYPE.documentCount,
     label: 'docTypeCountChart',
     minW: 1,
     minH: 2,
@@ -128,7 +129,7 @@ export const dashboardWidgetSetting: { [key in string]: DashboardWidgetSetting }
     }
   },
   DocTypeCoCount: {
-    type: dashboardType.documentCount,
+    type: DASHBOARD_TYPE.documentCount,
     label: 'docTypeChart',
     minW: 4,
     minH: 4,
@@ -147,7 +148,7 @@ export const dashboardWidgetSetting: { [key in string]: DashboardWidgetSetting }
     }
   },
   WorkflowCoCount: {
-    type: dashboardType.workflowCount,
+    type: DASHBOARD_TYPE.workflowCount,
     divided: true,
     label: 'workflowCoCount',
     minW: 4,
@@ -170,7 +171,7 @@ export const dashboardWidgetSetting: { [key in string]: DashboardWidgetSetting }
     }
   },
   WorkflowGroup: {
-    type: dashboardType.workflowCount,
+    type: DASHBOARD_TYPE.workflowCount,
     label: 'workflowGroup',
     minW: 4,
     minH: 4,
@@ -228,7 +229,7 @@ export const dashboardWidgetSetting: { [key in string]: DashboardWidgetSetting }
   //     setting: {}
   // },
   PersonalDashboard: {
-    type: dashboardType.default,
+    type: DASHBOARD_TYPE.default,
     feature: 'DASHBOARD',
     divided: true,
     label: 'PersonalDashboard',
@@ -242,7 +243,7 @@ export const dashboardWidgetSetting: { [key in string]: DashboardWidgetSetting }
     setting: {}
   },
   PersonalShare: {
-    type: dashboardType.document,
+    type: DASHBOARD_TYPE.document,
     feature: 'SHARE_INTERNAL',
     label: 'PersonalShare',
     minW: 2,
@@ -255,7 +256,7 @@ export const dashboardWidgetSetting: { [key in string]: DashboardWidgetSetting }
     setting: {}
   },
   PersonalShareExternal: {
-    type: dashboardType.document,
+    type: DASHBOARD_TYPE.document,
     feature: 'SHARE_EXTERNAL',
     label: 'PersonalShareExternal',
     minW: 2,
@@ -268,7 +269,7 @@ export const dashboardWidgetSetting: { [key in string]: DashboardWidgetSetting }
     setting: {}
   },
   PersonalShareInternalOther: {
-    type: dashboardType.document,
+    type: DASHBOARD_TYPE.document,
     feature: 'SHARE_INTERNAL',
     label: 'PersonalShareInternalOther',
     minW: 2,
@@ -281,7 +282,7 @@ export const dashboardWidgetSetting: { [key in string]: DashboardWidgetSetting }
     setting: {}
   },
   PersonalShareInternalMe: {
-    type: dashboardType.document,
+    type: DASHBOARD_TYPE.document,
     label: 'PersonalShareInternalMe',
     minW: 2,
     minH: 2,
@@ -308,7 +309,7 @@ export const dashboardWidgetSetting: { [key in string]: DashboardWidgetSetting }
   //     }
   // },
   PersonalWorkflowCreate: {
-    type: dashboardType.workflow,
+    type: DASHBOARD_TYPE.workflow,
     feature: 'WORKFLOW',
     label: 'PersonalWorkflowCreate',
     minW: 2,
@@ -323,7 +324,7 @@ export const dashboardWidgetSetting: { [key in string]: DashboardWidgetSetting }
     }
   },
   PersonalWorkflow: {
-    type: dashboardType.workflow,
+    type: DASHBOARD_TYPE.workflow,
     feature: 'WORKFLOW',
     label: 'PersonalWorkflow',
     minW: 2,
@@ -339,7 +340,7 @@ export const dashboardWidgetSetting: { [key in string]: DashboardWidgetSetting }
     }
   },
   PersonalWorkflowSingle: {
-    type: dashboardType.workflow,
+    type: DASHBOARD_TYPE.workflow,
     label: 'PersonalWorkflowSingle',
     minW: 2,
     minH: 2,
@@ -369,7 +370,7 @@ export const dashboardWidgetSetting: { [key in string]: DashboardWidgetSetting }
   //     }
   // },
   PersonalSearchHistory: {
-    type: dashboardType.document,
+    type: DASHBOARD_TYPE.document,
     // feature: 'SEARCH',
     label: 'PersonalSearchHistory',
     minW: 2,
@@ -382,7 +383,7 @@ export const dashboardWidgetSetting: { [key in string]: DashboardWidgetSetting }
     setting: {}
   },
   PersonalSearchDefine: {
-    type: dashboardType.document,
+    type: DASHBOARD_TYPE.document,
     label: 'PersonalSearchDefine',
     minW: 2,
     minH: 2,
@@ -394,7 +395,7 @@ export const dashboardWidgetSetting: { [key in string]: DashboardWidgetSetting }
     setting: {}
   },
   PersonalSearchRecentDoc: {
-    type: dashboardType.document,
+    type: DASHBOARD_TYPE.document,
     // feature: 'SEARCH',
     label: 'PersonalSearchRecentDoc',
     minW: 2,
@@ -407,7 +408,7 @@ export const dashboardWidgetSetting: { [key in string]: DashboardWidgetSetting }
     setting: {}
   },
   PersonalSearchSubscribed: {
-    type: dashboardType.document,
+    type: DASHBOARD_TYPE.document,
     label: 'PersonalSearchSubscribed',
     minW: 4,
     minH: 2,
@@ -419,7 +420,7 @@ export const dashboardWidgetSetting: { [key in string]: DashboardWidgetSetting }
     setting: {}
   },
   PersonalCaseCreate: {
-    type: dashboardType.case,
+    type: DASHBOARD_TYPE.case,
     label: 'PersonalCaseCreate',
     minW: 1,
     minH: 2,
@@ -431,7 +432,7 @@ export const dashboardWidgetSetting: { [key in string]: DashboardWidgetSetting }
     setting: {}
   },
   PersonalCase: {
-    type: dashboardType.case,
+    type: DASHBOARD_TYPE.case,
     label: 'PersonalCase',
     minW: 2,
     minH: 2,
@@ -445,7 +446,7 @@ export const dashboardWidgetSetting: { [key in string]: DashboardWidgetSetting }
     }
   },
   PersonalCaseSingle: {
-    type: dashboardType.case,
+    type: DASHBOARD_TYPE.case,
     label: 'PersonalCaseSingle',
     minW: 2,
     minH: 2,
@@ -463,7 +464,7 @@ export const dashboardWidgetSetting: { [key in string]: DashboardWidgetSetting }
   },
   CalendarWidget: {
     divided: true,
-    type: dashboardType.default,
+    type: DASHBOARD_TYPE.default,
     label: 'CalendarWidget',
     minW: 2,
     minH: 6,
@@ -477,7 +478,7 @@ export const dashboardWidgetSetting: { [key in string]: DashboardWidgetSetting }
     }
   },
   Browse: {
-    type: dashboardType.document,
+    type: DASHBOARD_TYPE.document,
     label: 'Browse',
     minW: 4,
     minH: 4,
@@ -492,13 +493,13 @@ export const dashboardWidgetSetting: { [key in string]: DashboardWidgetSetting }
     }
   }
 }
-export function getDashboardWidgetByType(): { [key in string]: DashboardWidget[] } {
-  const DashboardWidgetResult: any = {
-    default: [] as DashboardWidget[]
-  } as { [key in string]: DashboardWidget[] }
-
-  Object.keys(dashboardWidgetSetting).forEach((key) => {
-    const item = dashboardWidgetSetting[key]
+export function getDashboardWidgetByType(settingMap: { [key in string]: DashboardWidgetSetting }):{ [key in string]: DashboardWidgetSetting[] } {
+  const DashboardWidgetResult: { [key in string]: DashboardWidgetSetting[] } = {
+    default: [] 
+  }
+  
+  Object.keys(settingMap).forEach((key) => {
+    const item = settingMap[key]
     if (item.type) {
       if(!DashboardWidgetResult[item.type]) {
         DashboardWidgetResult[item.type] = []
