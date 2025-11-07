@@ -64,6 +64,11 @@ export async function getBpmnAddtionalElement(xml:any,taskDefinitionKey:string, 
         }
     }
     // TODO : get buttonSetting
+    if(currentTask.extensionElements && currentTask.extensionElements['docpal:buttonSetting']){
+      const buttonSettingFromTask = currentTask.extensionElements['docpal:buttonSetting']
+      console.log('buttonSettingFromTask', buttonSettingFromTask)
+      buttonSetting = buttonSettingFromTask
+    }
     if(currentTask.extensionElements && currentTask.extensionElements['docpal:signatureSetting']){
       // if docpal:signatureSetting' is in current Task , that mean it is a signature task
       // step 1 , get signature setting from task
@@ -93,7 +98,6 @@ export async function getBpmnAddtionalElement(xml:any,taskDefinitionKey:string, 
       const newVariables = generateData({}, json)
       let templateDetail = {...json}
       const content = templateDetail.json.content.content
-
       templateDetail.json.content.content = replaceVariables(content, newVariables.variables)
       // const json.json.content = replaceVariables(json.json.content, newVariables)
       // finally, store signature setting
