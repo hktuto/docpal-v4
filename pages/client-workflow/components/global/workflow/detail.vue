@@ -327,7 +327,8 @@ onMounted(() => {
                             @change="handleTaskInfoChange"></WorkflowDetailInfo>
       </el-tab-pane>
       <el-tab-pane class="workflow-detail-pane" :label="$t('workflow_form')" name="form" v-loading="state.loading">
-          <div :class="{workflowFormContainer:true, [displayMode]:true ,glass: displayMode === 'signature'}">
+          <div :class="{ workflowFormContainer:true, [displayMode]:true, glass: displayMode === 'signature' }"
+               style="height: 100%; overflow-y: auto">
             <WorkflowDetailFormRender ref="vFormRef" :taskDetail="state.taskDetail">
                 <template #action>
                   <div class="workflow-detail-pane--btns" v-if="isAssigneeUser">
