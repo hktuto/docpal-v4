@@ -25,6 +25,7 @@ const state = reactive<any>({
   taskDetail: {},
   activityList: [],
   loading: false,
+  submitLoading: false,
   submitShow: false,
   error: null
 })
@@ -81,6 +82,7 @@ async function handleGetActivity() {
 // #region module: form
 const vFormRef = ref()
 const displayMode = ref<'form' | 'signature'>('')
+
 async function handleFormDataGet() {
   let formJson
   let formData
@@ -162,6 +164,7 @@ async function handleSave() {
   try {
     const data = await vFormRef.value.getFormData(false, false)
     state.loading = true
+    state.submitLoading = true
     const param = {
       taskId: id,
       properties: { ...data }
@@ -173,9 +176,11 @@ async function handleSave() {
     // routerProvider?.message.error(error)
   }
   state.loading = false
+  state.submitLoading = false
 }
 
 async function handleSubmit() {
+  state.submitLoading = true
   state.loading = true
   try {
     // FIXME : auto assign workflow to user if assigee is not user, API should auto do this step, if so remove this step
@@ -223,6 +228,7 @@ async function handleSubmit() {
     console.log('error', error)
     // routerProvider?.message.error(error.message)
   } finally {
+    state.submitLoading = false
     state.loading = false
   }
 }
@@ -249,11 +255,12 @@ async function handleAdditionalSetting(xml: any, taskDetail: any, formData: any)
     nextTick(() => {
       displayMode.value = 'form'
     })
-    
+
   }
 }
 
 async function addtionalSubmit(formData: any) {
+  state.submitLoading = true
   if (state.taskDetail?.assignee !== userId) {
     await clientApi.api.postWorkflowTaskClaim({ taskId: id, userId }).then((res) => res.data)
   }
@@ -271,6 +278,7 @@ async function addtionalSubmit(formData: any) {
     })
     routerProvider?.back(fallbackRoute)
   }
+  state.submitLoading = false
 }
 
 const handleTaskInfoChange = async (taskDetailRes: any, isClaim: boolean) => {
@@ -329,7 +337,7 @@ onMounted(() => {
       <el-tab-pane class="workflow-detail-pane" :label="$t('workflow_form')" name="form" v-loading="state.loading">
           <div :class="{ workflowFormContainer:true, [displayMode]:true, glass: displayMode === 'signature' }"
                style="height: 100%; overflow-y: auto">
-            <WorkflowDetailFormRender ref="vFormRef" :taskDetail="state.taskDetail">
+            <WorkflowDetailFormRender ref="vFormRef" :taskDetail="state.taskDetail" v-loading="state.submitLoading">
                 <template #action>
                   <div class="workflow-detail-pane--btns" v-if="isAssigneeUser">
                     <template v-for="(item, index) in additionalButton" :key="index">
@@ -354,7 +362,7 @@ onMounted(() => {
                                :json="signatureDetail.templateDetail.json.content" />
             </div>
 
-          </template>
+        </template>
       </el-tab-pane>
       <el-tab-pane :label="$t('workflow_graph')" name="graph">
         <!-- need to use v-if for bpmn, if not  svg graph will not show -->
@@ -414,9 +422,11 @@ onMounted(() => {
   }
 }
 
-.workflowFormContainer{
-  &.form{}
-  &.signature{
+.workflowFormContainer {
+  &.form {
+  }
+
+  &.signature {
     position: absolute;
     top: var(--app-space-xs);
     right: var(--app-space-xs);
