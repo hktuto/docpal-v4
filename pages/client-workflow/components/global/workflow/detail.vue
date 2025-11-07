@@ -101,7 +101,7 @@ async function handleFormDataGet() {
       xml = await clientApi.api.getWorkflowVersionVersionidBpmnxml(state.taskDetail.processDefinitionVersionId)
       console.log('formData', formData)
       vFormRef.value.setForm(formJson, formData, [], xml)
-      handleAdditionalSetting(xml, state.taskDetail, formData)
+      await handleAdditionalSetting(xml, state.taskDetail, formData)
       break
     default:
       const properties = await clientApi.api.postWorkflowProperties({ taskId: id }).then((res) => res.data)
@@ -114,7 +114,7 @@ async function handleFormDataGet() {
       )
       xml = await clientApi.api.getWorkflowVersionVersionidBpmnxml(state.taskDetail.processDefinitionVersionId)
       vFormRef.value.setForm(formJson, formData, [], xml)
-      handleAdditionalSetting(xml, state.taskDetail, formData)
+      await handleAdditionalSetting(xml, state.taskDetail, formData)
       break
   }
 }
@@ -243,6 +243,7 @@ const additionalButton = ref<AdditionalButton[]>([])
 const additionalButtonRef = ref<any[]>([])
 const signatureDetail = ref<any>(null)
 const pageButtonSetting = ref<any>(null)
+const signStage = ref<'form' | 'preview' | 'submit' >('form')
 async function handleAdditionalSetting(xml: any, taskDetail: any, formData: any) {
   const { buttons, components, signatureSetting, buttonSetting } = await getBpmnAddtionalElement(xml, state.taskDetail.taskDefinitionKey, taskDetail, formData)
   additionalButton.value = buttons
@@ -254,6 +255,7 @@ async function handleAdditionalSetting(xml: any, taskDetail: any, formData: any)
     nextTick(() => {
       displayMode.value = 'signature'
     })
+    signStage.value = 'preview'
   }else{
     signatureDetail.value = null
     nextTick(() => {
@@ -344,8 +346,7 @@ onMounted(() => {
               [displayMode]:true, 
               glass: displayMode === 'signature',
               showForm
-             }"
-               style="height: 100%; overflow-y: auto">
+             }">
                <div v-if="displayMode === 'signature'" class="toggleFormButton">
                   <Icon :name="showForm ? 'tabler:arrow-right' : 'tabler:arrow-left'  " size="20" @click="toggleShowForm"/>
                </div>
@@ -356,11 +357,23 @@ onMounted(() => {
                       <component :is="item.component" ref="additionalButtonRef" v-bind="item.props"
                                 @submit="addtionalSubmit" />
                     </template>
-                    <el-button id="Workflow__AvailableTask__Detail__Form__SaveDraft" :disabled="workflowType === 'completeTask'" @click="handleSave">
-                      {{ $t('workflow_save') }}
+                    <el-button 
+                      v-if="!pageButtonSetting || pageButtonSetting.showSaveDraft"
+                      id="Workflow__AvailableTask__Detail__Form__SaveDraft" :disabled="workflowType === 'completeTask'" @click="handleSave">
+                      <template v-if="pageButtonSetting && pageButtonSetting.saveDraftLabel">
+                        {{ pageButtonSetting.saveDraftLabel }}
+                      </template>
+                      <template v-else>
+                        {{ $t('workflow_save') }}
+                      </template>
                     </el-button>
-                    <el-button id="Workflow__AvailableTask__Detail__Form__Submit" type="primary" :disabled="workflowType === 'completeTask'" @click="handleSubmit">
-                      {{ $t('common_submit') }}
+                    <el-button v-if="!pageButtonSetting || pageButtonSetting.showSumBitButton" id="Workflow__AvailableTask__Detail__Form__Submit" type="primary" :disabled="workflowType === 'completeTask'" @click="handleSubmit">
+                      <template v-if="pageButtonSetting && pageButtonSetting.submitButtonLabel">
+                        {{ pageButtonSetting.submitButtonLabel }}
+                      </template>
+                      <template v-else>
+                        {{ $t('common_submit') }}
+                      </template>
                     </el-button>
                   </div>
                 </template>
@@ -422,11 +435,14 @@ onMounted(() => {
     height: 100%;
   }
 }
-
+.templateViewerContainer{
+  position: relative;
+  overflow: hidden;
+}
 .workflow-detail-pane {
   display: grid;
   grid-template-rows: 1fr min-content;
-
+  transform: scale(1);
   &--btns {
     box-shadow: var(--el-box-shadow-light);
     padding: var(--app-space-s);
@@ -435,14 +451,15 @@ onMounted(() => {
 }
 
 .workflowFormContainer{
+  position: relative;
   &.form{}
   &.signature{
-    position: absolute;
+    position: fixed;
     top: var(--app-space-xs);
     right: var(--app-space-xs);
     width: clamp(220px, 40vw, 600px);
     height: calc( 100% - var(--app-space-xs) * 2);
-    padding: var(--app-space-s);
+    padding: var(--app-space-l) var(--app-space-s) var(--app-space-s) var(--app-space-s);
     border-radius: var(--app-border-radius-m);
     z-index: 99;
     transition: all 0.2s ease-in-out;
@@ -450,6 +467,16 @@ onMounted(() => {
     &.showForm{
       transform: translateX(0);
     }
+  }
+}
+.toggleFormButton{
+  position: absolute;
+  top: var(--app-space-s);
+  left: var(--app-space-s);
+  z-index: 2;
+  cursor: pointer;
+  &:hover{
+    color: var(--app-primary-color);
   }
 }
 </style>
