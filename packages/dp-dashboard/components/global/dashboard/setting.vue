@@ -36,15 +36,15 @@ const state = reactive({
 const FormRendererRef = ref()
 
 async function handleSubmit() {
-  state.loading = true
   try {
+    state.loading = true
     const data = await FormRendererRef.value.getFormData()
     emits('refresh', data)
+    state.visible = false
   } catch (error) {
+  } finally {
     state.loading = false
   }
-  state.visible = false
-  state.loading = false
 }
 
 function handleOpen(setting) {
