@@ -1,9 +1,11 @@
+import { clientApi } from "api"
 const generateDocumentComponent = "LazyBpmnButtonGenerateDocument"
 const booleanButtonComponent = 'LazyBpmnButtonBoolean'
 
-export function getBpmnAddtionalElement(xml:any,taskDefinitionKey:string, taskDetail: any, formData:any) {
+export async function getBpmnAddtionalElement(xml:any,taskDefinitionKey:string, taskDetail: any, formData:any) {
     const xmlJson = bpmnStringToJson(xml)
     const currentTask = xmlJson.flatObj[taskDefinitionKey]
+    let signatureSetting:any = null
     // check generate document button 
     let buttons:any[] = []
     let components:any[] = []
@@ -59,8 +61,42 @@ export function getBpmnAddtionalElement(xml:any,taskDefinitionKey:string, taskDe
             })
         }
     }
+    if(currentTask.extensionElements && currentTask.extensionElements['docpal:signatureSetting']){
+      // if docpal:signatureSetting' is in current Task , that mean it is a signature task
+      // step 1 , get signature setting from task
+      const signatureSettingFromTask =  currentTask.extensionElements['docpal:signatureSetting']
+      // step 2, get target template setting from workflow xml
+      const signatureTask = xmlJson.flatObj[signatureSettingFromTask.attr_documentStepId]
+      // step 3, we only store template step id into docpal:signatureSetting, so need to get the template id from template task
+      const templateId = signatureTask.extensionElements['flowable:field'].find((item: any) => item.attr_name === 'templateId')?.['flowable:expression'].__cdata
+      // step 4, get all variable from template task and convert to workflow to template mapping
+      const variablesString = signatureTask.extensionElements['flowable:field'].find((item: any) => item.attr_name === 'variables')?.['flowable:expression'].__cdata
+      const variables = JSON.parse(variablesString)
+      const workflowToTemplateMapping = Object.keys(variables).reduce((prev: any, key: string) => {
+        prev[key] = variables[key].replace('${variables:get(', '').replace(')}', '')
+        return prev
+      }, {})
+      // step 5, get which workflow information to store signature
+      const currentStepSignatureKey = variables[signatureSettingFromTask.attr_signature]
+      const workflowKeyToStoreSignature = currentStepSignatureKey.replace('${variables:get(', '').replace(')}', '')
+      // step 6, get template detail and setting json
+      const {data:templateDetail} = await clientApi.api.getNuxeoTemplateTemplateid(templateId)
+      const json = await clientApi.api.postNuxeoDocumentPreview({idOrPath:templateDetail.documentId},{
+        format: 'blob'
+      }).then(async(res) => {const t = await res.text(); return JSON.parse(t)})
+      // step 7, store signature setting
+      signatureSetting = {
+        templateDetail : json,
+        workflowKeyToStoreSignature,
+        workflowToTemplateMapping,
+        templateId,
+      }
+      console.log('signatureSetting', signatureSetting)
+      // get 
+    }
     return{
         buttons,
-        components
+        components,
+        signatureSetting
     }
 }

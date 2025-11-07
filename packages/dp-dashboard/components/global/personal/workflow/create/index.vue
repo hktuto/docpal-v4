@@ -11,7 +11,7 @@
     @refresh="refresh"
   >
     <div class="workflow-create-content">
-      <el-button v-for="item in state.workflowList" type="info" :key="item.key" :title="item.name" @click="handleClick(item)">{{ item.title || item.name }}</el-button>
+      <el-button v-for="item in state.workflowList" :type="item.type || 'primary'" :key="item.key" :title="item.name" @click="handleClick(item)">{{ item.title || item.name }}</el-button>
     </div>
     <PersonalWorkflowCreateDialog
       ref="settingRef"
@@ -62,7 +62,7 @@ async function getWorkflowId() {
   if (props.setting.workflowList && props.setting.workflowList.length > 0) {
     state.workflowList = props.setting.workflowList.reduce((prev: any, item: any) => {
       const workflowItem = state.workflowAList?.find((workflow: any) => workflow.key === item.key)
-      prev.push({ ...workflowItem, title: item.title })
+      prev.push({ ...workflowItem, title: item.title, type: item.type || 'primary' })
       return prev
     }, [])
   }

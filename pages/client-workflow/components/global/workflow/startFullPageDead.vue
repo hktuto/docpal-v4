@@ -53,8 +53,8 @@ type AdditionalButton = {
 const additionalButton = ref<AdditionalButton[]>([])
 const additionalButtonRef = ref<any[]>([])
 
-function handleAdditionalSetting(xml: any, taskDetail: any, formData: any) {
-  const { buttons, components } = getBpmnAddtionalElement(xml, userTaskId, taskDetail, formData)
+async function handleAdditionalSetting(xml: any, taskDetail: any, formData: any) {
+  const { buttons, components } = await getBpmnAddtionalElement(xml, userTaskId, taskDetail, formData)
   additionalButton.value = buttons
 }
 

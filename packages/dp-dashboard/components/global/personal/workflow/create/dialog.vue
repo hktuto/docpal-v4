@@ -52,7 +52,8 @@ async function handleSubmit() {
         key: item.key,
         title: item.title,
         versionId: item.versionId,
-        name: item.name
+        name: item.name,
+        type: item.type || 'primary'
       })
       return prev
     }, [])

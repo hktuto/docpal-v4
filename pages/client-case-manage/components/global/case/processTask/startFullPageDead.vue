@@ -63,7 +63,7 @@ async function setUpForm() {
         return res.data.length > 0 ? (res.data[0].jsonValue ? JSON.parse(res.data[0].jsonValue) : {}) : {}
       })
     // get additional element
-    const { buttons, components } = getBpmnAddtionalElement(xml, 'Start', stepDetail, formJson.value)
+    const { buttons, components } = await getBpmnAddtionalElement(xml, 'Start', stepDetail, formJson.value)
     additionalButton.value = buttons
     nextTick(() => {
       console.log('set form data', formData.value)
@@ -87,6 +87,7 @@ function formKeyToCaseKey(formKey: string) {
 
 async function handleSubmit() {
   try {
+    loading.value = true
     const data = await vFormRef.value.getFormData(false, false)
     let variables = Object.keys(inParameters.value).reduce((prev: any, item: any) => {
       const otherKeys = inParameters.value[item]
@@ -103,7 +104,9 @@ async function handleSubmit() {
     if (!variables.user_creator_id) {
       variables.user_creator_id = useUserId().value
     }
-
+    if (!data.user_creator_id) {
+      data.user_creator_id = useUserId().value
+    }
     const additionButtonActions: any = []
     additionalButtonRef.value.forEach((item) => {
       if (item && item.beforeSubmit) {
@@ -132,8 +135,8 @@ async function handleSubmit() {
 
     await clientApi.api.postCaseInstanceProcessStart({
       id: actionStepId,
-      inputVariables: variables,
-      variables: data
+      workflowVariables: data,
+      variables
     })
     handelCancel()
   } catch (error) {
@@ -149,10 +152,13 @@ async function additionSubmit(formData: any) {
     prev[item] = formData[otherKeys]
     return prev
   }, {}) as any
+  if (!formData.user_creator_id) {
+    formData.user_creator_id = useUserId().value
+  }
   const res = await clientApi.api.postCaseInstanceProcessStart({
     id: actionStepId,
-    inputVariables: variables,
-    variables: formData
+    workflowVariables: formData,
+    variables
   })
   handelCancel()
 }

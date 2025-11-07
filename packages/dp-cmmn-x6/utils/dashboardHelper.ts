@@ -1,5 +1,5 @@
 import type { DashboardWidgetSetting } from '../../dp-dashboard/utils/dashboardWidgetHelper'
-import Action from '../components/dashboard/action.vue'
+import Action from '../components/dashboard/action/index.vue'
 import BasicInfo from '../components/dashboard/basicInfo.vue'
 import Activity from '../components/dashboard/activity.vue'
 import Process from '../components/dashboard/process.vue'

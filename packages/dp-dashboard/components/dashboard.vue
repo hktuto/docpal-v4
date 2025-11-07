@@ -7,20 +7,22 @@
           {{ currentHome.name }}
           <DashboardDate class="el-icon--right" v-model="state.dates" />
         </span>
-        <template v-if="!state.editMode && currentHome.name === 'PERSONAL'">
-          <el-button id="Dashboard__Home__Edit" @click="handleEdit" type="primary" :icon="Edit" circle />
-        </template>
-        <template v-else-if="state.editMode">
-          <div class="template-container--header__buttons">
+        <div class="template-container--header__buttons">
+          <template v-if="!state.editMode">
+            <el-button :loading="exportLoading" type="primary" @click="handleExportPdf">{{ $t('dpTool_downloadPDF') }}</el-button>
+            <el-button v-if="currentHome.name === 'PERSONAL'" id="Dashboard__Home__Edit" @click="handleEdit" type="primary" :icon="Edit" circle />
+          </template>
+          <template v-else-if="state.editMode">
             <el-button v-if="currentHome.layout.length > 0" type="danger" @click="handleClear">{{ $t('common_clear') }}</el-button>
             <el-button id="Dashboard__Home__Finish" class="el-icon--right" type="primary" @click="handleFinish">
               {{ $t('dpButtom_finish') }}
             </el-button>
-          </div>
-        </template>
+          </template>
+        </div>
       </div>
       <DashboardDetail
         class="template-container--main"
+        id="Dashboard__Home__Main"
         v-if="currentHome && currentHome.layout"
         ref="DashboardDetailRef"
         :id="currentHome.id"
@@ -43,7 +45,7 @@
 <script lang="ts" setup>
 import dayjs from 'dayjs'
 import { allowFeature } from '#imports'
-import { ElMessageBox } from 'element-plus'
+import { ElMessageBox, ElMessage } from 'element-plus'
 import { Plus, Edit } from '@element-plus/icons-vue'
 
 import { clientApi } from 'api'
@@ -108,16 +110,28 @@ async function handleSave() {
   }
 }
 
-
 async function handleClear() {
   try {
-    const action = await ElMessageBox.confirm(t('tip_cleanMsg', {name: currentHome.value.name}))
+    const action = await ElMessageBox.confirm(t('tip_cleanMsg', { name: currentHome.value.name }))
     if (action !== 'confirm') return
     currentHome.value.layout = []
     handleSave()
   } catch (error) {
     console.log('error', error)
   } finally {
+  }
+}
+const DashboardDetailRef = ref()
+const exportLoading = ref(false)
+async function handleExportPdf() {
+  try {
+    exportLoading.value = true
+    await divToPDF('Dashboard__Home__Main', currentHome.value.name)
+  } catch (error) {
+    console.error('Export PDF error:', error)
+    ElMessage.error(t('dpTip.exportPDFFailed'))
+  } finally {
+    exportLoading.value = false
   }
 }
 onMounted(async () => {

@@ -13,7 +13,7 @@ import { templateApi } from 'api'
 
 const docTempalteProvider = inject(DocTemplateProveKey)
 const { t } = useI18n()
-const { editor, options, variables } = docTempalteProvider!
+const { editor, options, variables } = docTempalteProvider
 
 const state = reactive({
   loading: false,
@@ -43,6 +43,7 @@ async function fetchExportBlob(endpoint: string, data: any): Promise<Blob> {
 }
 
 async function performExport(exportType: 'html' | 'docx' | 'pdf', configuredVariables: any[]) {
+  console.log(11,configuredVariables)
   const data = getJsonConfig(editor.value.getJSON(), options.value, configuredVariables)
   let filename
   let mime

@@ -16,6 +16,7 @@ let where = ref({})
 const { t } = useI18n()
 const emits = defineEmits(['filter-change', 'refresh'])
 const routerProvider = inject(MenuRouterKey)
+const tabProvider = inject(TabManagerKey)
 type TableState = {
   columns: any
   where: any[]
@@ -43,13 +44,13 @@ const { tableConfig, tableEvent, tableRef, query, reload, cleanSelectedRows } = 
         totalSize: 0
       }
     }
-    return clientApi.api.postCaseTypesCasetypeidRecordsPage(id, { ...pageParams, ...extraParams })
+    return clientApi.api.postCaseTypesCasetypeidRecordsPage(id, { ...pageParams, ...params, ...extraParams })
   },
   columns: [],
   dblClickAction: ({ row }) => {
     const newItem = caseManageDashboardPage({ ...row, id, instanceId: row.case_id, versionId: row.caseDefinitionVersionId, data: detail })
     console.log(newItem)
-    routerProvider?.navigateTo(newItem)
+    tabProvider?.openTab(newItem)
   },
   zoom: false,
   saveColumnOrder: false
@@ -93,18 +94,26 @@ async function reorderColumn(fields: any) {
 const responsiveFilterRef = ref()
 function handleFilterFormChange(formModel) {
   if (formModel.q) {
-    extraParams.where.q = formModel.q
+    extraParams.where.caseId = formModel.q
   } else {
-    delete extraParams.where.q
+    delete extraParams.where.caseId
   }
   reload()
 }
-
+function filterActions(action: any) {
+  if (action.planItemDefinitionType === 'processtask') {
+    return action.state === 'available' || action.state === 'enabled'
+  } else if (action.planItemDefinitionType === 'humantask') {
+    return !!action.referenceId
+  }
+  return action.state !== 'completed'
+}
 async function getActions(row: any) {
   try {
     caseEvents.value = await clientApi.api
       .getCaseDashboardInstanceCaseidActions(row.case_id)
       .then((res) => res.data?.filter((s) => s.state !== 'completed').sort((a: any, b: any) => a.name.localeCompare(b.name)))
+    caseEvents.value = caseEvents.value.filter((s) => filterActions(s))
   } catch (error) {
     caseEvents.value = []
   }

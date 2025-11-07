@@ -25,7 +25,7 @@
       <span class="icon-manage" aria-hidden="true"></span>
       <span class="tool-label">Manage</span>
     </el-button>
-    <el-dialog v-model="showManager" title="Variable Manager" width="600px">
+    <el-dialog v-model="showManager" title="Variable Manager" width="600px" class="big">
       <VariableManager />
     </el-dialog>
     <VariablePicker

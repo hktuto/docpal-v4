@@ -1,5 +1,5 @@
 <template>
-  <div class="iconContainer">
+  <div class="iconContainer" style="--icon-size: var(--app-space-l);">
     <SvgIcon :src="iconSrc"/>
   </div>
 </template>

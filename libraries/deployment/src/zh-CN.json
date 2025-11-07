@@ -318,6 +318,7 @@
     "clearFilter": "清除",
     "clearSelected": "清除所选内容",
     "close": "关闭",
+    "color": "按钮颜色",
     "copyPath": "复制路径",
     "deleteSelected": "删除已选",
     "dismiss": "忽略",
@@ -432,7 +433,7 @@
   "caseManagement_editFieldcaseManagement_editFieldcaseManagement_editField": "Edit Field",
   "caseManagement_editLatest": "编辑最新版本的案例模板",
   "caseManagement_editProduction": "编辑案例模板的制作版本",
-  "caseManagement_filter": "按案例模板名称筛选",
+  "caseManagement_filter": "按案例模板Id筛选",
   "caseManagement_name": "案例模板名称",
   "caseManagement_record": "记录",
   "caseManagement_recordAll": "All Record",
@@ -1148,6 +1149,11 @@
       "toggleHeaderColumn": "切换标题列",
       "toggleHeaderRow": "切换标题行"
     },
+    "test": {
+      "html": "输出 HTML 文件",
+      "pdf": "输出 PDF 文件",
+      "word": "输出 Word 文件"
+    },
     "utils": {
       "HorizontalLine": "水平线",
       "TaskList": "任务列表",
@@ -1177,6 +1183,7 @@
       "addErrorKeyRequired": "变量键是必需的",
       "addListItem": "添加项",
       "addRow": "添加行",
+      "addSignature": "添加签名",
       "addSuccess": "变量添加成功",
       "addVariable": "添加变量",
       "asc": "升序",
@@ -1235,6 +1242,7 @@
         "warning": "至少有一列的宽度是默认值"
       },
       "setHeaderColor": "设置标题颜色",
+      "signatures": "签名",
       "striped": "有条纹",
       "tableBordered": "显示边框",
       "tableContent": "表格内容",
@@ -1484,6 +1492,7 @@
     "embedCodeCopied": "嵌入代码已复制",
     "enterNumber": "请输入数字",
     "exit": "{name} 已存在",
+    "exportPDFFailed": "导出PDF失败",
     "filePreviewNotSupport": "不支持预览该文件格式",
     "fillCollectionName": "请填写收藏夹名称",
     "fillValue": "填充值",

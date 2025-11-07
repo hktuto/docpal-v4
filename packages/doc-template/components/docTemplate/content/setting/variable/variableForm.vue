@@ -42,7 +42,7 @@ import VariableValueList from './VariableValueList.vue'
 import VariableValueTable from './VariableValueTable.vue'
 import VariableValueLink from './VariableValueLink.vue'
 import VariableValueImage from './VariableValueImage.vue'
-import VariableValueSignature from './VariableValueSignature.vue'
+import VariableValueSignature from './signature/form.vue'
 
 interface CreateVariableInput {
   id: string

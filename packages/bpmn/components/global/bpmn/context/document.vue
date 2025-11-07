@@ -19,6 +19,18 @@ if (!graphProvider) {
 }
 
 const documentTypeList = ref<any[]>([])
+
+const allFields = computed(() => {
+  if (!bpmnGlobalRules.value || bpmnGlobalRules.value.length === 0) return []
+
+  return bpmnGlobalRules.value.map((item: any) => {
+    return {
+      id: item.id,
+      name: item.name
+    }
+  })
+})
+
 const stringFields = computed(() => {
   if (!bpmnGlobalRules.value || bpmnGlobalRules.value.length === 0) return []
 
@@ -221,7 +233,7 @@ onMounted(async () => {
         </el-form>
 
         <BpmnSidebarTemplateVariable v-if="form.templateId && ''!= form.templateId" :node="node"
-                                     :templateCData="form.variables" :allFields="stringFields"
+                                     :templateCData="form.variables" :allFields="allFields"
                                      :templateId="form.templateId" :disabled="editorProvider.readonly.value"
                                      @updateCData="(val:string) => updateFieldData('variables', val)" />
       </div>
