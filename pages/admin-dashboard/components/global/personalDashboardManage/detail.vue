@@ -18,7 +18,7 @@ const state = reactive({
   saveLoading: false,
   dates: [dayjs().startOf('year').format('YYYY-MM-DD'), dayjs(new Date()).format('YYYY-MM-DD')]
 })
-let dashboardWidgetByType = getDashboardWidgetByType()
+let dashboardWidgetByType = getDashboardWidgetByType(dashboardWidgetSetting)
 function handleRefresh(layoutSetting: any) {
   const index = state.layout.findIndex((item) => item.i === layoutSetting.i)
   state.layout[index] = deepCopy(layoutSetting)
