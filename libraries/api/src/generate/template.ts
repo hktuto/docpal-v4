@@ -373,37 +373,6 @@ export class Template<SecurityDataType extends unknown> extends HttpClient<Secur
             }),
 
         /**
-         * @description Generates a file based on the system_output_file_type parameter. Defaults to DOCX if not specified or invalid.
-         *
-         * @tags Data Generation
-         * @name PostConvertGeneratefilefromdata
-         * @summary Generate file (HTML, PDF, or DOCX) from data and template
-         * @request POST:/convert/generateFileFromData
-         */
-        postConvertGeneratefilefromdata: (
-            data: {
-                /** Data to populate template */
-                data: object;
-                /** Template configuration */
-                template: object;
-            },
-            params: RequestParams = {},
-        ) =>
-            this.request<
-                string,
-                {
-                    error?: string;
-                }
-            >({
-                path: `/convert/generateFileFromData`,
-                method: "POST",
-                body: data,
-                type: ContentType.Json,
-                format: "json",
-                ...params,
-            }),
-
-        /**
          * No description
          *
          * @tags File Upload

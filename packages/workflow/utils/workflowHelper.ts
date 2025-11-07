@@ -1,11 +1,13 @@
 import { clientApi } from "api"
 const generateDocumentComponent = "LazyBpmnButtonGenerateDocument"
 const booleanButtonComponent = 'LazyBpmnButtonBoolean'
+import { generateData, replaceVariables } from "docpal-document-editor/src/utils"
 
 export async function getBpmnAddtionalElement(xml:any,taskDefinitionKey:string, taskDetail: any, formData:any) {
     const xmlJson = bpmnStringToJson(xml)
     const currentTask = xmlJson.flatObj[taskDefinitionKey]
     let signatureSetting:any = null
+    let buttonSetting:any
     // check generate document button 
     let buttons:any[] = []
     let components:any[] = []
@@ -61,6 +63,7 @@ export async function getBpmnAddtionalElement(xml:any,taskDefinitionKey:string, 
             })
         }
     }
+    // TODO : get buttonSetting
     if(currentTask.extensionElements && currentTask.extensionElements['docpal:signatureSetting']){
       // if docpal:signatureSetting' is in current Task , that mean it is a signature task
       // step 1 , get signature setting from task
@@ -80,13 +83,22 @@ export async function getBpmnAddtionalElement(xml:any,taskDefinitionKey:string, 
       const currentStepSignatureKey = variables[signatureSettingFromTask.attr_signature]
       const workflowKeyToStoreSignature = currentStepSignatureKey.replace('${variables:get(', '').replace(')}', '')
       // step 6, get template detail and setting json
-      const {data:templateDetail} = await clientApi.api.getNuxeoTemplateTemplateid(templateId)
-      const json = await clientApi.api.postNuxeoDocumentPreview({idOrPath:templateDetail.documentId},{
+      const {data:detail} = await clientApi.api.getNuxeoTemplateTemplateid(templateId)
+      let json = await clientApi.api.postNuxeoDocumentPreview({idOrPath:detail.documentId},{
         format: 'blob'
       }).then(async(res) => {const t = await res.text(); return JSON.parse(t)})
-      // step 7, store signature setting
+      // replace signature variable
+      // convert workflow variable to template variable
+
+      const newVariables = generateData({}, json)
+      let templateDetail = {...json}
+      const content = templateDetail.json.content.content
+
+      templateDetail.json.content.content = replaceVariables(content, newVariables.variables)
+      // const json.json.content = replaceVariables(json.json.content, newVariables)
+      // finally, store signature setting
       signatureSetting = {
-        templateDetail : json,
+        templateDetail,
         workflowKeyToStoreSignature,
         workflowToTemplateMapping,
         templateId,
@@ -95,6 +107,7 @@ export async function getBpmnAddtionalElement(xml:any,taskDefinitionKey:string, 
       // get 
     }
     return{
+       buttonSetting,
         buttons,
         components,
         signatureSetting
