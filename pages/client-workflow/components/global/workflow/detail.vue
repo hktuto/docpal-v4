@@ -2,6 +2,7 @@
 import { ElMessage } from 'element-plus'
 import { clientApi } from 'api'
 import { routeWorkflowPage } from '~/utils/routerHelper'
+import { generateData, replaceVariables } from 'docpal-document-editor/src/utils'
 
 const routerProvider = inject(MenuRouterKey)
 if (!routerProvider) {
@@ -181,7 +182,17 @@ async function handleSave() {
   }
 }
 
+const signSubmitStage = ref<'beforeSubmit' | 'afterSubmit' >('beforeSubmit')
+const signatureSettingDialogRef = ref<any>(null)
+function openSignatureSettingDialog() {
+  signatureSettingDialogRef.value.open()
+}
 async function handleSubmit() {
+  // if displayMode is signature, and signSubmitStage is beforeSubmit, do not submit form, open signature setting dialog
+  if(displayMode.value === 'signature' && signSubmitStage.value === 'beforeSubmit') {
+    openSignatureSettingDialog()
+    return
+  }
   state.loading = true
   try {
     // FIXME : auto assign workflow to user if assigee is not user, API should auto do this step, if so remove this step
@@ -190,6 +201,9 @@ async function handleSubmit() {
     }
     // get form data
     let data = await vFormRef.value.getFormData(true, false)
+    if(signSubmitStage.value === 'afterSubmit') {
+      data[signatureDetail.value.workflowKeyToStoreSignature] = temSignatureData.value
+    }
     // return;
     if (!data) throw new Error(`${t('incompleteData')}`)
     // check additional button
@@ -243,7 +257,22 @@ const additionalButton = ref<AdditionalButton[]>([])
 const additionalButtonRef = ref<any[]>([])
 const signatureDetail = ref<any>(null)
 const pageButtonSetting = ref<any>(null)
-const signStage = ref<'form' | 'preview' | 'submit' >('form')
+
+const temSignatureData = ref<any>(null)
+async function handleApplySignature(newSignature: any) {
+  // temp add signature to form data and update signature setting variable
+  // get form data
+  let data = await vFormRef.value.getFormData(true, false)
+  data[signatureDetail.value.workflowKeyToStoreSignature] = newSignature
+  console.log('data', data)
+  const templateVariables = convertWorkflowVariableToTemplateVariable(data, signatureDetail.value.workflowToTemplateMapping)
+  const newVariables = generateData(templateVariables, JSON.parse(JSON.stringify(signatureDetail.value.templateDetail)))
+  const content = signatureDetail.value.templateDetail.json.content.content
+  signatureDetail.value.templateDetail.json.content.content = replaceVariables(content, newVariables.variables)
+  temSignatureData.value = newSignature
+  signSubmitStage.value = 'afterSubmit'
+}
+
 async function handleAdditionalSetting(xml: any, taskDetail: any, formData: any) {
   const { buttons, components, signatureSetting, buttonSetting } = await getBpmnAddtionalElement(xml, state.taskDetail.taskDefinitionKey, taskDetail, formData)
   additionalButton.value = buttons
@@ -255,7 +284,7 @@ async function handleAdditionalSetting(xml: any, taskDetail: any, formData: any)
     nextTick(() => {
       displayMode.value = 'signature'
     })
-    signStage.value = 'preview'
+    signSubmitStage.value = 'beforeSubmit'
   }else{
     signatureDetail.value = null
     nextTick(() => {
@@ -386,7 +415,11 @@ onMounted(() => {
               <DocTemplateViewer ref="templateViewerRef" v-if="!state.isEdit && signatureDetail" :options="signatureDetail.templateDetail.json.options"
                                :json="signatureDetail.templateDetail.json.content" />
             </div>
-
+            <WorkflowSignatureDialog 
+              ref="signatureSettingDialogRef" 
+              :signatureSetting="signatureDetail"
+              @confirm="handleApplySignature"
+            />
           </template>
       </el-tab-pane>
       <el-tab-pane :label="$t('workflow_graph')" name="graph">
