@@ -5290,6 +5290,94 @@ export interface ResultPaginationDTOContactGroupResponseDTO {
     locale?: string;
 }
 
+/** Company Profile RequestDTO */
+export interface CompanyRequestDTO {
+    /** Fuzzy Search Parameter */
+    q?: string;
+    /**
+     * Page Number
+     * @format int32
+     */
+    pageNum?: number;
+    /**
+     * Page Size
+     * @format int32
+     */
+    pageSize?: number;
+    /** The sortBy fields */
+    orderBy?: string;
+    /** The sort ASC or DESC */
+    isDesc?: boolean;
+    /** ID */
+    id?: string;
+    /** Name */
+    name?: string;
+    /** Contact Phone */
+    phone?: string;
+    /** Contact Email */
+    email?: string;
+    /** Contact Fax */
+    fax?: string;
+    /** Website */
+    website?: string;
+    /** Contact Address */
+    address?: string;
+    /** @format int32 */
+    pageIndex?: number;
+}
+
+export interface Company {
+    id?: string;
+    code?: string;
+    name?: string;
+    phone?: string;
+    email?: string;
+    fax?: string;
+    website?: string;
+    type?: string;
+    address?: string;
+    logoUrl?: string;
+    creditCode?: string;
+    industry?: string;
+    /** @format date-time */
+    establishedDate?: string;
+    legalPerson?: string;
+    description?: string;
+    scale?: string;
+    /** @format int32 */
+    employeeCount?: number;
+    status?: string;
+    createdBy?: string;
+    /** @format date-time */
+    createdDate?: string;
+    modifiedBy?: string;
+    /** @format date-time */
+    modifiedDate?: string;
+}
+
+export interface PaginationDTOCompany {
+    entryList?: Company[];
+    /** @format int32 */
+    totalSize?: number;
+    /** @format int32 */
+    currentPageSize?: number;
+    /** @format int32 */
+    pageNum?: number;
+    /** @format int32 */
+    pageCount?: number;
+    isNextPageAvailable?: boolean;
+}
+
+export interface ResultPaginationDTOCompany {
+    result?: boolean;
+    /** @format int32 */
+    code?: number;
+    message?: string;
+    data?: PaginationDTOCompany;
+    messageKey?: string;
+    locale?: string;
+}
+
 /** Case model dashboard (RequestDTO) */
 export interface CmmnDashboardRequestDTO {
     q?: string;
@@ -6234,28 +6322,9 @@ export interface FilingDocumentPreviewReq {
 }
 
 export interface AuditLogQueryRequest {
-    /**
-     * UserId
-     * @minLength 0
-     * @maxLength 50
-     * @example "admin"
-     */
-    userId: string;
-    /**
-     * Client IP
-     * @minLength 0
-     * @maxLength 45
-     * @example "192.168.1.100"
-     */
+    userId?: string;
     clientIp?: string;
-    /**
-     * Comment
-     * @minLength 0
-     * @maxLength 500
-     * @example "User viewed document: project plan"
-     */
     comment?: string;
-    /** Stream Name */
     stream?: string;
     instanceId?: string;
     businessId?: string;
@@ -6267,98 +6336,17 @@ export interface AuditLogQueryRequest {
     createdDate?: string;
     request?: Record<string, object>;
     response?: Record<string, object>;
-    /**
-     * Page Number
-     * @format int32
-     * @example 0
-     */
+    /** @format int32 */
     pageNum?: number;
-    /**
-     * Page Size
-     * @format int32
-     * @example 10
-     */
+    /** @format int32 */
     pageSize?: number;
-    /**
-     * Start Date
-     * @format date-time
-     */
-    startTime?: string;
-    /**
-     * End Date
-     * @format date-time
-     */
-    endTime?: string;
-    /** Where Conditions */
-    where?: Record<string, object>;
-    /** The sortBy fields */
-    orderBy?: string;
-    /** The sort ASC or DESC */
-    isDesc?: boolean;
-    sortOrder?: string;
-    /** @format int32 */
-    from?: number;
-    /** @format int32 */
-    size?: number;
-}
-
-export interface AuditLogRequest {
-    /**
-     * UserId
-     * @minLength 0
-     * @maxLength 50
-     * @example "admin"
-     */
-    userId: string;
-    /**
-     * Client IP
-     * @minLength 0
-     * @maxLength 45
-     * @example "192.168.1.100"
-     */
-    clientIp?: string;
-    /**
-     * Comment
-     * @minLength 0
-     * @maxLength 500
-     * @example "User viewed document: project plan"
-     */
-    comment?: string;
-    /** Stream Name */
-    stream?: string;
-    instanceId?: string;
-    businessId?: string;
-    desc?: string;
-    status?: string;
-    type?: string;
-    activities?: string;
     /** @format date-time */
-    createdDate?: string;
-    request?: Record<string, object>;
-    response?: Record<string, object>;
-}
-
-export interface PaginationDTOAuditLogRequest {
-    entryList?: AuditLogRequest[];
-    /** @format int32 */
-    totalSize?: number;
-    /** @format int32 */
-    currentPageSize?: number;
-    /** @format int32 */
-    pageNum?: number;
-    /** @format int32 */
-    pageCount?: number;
-    isNextPageAvailable?: boolean;
-}
-
-export interface ResultPaginationDTOAuditLogRequest {
-    result?: boolean;
-    /** @format int32 */
-    code?: number;
-    message?: string;
-    data?: PaginationDTOAuditLogRequest;
-    messageKey?: string;
-    locale?: string;
+    startTime?: string;
+    /** @format date-time */
+    endTime?: string;
+    where?: Record<string, object>;
+    orderBy?: string;
+    isDesc?: boolean;
 }
 
 /** 审计日志查询请求 */
@@ -8514,6 +8502,81 @@ export interface ResultListContactGroupResponseDTO {
     code?: number;
     message?: string;
     data?: ContactGroupResponseDTO[];
+    messageKey?: string;
+    locale?: string;
+}
+
+export interface ResultCompany {
+    result?: boolean;
+    /** @format int32 */
+    code?: number;
+    message?: string;
+    data?: Company;
+    messageKey?: string;
+    locale?: string;
+}
+
+/** Company Chop (Request) */
+export interface CompanyChopRequestDTO {
+    /** Fuzzy Search Parameter */
+    q?: string;
+    /**
+     * Page Number
+     * @format int32
+     */
+    pageNum?: number;
+    /**
+     * Page Size
+     * @format int32
+     */
+    pageSize?: number;
+    /** The sortBy fields */
+    orderBy?: string;
+    /** The sort ASC or DESC */
+    isDesc?: boolean;
+    /** ID */
+    id?: string;
+    /** Company Id */
+    companyId?: string;
+    /** Chop name */
+    name?: string;
+    /** mime_type */
+    mimeType?: string;
+    /** Permission- Role List */
+    roles?: string[];
+    /** Permission- User List */
+    users?: string[];
+    /** status */
+    status?: string;
+    /** @format binary */
+    file?: File;
+    /** @format int32 */
+    pageIndex?: number;
+}
+
+export interface CompanyChop {
+    id?: string;
+    companyId?: string;
+    name?: string;
+    fileId?: string;
+    mimeType?: string;
+    roles?: string;
+    users?: string;
+    status?: string;
+    createdBy?: string;
+    /** @format date-time */
+    createdDate?: string;
+    modifiedBy?: string;
+    /** @format date-time */
+    modifiedDate?: string;
+}
+
+export interface ResultListCompanyChop {
+    result?: boolean;
+    /** @format int32 */
+    code?: number;
+    message?: string;
+    data?: CompanyChop[];
     messageKey?: string;
     locale?: string;
 }
@@ -17378,6 +17441,23 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
         /**
          * No description
          *
+         * @tags Profile APIs
+         * @name PostCompanyprofilesPage
+         * @summary Paginated query for fetch list of all company Profiles
+         * @request POST:/api/docpal/companyProfiles/page
+         */
+        postCompanyprofilesPage: (data: CompanyRequestDTO, params: RequestParams = {}) =>
+            this.request<ResultPaginationDTOCompany, ResultString | (ResultString | Result)>({
+                path: `/docpal/companyProfiles/page`,
+                method: "POST",
+                body: data,
+                type: ContentType.Json,
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
          * @tags CaseTypeController
          * @name PostCaseTypesCasetypeidRecordsPage
          * @summary Pagination Search data of deployed case type
@@ -18032,7 +18112,7 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
          * @request POST:/api/docpal/audit-log/workflow/page
          */
         postAuditLogWorkflowPage: (data: AuditLogQueryRequest, params: RequestParams = {}) =>
-            this.request<ResultPaginationDTOAuditLogRequest, ResultString | (ResultString | Result)>({
+            this.request<ResultObject, ResultString | (ResultString | Result)>({
                 path: `/docpal/audit-log/workflow/page`,
                 method: "POST",
                 body: data,
@@ -18065,7 +18145,7 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
          * @name PostAuditLogAdd
          * @request POST:/api/docpal/audit-log/add
          */
-        postAuditLogAdd: (data: AuditLogRequest, params: RequestParams = {}) =>
+        postAuditLogAdd: (data: AuditLogQueryRequest, params: RequestParams = {}) =>
             this.request<ResultObject, ResultString | (ResultString | Result)>({
                 path: `/docpal/audit-log/add`,
                 method: "POST",
@@ -22407,6 +22487,78 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
         getContactgroupList: (params: RequestParams = {}) =>
             this.request<ResultListContactGroupResponseDTO, ResultString | (ResultString | Result)>({
                 path: `/docpal/contactGroup/list`,
+                method: "GET",
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags Profile APIs
+         * @name GetCompanyprofilesCompanyid
+         * @summary Get company details
+         * @request GET:/api/docpal/companyProfiles/{companyId}
+         */
+        getCompanyprofilesCompanyid: (companyId: string, params: RequestParams = {}) =>
+            this.request<ResultCompany, ResultString | (ResultString | Result)>({
+                path: `/docpal/companyProfiles/${companyId}`,
+                method: "GET",
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags Profile APIs
+         * @name GetCompanyprofilesCompanyidChops
+         * @summary Retrieve list of all chops in one company
+         * @request GET:/api/docpal/companyProfiles/{companyId}/chops
+         */
+        getCompanyprofilesCompanyidChops: (
+            companyId: string,
+            query: {
+                /** Company Chop (Request) */
+                requestDTO: CompanyChopRequestDTO;
+            },
+            params: RequestParams = {},
+        ) =>
+            this.request<ResultListCompanyChop, ResultString | (ResultString | Result)>({
+                path: `/docpal/companyProfiles/${companyId}/chops`,
+                method: "GET",
+                query: query,
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags Profile APIs
+         * @name GetCompanyprofilesCompanyidChopsCompanychopidFile
+         * @summary Download company chop file
+         * @request GET:/api/docpal/companyProfiles/{companyId}/chops/{companyChopId}/file
+         */
+        getCompanyprofilesCompanyidChopsCompanychopidFile: (
+            companyId: string,
+            companyChopId: string,
+            params: RequestParams = {},
+        ) =>
+            this.request<string[], ResultString | (ResultString | Result)>({
+                path: `/docpal/companyProfiles/${companyId}/chops/${companyChopId}/file`,
+                method: "GET",
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags Profile APIs
+         * @name GetCompanyprofilesChopsCompanychopidFile
+         * @summary Download company chop file use company-chop-id
+         * @request GET:/api/docpal/companyProfiles/chops/{companyChopId}/file
+         */
+        getCompanyprofilesChopsCompanychopidFile: (companyChopId: string, params: RequestParams = {}) =>
+            this.request<string[], ResultString | (ResultString | Result)>({
+                path: `/docpal/companyProfiles/chops/${companyChopId}/file`,
                 method: "GET",
                 ...params,
             }),

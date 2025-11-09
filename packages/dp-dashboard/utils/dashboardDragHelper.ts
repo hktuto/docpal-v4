@@ -1,5 +1,4 @@
 import type { DashboardWidgetSetting } from './dashboardWidgetHelper'
-import { getWidgetSetting } from './dashboardWidgetHelper'
 
 /**
  * 初始化拖拽功能
@@ -14,11 +13,7 @@ export function useDashboardDrag(options: {
   const { wrapper, layout, colNum, rowHeight, onAdd } = options
 
   // 存储拖拽数据
-  const dragData = ref<{
-    component: string
-    label: string
-    icon?: string
-  } | null>(null)
+  const dragData = ref<DashboardWidgetSetting | null>(null)
 
   // 存储占位符数据
   const placeholder = ref<{
@@ -40,8 +35,8 @@ export function useDashboardDrag(options: {
    */
   function handleDragStart(event: DragEvent, item: any) {
     if (!event.dataTransfer) return
-
     dragData.value = {
+      ...item,
       component: item.component,
       label: item.label,
       icon: item.icon
@@ -62,19 +57,13 @@ export function useDashboardDrag(options: {
 
     // 如果有拖拽数据，显示占位符
     if (dragData.value) {
-      const component = dragData.value.component
-      const widgetSetting = getWidgetSetting(component as any)
-      
-      if (widgetSetting) {
-        const position = calculateDropPosition(event)
-        
-        placeholder.value = {
-          x: position.x,
-          y: position.y,
-          w: widgetSetting.w,
-          h: widgetSetting.h,
-          show: true
-        }
+      const position = calculateDropPosition(event)
+      placeholder.value = {
+        x: position.x,
+        y: position.y,
+        w: dragData.value.w,
+        h: dragData.value.h,
+        show: true
       }
     }
   }
@@ -113,22 +102,13 @@ export function useDashboardDrag(options: {
     if (!dragData.value) return
 
     try {
-      const component = dragData.value.component
-      const widgetSetting = getWidgetSetting(component as any)
-
-      if (!widgetSetting) {
-        console.error('Widget setting not found:', component)
-        return
-      }
-
       const position = calculateDropPosition(event)
-
       // 创建新的widget item
       const newItem: DashboardWidgetSetting = {
+        ...dragData.value,
         x: position.x,
         y: position.y,
         i: new Date().valueOf().toString(),
-        ...widgetSetting
       }
 
       // 添加到layout
@@ -174,4 +154,3 @@ export function useDashboardDrag(options: {
     handleDragEnd
   }
 }
-

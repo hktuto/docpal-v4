@@ -18,8 +18,8 @@ const form = ref<any>([])
 const buttonSetting = ref({
   showSumBitButton: true,
   submitButtonLabel: 'Submit',
-  showCancelButton: false,
-  cancelButtonLabel: 'Cancel'
+  showSaveDraft: true,
+  saveDraftLabel: 'Save Draft'
 })
 
 function getForm() {
@@ -47,7 +47,12 @@ const allBooleanInfo = computed(() => {
 function getButtonSetting() {
   const nodeData = node.getData()
   if (nodeData.data && nodeData.data.extensionElements && nodeData.data.extensionElements['docpal:buttonSetting']) {
-    buttonSetting.value = nodeData.data.extensionElements['docpal:buttonSetting']
+    const oldSetting = nodeData.data.extensionElements['docpal:buttonSetting']
+    // setting may change , assign new object to normailize data
+    buttonSetting.value = {
+      ...buttonSetting.value,
+      ...oldSetting
+    }
   }
 }
 
@@ -139,12 +144,14 @@ watch(buttonSetting, () => {
         <el-form-item label="Submit Button Label">
           <el-input v-model="buttonSetting.submitButtonLabel" />
         </el-form-item>
-        <el-form-item label="Show Cancel Button">
-          <el-switch v-model="buttonSetting.showCancelButton" />
-        </el-form-item>
-        <el-form-item label="Cancel Button Label">
-          <el-input v-model="buttonSetting.cancelButtonLabel" />
-        </el-form-item>
+        <template v-if="node.data.type !== 'startEvent'">
+          <el-form-item label="Show Save Draft Button">
+            <el-switch v-model="buttonSetting.showSaveDraft" />
+          </el-form-item>
+          <el-form-item label="Save Draft Button Label">
+            <el-input v-model="buttonSetting.saveDraftLabel" />
+          </el-form-item>
+        </template>
       </el-form>
     </div>
     <template v-if="allBooleanInfo.length === 0"> No Boolean Field to set</template>
