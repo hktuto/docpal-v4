@@ -70,7 +70,7 @@ watch(() => node, () => {
     <BpmnSidebarEditSignature :node="node" />
     <BpmnSidebarEditForm :node="node" />
     <!-- <BpmnSidebarPreviewDocument :node="node" /> -->
-    <!-- <BpmnSidebarBooleanButton :node="node" /> -->
+    <BpmnSidebarBooleanButton :node="node" />
   </div>
 </template>
 

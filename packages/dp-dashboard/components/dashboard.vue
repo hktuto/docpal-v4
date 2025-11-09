@@ -57,7 +57,7 @@ import { onMounted, onUnmounted } from 'vue'
 const routerProvider = inject(MenuRouterKey)
 const { t } = useI18n()
 const { currentHome, loading, getHomeList } = useHomePage()
-let dashboardWidgetByType = getDashboardWidgetByType()
+let dashboardWidgetByType = getDashboardWidgetByType(dashboardWidgetSetting)
 const state = reactive<any>({
   editMode: false,
   loading: false,

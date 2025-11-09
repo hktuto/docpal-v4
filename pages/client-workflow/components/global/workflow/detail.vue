@@ -2,6 +2,7 @@
 import { ElMessage } from 'element-plus'
 import { clientApi } from 'api'
 import { routeWorkflowPage } from '~/utils/routerHelper'
+import { generateData, replaceVariables } from 'docpal-document-editor/src/utils'
 
 const routerProvider = inject(MenuRouterKey)
 if (!routerProvider) {
@@ -80,7 +81,8 @@ async function handleGetActivity() {
 
 // #region module: form
 const vFormRef = ref()
-const displayMode = ref<'form' | 'signature'>('')
+const displayMode = ref<'form' | 'signature'>()
+const showForm = ref(true)
 async function handleFormDataGet() {
   let formJson
   let formData
@@ -100,7 +102,7 @@ async function handleFormDataGet() {
       xml = await clientApi.api.getWorkflowVersionVersionidBpmnxml(state.taskDetail.processDefinitionVersionId)
       console.log('formData', formData)
       vFormRef.value.setForm(formJson, formData, [], xml)
-      handleAdditionalSetting(xml, state.taskDetail, formData)
+      await handleAdditionalSetting(xml, state.taskDetail, formData)
       break
     default:
       const properties = await clientApi.api.postWorkflowProperties({ taskId: id }).then((res) => res.data)
@@ -113,9 +115,13 @@ async function handleFormDataGet() {
       )
       xml = await clientApi.api.getWorkflowVersionVersionidBpmnxml(state.taskDetail.processDefinitionVersionId)
       vFormRef.value.setForm(formJson, formData, [], xml)
-      handleAdditionalSetting(xml, state.taskDetail, formData)
+      await handleAdditionalSetting(xml, state.taskDetail, formData)
       break
   }
+}
+
+function toggleShowForm() {
+  showForm.value = !showForm.value
 }
 
 function formDataGet(obj: any) {
@@ -171,11 +177,22 @@ async function handleSave() {
   } catch (error) {
     console.log(error)
     // routerProvider?.message.error(error)
+  }finally{
+    state.loading = false
   }
-  state.loading = false
 }
 
+const signSubmitStage = ref<'beforeSubmit' | 'afterSubmit' >('beforeSubmit')
+const signatureSettingDialogRef = ref<any>(null)
+function openSignatureSettingDialog() {
+  signatureSettingDialogRef.value.open()
+}
 async function handleSubmit() {
+  // if displayMode is signature, and signSubmitStage is beforeSubmit, do not submit form, open signature setting dialog
+  if(displayMode.value === 'signature' && signSubmitStage.value === 'beforeSubmit') {
+    openSignatureSettingDialog()
+    return
+  }
   state.loading = true
   try {
     // FIXME : auto assign workflow to user if assigee is not user, API should auto do this step, if so remove this step
@@ -184,6 +201,9 @@ async function handleSubmit() {
     }
     // get form data
     let data = await vFormRef.value.getFormData(true, false)
+    if(signSubmitStage.value === 'afterSubmit') {
+      data[signatureDetail.value.workflowKeyToStoreSignature] = temSignatureData.value
+    }
     // return;
     if (!data) throw new Error(`${t('incompleteData')}`)
     // check additional button
@@ -236,14 +256,35 @@ type AdditionalButton = {
 const additionalButton = ref<AdditionalButton[]>([])
 const additionalButtonRef = ref<any[]>([])
 const signatureDetail = ref<any>(null)
+const pageButtonSetting = ref<any>(null)
+
+const temSignatureData = ref<any>(null)
+async function handleApplySignature(newSignature: any) {
+  // temp add signature to form data and update signature setting variable
+  // get form data
+  let data = await vFormRef.value.getFormData(true, false)
+  data[signatureDetail.value.workflowKeyToStoreSignature] = newSignature
+  console.log('data', data)
+  const templateVariables = convertWorkflowVariableToTemplateVariable(data, signatureDetail.value.workflowToTemplateMapping)
+  const newVariables = generateData(templateVariables, JSON.parse(JSON.stringify(signatureDetail.value.templateDetail)))
+  const content = signatureDetail.value.templateDetail.json.content.content
+  signatureDetail.value.templateDetail.json.content.content = replaceVariables(content, newVariables.variables)
+  temSignatureData.value = newSignature
+  signSubmitStage.value = 'afterSubmit'
+}
+
 async function handleAdditionalSetting(xml: any, taskDetail: any, formData: any) {
-  const { buttons, components, signatureSetting } = await getBpmnAddtionalElement(xml, state.taskDetail.taskDefinitionKey, taskDetail, formData)
+  const { buttons, components, signatureSetting, buttonSetting } = await getBpmnAddtionalElement(xml, state.taskDetail.taskDefinitionKey, taskDetail, formData)
   additionalButton.value = buttons
+  if(buttonSetting) {
+    pageButtonSetting.value = buttonSetting
+  }
   if(signatureSetting) {
     signatureDetail.value = signatureSetting
     nextTick(() => {
       displayMode.value = 'signature'
     })
+    signSubmitStage.value = 'beforeSubmit'
   }else{
     signatureDetail.value = null
     nextTick(() => {
@@ -254,6 +295,7 @@ async function handleAdditionalSetting(xml: any, taskDetail: any, formData: any)
 }
 
 async function addtionalSubmit(formData: any) {
+  state.loading = true
   if (state.taskDetail?.assignee !== userId) {
     await clientApi.api.postWorkflowTaskClaim({ taskId: id, userId }).then((res) => res.data)
   }
@@ -271,6 +313,7 @@ async function addtionalSubmit(formData: any) {
     })
     routerProvider?.back(fallbackRoute)
   }
+  state.loading = false
 }
 
 const handleTaskInfoChange = async (taskDetailRes: any, isClaim: boolean) => {
@@ -327,8 +370,15 @@ onMounted(() => {
                             @change="handleTaskInfoChange"></WorkflowDetailInfo>
       </el-tab-pane>
       <el-tab-pane class="workflow-detail-pane" :label="$t('workflow_form')" name="form" v-loading="state.loading">
-          <div :class="{ workflowFormContainer:true, [displayMode]:true, glass: displayMode === 'signature' }"
-               style="height: 100%; overflow-y: auto">
+          <div :class="
+            { workflowFormContainer:true, 
+              [displayMode]:true, 
+              glass: displayMode === 'signature',
+              showForm
+             }">
+               <div v-if="displayMode === 'signature'" class="toggleFormButton">
+                  <Icon :name="showForm ? 'tabler:arrow-right' : 'tabler:arrow-left'  " size="20" @click="toggleShowForm"/>
+               </div>
             <WorkflowDetailFormRender ref="vFormRef" :taskDetail="state.taskDetail">
                 <template #action>
                   <div class="workflow-detail-pane--btns" v-if="isAssigneeUser">
@@ -336,11 +386,23 @@ onMounted(() => {
                       <component :is="item.component" ref="additionalButtonRef" v-bind="item.props"
                                 @submit="addtionalSubmit" />
                     </template>
-                    <el-button id="Workflow__AvailableTask__Detail__Form__SaveDraft" :disabled="workflowType === 'completeTask'" @click="handleSave">
-                      {{ $t('workflow_save') }}
+                    <el-button 
+                      v-if="!pageButtonSetting || pageButtonSetting.showSaveDraft"
+                      id="Workflow__AvailableTask__Detail__Form__SaveDraft" :disabled="workflowType === 'completeTask'" @click="handleSave">
+                      <template v-if="pageButtonSetting && pageButtonSetting.saveDraftLabel">
+                        {{ pageButtonSetting.saveDraftLabel }}
+                      </template>
+                      <template v-else>
+                        {{ $t('workflow_save') }}
+                      </template>
                     </el-button>
-                    <el-button id="Workflow__AvailableTask__Detail__Form__Submit" type="primary" :disabled="workflowType === 'completeTask'" @click="handleSubmit">
-                      {{ $t('common_submit') }}
+                    <el-button v-if="!pageButtonSetting || pageButtonSetting.showSumBitButton" id="Workflow__AvailableTask__Detail__Form__Submit" type="primary" :disabled="workflowType === 'completeTask'" @click="handleSubmit">
+                      <template v-if="pageButtonSetting && pageButtonSetting.submitButtonLabel">
+                        {{ pageButtonSetting.submitButtonLabel }}
+                      </template>
+                      <template v-else>
+                        {{ $t('common_submit') }}
+                      </template>
                     </el-button>
                   </div>
                 </template>
@@ -353,7 +415,11 @@ onMounted(() => {
               <DocTemplateViewer ref="templateViewerRef" v-if="!state.isEdit && signatureDetail" :options="signatureDetail.templateDetail.json.options"
                                :json="signatureDetail.templateDetail.json.content" />
             </div>
-
+            <WorkflowSignatureDialog 
+              ref="signatureSettingDialogRef" 
+              :signatureSetting="signatureDetail"
+              @confirm="handleApplySignature"
+            />
           </template>
       </el-tab-pane>
       <el-tab-pane :label="$t('workflow_graph')" name="graph">
@@ -402,11 +468,14 @@ onMounted(() => {
     height: 100%;
   }
 }
-
+.templateViewerContainer{
+  position: relative;
+  overflow: hidden;
+}
 .workflow-detail-pane {
   display: grid;
   grid-template-rows: 1fr min-content;
-
+  transform: scale(1);
   &--btns {
     box-shadow: var(--el-box-shadow-light);
     padding: var(--app-space-s);
@@ -415,16 +484,32 @@ onMounted(() => {
 }
 
 .workflowFormContainer{
+  position: relative;
   &.form{}
   &.signature{
-    position: absolute;
+    position: fixed;
     top: var(--app-space-xs);
     right: var(--app-space-xs);
     width: clamp(220px, 40vw, 600px);
     height: calc( 100% - var(--app-space-xs) * 2);
-    padding: var(--app-space-s);
+    padding: var(--app-space-l) var(--app-space-s) var(--app-space-s) var(--app-space-s);
     border-radius: var(--app-border-radius-m);
     z-index: 99;
+    transition: all 0.2s ease-in-out;
+    transform: translateX(90%);
+    &.showForm{
+      transform: translateX(0);
+    }
+  }
+}
+.toggleFormButton{
+  position: absolute;
+  top: var(--app-space-s);
+  left: var(--app-space-s);
+  z-index: 2;
+  cursor: pointer;
+  &:hover{
+    color: var(--app-primary-color);
   }
 }
 </style>
