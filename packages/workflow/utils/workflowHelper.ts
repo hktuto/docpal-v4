@@ -66,7 +66,6 @@ export async function getBpmnAddtionalElement(xml:any,taskDefinitionKey:string, 
     // TODO : get buttonSetting
     if(currentTask.extensionElements && currentTask.extensionElements['docpal:buttonSetting']){
       const buttonSettingFromTask = currentTask.extensionElements['docpal:buttonSetting']
-      console.log('buttonSettingFromTask', buttonSettingFromTask)
       buttonSetting = buttonSettingFromTask
     }
     if(currentTask.extensionElements && currentTask.extensionElements['docpal:signatureSetting']){
@@ -84,19 +83,23 @@ export async function getBpmnAddtionalElement(xml:any,taskDefinitionKey:string, 
         prev[key] = variables[key].replace('${variables:get(', '').replace(')}', '')
         return prev
       }, {})
+
       // step 5, get which workflow information to store signature
       const currentStepSignatureKey = variables[signatureSettingFromTask.attr_signature]
       const workflowKeyToStoreSignature = currentStepSignatureKey.replace('${variables:get(', '').replace(')}', '')
+      
       // step 6, get template detail and setting json
       const {data:detail} = await clientApi.api.getNuxeoTemplateTemplateid(templateId)
       let json = await clientApi.api.postNuxeoDocumentPreview({idOrPath:detail.documentId},{
         format: 'blob'
       }).then(async(res) => {const t = await res.text(); return JSON.parse(t)})
+      
       // replace signature variable
       // convert workflow variable to template variable
-
-      const newVariables = generateData({}, json)
-      let templateDetail = {...json}
+      const templateVariables = convertWorkflowVariableToTemplateVariable(formData, workflowToTemplateMapping)
+      const signatureVariableSetting = json.variables.find((item: any) => item.id === signatureSettingFromTask.attr_signature)
+      const newVariables = generateData(templateVariables, JSON.parse(JSON.stringify(json)))
+      let templateDetail = JSON.parse(JSON.stringify(json))
       const content = templateDetail.json.content.content
       templateDetail.json.content.content = replaceVariables(content, newVariables.variables)
       // const json.json.content = replaceVariables(json.json.content, newVariables)
@@ -104,8 +107,10 @@ export async function getBpmnAddtionalElement(xml:any,taskDefinitionKey:string, 
       signatureSetting = {
         templateDetail,
         workflowKeyToStoreSignature,
+        signatureVariableSetting,
         workflowToTemplateMapping,
         templateId,
+        templateVariables
       }
       console.log('signatureSetting', signatureSetting)
       // get 
@@ -116,4 +121,20 @@ export async function getBpmnAddtionalElement(xml:any,taskDefinitionKey:string, 
         components,
         signatureSetting
     }
+}
+
+export function convertWorkflowVariableToTemplateVariable(variables: any, mapping: any) {
+  return Object.keys(mapping).reduce((prev: any, key: string) => {
+    const valueKey = mapping[key]
+    if(valueKey && variables[valueKey]) {
+      // variables[valueKey] may be can convert yto json, so we need to convert it to json
+      try {
+        const json = JSON.parse(variables[valueKey])
+        prev[key] = json
+      } catch (e) {
+        prev[key] = variables[valueKey]
+      }
+    }
+    return prev
+  }, {})
 }
