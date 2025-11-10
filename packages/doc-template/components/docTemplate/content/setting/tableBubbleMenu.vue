@@ -104,8 +104,6 @@ function updateTableStyle(newStyle: string){
     v-if="editor"
     style="z-index: 3;"
   >
-    
-
     <div v-if="lastSelection?.type === 'cell'" class="bubble-menu">
       <button @click="handleTableCellsMergeOrSplit(true)">
         {{ $t('Merge Cells') }}

@@ -19,9 +19,9 @@ const emit = defineEmits<{
 const dialogVisible = ref(false)
 
 const form = reactive<TableCellStyleForm>({
-  backgroundColor: '#ffffff',
-  borderStyle: 'solid',
-  borderWidth: 1,
+  backgroundColor: '',
+  borderStyle: 'none',
+  borderWidth: 0,
   borderColor: '#d0d5dd'
 })
 
@@ -34,9 +34,9 @@ const borderStyleOptions: Array<{ label: string; value: BorderStyle }> = [
 ]
 
 function resetForm() {
-  form.backgroundColor = '#ffffff'
-  form.borderStyle = 'solid'
-  form.borderWidth = 1
+  form.backgroundColor = ''
+  form.borderStyle = 'none'
+  form.borderWidth = 0
   form.borderColor = '#d0d5dd'
 }
 
@@ -134,7 +134,9 @@ function buildPayload(): TableCellStylePayload {
 
   const styles: string[] = []
 
-  styles.push(`background-color: ${form.backgroundColor}`)
+  if (form.backgroundColor) {
+    styles.push(`background-color: ${form.backgroundColor}`)
+  }
   styles.push(`border: ${border}`)
   styles.push(`border-color: ${form.borderStyle === 'none' ? 'transparent' : form.borderColor}`)
 
