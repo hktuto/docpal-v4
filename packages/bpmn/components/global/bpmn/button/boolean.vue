@@ -35,7 +35,7 @@ async function submit(){
     formData[attr_booleanValue] = attr_applyState
     console.log("formData", formData)
     // workflowProvider?.updateData(formData)
-    emits('submit', formData)
+    emits('submit', {formData, attr_booleanValue})
 }
 
 defineExpose({ beforeSubmit })
