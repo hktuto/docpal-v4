@@ -25,7 +25,6 @@ const state = reactive({
 
 function handleOpen() {
   if (!setting.fields) return
-  console.log('setting', setting)
   state.visible = true
 }
 

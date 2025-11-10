@@ -97,25 +97,28 @@ async function reorderColumn(fields: any) {
 watch(
   () => setting?.displayColumns,
   (newVal) => {
-    if(!setting.fields) return
-    const fields = JSON.parse(setting.fields)
-    const columns = newVal.reduce((prev: any, columnId: any) => {
-      const field = fields.find((item: any) => item.value === columnId)
-      if(field) {
-        prev.push({
-          id: field.value,
-          name: field.label,
-          type: field.type,
-        })
-      } else {
-        prev.push({
-          id: columnId,
-          name: columnId,
-        })
-      }
-      return prev
-    },[])
-    reorderColumn(columns)
+    try {
+      const fields = JSON.parse(setting.fields)
+      const columns = newVal.reduce((prev: any, columnId: any) => {
+        const field = fields.find((item: any) => item.value === columnId)
+        if (field) {
+          prev.push({
+            id: field.value,
+            name: field.label,
+            type: field.type
+          })
+        } else {
+          prev.push({
+            id: columnId,
+            name: columnId
+          })
+        }
+        return prev
+      }, [])
+      reorderColumn(columns)
+    } catch (error) {
+      console.log('error', error)
+    }
   },
   {
     deep: true,
@@ -131,6 +134,7 @@ defineExpose({ reorderColumn, reload, query })
 <template>
   <VxeGrid v-if="tableReady" ref="tableRef" v-bind="tableConfig" v-on="tableEvent">
     <template #toolbar_buttons>
+      {{ dates }}
       <ResponsiveFilter ref="responsiveFilterRef" @form-change="handleFilterFormChange" inputKey="q" inputPlaceHolder="caseManagement_filter" />
     </template>
   </VxeGrid>

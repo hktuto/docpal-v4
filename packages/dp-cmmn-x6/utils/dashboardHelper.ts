@@ -13,6 +13,8 @@ import MasterTableInfo from '../components/dashboard/masterTableInfo/index.vue'
 import RelatedCaseInfo from '../components/dashboard/relatedCaseInfo/index.vue'
 import CaseFieldNum from '../components/caseStatistics/fieldNum/index.vue'
 import CaseGroupFieldNum from '../components/caseStatistics/groupFieldNum/index.vue'
+import CaseMonthlyAverage from '../components/caseStatistics/monthlyAverage/index.vue'
+import CaseMonthlyDateRange from '../components/caseStatistics/monthlyDateRange/index.vue'
 export type CmmnDashboardWidget = 
 'Action' | 
 'BasicInfo' | 
@@ -26,7 +28,9 @@ export type CmmnDashboardWidget =
 'MasterTableInfo' | 
 'RelatedCaseInfo' | 
 'CaseFieldNum' |
-'CaseGroupFieldNum'
+'CaseGroupFieldNum' |
+'CaseMonthlyAverage' |
+'CaseMonthlyDateRange'
 export const CmmnDashboardWidgetSetting: { [key in CmmnDashboardWidget]: DashboardWidgetSetting } = {
   BasicInfo: {
     label: 'cmmnBasicInfo',
@@ -211,6 +215,48 @@ export const CmmnDashboardWidgetSetting: { [key in CmmnDashboardWidget]: Dashboa
       prefix: '',
       displayMethod: '',
     }
+  },
+  CaseMonthlyAverage: {
+    type: DASHBOARD_TYPE.caseCount,
+    label: 'cmmnCaseMonthlyAverage',
+    minW: 2,
+    minH: 2,
+    maxW: 12,
+    maxH: 12,
+    w: 6,
+    h: 4,
+    component: 'CaseMonthlyAverage',
+    setting: {
+      caseId: '',
+      relatedField: '',
+      averageField: '',
+      averageTitle: '',
+      averageUnit: 'Average Duration',
+      title: 'Number of Cases',
+      dialogSettingTitle: '',
+      displayColumns: [],
+      fields: '[]',
+    }
+  },
+  CaseMonthlyDateRange: {
+    type: DASHBOARD_TYPE.caseCount,
+    label: 'cmmnCaseMonthlyDateRange',
+    minW: 2,
+    minH: 2,
+    maxW: 12,
+    maxH: 12,
+    w: 6,
+    h: 4,
+    component: 'CaseMonthlyDateRange',
+    setting: {
+      caseId: '',
+      relatedField: '',
+      dateField: '',
+      title: 'Monthly Date Range',
+      dialogSettingTitle: '',
+      displayColumns: [],
+      fields: '[]',
+    }
   }
 }
 
@@ -239,5 +285,7 @@ export const CmmnWidgetComponent = {
   RelatedMaster: RelatedMaster,
   MasterTableInfo: MasterTableInfo,
   CaseFieldNum: CaseFieldNum,
-  CaseGroupFieldNum: CaseGroupFieldNum
+  CaseGroupFieldNum: CaseGroupFieldNum,
+  CaseMonthlyAverage: CaseMonthlyAverage,
+  CaseMonthlyDateRange: CaseMonthlyDateRange
 }

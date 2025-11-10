@@ -1,13 +1,21 @@
 <template>
-  <DashboardCard v-loading="loading" :title="setting.title" :hideSetting="hideSetting" :setting="setting" :settingRef="settingRef" @delete="handleDelete" @refresh="handleInitCard">
+  <DashboardCard
+    v-loading="loading"
+    :title="setting.title"
+    :hideSetting="hideSetting"
+    :setting="setting"
+    :settingRef="settingRef"
+    @delete="handleDelete"
+    @refresh="handleInitCard"
+  >
     <div class="chartContainer">
       <div ref="cardRef">
         <div id="myEcharts" ref="chartRef" class="echart"></div>
       </div>
       <el-button type="primary" @click="handleShowAll">{{ $t('button.showAll') }}</el-button>
     </div>
-    <CaseStatisticsTableDialog :setting="setting" :dates="dates" ref="dialogRef" > </CaseStatisticsTableDialog>
-    <CaseStatisticsTableDialog :setting="setting" :dates="dates" ref="groupDialogRef" > 
+    <CaseStatisticsTableDialog :setting="setting" :dates="dates" ref="dialogRef"> </CaseStatisticsTableDialog>
+    <CaseStatisticsTableDialog :setting="setting" :dates="dates" ref="groupDialogRef">
       <CaseStatisticsTableGroup :setting="setting" :dates="dates" ref="groupTableRef" />
     </CaseStatisticsTableDialog>
     <DashboardSetting ref="settingRef" :formJson="formJson" @delete="handleDelete" @refresh="handleRefresh" />
@@ -86,7 +94,7 @@ const { cardRef, chartRef, settingRef, resize, handleInitCard, loading } = useDa
   clickAction: (params: any) => {
     console.log('props', props.setting)
     console.log('params', params)
-    if(props.setting.groupField) {
+    if (props.setting.groupField) {
       groupDialogRef.value.handleOpen()
     } else {
       dialogRef.value.handleOpen()
@@ -111,7 +119,7 @@ defineExpose({ resize })
   width: 100%;
   display: grid;
   grid-template-rows: 1fr min-content;
-  padding: 0 var(--app-space-s) var(--app-space-s); 
+  padding: 0 var(--app-space-s) var(--app-space-s);
   overflow: hidden;
 }
 </style>
