@@ -1,4 +1,5 @@
 import type { DashboardWidgetSetting } from '../../dp-dashboard/utils/dashboardWidgetHelper'
+import { DASHBOARD_TYPE } from '../../dp-dashboard/utils/dashboardWidgetHelper'
 import Action from '../components/dashboard/action/index.vue'
 import BasicInfo from '../components/dashboard/basicInfo.vue'
 import Activity from '../components/dashboard/activity.vue'
@@ -10,7 +11,22 @@ import RelatedCase from '../components/dashboard/relatedCase/index.vue'
 import RelatedMaster from '../components/dashboard/relatedMaster/index.vue'
 import MasterTableInfo from '../components/dashboard/masterTableInfo/index.vue'
 import RelatedCaseInfo from '../components/dashboard/relatedCaseInfo/index.vue'
-export type CmmnDashboardWidget = 'Action' | 'BasicInfo' | 'Process' | 'TaskPage' | 'WorkflowPage' | 'Activity' | 'DocumentRoot' | 'RelatedCase' | 'RelatedMaster' | 'MasterTableInfo' | 'RelatedCaseInfo'
+import CaseFieldNum from '../components/caseStatistics/fieldNum/index.vue'
+import CaseGroupFieldNum from '../components/caseStatistics/groupFieldNum/index.vue'
+export type CmmnDashboardWidget = 
+'Action' | 
+'BasicInfo' | 
+'Process' | 
+'TaskPage' | 
+'WorkflowPage' | 
+'Activity' | 
+'DocumentRoot' | 
+'RelatedCase' | 
+'RelatedMaster' | 
+'MasterTableInfo' | 
+'RelatedCaseInfo' | 
+'CaseFieldNum' |
+'CaseGroupFieldNum'
 export const CmmnDashboardWidgetSetting: { [key in CmmnDashboardWidget]: DashboardWidgetSetting } = {
   BasicInfo: {
     label: 'cmmnBasicInfo',
@@ -163,6 +179,39 @@ export const CmmnDashboardWidgetSetting: { [key in CmmnDashboardWidget]: Dashboa
       relatedCaseField: '',
     }
   },
+
+  CaseFieldNum: {
+    type: DASHBOARD_TYPE.caseCount,
+    label: 'cmmnCaseFieldNum',
+    minW: 1,
+    minH: 2,
+    maxW: 12,
+    maxH: 12,
+    w: 2,
+    h: 2,
+    component: 'CaseFieldNum',
+    setting: {
+      name: '',
+      prefix: '',
+      displayMethod: '',
+    }
+  },
+  CaseGroupFieldNum: {
+    type: DASHBOARD_TYPE.caseCount,
+    label: 'cmmnCaseGroupFieldNum',
+    minW: 2,
+    minH: 2,
+    maxW: 12,
+    maxH: 12,
+    w: 3,
+    h: 4,
+    component: 'CaseGroupFieldNum',
+    setting: {
+      name: '',
+      prefix: '',
+      displayMethod: '',
+    }
+  }
 }
 
 export function getCmmnWidgetSetting(widget: CmmnDashboardWidget) {
@@ -188,5 +237,7 @@ export const CmmnWidgetComponent = {
   RelatedCase: RelatedCase,
   RelatedCaseInfo: RelatedCaseInfo,
   RelatedMaster: RelatedMaster,
-  MasterTableInfo: MasterTableInfo
+  MasterTableInfo: MasterTableInfo,
+  CaseFieldNum: CaseFieldNum,
+  CaseGroupFieldNum: CaseGroupFieldNum
 }

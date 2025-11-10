@@ -19,7 +19,7 @@
         </el-collapse-item>
       </el-collapse>
     </el-splitter-panel>
-    <el-splitter-panel>
+    <el-splitter-panel @update:size="handleResize">
       <div ref="wrapper" style="position: relative; height: 100%; overflow: auto" @drop="handleDrop" @dragover="handleDragOver">
         <div v-if="layout.length === 0 && editMode" class="dashboard-null-placeholder">
           {{ $t('dashboard.dragToHere') }}
@@ -176,7 +176,13 @@ function handleRefreshSetting(setting: any, row: any) {
   row.setting = setting
   emits('refreshSetting', row)
 }
-
+function handleResize() {
+  Object.keys(sheetRefs.value).forEach((key) => {
+    if (sheetRefs.value[key] && sheetRefs.value[key].resize) {
+      sheetRefs.value[key].resize()
+    }
+  })
+}
 const chartResize = useDebounceFn(
   (row: any) => {
     if (sheetRefs.value[row.i] && sheetRefs.value[row.i].resize) {
@@ -203,7 +209,7 @@ const { handleDragStart, handleDragOver, handleDrop, handleDragEnd, placeholder 
   }
 })
 onMounted(() => {
-  if(props.dashboardSettingList) activeNames.value = Object.keys(props.dashboardSettingList)
+  if (props.dashboardSettingList) activeNames.value = Object.keys(props.dashboardSettingList)
 })
 </script>
 
@@ -354,7 +360,7 @@ onMounted(() => {
   transform: translate(-50%, -50%);
   font-size: var(--app-font-size-xxl);
 }
-:deep(.el-collapse-item__header) ,
+:deep(.el-collapse-item__header),
 :deep(.el-collapse-item__wrap) {
   padding-left: var(--app-space-xs);
 }
