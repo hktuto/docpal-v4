@@ -190,6 +190,7 @@ defineExpose({ getJsonData })
     <div class="editorBody">
       <EditorContent :editor="editor" />
       <DocTemplateContentSettingBubbleMenu />
+      <DocTemplateContentSettingTableBubbleMenu />
     </div>
     <DocTemplateFooter />
   </div>
@@ -246,7 +247,7 @@ defineExpose({ getJsonData })
     }
 
     th {
-      background-color: var(--app-grey-800);
+      /* background-color: var(--app-grey-800); */
       font-weight: bold;
       text-align: left;
     }
