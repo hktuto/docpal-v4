@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { BubbleMenu } from '@tiptap/vue-3/menus'
 import { DocTemplateProveKey } from '../../../../utils/docTemplateHelper'
+import { findParentNode, posToDOMRect } from '@tiptap/core'
 
 const editorProvider = inject(DocTemplateProveKey)
 if (!editorProvider) {
@@ -17,6 +18,31 @@ function handleWidthChange() {
     src: editor.value.state.selection.node.attrs.src,
     width: `${state.imageWidth}%;`
   }).run()
+}
+
+function toggleListType() {
+  const chain = editor.value.chain().focus()
+  console.log(editor.value);
+  if (editor.value.isActive('bulletList')) {
+    chain.toggleOrderedList()
+  } else {
+    chain.toggleBulletList()
+  }
+  chain.run()
+}
+
+function getListVirtualElement() {
+  const parentNode = findParentNode(node => node.type.name === 'bulletList' || node.type.name === 'orderedList')(
+    editor.value.state.selection,
+  )
+  if (parentNode) {
+    const domRect = posToDOMRect(editor.value.view, parentNode.start, parentNode.start + parentNode.node.nodeSize)
+    return {
+      getBoundingClientRect: () => domRect,
+      getClientRects: () => [domRect],
+    }
+  }
+  return null
 }
 
 /**
@@ -36,7 +62,7 @@ function handleTableCellsMergeOrSplit(state: boolean) {
     :editor="editor"
     :tippy-options="{ duration: 500, zIndex:11 }"
     v-if="editor"
-    style="width: auto"
+    style="z-index: 3;"
   >
     <div v-if="lastSelection?.type === 'text'" class="bubble-menu">
       <button @click="editor.chain().focus().toggleBold().run()"
@@ -59,16 +85,28 @@ function handleTableCellsMergeOrSplit(state: boolean) {
       </button>
     </div>
 
-    <div v-if="lastSelection?.type === 'cell'" class="bubble-menu">
+    <!-- <div v-if="lastSelection?.type === 'cell'" class="bubble-menu">
       <button @click="handleTableCellsMergeOrSplit(true)">
         {{ $t('Merge Cells') }}
       </button>
       <button @click="handleTableCellsMergeOrSplit(false)">
         {{ $t('Split Cell') }}
       </button>
-    </div>
+    </div> -->
   </bubble-menu>
-
+  <bubble-menu
+      v-if="editor"
+      :editor="editor"
+      :should-show="() => editor.isActive('bulletList') || editor.isActive('orderedList')"
+      :get-referenced-virtual-element="getListVirtualElement"
+      :options="{ placement: 'top-start', offset: 8 }"
+    >
+      <div class="bubble-menu">
+        <button type="button" @click="toggleListType">Toggle list type</button>
+      </div>
+    </bubble-menu>
+    
+    
 </template>
 
 <style lang="scss" scoped>

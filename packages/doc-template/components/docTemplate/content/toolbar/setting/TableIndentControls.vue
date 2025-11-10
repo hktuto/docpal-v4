@@ -37,13 +37,7 @@ const tableForm = reactive({
 
 function handleCreateTable() {
   const { to } = editor.value.state.selection
-  editor.value.commands.insertContent({
-    type: 'variableTable',
-    attrs: {
-      type: 'table',
-      value: tableForm.value
-    }
-  })
+  editor.value.chain().focus().insertTable({ rows: 3, cols: 3, withHeaderRow: true }).run()
   editor.value.commands.focus(to + 1)
   state.createTablePopoverVisible = false
 }
@@ -51,7 +45,7 @@ function handleCreateTable() {
 
 <template>
   <!-- table -->
-  <el-button v-tooltip="t('docTemplate.table.createTable')" @click="state.createTablePopoverVisible = true"
+  <el-button v-tooltip="t('docTemplate.table.createTable')" @click="handleCreateTable"
              style="width:34px; margin-left: -6px">
     <svg xmlns="http://www.w3.org/2000/svg" width="1.2em" height="1.2em" viewBox="0 0 14 14">
       <path fill="currentColor" fillRule="evenodd"
