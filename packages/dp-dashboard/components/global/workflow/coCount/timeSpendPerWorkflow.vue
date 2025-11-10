@@ -31,7 +31,7 @@ const defaultSetting = {
       trigger: 'item'
     },
     legend: {
-      bottom: '5%',
+      bottom: '8%',
       left: 'center',
       itemWidth: 10,
       itemHeight: 10
@@ -39,6 +39,7 @@ const defaultSetting = {
   },
   series: {
     type: 'pie',
+    center: ['50%', '44%'],
     label: {
       normal: {
         position: 'inside', // 在内部显示，outseide 是在外部显示
