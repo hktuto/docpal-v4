@@ -97,11 +97,10 @@ defineExpose({
   max-width: 100%;
   display: grid;
   grid-template-columns: 1fr 1fr;
-  overflow-y: hidden;
-  flex-flow: row wrap;
+  overflow-y: auto;
   container-type: inline-size;
   .chartContainer-item {
-    min-height: 300px;
+    min-height: 280px;
     width: 100%;
   }
 }
