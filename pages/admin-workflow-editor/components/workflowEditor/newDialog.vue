@@ -56,14 +56,18 @@ async function handleSubmit() {
   form.append('jsonValue', JSON.stringify({}))
   form.append('file', blob, 'workflow.bpmn.xml')
   form.append('isDraft', true)
-  const { data } = await adminApi.api.postWorkflowProcessDefinitionUpload({ requestDTO: {} }, form)
-  state.form = {
-    template: 'Blank',
-    name: ''
+  try {
+    const data = await adminApi.api.postWorkflowProcessDefinitionUpload({ requestDTO: {} }, form).then((res) => res.data)
+    state.form = {
+      template: 'Blank',
+      name: ''
+    }
+    ElMessage.success(t('tip_createdMsg', { modelName: t('dashboard.WorkflowNewCount'), name: null }))
+    state.visible = false
+    emits('created', data)
+  } catch (e) {
+    console.log(e)
   }
-  ElMessage.success(t('tip_createdMsg', { modelName: t('dashboard.WorkflowNewCount'), name: null }))
-  state.visible = false
-  emits('created', data)
 }
 
 async function getXMLFileTemplate(template: string = 'Single') {
@@ -82,7 +86,8 @@ defineExpose({ handleOpen })
 </script>
 
 <template>
-  <el-dialog v-model="state.visible" :title="$t('workflow_editorCreate')" :close-on-click-modal="false" distroy-on-close>
+  <el-dialog v-model="state.visible" :title="$t('workflow_editorCreate')" :close-on-click-modal="false"
+             distroy-on-close>
     <el-form ref="formRef" :model="state.form" label-position="top" class="demo-ruleForm" status-icon>
       <el-form-item
         :label="$t('workflowEditor.name')"
@@ -108,8 +113,9 @@ defineExpose({ handleOpen })
       </el-form-item>
     </el-form>
     <template #footer>
-      <el-button id="WorkflowEditor__CreateNewWorkflow__Submit" type="primary" :loading="state.loading" @click="handleSubmit"
-        >{{ $t('common_submit') }}
+      <el-button id="WorkflowEditor__CreateNewWorkflow__Submit" type="primary" :loading="state.loading"
+                 @click="handleSubmit"
+      >{{ $t('common_submit') }}
       </el-button>
     </template>
   </el-dialog>

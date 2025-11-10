@@ -124,7 +124,7 @@ function handlePickerClose() {
   <!-- add visible -->
   <el-dialog v-model="state.addVisible"
              :title="formMode === 'create' ? t('docTemplate.utils.variableManager.add') : t('docTemplate.variable.editVariable')"
-             width="80%"
+             class="big"
              destroy-on-close>
     <VariableForm
       v-if="state.addVisible"

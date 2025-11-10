@@ -83,6 +83,7 @@ async function handleGetActivity() {
 const vFormRef = ref()
 const displayMode = ref<'form' | 'signature'>()
 const showForm = ref(true)
+const formDataValue = ref<any>(null)
 async function handleFormDataGet() {
   let formJson
   let formData
@@ -100,9 +101,9 @@ async function handleFormDataGet() {
         }
       }
       xml = await clientApi.api.getWorkflowVersionVersionidBpmnxml(state.taskDetail.processDefinitionVersionId)
-      console.log('formData', formData)
       vFormRef.value.setForm(formJson, formData, [], xml)
       await handleAdditionalSetting(xml, state.taskDetail, formData)
+      formDataValue.value = formData
       break
     default:
       const properties = await clientApi.api.postWorkflowProperties({ taskId: id }).then((res) => res.data)
@@ -115,6 +116,7 @@ async function handleFormDataGet() {
       )
       xml = await clientApi.api.getWorkflowVersionVersionidBpmnxml(state.taskDetail.processDefinitionVersionId)
       vFormRef.value.setForm(formJson, formData, [], xml)
+      formDataValue.value = formData
       await handleAdditionalSetting(xml, state.taskDetail, formData)
       break
   }
@@ -215,7 +217,6 @@ async function handleSubmit() {
       }
     })
     const buttonResults = await Promise.all(additionButtonActions)
-    console.log('additionButtonActions', buttonResults)
     // after check all actions, if any addtional data need to set to from data, set it
     buttonResults.forEach((item: any) => {
       if (item && typeof item === 'object') {
@@ -263,9 +264,13 @@ async function handleApplySignature(newSignature: any) {
   // temp add signature to form data and update signature setting variable
   // get form data
   let data = await vFormRef.value.getFormData(true, false)
+
   data[signatureDetail.value.workflowKeyToStoreSignature] = newSignature
-  console.log('data', data)
-  const templateVariables = convertWorkflowVariableToTemplateVariable(data, signatureDetail.value.workflowToTemplateMapping)
+  const allFormData = {
+    ...formDataValue.value,
+    ...data
+  }
+  const templateVariables = convertWorkflowVariableToTemplateVariable(allFormData, signatureDetail.value.workflowToTemplateMapping)
   const newVariables = generateData(templateVariables, JSON.parse(JSON.stringify(signatureDetail.value.templateDetail)))
   const content = signatureDetail.value.templateDetail.json.content.content
   signatureDetail.value.templateDetail.json.content.content = replaceVariables(content, newVariables.variables)
@@ -294,11 +299,25 @@ async function handleAdditionalSetting(xml: any, taskDetail: any, formData: any)
   }
 }
 
-async function addtionalSubmit(formData: any) {
+async function addtionalSubmit({formData,attr_booleanValue}: any) {
   state.loading = true
   if (state.taskDetail?.assignee !== userId) {
     await clientApi.api.postWorkflowTaskClaim({ taskId: id, userId }).then((res) => res.data)
   }
+  
+  const additionButtonActions: any = []
+  additionalButtonRef.value.forEach((item) => {
+    if (item && item.beforeSubmit && item.attr_booleanValue !== attr_booleanValue) {
+      additionButtonActions.push(item.beforeSubmit())
+    }
+  })
+  const buttonResults = await Promise.all(additionButtonActions)
+  // after check all actions, if any addtional data need to set to from data, set it
+  buttonResults.forEach((item: any) => {
+    if (item && typeof item === 'object') {
+      formData = { ...formData, ...item }
+    }
+  })
   const param = {
     taskId: id,
     properties: { ...formData }
@@ -490,7 +509,7 @@ onMounted(() => {
     position: fixed;
     top: var(--app-space-xs);
     right: var(--app-space-xs);
-    width: clamp(220px, 40vw, 600px);
+    width: clamp(120px, 30vw, 400px);
     height: calc( 100% - var(--app-space-xs) * 2);
     padding: var(--app-space-l) var(--app-space-s) var(--app-space-s) var(--app-space-s);
     border-radius: var(--app-border-radius-m);
