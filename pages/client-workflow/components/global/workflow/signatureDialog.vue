@@ -70,14 +70,27 @@ defineExpose({
 </script>
 <template>
   <el-dialog v-model="opened" v-loading="loading" append-to-body>
+    <h3>Apply Signature</h3>
     <div class="signatureContainer">
       <div class="signatureItem" v-for="signature in signatures" :key="signature">
-        <img :src="signature" alt="signature" />
+        <img class="signatureImage" :src="signature" alt="signature" />
       </div>
     </div>
 
     <template #footer>
+      <el-button type="info" @click="close">Cancel</el-button>
       <el-button type="primary" @click="confirmApplySignature">Apply Signature</el-button>
     </template>
   </el-dialog>
 </template>
+<style scoped>
+.signatureContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.signatureImage {
+  width: 100%;
+  height: 100%;
+}
+</style>
