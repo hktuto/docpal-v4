@@ -496,7 +496,7 @@ onMounted(() => {
     position: fixed;
     top: var(--app-space-xs);
     right: var(--app-space-xs);
-    width: clamp(220px, 40vw, 600px);
+    width: clamp(120px, 30vw, 400px);
     height: calc( 100% - var(--app-space-xs) * 2);
     padding: var(--app-space-l) var(--app-space-s) var(--app-space-s) var(--app-space-s);
     border-radius: var(--app-border-radius-m);
