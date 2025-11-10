@@ -83,6 +83,7 @@ async function handleGetActivity() {
 const vFormRef = ref()
 const displayMode = ref<'form' | 'signature'>()
 const showForm = ref(true)
+const formDataValue = ref<any>(null)
 async function handleFormDataGet() {
   let formJson
   let formData
@@ -100,9 +101,9 @@ async function handleFormDataGet() {
         }
       }
       xml = await clientApi.api.getWorkflowVersionVersionidBpmnxml(state.taskDetail.processDefinitionVersionId)
-      console.log('formData', formData)
       vFormRef.value.setForm(formJson, formData, [], xml)
       await handleAdditionalSetting(xml, state.taskDetail, formData)
+      formDataValue.value = formData
       break
     default:
       const properties = await clientApi.api.postWorkflowProperties({ taskId: id }).then((res) => res.data)
@@ -115,6 +116,7 @@ async function handleFormDataGet() {
       )
       xml = await clientApi.api.getWorkflowVersionVersionidBpmnxml(state.taskDetail.processDefinitionVersionId)
       vFormRef.value.setForm(formJson, formData, [], xml)
+      formDataValue.value = formData
       await handleAdditionalSetting(xml, state.taskDetail, formData)
       break
   }
@@ -263,9 +265,13 @@ async function handleApplySignature(newSignature: any) {
   // temp add signature to form data and update signature setting variable
   // get form data
   let data = await vFormRef.value.getFormData(true, false)
+
   data[signatureDetail.value.workflowKeyToStoreSignature] = newSignature
-  console.log('data', data)
-  const templateVariables = convertWorkflowVariableToTemplateVariable(data, signatureDetail.value.workflowToTemplateMapping)
+  const allFormData = {
+    ...formDataValue.value,
+    ...data
+  }
+  const templateVariables = convertWorkflowVariableToTemplateVariable(allFormData, signatureDetail.value.workflowToTemplateMapping)
   const newVariables = generateData(templateVariables, JSON.parse(JSON.stringify(signatureDetail.value.templateDetail)))
   const content = signatureDetail.value.templateDetail.json.content.content
   signatureDetail.value.templateDetail.json.content.content = replaceVariables(content, newVariables.variables)

@@ -96,6 +96,7 @@ export async function getBpmnAddtionalElement(xml:any,taskDefinitionKey:string, 
       
       // replace signature variable
       // convert workflow variable to template variable
+      console.log('formData', formData)
       const templateVariables = convertWorkflowVariableToTemplateVariable(formData, workflowToTemplateMapping)
       const signatureVariableSetting = json.variables.find((item: any) => item.id === signatureSettingFromTask.attr_signature)
       const newVariables = generateData(templateVariables, JSON.parse(JSON.stringify(json)))
