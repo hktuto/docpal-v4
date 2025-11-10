@@ -179,7 +179,9 @@ function handleRefreshSetting(setting: any, row: any) {
 function handleResize() {
   Object.keys(sheetRefs.value).forEach((key) => {
     if (sheetRefs.value[key] && sheetRefs.value[key].resize) {
-      sheetRefs.value[key].resize()
+      setTimeout(() => {
+        sheetRefs.value[key].resize()
+      },100)
     }
   })
 }
