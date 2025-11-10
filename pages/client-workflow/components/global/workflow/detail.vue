@@ -217,7 +217,6 @@ async function handleSubmit() {
       }
     })
     const buttonResults = await Promise.all(additionButtonActions)
-    console.log('additionButtonActions', buttonResults)
     // after check all actions, if any addtional data need to set to from data, set it
     buttonResults.forEach((item: any) => {
       if (item && typeof item === 'object') {
@@ -300,11 +299,25 @@ async function handleAdditionalSetting(xml: any, taskDetail: any, formData: any)
   }
 }
 
-async function addtionalSubmit(formData: any) {
+async function addtionalSubmit({formData,attr_booleanValue}: any) {
   state.loading = true
   if (state.taskDetail?.assignee !== userId) {
     await clientApi.api.postWorkflowTaskClaim({ taskId: id, userId }).then((res) => res.data)
   }
+  
+  const additionButtonActions: any = []
+  additionalButtonRef.value.forEach((item) => {
+    if (item && item.beforeSubmit && item.attr_booleanValue !== attr_booleanValue) {
+      additionButtonActions.push(item.beforeSubmit())
+    }
+  })
+  const buttonResults = await Promise.all(additionButtonActions)
+  // after check all actions, if any addtional data need to set to from data, set it
+  buttonResults.forEach((item: any) => {
+    if (item && typeof item === 'object') {
+      formData = { ...formData, ...item }
+    }
+  })
   const param = {
     taskId: id,
     properties: { ...formData }
