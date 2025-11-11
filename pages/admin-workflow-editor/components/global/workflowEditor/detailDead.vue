@@ -63,7 +63,7 @@ async function getWorkflow() {
   readonly.value = !!(currentVersion !== lastestVewsion.value || (productionVersion.value && currentVersion === productionVersion.value))
   workflowData.value = draftData
   // key
-  workflowData.value.key = draftData.key || draftData.name
+  workflowData.value.key = processKey.value
   routerProvider?.updateTabName(draftData.name + ` - (${currentVersion})`)
   nextTick(() => {
     if (json && json.data) {
