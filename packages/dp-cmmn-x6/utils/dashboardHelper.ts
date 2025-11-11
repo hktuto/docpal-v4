@@ -15,6 +15,7 @@ import CaseFieldNum from '../components/caseStatistics/fieldNum/index.vue'
 import CaseGroupFieldNum from '../components/caseStatistics/groupFieldNum/index.vue'
 import CaseMonthlyAverage from '../components/caseStatistics/monthlyAverage/index.vue'
 import CaseMonthlyDateRange from '../components/caseStatistics/monthlyDateRange/index.vue'
+import CaseFieldLifecycle from '../components/caseStatistics/fieldLifecycle/index.vue'
 export type CmmnDashboardWidget = 
 'Action' | 
 'BasicInfo' | 
@@ -30,7 +31,8 @@ export type CmmnDashboardWidget =
 'CaseFieldNum' |
 'CaseGroupFieldNum' |
 'CaseMonthlyAverage' |
-'CaseMonthlyDateRange'
+'CaseMonthlyDateRange' |
+'CaseFieldLifecycle'
 export const CmmnDashboardWidgetSetting: { [key in CmmnDashboardWidget]: DashboardWidgetSetting } = {
   BasicInfo: {
     label: 'cmmnBasicInfo',
@@ -257,6 +259,26 @@ export const CmmnDashboardWidgetSetting: { [key in CmmnDashboardWidget]: Dashboa
       displayColumns: [],
       fields: '[]',
     }
+  },
+  CaseFieldLifecycle: {
+    type: DASHBOARD_TYPE.caseCount,
+    label: 'cmmnCaseFieldLifecycle',
+    minW: 2,
+    minH: 2,
+    maxW: 12,
+    maxH: 12,
+    w: 6,
+    h: 4,
+    component: 'CaseFieldLifecycle',
+    setting: {
+      caseId: '',
+      relatedField: '',
+      dateField: '',
+      title: 'Field Lifecycle',
+      dialogSettingTitle: '',
+      displayColumns: [],
+      fields: '[]',
+    }
   }
 }
 
@@ -287,5 +309,6 @@ export const CmmnWidgetComponent = {
   CaseFieldNum: CaseFieldNum,
   CaseGroupFieldNum: CaseGroupFieldNum,
   CaseMonthlyAverage: CaseMonthlyAverage,
-  CaseMonthlyDateRange: CaseMonthlyDateRange
+  CaseMonthlyDateRange: CaseMonthlyDateRange,
+  CaseFieldLifecycle: CaseFieldLifecycle
 }
