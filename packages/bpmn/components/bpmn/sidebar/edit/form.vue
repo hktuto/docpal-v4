@@ -251,7 +251,7 @@ watch(
       </ElButton>
 
       <ElButton
-        v-if="editorProvider.copyKey.value && editorProvider.copyKey.value !== node.data.id"
+        v-if="editorProvider.copyKey.value "
         type="link"
         size="small"
         :disabled="editorProvider.readonly.value"

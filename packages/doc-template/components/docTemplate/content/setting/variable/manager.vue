@@ -18,7 +18,7 @@
         </template>
       </el-table-column>
     </el-table>
-    <el-dialog v-model="showForm" :title="formMode === 'create' ? 'Create Variable' : 'Edit Variable'" width="80%"
+    <el-dialog v-model="showForm" :title="formMode === 'create' ? 'Create Variable' : 'Edit Variable'" class="big"
                destroy-on-close>
       <VariableForm
         v-if="showForm"

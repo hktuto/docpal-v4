@@ -153,7 +153,7 @@ defineExpose({ setVariables, getData })
     </div>
   </div>
 
-  <EditVariablesDialog ref="editVariablesDialogRef" @update="handleUpdate" />
+  <EditVariablesDialog ref="editVariablesDialogRef" @update="handleUpdate" class="big"/>
 </template>
 
 <style scoped lang="scss">
