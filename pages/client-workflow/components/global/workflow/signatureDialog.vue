@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { clientApi } from 'api';
-
+import { Plus } from '@element-plus/icons-vue'
 const opened = ref(false)
 const props = defineProps<{
   signatureSetting: any
@@ -10,25 +10,45 @@ const loading = ref(false)
 const signatures = ref<any[]>([])
 const signaturePreview = ref<any[]>([])
 const currenUserDetail = useUserState()
+
+function ensureUserId(): string {
+  const userId = currenUserDetail.value?.userId
+  if (!userId) {
+    throw new Error('Missing user id')
+  }
+  return userId
+}
+const signatureCanvasRef = ref<any>(null)
+
 async function getUserSignature(){
-  console.log('currenUserDetail', currenUserDetail.value)
- const signature = await clientApi.api.getUserProfileUseridSignature(currenUserDetail.value.userId,{format: 'blob'})
+ const signature = await clientApi.api.getUserProfileUseridSignature(ensureUserId(),{format: 'blob'}) as unknown as Blob
+ if(!signature || signature.size === 0) {
+  signaturePreview.value.push({
+      type: "user", img:""
+    })
+    return
+ }
  const reader = new FileReader();
   reader.readAsDataURL(signature); 
   reader.onloadend = function() {
     var base64data = reader.result;  
     signatures.value.push(base64data)       
-    signaturePreview.value.push(base64data)
+    signaturePreview.value.push({
+      type: "user", img:base64data
+    })
   }
 }
 
 async function getCompanyChop(chopId:string){
-  const signature = await clientApi.api.getCompanyprofilesChopsCompanychopidFile(chopId,{format: 'blob'})
+  const signature = await clientApi.api.getCompanyprofilesChopsCompanychopidFile(chopId,{format: 'blob'}) as unknown as Blob
   const reader = new FileReader();
   reader.readAsDataURL(signature); 
   reader.onloadend = function() {
     var base64data = reader.result;  
-    signatures.value.push(base64data)       
+    signatures.value.push(base64data) 
+    signaturePreview.value.push({
+      type: "company", img:base64data
+    })
   }
 }
 
@@ -51,19 +71,51 @@ function close() {
   opened.value = false
 }
 
+function openSignatureCanvas() {
+  signatureCanvasRef.value.open()
+}
+
+async function handleSubmitSignature(signature: string) {
+  if (!signature) {
+    return
+  }
+
+  const response = await fetch(signature)
+  const blob = await response.blob()
+  const fileObj = new File([blob], 'signature.png', { type: 'image/png' })
+  const form = new FormData()
+  form.append('file', fileObj)
+  form.append('format', 'image/png')
+
+  const userSignature = signaturePreview.value.find((item: any) => item.type === 'user')
+
+  // TODO: swagger APi 文檔需要移除 query 參數
+  if (!userSignature.img) {
+    await clientApi.api.postUserprofileUseridSignature(ensureUserId(), {} as any, form as any)
+  } else {
+    await clientApi.api.putUserprofileUseridSignature(ensureUserId(), {} as any, form as any)
+  }
+  // step 1 save user signature, and call open again to draw new signature
+  // signaturePreview.value.push(signature)
+  open()
+}
+
 function confirmApplySignature() {
   // step 1 , create current user info
   const signatureData = {
     ...currenUserDetail.value,
-    role: currenUserDetail.value.aclUserDetail.roleName,
+    role: currenUserDetail.value?.aclUserDetail?.roleName ?? '',
     signature: JSON.parse(JSON.stringify(signatures.value)),
     signDate: Date.now()
   }
-  console.log('signatureData', signatureData)
   emit('confirm', signatureData)
   close()
 }
 
+
+const canDrawNewSignature = computed(() => {
+  return props.signatureSetting.signatureVariableSetting.value.type === 'personal' || props.signatureSetting.signatureVariableSetting.value.type === 'both'
+})
 
 defineExpose({
   open,
@@ -75,24 +127,46 @@ defineExpose({
     <h3>Apply Signature</h3>
     <div class="signatureContainer">
       <div class="signatureItem" v-for="signature in signaturePreview" :key="signature">
-        <img class="signatureImage" :src="signature" alt="signature" />
+        <div class="signatureType">
+          {{ signature.type }}
+        </div>
+        <div class="signatureImageContainer">
+          <template v-if="signature.img" >
+            <img class="signatureImage" :src="signature.img" alt="signature" />
+          </template>
+          <template v-else>
+            <el-icon class="cursor-pointer" @click="openSignatureCanvas">
+              <Plus />
+            </el-icon>
+          </template>
+        </div>
       </div>
     </div>
 
     <template #footer>
+      <el-button v-if="canDrawNewSignature" type="primary" @click="openSignatureCanvas">Draw New Signature</el-button>
       <el-button type="info" @click="close">Cancel</el-button>
       <el-button type="primary" @click="confirmApplySignature">Apply Signature</el-button>
     </template>
   </el-dialog>
+  <SignatureCanvas ref="signatureCanvasRef" @submit="handleSubmitSignature" />
 </template>
 <style scoped>
 .signatureContainer {
   display: flex;
+  flex-direction: row wrap;
+  gap: var(--app-space-s);
+}
+.signatureItem{
+  display: flex;
   flex-direction: column;
-  gap: 10px;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 5px;
 }
 .signatureImage {
   width: 100%;
   height: 100%;
+  max-width: 200px;
 }
 </style>
