@@ -96,9 +96,17 @@ export async function getBpmnAddtionalElement(xml:any,taskDefinitionKey:string, 
       
       // replace signature variable
       // convert workflow variable to template variable
-      console.log('formData', formData)
       const templateVariables = convertWorkflowVariableToTemplateVariable(formData, workflowToTemplateMapping)
+      // get current user detail 
+      const currenUserDetail = useUserState()
+      const userSignatureInfo = {
+        ...currenUserDetail.value,
+        role: currenUserDetail.value.aclUserDetail.roleName,
+        signature: "",
+        signDate: Date.now()
+      }
       const signatureVariableSetting = json.variables.find((item: any) => item.id === signatureSettingFromTask.attr_signature)
+      templateVariables[signatureSettingFromTask.attr_signature] = userSignatureInfo
       const newVariables = generateData(templateVariables, JSON.parse(JSON.stringify(json)))
       let templateDetail = JSON.parse(JSON.stringify(json))
       const content = templateDetail.json.content.content
@@ -131,9 +139,18 @@ export function convertWorkflowVariableToTemplateVariable(variables: any, mappin
       // variables[valueKey] may be can convert yto json, so we need to convert it to json
       try {
         const json = JSON.parse(variables[valueKey])
-        prev[key] = json
+        // REMARK : number will not throw error in JSON.parse, so we need to check it manually
+        if(typeof json === 'number') {
+          prev[key] = json.toString()
+        } else {
+          prev[key] = json
+        }
       } catch (e) {
-        prev[key] = variables[valueKey]
+        if(typeof variables[valueKey] === 'number') {
+          prev[key] = variables[valueKey].toString()
+        } else {
+          prev[key] = variables[valueKey]
+        }
       }
     }
     return prev
