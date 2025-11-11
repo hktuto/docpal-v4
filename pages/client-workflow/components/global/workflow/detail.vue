@@ -286,6 +286,7 @@ async function handleAdditionalSetting(xml: any, taskDetail: any, formData: any)
   }
   if(signatureSetting) {
     signatureDetail.value = signatureSetting
+    console.log("signatureDetail", signatureDetail.value)
     nextTick(() => {
       displayMode.value = 'signature'
     })
@@ -430,7 +431,7 @@ onMounted(() => {
           <template v-if="displayMode === 'signature'">
             <!-- template viewer -->
             <div class="templateViewerContainer">
-              <!-- {{ signatureDetail }} -->
+              <!-- {{ signatureDetail.templateDetail }} -->
               <DocTemplateViewer ref="templateViewerRef" v-if="!state.isEdit && signatureDetail" :options="signatureDetail.templateDetail.json.options"
                                :json="signatureDetail.templateDetail.json.content" />
             </div>
