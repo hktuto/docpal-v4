@@ -97,11 +97,12 @@ export async function getBpmnAddtionalElement(xml:any,taskDefinitionKey:string, 
       // replace signature variable
       // convert workflow variable to template variable
       const templateVariables = convertWorkflowVariableToTemplateVariable(formData, workflowToTemplateMapping)
+      console.log('templateVariables', templateVariables, formData)
       // get current user detail 
       const currenUserDetail = useUserState()
       const userSignatureInfo = {
         ...currenUserDetail.value,
-        role: currenUserDetail.value.aclUserDetail.roleName,
+        role: currenUserDetail.value?.aclUserDetail?.roleName,
         signature: "",
         signDate: Date.now()
       }
