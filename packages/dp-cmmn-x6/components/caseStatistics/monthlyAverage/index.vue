@@ -65,13 +65,22 @@ const option = {
       }
     }
   ],
+   grid: {
+    left: '10%', // 调整整个图表左侧的留白，增加偏移
+    right: '10%',
+    bottom: '15%',
+    top: '10%'
+  },
   yAxis: [
     {
       type: 'value',
       name: 'Number of Cases',
+      nameRotate: 90,
+      nameLocation: 'middle',
       axisLabel: {
-        formatter: '{value}'
-      }
+        formatter: '{value}',
+        margin: -8
+      },
     },
     {
       type: 'value',
