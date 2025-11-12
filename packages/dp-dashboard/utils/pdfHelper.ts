@@ -1,82 +1,42 @@
-import { jsPDF } from 'jspdf';
-import html2canvas from 'html2canvas';
+import { jsPDF } from 'jspdf'
+import html2canvas from 'html2canvas'
 
 export async function divToPDF(divId: string, name: string) {
-  const element = document.getElementById(divId) as HTMLElement;
-  if (!element) {
-    throw new Error('Element not found');
+  const contentDiv: HTMLElement | null = document.getElementById(divId)
+  if (!contentDiv) {
+    throw new Error('Content element not found')
   }
+  const originalOverflow = contentDiv.style.overflow
+  contentDiv.style.height = 'auto'
+  contentDiv.style.overflow = 'visible'
+  html2canvas(contentDiv).then((canvas) => {
+    contentDiv.style.height = `${contentDiv.scrollHeight}px`
+    contentDiv.style.overflow = originalOverflow
+    const imgData = canvas.toDataURL('image/png')
+    const pdf = new jsPDF('p', 'mm', 'a4')
 
-  try {
-    // 配置html2canvas选项以确保完整渲染
-    const canvas = await html2canvas(element, {
-      scale: 2, // 提高分辨率，使PDF更清晰
-      useCORS: true, // 允许跨域图片
-      allowTaint: true, // 允许跨域图片
-      backgroundColor: '#ffffff', // 设置背景色
-      logging: false, // 关闭日志
-      imageTimeout: 0, // 图片加载超时时间
-      // 确保SVG和图标能正确渲染
-      onclone: (clonedDoc) => {
-        const clonedElement = clonedDoc.getElementById(divId);
-        if (clonedElement) {
-          // 确保所有元素都可见
-          clonedElement.style.display = 'block';
-          clonedElement.style.overflow = 'visible';
-          
-          // 处理所有SVG元素
-          const svgs = clonedElement.querySelectorAll('svg');
-          svgs.forEach((svg) => {
-            const computedStyle = window.getComputedStyle(svg);
-            svg.setAttribute('width', computedStyle.width);
-            svg.setAttribute('height', computedStyle.height);
-          });
-        }
-      }
-    });
+    // // 获取PDF页面的宽高
+    const pdfWidth = pdf.internal.pageSize.getWidth()
+    const pdfHeight = pdf.internal.pageSize.getHeight()
 
-    const imgData = canvas.toDataURL('image/png', 1.0); // 使用最高质量
-    const pdf = new jsPDF('p', 'mm', 'a4');
+    // // 获取canvas的宽高
+    const imgWidth = canvas.width
+    const imgHeight = canvas.height
+    // // 计算缩放比例
+    const scale = Math.min(pdfWidth / imgWidth, pdfHeight / imgHeight)
+    const newWidth = imgWidth * scale
+    const newHeight = imgHeight * scale
+    // 添加进pdf时，左右间距1cm,上下间距0.5cm
 
-    // A4纸的尺寸（毫米）
-    const pdfWidth = 210; // A4宽度
-    const pdfHeight = 297; // A4高度
-    const pageHeight = 297;
-    
-    // 添加左右边距（毫米）
-    const margin = 10;
-    const contentWidth = pdfWidth - (margin * 2);
-    
-    // 计算图片在PDF中的尺寸（考虑边距）
-    const imgWidth = contentWidth;
-    const imgHeight = (canvas.height * contentWidth) / canvas.width;
-    
-    // 计算水平居中的X坐标
-    const xOffset = margin;
-    
-    // 计算需要的页数
-    let heightLeft = imgHeight;
-    let position = 0;
-    let page = 0;
-
-    // 添加第一页
-    pdf.addImage(imgData, 'PNG', xOffset, position, imgWidth, imgHeight, undefined, 'FAST');
-    heightLeft -= pageHeight;
-
-    // 如果内容超过一页，添加更多页面
-    while (heightLeft > 0) {
-      position = heightLeft - imgHeight;
-      pdf.addPage();
-      pdf.addImage(imgData, 'PNG', xOffset, position, imgWidth, imgHeight, undefined, 'FAST');
-      heightLeft -= pageHeight;
-      page++;
-    }
-
-    // 保存PDF文件
-    pdf.save(`${name}.pdf`);
-  } catch (error) {
-    console.error('PDF generation error:', error);
-    throw error;
-  }
+    const leftOffset = 10
+    const topOffset = 5
+    // 添加图像到PDF
+    // 不影响内容的情况下，左右间距1cm,上下间距0.5cm
+    const contentWidth = newWidth - leftOffset * 2
+    const contentHeight = newHeight - topOffset * 2
+    const contentLeft = leftOffset
+    const contentTop = topOffset
+    pdf.addImage(imgData, 'PNG', contentLeft, contentTop, contentWidth, contentHeight)
+    pdf.save(`${name}.pdf`)
+  })
 }
-
