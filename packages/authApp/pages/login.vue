@@ -35,7 +35,7 @@ async function submit() {
         form.password = "";
         verifly();
         const route = useRoute()
-        if(route.query.redirect){
+        if(route.query.redirect && route.query.redirect !== '/login'){
             router.push({
               path: route.query.redirect as string,
               query: {
