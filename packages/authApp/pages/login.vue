@@ -33,9 +33,19 @@ async function submit() {
     //    const {isRequired2FA} = await userStore.login(form.username, form.password);
         form.username = "";
         form.password = "";
-        sessionStorage.setItem('superAdmin', "true");
         verifly();
-        router.push('/')
+        const route = useRoute()
+        if(route.query.redirect){
+            router.push({
+              path: route.query.redirect as string,
+              query: {
+                ...route.query,
+                redirect: undefined
+              }
+            })
+        }else{
+          router.push('/')
+        }
     } catch (error) {
         // form.username = "";
         // form.password = "";
