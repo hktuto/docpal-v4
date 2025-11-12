@@ -28,7 +28,7 @@
         <template #header>
           <div class="col-header">
             <el-input v-model="columns[colIdx].name" @input="emitValue" size="small" style="width: 130%" />
-            <el-input v-model="columns[colIdx].key" disabled size="small" />
+            <el-input v-model="columns[colIdx].key"  size="small" />
             <el-select
               v-model="columns[colIdx].align"
               placeholder="Select"

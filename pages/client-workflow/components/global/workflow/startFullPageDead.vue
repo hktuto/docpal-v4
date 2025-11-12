@@ -52,10 +52,13 @@ type AdditionalButton = {
 }
 const additionalButton = ref<AdditionalButton[]>([])
 const additionalButtonRef = ref<any[]>([])
-
-function handleAdditionalSetting(xml: any, taskDetail: any, formData: any) {
-  const { buttons, components } = getBpmnAddtionalElement(xml, userTaskId, taskDetail, formData)
+const pageButtonSetting = ref<any>(null)
+async function handleAdditionalSetting(xml: any, taskDetail: any, formData: any) {
+  const { buttons, components, buttonSetting } = await getBpmnAddtionalElement(xml, userTaskId, taskDetail, formData)
   additionalButton.value = buttons
+  if(buttonSetting) {
+    pageButtonSetting.value = buttonSetting
+  }
 }
 
 async function handleSubmit() {
@@ -155,8 +158,15 @@ onMounted(() => {
           <el-button id="Workflow__NewWorkflow__StartFullPageDead__Cancel" @click="cancel">
             {{ $t('cancelText') }}
           </el-button>
-          <el-button id="Workflow__NewWorkflow__StartFullPageDead__Submit" type="primary" @click="handleSubmit">
-            {{ $t('common_submit') }}
+          <el-button
+            v-if="!pageButtonSetting || pageButtonSetting.showSumBitButton"
+            id="Workflow__NewWorkflow__StartFullPageDead__Submit" type="primary" @click="handleSubmit">
+            <template v-if="pageButtonSetting && pageButtonSetting.submitButtonLabel">
+              {{ pageButtonSetting.submitButtonLabel }}
+            </template>
+            <template v-else>
+              {{ $t('common_submit') }}
+            </template>
           </el-button>
         </div>
       </template>

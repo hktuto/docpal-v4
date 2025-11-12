@@ -4,6 +4,7 @@ import { ElNotification } from 'element-plus'
 import { adminApi, templateApi } from 'api'
 import InitWordEditCheckingDialog from '~/components/template/initWordEditCheckingDialog.vue'
 import { getJsonConfig, variablesSchema } from 'docpal-document-editor/src/client'
+import cloneDeep from 'lodash/cloneDeep'
 
 const routerProvider = inject(MenuRouterKey)
 const { t } = useI18n()
@@ -19,7 +20,6 @@ const state = reactive<any>({
   },
   oldVariables: [],
   variables: [],
-  testVariables: [],
   previewFile: {
     blob: null,
     name: '',
@@ -39,6 +39,7 @@ const state = reactive<any>({
   isEdit: false,
   openWordDialog: false
 })
+const exportVariables = ref<any[]>([])
 const InteractDrawerRef = ref()
 const docTemplateEditorRef = ref()
 const variables = ref([])
@@ -96,7 +97,7 @@ async function getVariables() {
       }
     })
     nextTick(() => {
-      templateVariablesRendererRef.value.setVariables(c)
+      templateVariablesRendererRef.value.setVariables(deepCopy(state.variables))
     })
 
   } catch (error) {
@@ -120,15 +121,16 @@ async function handleTest(fileType: string) {
   try {
     let blob
     if (state.info.fileType === 'Word') {
-      const data = getJsonConfig(jsonData.value, documentOptions.value, state.testVariables)
-      data.variables.push({
+      const data = getJsonConfig(jsonData.value, documentOptions.value, exportVariables.value)
+      const deepData = cloneDeep(data)
+      deepData.variables.push({
         id: 'system_output_file_type',
         name: 'Output File Type',
         type: 'text',
         value: fileType
       })
 
-      blob = await templateApi.convert.postConvertDocx(data, { format: 'blob' })
+      blob = await templateApi.convert.postConvertDocx(deepData, { format: 'blob' })
       const url = URL.createObjectURL(blob)
       const link = document.createElement('a')
       const suffix = fileType == 'word' ? 'docx' : fileType
@@ -275,6 +277,7 @@ async function getWordJsonFile() {
     }
     const dataJson = JSON.parse(isJson)
     initWordEditor(dataJson)
+    exportVariables.value = cloneDeep(variables.value)
   } catch (e) {
     console.log(e)
     wordEditCheckingDialogRef.value.openDialog(blob, state.info.name)
@@ -330,7 +333,7 @@ async function init() {
 }
 
 function handleTestVariable(variables: any) {
-  state.testVariables = variables
+  exportVariables.value = variables
 }
 
 onBeforeMount(async () => {

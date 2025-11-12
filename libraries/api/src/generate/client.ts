@@ -145,17 +145,8 @@ export interface BasePageRequest {
     orderBy?: string;
     /** The sort ASC or DESC */
     isDesc?: boolean;
-    sort?: SortObject;
-    sortOrder?: string;
-    descSort?: SortObject;
     /** @format int32 */
     pageIndex?: number;
-}
-
-export interface SortObject {
-    sorted?: boolean;
-    empty?: boolean;
-    unsorted?: boolean;
 }
 
 /** Document */
@@ -217,6 +208,9 @@ export interface DocumentDTO {
     /** ID of Document Folder Cabinet */
     dfcId?: string;
     permissionIds?: number[];
+    comeFrom?: string;
+    drivePreviewLink?: string;
+    originalPath?: string;
     fileContentName?: string;
     fileContentMimeType?: string;
     /** @format int64 */
@@ -481,6 +475,76 @@ export interface VirtualFolderSettingRequestDTO {
     jsonValue?: string;
 }
 
+export interface UpdateSyncTaskRequest {
+    name?: string;
+    cron_expression?: string;
+    is_enabled?: boolean;
+}
+
+export interface ResultSyncTaskDTO {
+    result?: boolean;
+    /** @format int32 */
+    code?: number;
+    message?: string;
+    data?: SyncTaskDTO;
+    messageKey?: string;
+    locale?: string;
+}
+
+export interface SyncTaskDTO {
+    /** @format int32 */
+    id?: number;
+    name?: string;
+    /** @format int32 */
+    cloud_service_id?: number;
+    source_path?: string;
+    target_path?: string;
+    sync_mode?: string;
+    cron_expression?: string;
+    is_enabled?: boolean;
+    /** @format date-time */
+    created_at?: string;
+}
+
+export interface UpdateOAuthAppRequest {
+    name?: string;
+    provider?: string;
+    client_id?: string;
+    client_secret?: string;
+    redirect_uri?: string;
+    scopes?: string;
+    sharepoint_site_url?: string;
+    create_by?: string;
+}
+
+export interface CloudServiceDTO {
+    id?: string;
+    name?: string;
+    provider?: string;
+    status?: string;
+    authorized_at?: string;
+    expires_at?: string;
+}
+
+export interface OAuthAppDTO {
+    id?: string;
+    name?: string;
+    provider?: string;
+    client_id?: string;
+    client_secret?: string;
+    cloud_service?: CloudServiceDTO;
+}
+
+export interface ResultOAuthAppDTO {
+    result?: boolean;
+    /** @format int32 */
+    code?: number;
+    message?: string;
+    data?: OAuthAppDTO;
+    messageKey?: string;
+    locale?: string;
+}
+
 export interface FieldProfile {
     type?: string;
     label?: string;
@@ -605,9 +669,6 @@ export interface MTRecordRequestDTO {
     in?: Record<string, object>;
     /** Relation Record */
     relationRecords?: MTRecordDTO[];
-    sort?: SortObject;
-    sortOrder?: string;
-    descSort?: SortObject;
     /** @format int32 */
     pageIndex?: number;
 }
@@ -709,9 +770,6 @@ export interface ContactGroupRequestDTO {
     attributes?: ContactAttribute[];
     operator?: string;
     verifyReadPermission?: boolean;
-    sort?: SortObject;
-    sortOrder?: string;
-    descSort?: SortObject;
     /** @format int32 */
     pageIndex?: number;
 }
@@ -2051,6 +2109,150 @@ export interface DocumentCopyDTO {
     targetDirectory?: string;
 }
 
+/** Case Instance (Request) */
+export interface CaseInstanceRequestDTO {
+    /** Fuzzy Search Parameter */
+    q?: string;
+    /**
+     * Page Number
+     * @format int32
+     */
+    pageNum?: number;
+    /**
+     * Page Size
+     * @format int32
+     */
+    pageSize?: number;
+    /** The sortBy fields */
+    orderBy?: string;
+    /** The sort ASC or DESC */
+    isDesc?: boolean;
+    caseTypeId?: string;
+    /** Case Definition ID */
+    caseDefinitionId?: string;
+    /** Case Definition Key */
+    caseDefinitionKey?: string;
+    /** Case ID or alias business key */
+    businessKey?: string;
+    /** Case Instance ID */
+    caseInstanceId?: string;
+    /** Is Active */
+    isActive?: boolean;
+    /** Request Parameters */
+    parameters?: Record<string, object>;
+    /** Operation User Id */
+    operator?: string;
+    /** State */
+    state?: string;
+    /** Execution ID */
+    executionId?: string;
+    /** PlanItem Instance Id list */
+    planItemInstanceIds?: string[];
+    /** PlanItem Definition Type list */
+    planItemDefinitionTypes?: string[];
+    /** @format int32 */
+    pageIndex?: number;
+}
+
+/** Case Instance */
+export interface CaseInstanceDTO {
+    id?: string;
+    parentId?: string;
+    businessKey?: string;
+    businessStatus?: string;
+    name?: string;
+    caseDefinitionId?: string;
+    caseDefinitionKey?: string;
+    caseDefinitionName?: string;
+    /** @format int32 */
+    caseDefinitionVersion?: number;
+    caseDefinitionDeploymentId?: string;
+    state?: string;
+    /** @format date-time */
+    startTime?: string;
+    startUserId?: string;
+    /** @format date-time */
+    lastReactivationTime?: string;
+    lastReactivationUserId?: string;
+    callbackId?: string;
+    callbackType?: string;
+    referenceId?: string;
+    referenceType?: string;
+    completable?: boolean;
+    tenantId?: string;
+    variables?: Record<string, object>;
+    planItemInstances?: PlanItemInstanceDTO[];
+}
+
+/** Case Model Plan Form DTO */
+export interface CmmnPlanFormDTO {
+    id?: string;
+    name?: string;
+    type?: string;
+    casetable?: string;
+    fields?: PlanTableFieldDTO[];
+}
+
+/** PlanItemInstanceDTO */
+export interface PlanItemInstanceDTO {
+    caseDefinitionId?: string;
+    caseInstanceId?: string;
+    derivedCaseDefinitionId?: string;
+    formKey?: string;
+    id?: string;
+    name?: string;
+    planItemDefinitionId?: string;
+    planItemDefinitionType?: string;
+    referenceId?: string;
+    referenceType?: string;
+    stageInstanceId?: string;
+    startUserId?: string;
+    state?: string;
+    /** @format date-time */
+    completedTime?: string;
+    /** @format date-time */
+    createTime?: string;
+    /** @format date-time */
+    endedTime?: string;
+    /** @format date-time */
+    exitTime?: string;
+    active?: boolean;
+    businessKey?: string;
+    operator?: string;
+    variables?: Record<string, object>;
+    /** Workflow Instance Request Variables */
+    workflowVariables?: Record<string, object>;
+    /** Case Model Plan Form DTO */
+    planForm?: CmmnPlanFormDTO;
+    processInstanceId?: string;
+    humanTaskId?: string;
+}
+
+export interface PlanTableFieldDTO {
+    id?: string;
+    name?: string;
+    type?: string;
+    accesstype?: string;
+    fieldMappingId?: string;
+    masterTable?: string;
+    documentType?: string;
+    displayField?: string;
+    vocabulary?: string;
+    require?: string;
+    readOnly?: string;
+}
+
+export interface ResultCaseInstanceDTO {
+    result?: boolean;
+    /** @format int32 */
+    code?: number;
+    message?: string;
+    /** Case Instance */
+    data?: CaseInstanceDTO;
+    messageKey?: string;
+    locale?: string;
+}
+
 export interface ResultUserDTO {
     result?: boolean;
     /** @format int32 */
@@ -2309,6 +2511,9 @@ export interface DocumentResponseDTO {
     /** ID of Document Folder Cabinet */
     dfcId?: string;
     permissionIds?: number[];
+    comeFrom?: string;
+    drivePreviewLink?: string;
+    originalPath?: string;
     facets?: string[];
     isCollectionMember?: boolean;
     hold?: PolicyDocument;
@@ -2414,6 +2619,7 @@ export interface FileCheckElementDTO {
     /** @format int64 */
     id?: number;
     docName?: string;
+    fileSuffix?: string;
 }
 
 export interface FileCheckRequestDTO {
@@ -2524,9 +2730,6 @@ export interface QueryFileOverviewRequestDTO {
     userId?: string;
     fileUploadStatus?: string[];
     fileName?: string;
-    sort?: SortObject;
-    sortOrder?: string;
-    descSort?: SortObject;
     /** @format int32 */
     pageIndex?: number;
 }
@@ -2570,6 +2773,12 @@ export interface ResultPageUploadFileDTO {
     data?: PageUploadFileDTO;
     messageKey?: string;
     locale?: string;
+}
+
+export interface SortObject {
+    sorted?: boolean;
+    empty?: boolean;
+    unsorted?: boolean;
 }
 
 export interface UploadFileDTO {
@@ -2795,6 +3004,9 @@ export interface DocumentThumbnailDTO {
     permissionIds?: number[];
     hold?: PolicyDocument;
     retention?: RetentionPolicyDocument;
+    comeFrom?: string;
+    drivePreviewLink?: string;
+    originalPath?: string;
 }
 
 export interface PaginationDTODocumentThumbnailDTO {
@@ -2889,36 +3101,6 @@ export interface ResultListAccessControlListDTO {
     locale?: string;
 }
 
-export interface FileTemplateRecord {
-    /** @format int64 */
-    id?: number;
-    conversionId?: string;
-    templateName?: string;
-    templateTargetName?: string;
-    templateLocalPath?: string;
-    templatePath?: string;
-    userId?: string;
-    userEmail?: string;
-    status?: string;
-    /** @format date-time */
-    fileCreatedDate?: string;
-    fileType?: string;
-    params?: string;
-    fileName?: string;
-    documentLocalPath?: string;
-    idOrPath?: string;
-}
-
-export interface ResultFileTemplateRecord {
-    result?: boolean;
-    /** @format int32 */
-    code?: number;
-    message?: string;
-    data?: FileTemplateRecord;
-    messageKey?: string;
-    locale?: string;
-}
-
 /** Conversion (Request) */
 export interface ConversionFileRequestDTO {
     /** File ID or Path */
@@ -2933,31 +3115,12 @@ export interface ConversionFileRequestDTO {
     label?: string;
 }
 
-export interface FileConversionRecord {
-    /** @format int64 */
-    id?: number;
-    conversionId?: string;
-    documentId?: string;
-    userId?: string;
-    userEmail?: string;
-    documentPath?: string;
-    status?: string;
-    /** @format date-time */
-    fileCreatedDate?: string;
-    fileType?: string;
-    targetFileType?: string;
-    operation?: string;
-    fileName?: string;
-    isExpired?: boolean;
-    idOrPath?: string;
-}
-
-export interface ResultListFileConversionRecord {
+export interface ResultListMapStringObject {
     result?: boolean;
     /** @format int32 */
     code?: number;
     message?: string;
-    data?: FileConversionRecord[];
+    data?: Record<string, object>[];
     messageKey?: string;
     locale?: string;
 }
@@ -3221,6 +3384,28 @@ export interface ResultUploadFileDetailRecord {
     data?: UploadFileDetailRecord;
     messageKey?: string;
     locale?: string;
+}
+
+export interface CreateSyncTaskRequest {
+    name: string;
+    /** @format int32 */
+    cloud_service_id: number;
+    source_path: string;
+    target_path: string;
+    sync_mode: string;
+    cron_expression: string;
+    is_enabled?: boolean;
+}
+
+export interface CreateOAuthAppRequest {
+    name?: string;
+    provider?: string;
+    client_id?: string;
+    client_secret?: string;
+    redirect_uri?: string;
+    scopes?: string;
+    sharepoint_site_url?: string;
+    create_by?: string;
 }
 
 export interface DocumentTypeMetadataMapping {
@@ -4020,6 +4205,12 @@ export interface ValidateJsonSchemaRequestDTO {
     };
 }
 
+export interface TemplateRequestDTO {
+    id?: string;
+    subject?: boolean;
+    variables?: Record<string, object>;
+}
+
 export interface MailSendRequest {
     fromEmail?: string;
     to?: string;
@@ -4033,12 +4224,6 @@ export interface MailSendRequest {
     files?: File[];
     userId?: string;
     accessToken?: string;
-}
-
-export interface TemplateRequestDTO {
-    id?: string;
-    subject?: boolean;
-    variables?: Record<string, object>;
 }
 
 export interface LanguageEntity {
@@ -4107,9 +4292,6 @@ export interface RetentionPolicyDocumentRequestDTO {
     applyBy?: string;
     /** The Retention Policy Document Status List */
     states?: string[];
-    sort?: SortObject;
-    sortOrder?: string;
-    descSort?: SortObject;
     /** @format int32 */
     pageIndex?: number;
 }
@@ -4197,9 +4379,6 @@ export interface PolicyDocumentRequestDTO {
     documentName?: string;
     /** Document path */
     documentPath?: string;
-    sort?: SortObject;
-    sortOrder?: string;
-    descSort?: SortObject;
     /** @format int32 */
     pageIndex?: number;
 }
@@ -4353,9 +4532,6 @@ export interface QueryNotificationRequestDTO {
     readStatus?: string;
     type?: string;
     action?: string;
-    sort?: SortObject;
-    sortOrder?: string;
-    descSort?: SortObject;
     /** @format int32 */
     pageIndex?: number;
 }
@@ -4456,21 +4632,8 @@ export interface MasterTableRequestDTO {
     data?: Record<string, object>[];
     /** Where Condition */
     where?: Record<string, object>;
-    sort?: SortObject;
-    sortOrder?: string;
-    descSort?: SortObject;
     /** @format int32 */
     pageIndex?: number;
-}
-
-export interface ResultListMapStringObject {
-    result?: boolean;
-    /** @format int32 */
-    code?: number;
-    message?: string;
-    data?: Record<string, object>[];
-    messageKey?: string;
-    locale?: string;
 }
 
 export interface DeleteMTRecordRequestDTO {
@@ -4765,9 +4928,6 @@ export interface FormDesignRequestDTO {
     notEquals?: Record<string, object>;
     /** Where Condition (Equal) */
     equals?: Record<string, object>;
-    sort?: SortObject;
-    sortOrder?: string;
-    descSort?: SortObject;
     /** @format int32 */
     pageIndex?: number;
 }
@@ -4804,9 +4964,6 @@ export interface EasyFormEmailQueryRequestDTO {
     subject?: string;
     easyFormId?: string;
     status?: string;
-    sort?: SortObject;
-    sortOrder?: string;
-    descSort?: SortObject;
     /** @format int32 */
     pageIndex?: number;
 }
@@ -4960,21 +5117,6 @@ export interface PaginationDTOFormDesignResponseDTO {
 export interface ParamMappingDTO {
     source?: string;
     target?: string;
-}
-
-/** Form Design Information List */
-export interface PlanTableFieldDTO {
-    id?: string;
-    name?: string;
-    type?: string;
-    accesstype?: string;
-    fieldMappingId?: string;
-    masterTable?: string;
-    documentType?: string;
-    displayField?: string;
-    vocabulary?: string;
-    require?: string;
-    readOnly?: string;
 }
 
 export interface ResultPaginationDTOFormDesignResponseDTO {
@@ -5148,6 +5290,94 @@ export interface ResultPaginationDTOContactGroupResponseDTO {
     locale?: string;
 }
 
+/** Company Profile RequestDTO */
+export interface CompanyRequestDTO {
+    /** Fuzzy Search Parameter */
+    q?: string;
+    /**
+     * Page Number
+     * @format int32
+     */
+    pageNum?: number;
+    /**
+     * Page Size
+     * @format int32
+     */
+    pageSize?: number;
+    /** The sortBy fields */
+    orderBy?: string;
+    /** The sort ASC or DESC */
+    isDesc?: boolean;
+    /** ID */
+    id?: string;
+    /** Name */
+    name?: string;
+    /** Contact Phone */
+    phone?: string;
+    /** Contact Email */
+    email?: string;
+    /** Contact Fax */
+    fax?: string;
+    /** Website */
+    website?: string;
+    /** Contact Address */
+    address?: string;
+    /** @format int32 */
+    pageIndex?: number;
+}
+
+export interface Company {
+    id?: string;
+    code?: string;
+    name?: string;
+    phone?: string;
+    email?: string;
+    fax?: string;
+    website?: string;
+    type?: string;
+    address?: string;
+    logoUrl?: string;
+    creditCode?: string;
+    industry?: string;
+    /** @format date-time */
+    establishedDate?: string;
+    legalPerson?: string;
+    description?: string;
+    scale?: string;
+    /** @format int32 */
+    employeeCount?: number;
+    status?: string;
+    createdBy?: string;
+    /** @format date-time */
+    createdDate?: string;
+    modifiedBy?: string;
+    /** @format date-time */
+    modifiedDate?: string;
+}
+
+export interface PaginationDTOCompany {
+    entryList?: Company[];
+    /** @format int32 */
+    totalSize?: number;
+    /** @format int32 */
+    currentPageSize?: number;
+    /** @format int32 */
+    pageNum?: number;
+    /** @format int32 */
+    pageCount?: number;
+    isNextPageAvailable?: boolean;
+}
+
+export interface ResultPaginationDTOCompany {
+    result?: boolean;
+    /** @format int32 */
+    code?: number;
+    message?: string;
+    data?: PaginationDTOCompany;
+    messageKey?: string;
+    locale?: string;
+}
+
 /** Case model dashboard (RequestDTO) */
 export interface CmmnDashboardRequestDTO {
     q?: string;
@@ -5177,9 +5407,6 @@ export interface CmmnDashboardRequestDTO {
     where?: Record<string, object>;
     businessKey?: string;
     versionNumber?: string;
-    sort?: SortObject;
-    sortOrder?: string;
-    descSort?: SortObject;
     /** @format int32 */
     pageIndex?: number;
 }
@@ -5231,9 +5458,6 @@ export interface CaseTableRequestDTO {
     c?: Record<string, object>;
     /** User */
     operator?: UserDTO;
-    sort?: SortObject;
-    sortOrder?: string;
-    descSort?: SortObject;
     /** @format int32 */
     pageIndex?: number;
 }
@@ -5306,9 +5530,6 @@ export interface CaseTypeRequestDTO {
     enable?: boolean;
     /** List of Case Type Id */
     caseIds?: string[];
-    sort?: SortObject;
-    sortOrder?: string;
-    descSort?: SortObject;
     /** @format int32 */
     pageIndex?: number;
 }
@@ -5412,15 +5633,6 @@ export interface CaseTypeResponseDTO {
     primaryForm?: CmmnPlanFormDTO;
 }
 
-/** Case Model Plan Form DTO */
-export interface CmmnPlanFormDTO {
-    id?: string;
-    name?: string;
-    type?: string;
-    casetable?: string;
-    fields?: PlanTableFieldDTO[];
-}
-
 /** Case Model PlanItem Information DTO */
 export interface PlanItemDefinitionDTO {
     /** PlanItem Definition Id */
@@ -5440,7 +5652,6 @@ export interface PlanItemDefinitionDTO {
     /** Case Model Plan Form DTO */
     planForm?: CmmnPlanFormDTO;
     fields?: PlanTableFieldDTO[];
-    /** Form Design Information List */
     assigneeField?: PlanTableFieldDTO;
     isStartTask?: boolean;
     upProcessTaskKey?: string;
@@ -5540,124 +5751,57 @@ export interface ResultListCmmnTaskDTO {
     locale?: string;
 }
 
-/** Case Instance (Request) */
-export interface CaseInstanceRequestDTO {
-    /** Fuzzy Search Parameter */
-    q?: string;
+/** Case Import Failure Row Preview */
+export interface CaseImportReponseFailRow {
     /**
-     * Page Number
+     * Row index in Excel (1-based including header)
      * @format int32
      */
-    pageNum?: number;
+    rowIndex?: number;
+    /** Original row values mapped by header name */
+    rowValues?: Record<string, object>;
+    /** Error message when starting case instance */
+    errorMessage?: string;
+}
+
+/** Case Import Response */
+export interface CaseImportResponse {
+    /** Import Batch Id */
+    importBatchId?: string;
     /**
-     * Page Size
+     * Total rows parsed from Excel (excluding header)
      * @format int32
      */
-    pageSize?: number;
-    /** The sortBy fields */
-    orderBy?: string;
-    /** The sort ASC or DESC */
-    isDesc?: boolean;
-    caseTypeId?: string;
-    /** Case Definition ID */
-    caseDefinitionId?: string;
-    /** Case Definition Key */
-    caseDefinitionKey?: string;
-    /** Case ID or alias business key */
-    businessKey?: string;
-    /** Case Instance ID */
-    caseInstanceId?: string;
-    /** Is Active */
-    isActive?: boolean;
-    /** Request Parameters */
-    parameters?: Record<string, object>;
-    /** Operation User Id */
-    operator?: string;
-    /** State */
-    state?: string;
-    /** Execution ID */
-    executionId?: string;
-    /** PlanItem Instance Id list */
-    planItemInstanceIds?: string[];
-    /** PlanItem Definition Type list */
-    planItemDefinitionTypes?: string[];
-    sort?: SortObject;
-    sortOrder?: string;
-    descSort?: SortObject;
-    /** @format int32 */
-    pageIndex?: number;
+    totalRecords?: number;
+    /**
+     * Number of successfully started case instances
+     * @format int32
+     */
+    successCount?: number;
+    /**
+     * Number of failed rows while starting cases
+     * @format int32
+     */
+    failureCount?: number;
+    /** Status of import: COMPLETED / PARTIAL / FAILED */
+    status?: string;
+    /** Message or summary of the import result */
+    message?: string;
+    /** Failure Excel file name */
+    failureFileName?: string;
+    /** Failure Excel file content encoded in Base64. Null if no failures */
+    failureFileContentBase64?: string;
+    /** A few failed rows (truncated) with error messages for preview */
+    previewFailureRows?: CaseImportReponseFailRow[];
 }
 
-/** Case Instance */
-export interface CaseInstanceDTO {
-    id?: string;
-    parentId?: string;
-    businessKey?: string;
-    businessStatus?: string;
-    name?: string;
-    caseDefinitionId?: string;
-    caseDefinitionKey?: string;
-    caseDefinitionName?: string;
-    /** @format int32 */
-    caseDefinitionVersion?: number;
-    caseDefinitionDeploymentId?: string;
-    state?: string;
-    /** @format date-time */
-    startTime?: string;
-    startUserId?: string;
-    /** @format date-time */
-    lastReactivationTime?: string;
-    lastReactivationUserId?: string;
-    callbackId?: string;
-    callbackType?: string;
-    referenceId?: string;
-    referenceType?: string;
-    completable?: boolean;
-    tenantId?: string;
-    variables?: Record<string, object>;
-    planItemInstances?: PlanItemInstanceDTO[];
-}
-
-/** PlanItemInstanceDTO */
-export interface PlanItemInstanceDTO {
-    caseDefinitionId?: string;
-    caseInstanceId?: string;
-    derivedCaseDefinitionId?: string;
-    formKey?: string;
-    id?: string;
-    name?: string;
-    planItemDefinitionId?: string;
-    planItemDefinitionType?: string;
-    referenceId?: string;
-    referenceType?: string;
-    stageInstanceId?: string;
-    startUserId?: string;
-    state?: string;
-    /** @format date-time */
-    completedTime?: string;
-    /** @format date-time */
-    createTime?: string;
-    /** @format date-time */
-    endedTime?: string;
-    /** @format date-time */
-    exitTime?: string;
-    active?: boolean;
-    businessKey?: string;
-    operator?: string;
-    variables?: Record<string, object>;
-    /** Case Model Plan Form DTO */
-    planForm?: CmmnPlanFormDTO;
-    processInstanceId?: string;
-    humanTaskId?: string;
-}
-
-export interface ResultCaseInstanceDTO {
+export interface ResultCaseImportResponse {
     result?: boolean;
     /** @format int32 */
     code?: number;
     message?: string;
-    /** Case Instance */
-    data?: CaseInstanceDTO;
+    /** Case Import Response */
+    data?: CaseImportResponse;
     messageKey?: string;
     locale?: string;
 }
@@ -5700,11 +5844,10 @@ export interface PlanItemInstanceRequestDTO {
     referenceId?: string;
     /** Request Variables */
     variables?: Record<string, object>;
+    /** Workflow Instance Request Variables */
+    workflowVariables?: Record<string, object>;
     /** Execute Action */
     action?: string;
-    sort?: SortObject;
-    sortOrder?: string;
-    descSort?: SortObject;
     /** @format int32 */
     pageIndex?: number;
 }
@@ -5829,9 +5972,6 @@ export interface CmmnProcessRequestDTO {
     candidateOrAssigned?: string;
     category?: string;
     workflow?: string;
-    sort?: SortObject;
-    sortOrder?: string;
-    descSort?: SortObject;
     /** @format int32 */
     pageIndex?: number;
 }
@@ -6053,9 +6193,6 @@ export interface DocFolderCabinetRequestDTO {
     emailReminder?: FCReminder;
     jpasortOrderStr?: SortObject;
     nuxeoSortSql?: string;
-    sort?: SortObject;
-    sortOrder?: string;
-    descSort?: SortObject;
     /** @format int32 */
     pageIndex?: number;
 }
@@ -6182,6 +6319,34 @@ export interface FilingDocumentPreviewReq {
     variables?: Record<string, object>;
     operator?: string;
     folderCabinetDataMapping?: Record<string, FCDataMappingDTO[]>;
+}
+
+export interface AuditLogQueryRequest {
+    userId?: string;
+    clientIp?: string;
+    comment?: string;
+    stream?: string;
+    instanceId?: string;
+    businessId?: string;
+    desc?: string;
+    status?: string;
+    type?: string;
+    activities?: string;
+    /** @format date-time */
+    createdDate?: string;
+    request?: Record<string, object>;
+    response?: Record<string, object>;
+    /** @format int32 */
+    pageNum?: number;
+    /** @format int32 */
+    pageSize?: number;
+    /** @format date-time */
+    startTime?: string;
+    /** @format date-time */
+    endTime?: string;
+    where?: Record<string, object>;
+    orderBy?: string;
+    isDesc?: boolean;
 }
 
 /** 审计日志查询请求 */
@@ -7088,6 +7253,34 @@ export interface ResultMapStringListObject {
     locale?: string;
 }
 
+export interface FileConversionRecord {
+    id?: string;
+    conversionId?: string;
+    documentId?: string;
+    userId?: string;
+    userEmail?: string;
+    documentPath?: string;
+    status?: string;
+    /** @format date-time */
+    fileCreatedDate?: string;
+    fileType?: string;
+    targetFileType?: string;
+    operation?: string;
+    fileName?: string;
+    isExpired?: boolean;
+    idOrPath?: string;
+}
+
+export interface ResultListFileConversionRecord {
+    result?: boolean;
+    /** @format int32 */
+    code?: number;
+    message?: string;
+    data?: FileConversionRecord[];
+    messageKey?: string;
+    locale?: string;
+}
+
 /** CustomIcon */
 export interface CustomIconDTO {
     docTypeId?: string;
@@ -7174,6 +7367,36 @@ export interface ResultListMQConfigurationInfo {
     code?: number;
     message?: string;
     data?: MQConfigurationInfo[];
+    messageKey?: string;
+    locale?: string;
+}
+
+export interface ResultListSyncTaskDTO {
+    result?: boolean;
+    /** @format int32 */
+    code?: number;
+    message?: string;
+    data?: SyncTaskDTO[];
+    messageKey?: string;
+    locale?: string;
+}
+
+export interface ResultListCloudServiceDTO {
+    result?: boolean;
+    /** @format int32 */
+    code?: number;
+    message?: string;
+    data?: CloudServiceDTO[];
+    messageKey?: string;
+    locale?: string;
+}
+
+export interface ResultListOAuthAppDTO {
+    result?: boolean;
+    /** @format int32 */
+    code?: number;
+    message?: string;
+    data?: OAuthAppDTO[];
     messageKey?: string;
     locale?: string;
 }
@@ -8279,6 +8502,81 @@ export interface ResultListContactGroupResponseDTO {
     code?: number;
     message?: string;
     data?: ContactGroupResponseDTO[];
+    messageKey?: string;
+    locale?: string;
+}
+
+export interface ResultCompany {
+    result?: boolean;
+    /** @format int32 */
+    code?: number;
+    message?: string;
+    data?: Company;
+    messageKey?: string;
+    locale?: string;
+}
+
+/** Company Chop (Request) */
+export interface CompanyChopRequestDTO {
+    /** Fuzzy Search Parameter */
+    q?: string;
+    /**
+     * Page Number
+     * @format int32
+     */
+    pageNum?: number;
+    /**
+     * Page Size
+     * @format int32
+     */
+    pageSize?: number;
+    /** The sortBy fields */
+    orderBy?: string;
+    /** The sort ASC or DESC */
+    isDesc?: boolean;
+    /** ID */
+    id?: string;
+    /** Company Id */
+    companyId?: string;
+    /** Chop name */
+    name?: string;
+    /** mime_type */
+    mimeType?: string;
+    /** Permission- Role List */
+    roles?: string[];
+    /** Permission- User List */
+    users?: string[];
+    /** status */
+    status?: string;
+    /** @format binary */
+    file?: File;
+    /** @format int32 */
+    pageIndex?: number;
+}
+
+export interface CompanyChop {
+    id?: string;
+    companyId?: string;
+    name?: string;
+    fileId?: string;
+    mimeType?: string;
+    roles?: string;
+    users?: string;
+    status?: string;
+    createdBy?: string;
+    /** @format date-time */
+    createdDate?: string;
+    modifiedBy?: string;
+    /** @format date-time */
+    modifiedDate?: string;
+}
+
+export interface ResultListCompanyChop {
+    result?: boolean;
+    /** @format int32 */
+    code?: number;
+    message?: string;
+    data?: CompanyChop[];
     messageKey?: string;
     locale?: string;
 }
@@ -10162,6 +10460,100 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
         /**
          * No description
          *
+         * @tags Sync Task Management
+         * @name GetExternalDriveSyncTasksTaskId
+         * @summary Get a sync task by ID
+         * @request GET:/api/external-drive/sync-tasks/{task_id}
+         */
+        getExternalDriveSyncTasksTaskId: (taskId: string, params: RequestParams = {}) =>
+            this.request<ResultSyncTaskDTO, ResultString | (ResultString | Result)>({
+                path: `/external-drive/sync-tasks/${taskId}`,
+                method: "GET",
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags Sync Task Management
+         * @name PutExternalDriveSyncTasksTaskId
+         * @summary Update a sync task
+         * @request PUT:/api/external-drive/sync-tasks/{task_id}
+         */
+        putExternalDriveSyncTasksTaskId: (taskId: string, data: UpdateSyncTaskRequest, params: RequestParams = {}) =>
+            this.request<ResultSyncTaskDTO, ResultString | (ResultString | Result)>({
+                path: `/external-drive/sync-tasks/${taskId}`,
+                method: "PUT",
+                body: data,
+                type: ContentType.Json,
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags Sync Task Management
+         * @name DeleteExternalDriveSyncTasksTaskId
+         * @summary Delete a sync task
+         * @request DELETE:/api/external-drive/sync-tasks/{task_id}
+         */
+        deleteExternalDriveSyncTasksTaskId: (taskId: string, params: RequestParams = {}) =>
+            this.request<ResultVoid, ResultString | (ResultString | Result)>({
+                path: `/external-drive/sync-tasks/${taskId}`,
+                method: "DELETE",
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags External Drive Authentication
+         * @name GetExternalDriveOauthAppsAppId
+         * @summary Get an OAuth application by ID
+         * @request GET:/api/external-drive/oauth/apps/{app_id}
+         */
+        getExternalDriveOauthAppsAppId: (appId: string, params: RequestParams = {}) =>
+            this.request<ResultOAuthAppDTO, ResultString | (ResultString | Result)>({
+                path: `/external-drive/oauth/apps/${appId}`,
+                method: "GET",
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags External Drive Authentication
+         * @name PutExternalDriveOauthAppsAppId
+         * @summary Update an OAuth application
+         * @request PUT:/api/external-drive/oauth/apps/{app_id}
+         */
+        putExternalDriveOauthAppsAppId: (appId: string, data: UpdateOAuthAppRequest, params: RequestParams = {}) =>
+            this.request<ResultOAuthAppDTO, ResultString | (ResultString | Result)>({
+                path: `/external-drive/oauth/apps/${appId}`,
+                method: "PUT",
+                body: data,
+                type: ContentType.Json,
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags External Drive Authentication
+         * @name DeleteExternalDriveOauthAppsAppId
+         * @summary Delete an OAuth application
+         * @request DELETE:/api/external-drive/oauth/apps/{app_id}
+         */
+        deleteExternalDriveOauthAppsAppId: (appId: string, params: RequestParams = {}) =>
+            this.request<ResultVoid, ResultString | (ResultString | Result)>({
+                path: `/external-drive/oauth/apps/${appId}`,
+                method: "DELETE",
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
          * @tags Workflow
          * @name PutWorkflowTaskAttachmentDeprecate
          * @request PUT:/api/docpal/workflow/task/attachment/
@@ -10470,6 +10862,39 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
             this.request<ResultBoolean, ResultString | (ResultString | Result)>({
                 path: `/docpal/master/tables/${id}/record`,
                 method: "PUT",
+                body: data,
+                type: ContentType.Json,
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags MasterTableController
+         * @name PutMasterTablesIdRecordStatus
+         * @request PUT:/api/docpal/master/tables/{id}/record/status
+         */
+        putMasterTablesIdRecordStatus: (id: string, data: MTRecordRequestDTO, params: RequestParams = {}) =>
+            this.request<ResultBoolean, ResultString | (ResultString | Result)>({
+                path: `/docpal/master/tables/${id}/record/status`,
+                method: "PUT",
+                body: data,
+                type: ContentType.Json,
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags MasterTableController
+         * @name PatchMasterTablesIdRecordStatus
+         * @summary Enable or Disable Record
+         * @request PATCH:/api/docpal/master/tables/{id}/record/status
+         */
+        patchMasterTablesIdRecordStatus: (id: string, data: MTRecordRequestDTO, params: RequestParams = {}) =>
+            this.request<ResultBoolean, ResultString | (ResultString | Result)>({
+                path: `/docpal/master/tables/${id}/record/status`,
+                method: "PATCH",
                 body: data,
                 type: ContentType.Json,
                 ...params,
@@ -12000,12 +12425,65 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
          * No description
          *
          * @tags Document (Nuxeo)
+         * @name PostNuxeoRegisteredserverCaseinstanceStart
+         * @summary Start a case model definition to get a case instance
+         * @request POST:/api/nuxeo/registeredServer/caseInstance/start
+         */
+        postNuxeoRegisteredserverCaseinstanceStart: (data: CaseInstanceRequestDTO, params: RequestParams = {}) =>
+            this.request<ResultCaseInstanceDTO, ResultString | (ResultString | Result)>({
+                path: `/nuxeo/registeredServer/caseInstance/start`,
+                method: "POST",
+                body: data,
+                type: ContentType.Json,
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags Document (Nuxeo)
+         * @name PostNuxeoRegisteredserverCaseinstanceSavetabledata
+         * @summary Start a case model definition to get a case instance
+         * @request POST:/api/nuxeo/registeredServer/caseInstance/saveTableData
+         */
+        postNuxeoRegisteredserverCaseinstanceSavetabledata: (
+            data: CaseInstanceRequestDTO,
+            params: RequestParams = {},
+        ) =>
+            this.request<ResultString, ResultString | (ResultString | Result)>({
+                path: `/nuxeo/registeredServer/caseInstance/saveTableData`,
+                method: "POST",
+                body: data,
+                type: ContentType.Json,
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags Document (Nuxeo)
          * @name PostNuxeoRegisteredserverCalendar
          * @request POST:/api/nuxeo/registeredServer/calendar
          */
         postNuxeoRegisteredserverCalendar: (data: CalendarTaskReq, params: RequestParams = {}) =>
             this.request<ResultString, ResultString | (ResultString | Result)>({
                 path: `/nuxeo/registeredServer/calendar`,
+                method: "POST",
+                body: data,
+                type: ContentType.Json,
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags Document (Nuxeo)
+         * @name PostNuxeoRegisteredserverAuditLogAdd
+         * @request POST:/api/nuxeo/registeredServer/audit-log/add
+         */
+        postNuxeoRegisteredserverAuditLogAdd: (data: Record<string, object>, params: RequestParams = {}) =>
+            this.request<ResultObject, ResultString | (ResultString | Result)>({
+                path: `/nuxeo/registeredServer/audit-log/add`,
                 method: "POST",
                 body: data,
                 type: ContentType.Json,
@@ -13334,34 +13812,12 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
          * No description
          *
          * @tags Conversion (Nuxeo)
-         * @name PostNuxeoConversionSubmittemplate
-         * @summary submit Template Request
-         * @request POST:/api/nuxeo/conversion/submitTemplate
-         */
-        postNuxeoConversionSubmittemplate: (
-            query: {
-                templatePath: string;
-                documentPath: string;
-            },
-            params: RequestParams = {},
-        ) =>
-            this.request<ResultFileTemplateRecord, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/conversion/submitTemplate`,
-                method: "POST",
-                query: query,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Conversion (Nuxeo)
          * @name PostNuxeoConversionSubmitexportrequest
          * @summary Submit Export Request
          * @request POST:/api/nuxeo/conversion/submitExportRequest
          */
         postNuxeoConversionSubmitexportrequest: (data: ConversionFileRequestDTO[], params: RequestParams = {}) =>
-            this.request<ResultListFileConversionRecord, ResultString | (ResultString | Result)>({
+            this.request<ResultListMapStringObject, ResultString | (ResultString | Result)>({
                 path: `/nuxeo/conversion/submitExportRequest`,
                 method: "POST",
                 body: data,
@@ -13378,26 +13834,11 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
          * @request POST:/api/nuxeo/conversion/format/submit
          */
         postNuxeoConversionFormatSubmit: (data: ConversionFileRequestDTO[], params: RequestParams = {}) =>
-            this.request<ResultListFileConversionRecord, ResultString | (ResultString | Result)>({
+            this.request<ResultListMapStringObject, ResultString | (ResultString | Result)>({
                 path: `/nuxeo/conversion/format/submit`,
                 method: "POST",
                 body: data,
                 type: ContentType.Json,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Conversion (Nuxeo)
-         * @name PostNuxeoConversionGettemplatelist
-         * @summary Template List
-         * @request POST:/api/nuxeo/conversion/getTemplateList
-         */
-        postNuxeoConversionGettemplatelist: (params: RequestParams = {}) =>
-            this.request<ResultListDocumentDTO, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/conversion/getTemplateList`,
-                method: "POST",
                 ...params,
             }),
 
@@ -13968,6 +14409,100 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
                 path: `/file/list`,
                 method: "POST",
                 query: query,
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags Sync Task Management
+         * @name GetExternalDriveSyncTasks
+         * @summary Get all sync tasks
+         * @request GET:/api/external-drive/sync-tasks
+         */
+        getExternalDriveSyncTasks: (params: RequestParams = {}) =>
+            this.request<ResultListSyncTaskDTO, ResultString | (ResultString | Result)>({
+                path: `/external-drive/sync-tasks`,
+                method: "GET",
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags Sync Task Management
+         * @name PostExternalDriveSyncTasks
+         * @summary Create a sync task
+         * @request POST:/api/external-drive/sync-tasks
+         */
+        postExternalDriveSyncTasks: (data: CreateSyncTaskRequest, params: RequestParams = {}) =>
+            this.request<ResultSyncTaskDTO, ResultString | (ResultString | Result)>({
+                path: `/external-drive/sync-tasks`,
+                method: "POST",
+                body: data,
+                type: ContentType.Json,
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags Sync Task Management
+         * @name PostExternalDriveSyncTasksTaskIdTrigger
+         * @summary Trigger a sync task
+         * @request POST:/api/external-drive/sync-tasks/{task_id}/trigger
+         */
+        postExternalDriveSyncTasksTaskIdTrigger: (taskId: string, params: RequestParams = {}) =>
+            this.request<ResultVoid, ResultString | (ResultString | Result)>({
+                path: `/external-drive/sync-tasks/${taskId}/trigger`,
+                method: "POST",
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags External Drive Authentication
+         * @name PostExternalDriveOauthCloudServicesServiceIdReauthorize
+         * @summary Reauthorize a cloud service
+         * @request POST:/api/external-drive/oauth/cloud-services/{service_id}/reauthorize
+         */
+        postExternalDriveOauthCloudServicesServiceIdReauthorize: (serviceId: string, params: RequestParams = {}) =>
+            this.request<ResultString, ResultString | (ResultString | Result)>({
+                path: `/external-drive/oauth/cloud-services/${serviceId}/reauthorize`,
+                method: "POST",
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags External Drive Authentication
+         * @name GetExternalDriveOauthApps
+         * @summary Get all OAuth applications
+         * @request GET:/api/external-drive/oauth/apps
+         */
+        getExternalDriveOauthApps: (params: RequestParams = {}) =>
+            this.request<ResultListOAuthAppDTO, ResultString | (ResultString | Result)>({
+                path: `/external-drive/oauth/apps`,
+                method: "GET",
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags External Drive Authentication
+         * @name PostExternalDriveOauthApps
+         * @summary Create an OAuth application
+         * @request POST:/api/external-drive/oauth/apps
+         */
+        postExternalDriveOauthApps: (data: CreateOAuthAppRequest, params: RequestParams = {}) =>
+            this.request<ResultOAuthAppDTO, ResultString | (ResultString | Result)>({
+                path: `/external-drive/oauth/apps`,
+                method: "POST",
+                body: data,
+                type: ContentType.Json,
                 ...params,
             }),
 
@@ -15651,12 +16186,12 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
          * No description
          *
          * @tags Template
-         * @name PostTemplateEmailSendDeprecate
-         * @request POST:/api/docpal/template/email/send/
+         * @name PostTemplateEmail
+         * @request POST:/api/docpal/template/email
          */
-        postTemplateEmailSendDeprecate: (data: MailSendRequest, params: RequestParams = {}) =>
-            this.request<ResultBoolean, ResultString | (ResultString | Result)>({
-                path: `/docpal/template/email/send/`,
+        postTemplateEmail: (data: TemplateRequestDTO, params: RequestParams = {}) =>
+            this.request<ResultString, ResultString | (ResultString | Result)>({
+                path: `/docpal/template/email`,
                 method: "POST",
                 body: data,
                 type: ContentType.Json,
@@ -15683,38 +16218,6 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
          * No description
          *
          * @tags Template
-         * @name PostTemplateEmailDeprecate
-         * @request POST:/api/docpal/template/email/
-         */
-        postTemplateEmailDeprecate: (data: TemplateRequestDTO, params: RequestParams = {}) =>
-            this.request<ResultString, ResultString | (ResultString | Result)>({
-                path: `/docpal/template/email/`,
-                method: "POST",
-                body: data,
-                type: ContentType.Json,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Template
-         * @name PostTemplateEmail
-         * @request POST:/api/docpal/template/email
-         */
-        postTemplateEmail: (data: TemplateRequestDTO, params: RequestParams = {}) =>
-            this.request<ResultString, ResultString | (ResultString | Result)>({
-                path: `/docpal/template/email`,
-                method: "POST",
-                body: data,
-                type: ContentType.Json,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Template
          * @name PostTemplateDocument
          * @request POST:/api/docpal/template/document
          */
@@ -15728,29 +16231,6 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
         ) =>
             this.request<string[], ResultString | (ResultString | Result)>({
                 path: `/docpal/template/document`,
-                method: "POST",
-                body: data,
-                type: ContentType.FormData,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Template
-         * @name PostTemplateDocumentDeprecate
-         * @request POST:/api/docpal/template/document/
-         */
-        postTemplateDocumentDeprecate: (
-            data: {
-                params: string;
-                /** @format binary */
-                file: File;
-            },
-            params: RequestParams = {},
-        ) =>
-            this.request<string[], ResultString | (ResultString | Result)>({
-                path: `/docpal/template/document/`,
                 method: "POST",
                 body: data,
                 type: ContentType.FormData,
@@ -16961,6 +17441,23 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
         /**
          * No description
          *
+         * @tags Profile APIs
+         * @name PostCompanyprofilesPage
+         * @summary Paginated query for fetch list of all company Profiles
+         * @request POST:/api/docpal/companyProfiles/page
+         */
+        postCompanyprofilesPage: (data: CompanyRequestDTO, params: RequestParams = {}) =>
+            this.request<ResultPaginationDTOCompany, ResultString | (ResultString | Result)>({
+                path: `/docpal/companyProfiles/page`,
+                method: "POST",
+                body: data,
+                type: ContentType.Json,
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
          * @tags CaseTypeController
          * @name PostCaseTypesCasetypeidRecordsPage
          * @summary Pagination Search data of deployed case type
@@ -17136,16 +17633,64 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
          * No description
          *
          * @tags CaseInstanceController
+         * @name PostCaseInstanceSubmitStart
+         * @request POST:/api/docpal/case/instance/submit-start
+         */
+        postCaseInstanceSubmitStart: (data: CaseInstanceRequestDTO, params: RequestParams = {}) =>
+            this.request<ResultCaseInstanceDTO, ResultString | (ResultString | Result)>({
+                path: `/docpal/case/instance/submit-start`,
+                method: "POST",
+                body: data,
+                type: ContentType.Json,
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags CaseInstanceController
          * @name PostCaseInstanceStart
          * @summary Start a case model definition to get a case instance
          * @request POST:/api/docpal/case/instance/start
          */
-        postCaseInstanceStart: (data: CaseInstanceRequestDTO, params: RequestParams = {}) =>
+        postCaseInstanceStart: (
+            data: CaseInstanceRequestDTO,
+            query?: {
+                useWorkflow?: boolean;
+            },
+            params: RequestParams = {},
+        ) =>
             this.request<ResultCaseInstanceDTO, ResultString | (ResultString | Result)>({
                 path: `/docpal/case/instance/start`,
                 method: "POST",
+                query: query,
                 body: data,
                 type: ContentType.Json,
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags CaseInstanceController
+         * @name PostCaseInstanceStartImport
+         * @summary Import an Excel file to start case instances
+         * @request POST:/api/docpal/case/instance/start/import
+         */
+        postCaseInstanceStartImport: (
+            query: {
+                /** @format binary */
+                file: File;
+                caseTypeId?: string;
+                versionNumber?: string;
+                cmmnVersionId?: string;
+            },
+            params: RequestParams = {},
+        ) =>
+            this.request<ResultCaseImportResponse, ResultString | (ResultString | Result)>({
+                path: `/docpal/case/instance/start/import`,
+                method: "POST",
+                query: query,
                 ...params,
             }),
 
@@ -17560,6 +18105,22 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
             }),
 
         /**
+         * No description
+         *
+         * @tags 审计日志管理
+         * @name PostAuditLogWorkflowPage
+         * @request POST:/api/docpal/audit-log/workflow/page
+         */
+        postAuditLogWorkflowPage: (data: AuditLogQueryRequest, params: RequestParams = {}) =>
+            this.request<ResultObject, ResultString | (ResultString | Result)>({
+                path: `/docpal/audit-log/workflow/page`,
+                method: "POST",
+                body: data,
+                type: ContentType.Json,
+                ...params,
+            }),
+
+        /**
          * @description 根据条件查询审计日志，支持分页、筛选和排序
          *
          * @tags 审计日志管理
@@ -17574,6 +18135,22 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
                 body: data,
                 type: ContentType.Json,
                 format: "json",
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags 审计日志管理
+         * @name PostAuditLogAdd
+         * @request POST:/api/docpal/audit-log/add
+         */
+        postAuditLogAdd: (data: AuditLogQueryRequest, params: RequestParams = {}) =>
+            this.request<ResultObject, ResultString | (ResultString | Result)>({
+                path: `/docpal/audit-log/add`,
+                method: "POST",
+                body: data,
+                type: ContentType.Json,
                 ...params,
             }),
 
@@ -18157,23 +18734,6 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
          * No description
          *
          * @tags MasterTableController
-         * @name PatchMasterTablesIdRecordStatus
-         * @summary Enable or Disable Record
-         * @request PATCH:/api/docpal/master/tables/{id}/record/status
-         */
-        patchMasterTablesIdRecordStatus: (id: string, data: MTRecordRequestDTO, params: RequestParams = {}) =>
-            this.request<ResultBoolean, ResultString | (ResultString | Result)>({
-                path: `/docpal/master/tables/${id}/record/status`,
-                method: "PATCH",
-                body: data,
-                type: ContentType.Json,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags MasterTableController
          * @name PatchMasterTablesIdBatchRecordStatus
          * @request PATCH:/api/docpal/master/tables/{id}/batch/record/status
          */
@@ -18200,6 +18760,27 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
         ) =>
             this.request<ResultBoolean, ResultString | (ResultString | Result)>({
                 path: `/docpal/master/tables/for_admin/${id}/batch/record/status`,
+                method: "PATCH",
+                body: data,
+                type: ContentType.Json,
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags CaseInstanceController
+         * @name PatchCaseInstanceCaseidCaseidUpdateinformation
+         * @summary Update case information
+         * @request PATCH:/api/docpal/case/instance/caseId/{caseId}/updateInformation
+         */
+        patchCaseInstanceCaseidCaseidUpdateinformation: (
+            caseId: string,
+            data: Record<string, object>,
+            params: RequestParams = {},
+        ) =>
+            this.request<ResultBoolean, ResultString | (ResultString | Result)>({
+                path: `/docpal/case/instance/caseId/${caseId}/updateInformation`,
                 method: "PATCH",
                 body: data,
                 type: ContentType.Json,
@@ -19638,22 +20219,6 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
          * No description
          *
          * @tags Conversion (Nuxeo)
-         * @name GetNuxeoConversionGetfilepath
-         * @summary Get Files Path
-         * @request GET:/api/nuxeo/conversion/getFilePath
-         * @deprecated
-         */
-        getNuxeoConversionGetfilepath: (params: RequestParams = {}) =>
-            this.request<ResultMapObjectObject, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/conversion/getFilePath`,
-                method: "GET",
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Conversion (Nuxeo)
          * @name GetNuxeoConversionGetconversionhistory
          * @summary Get Conversion History
          * @request GET:/api/nuxeo/conversion/getConversionHistory
@@ -19888,6 +20453,118 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
         getFileDownloadFileId: (id: number, params: RequestParams = {}) =>
             this.request<string, ResultString | (ResultString | Result)>({
                 path: `/file/download/file/${id}`,
+                method: "GET",
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags Rclone Management
+         * @name GetExternalDriveRcloneTestRemoteName
+         * @summary Test a single cloud service
+         * @request GET:/api/external-drive/rclone/test/{remote_name}
+         */
+        getExternalDriveRcloneTestRemoteName: (remoteName: string, params: RequestParams = {}) =>
+            this.request<ResultString, ResultString | (ResultString | Result)>({
+                path: `/external-drive/rclone/test/${remoteName}`,
+                method: "GET",
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags Rclone Management
+         * @name GetExternalDriveRcloneTestAll
+         * @summary Test all cloud services
+         * @request GET:/api/external-drive/rclone/test-all
+         */
+        getExternalDriveRcloneTestAll: (params: RequestParams = {}) =>
+            this.request<ResultString, ResultString | (ResultString | Result)>({
+                path: `/external-drive/rclone/test-all`,
+                method: "GET",
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags Rclone Management
+         * @name GetExternalDriveRcloneConfig
+         * @summary Get Rclone configuration
+         * @request GET:/api/external-drive/rclone/config
+         */
+        getExternalDriveRcloneConfig: (params: RequestParams = {}) =>
+            this.request<ResultString, ResultString | (ResultString | Result)>({
+                path: `/external-drive/rclone/config`,
+                method: "GET",
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags External Drive Authentication
+         * @name GetExternalDriveOauthCloudServices
+         * @summary Get all cloud services
+         * @request GET:/api/external-drive/oauth/cloud-services
+         */
+        getExternalDriveOauthCloudServices: (params: RequestParams = {}) =>
+            this.request<ResultListCloudServiceDTO, ResultString | (ResultString | Result)>({
+                path: `/external-drive/oauth/cloud-services`,
+                method: "GET",
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags External Drive Authentication
+         * @name GetExternalDriveOauthCallback
+         * @summary Handle the OAuth callback
+         * @request GET:/api/external-drive/oauth/callback
+         */
+        getExternalDriveOauthCallback: (
+            query: {
+                code: string;
+                state: string;
+            },
+            params: RequestParams = {},
+        ) =>
+            this.request<ResultVoid, ResultString | (ResultString | Result)>({
+                path: `/external-drive/oauth/callback`,
+                method: "GET",
+                query: query,
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags External Drive Authentication
+         * @name GetExternalDriveOauthAppsAppIdAuthorize
+         * @summary Get the authorization URL for an OAuth application
+         * @request GET:/api/external-drive/oauth/apps/{app_id}/authorize
+         */
+        getExternalDriveOauthAppsAppIdAuthorize: (appId: string, params: RequestParams = {}) =>
+            this.request<ResultString, ResultString | (ResultString | Result)>({
+                path: `/external-drive/oauth/apps/${appId}/authorize`,
+                method: "GET",
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags External Drive Authentication
+         * @name GetExternalDriveOauthAppsDeprecate
+         * @summary Get all OAuth applications
+         * @request GET:/api/external-drive/oauth/apps/
+         */
+        getExternalDriveOauthAppsDeprecate: (params: RequestParams = {}) =>
+            this.request<ResultListOAuthAppDTO, ResultString | (ResultString | Result)>({
+                path: `/external-drive/oauth/apps/`,
                 method: "GET",
                 ...params,
             }),
@@ -21817,6 +22494,78 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
         /**
          * No description
          *
+         * @tags Profile APIs
+         * @name GetCompanyprofilesCompanyid
+         * @summary Get company details
+         * @request GET:/api/docpal/companyProfiles/{companyId}
+         */
+        getCompanyprofilesCompanyid: (companyId: string, params: RequestParams = {}) =>
+            this.request<ResultCompany, ResultString | (ResultString | Result)>({
+                path: `/docpal/companyProfiles/${companyId}`,
+                method: "GET",
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags Profile APIs
+         * @name GetCompanyprofilesCompanyidChops
+         * @summary Retrieve list of all chops in one company
+         * @request GET:/api/docpal/companyProfiles/{companyId}/chops
+         */
+        getCompanyprofilesCompanyidChops: (
+            companyId: string,
+            query: {
+                /** Company Chop (Request) */
+                requestDTO: CompanyChopRequestDTO;
+            },
+            params: RequestParams = {},
+        ) =>
+            this.request<ResultListCompanyChop, ResultString | (ResultString | Result)>({
+                path: `/docpal/companyProfiles/${companyId}/chops`,
+                method: "GET",
+                query: query,
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags Profile APIs
+         * @name GetCompanyprofilesCompanyidChopsCompanychopidFile
+         * @summary Download company chop file
+         * @request GET:/api/docpal/companyProfiles/{companyId}/chops/{companyChopId}/file
+         */
+        getCompanyprofilesCompanyidChopsCompanychopidFile: (
+            companyId: string,
+            companyChopId: string,
+            params: RequestParams = {},
+        ) =>
+            this.request<string[], ResultString | (ResultString | Result)>({
+                path: `/docpal/companyProfiles/${companyId}/chops/${companyChopId}/file`,
+                method: "GET",
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags Profile APIs
+         * @name GetCompanyprofilesChopsCompanychopidFile
+         * @summary Download company chop file use company-chop-id
+         * @request GET:/api/docpal/companyProfiles/chops/{companyChopId}/file
+         */
+        getCompanyprofilesChopsCompanychopidFile: (companyChopId: string, params: RequestParams = {}) =>
+            this.request<string[], ResultString | (ResultString | Result)>({
+                path: `/docpal/companyProfiles/chops/${companyChopId}/file`,
+                method: "GET",
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
          * @tags CaseTypeController
          * @name GetCaseTypes
          * @summary Retrieve all case types
@@ -22111,6 +22860,28 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
          * No description
          *
          * @tags CaseInstanceController
+         * @name GetCaseInstanceCasetypeidStarttaskDownloadExceltemplate
+         * @summary Download an Excel template file of a case type. Excel is used to import data to start case instances.
+         * @request GET:/api/docpal/case/instance/{caseTypeId}/startTask/download/excelTemplate
+         */
+        getCaseInstanceCasetypeidStarttaskDownloadExceltemplate: (
+            caseTypeId: string,
+            query?: {
+                versionNumber?: string;
+            },
+            params: RequestParams = {},
+        ) =>
+            this.request<string[], ResultString | (ResultString | Result)>({
+                path: `/docpal/case/instance/${caseTypeId}/startTask/download/excelTemplate`,
+                method: "GET",
+                query: query,
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags CaseInstanceController
          * @name GetCaseInstanceCaseinstanceidMilestoneStatus
          * @summary Obtain Milestone Status of a case instance
          * @request GET:/api/docpal/case/instance/{caseInstanceId}/milestone/status
@@ -22164,6 +22935,27 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
             this.request<ResultCaseInstanceFormDataDTO, ResultString | (ResultString | Result)>({
                 path: `/docpal/case/instance/tasks/${taskId}/form`,
                 method: "GET",
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags CaseInstanceController
+         * @name GetCaseInstanceStartImportExportFailed
+         * @summary Export a batch of failed import records to an Excel file
+         * @request GET:/api/docpal/case/instance/start/import/export-failed
+         */
+        getCaseInstanceStartImportExportFailed: (
+            query: {
+                importBatchId: string;
+            },
+            params: RequestParams = {},
+        ) =>
+            this.request<string[], ResultString | (ResultString | Result)>({
+                path: `/docpal/case/instance/start/import/export-failed`,
+                method: "GET",
+                query: query,
                 ...params,
             }),
 
@@ -23357,6 +24149,21 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
         deleteFileUploadFileId: (id: number, params: RequestParams = {}) =>
             this.request<ResultBoolean, ResultString | (ResultString | Result)>({
                 path: `/file/upload/file/${id}`,
+                method: "DELETE",
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags External Drive Authentication
+         * @name DeleteExternalDriveOauthCloudServicesServiceId
+         * @summary Delete a cloud service
+         * @request DELETE:/api/external-drive/oauth/cloud-services/{service_id}
+         */
+        deleteExternalDriveOauthCloudServicesServiceId: (serviceId: string, params: RequestParams = {}) =>
+            this.request<ResultVoid, ResultString | (ResultString | Result)>({
+                path: `/external-drive/oauth/cloud-services/${serviceId}`,
                 method: "DELETE",
                 ...params,
             }),

@@ -159,7 +159,7 @@ function setFieldsList(item: any) {
                   </template>
                 </div>
                 <ElFormItem v-for="metaField in setFieldsList(item)" :key="metaField.metadata"
-                            :label="metaField.attr_metadata" :required="'folderCabinetId'===metaField.attr_metadata">
+                            :label="metaField.attr_metadata" >
                   <ElSelect v-model="metaField.attr_formProperty" :disabled="editorProvider.readonly.value" clearable
                             @change="handleUpdateField(item)">
                     <ElOption v-for="option in filterOption(metaField)" :key="option.id" :label="option.name"
