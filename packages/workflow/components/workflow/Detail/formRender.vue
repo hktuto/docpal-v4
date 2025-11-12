@@ -6,6 +6,7 @@
       :formJson="formJson"
       :data="formData"
       @previewFileInit="handlePreviewFileInit"
+      @formChange="$emit('formChange')"
     >
       <template v-slot:previewFile="{ data }">
         <WorkflowDetailReader class="WorkflowDetailReader" ref="WorkflowReaderRef"> </WorkflowDetailReader>
@@ -40,6 +41,8 @@ const state = reactive<any>({
 })
 // @ts-ignore
 const { formRenderSlots } = useWorkflow()
+const emit = defineEmits(['formChange'])
+
 const WidgetNames = {
   arr: ['sub-form'],
   upload: ['file-upload'],
@@ -144,7 +147,6 @@ async function revertUploadFile(ids: any, mode: 'workflow' | 'nuxeo' = 'workflow
 }
 function handleTypeIds(properties: any) {
   state.writableIds = []
-  console.log('properties', properties)
   properties.forEach((item: any) => {
     if (item.writable) state.writableIds.push(item.id)
   })
