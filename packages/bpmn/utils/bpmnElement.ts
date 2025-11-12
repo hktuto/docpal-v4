@@ -540,8 +540,7 @@ export const bpmnElement: BpmnElement = {
                 { attr_name: 'storeValue', 'flowable:expression': { '__cdata': '' } },
                 { attr_name: 'documentName', 'flowable:expression': { '__cdata': '' } },
                 { attr_name: 'documentType', 'flowable:expression': { '__cdata': 'File' } },
-                { attr_name: 'templateId', 'flowable:expression': { '__cdata': '' } },
-                { attr_name: 'variables', 'flowable:expression': { '__cdata': '' } }
+                { attr_name: 'templateId', 'flowable:expression': { '__cdata': '' } }
               ]
             }
           }),
@@ -555,8 +554,7 @@ export const bpmnElement: BpmnElement = {
                 { attr_name: 'storeValue', 'flowable:expression': { '__cdata': '' } },
                 { attr_name: 'documentName', 'flowable:expression': { '__cdata': '' } },
                 { attr_name: 'documentType', 'flowable:expression': { '__cdata': 'File' } },
-                { attr_name: 'templateId', 'flowable:expression': { '__cdata': '' } },
-                { attr_name: 'variables', 'flowable:expression': { '__cdata': '' } }
+                { attr_name: 'templateId', 'flowable:expression': { '__cdata': '' } }
               ]
             }
           })

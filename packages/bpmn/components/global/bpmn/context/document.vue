@@ -1,7 +1,7 @@
 <script lang="ts" setup>
-import { adminApi } from 'api'
-import type { Node } from '@antv/x6'
-import { QuestionFilled } from '@element-plus/icons-vue'
+import {adminApi} from 'api'
+import type {Node} from '@antv/x6'
+import {QuestionFilled} from '@element-plus/icons-vue'
 
 const editorProvider = inject(EDITOR_PROVIDER)
 if (!editorProvider) {
@@ -142,6 +142,20 @@ function setUpListener() {
   })
 }
 
+function handleUpdateVariables(fields: any[]) {
+  graphProvider?.graph.value?.startBatch('update-new-document-field-data')
+
+  const nodeData = node.getData()
+  const newData = {
+    ...nodeData,
+    version: (nodeData.version || 0) + 1
+  }
+  newData.data.extensionElements['flowable:field'] = fields
+
+  node.setData(newData, {overwrite: true, deep: true})
+  graphProvider?.graph.value?.stopBatch('update-new-document-field-data')
+}
+
 function handleStatus() {
   const nodeData = node.getData()
   const newData = {
@@ -235,7 +249,7 @@ onMounted(async () => {
         <BpmnSidebarTemplateVariable v-if="form.templateId && ''!= form.templateId" :node="node"
                                      :templateCData="form.variables" :allFields="allFields"
                                      :templateId="form.templateId" :disabled="editorProvider.readonly.value"
-                                     @updateCData="(val:string) => updateFieldData('variables', val)" />
+                                     @updateVariables="handleUpdateVariables"/>
       </div>
     </div>
   </div>
