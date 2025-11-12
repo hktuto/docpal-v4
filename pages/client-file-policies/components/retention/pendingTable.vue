@@ -10,16 +10,16 @@
     <template #commonActions="{ row }">
       <template v-if="row.status === 'P'">
         <template v-if="row.applyApprovedBy === userId">
-          <el-button id="RetentionList__RetentionPendingList__Approve" class="approval-btn" size="small" type="primary" @click.stop="handleApprove(true, row)">
+          <el-button id="RetentionList__RetentionPendingList__Approve" class="approval-btn el-icon--left" size="small" type="primary" @click.stop="handleApprove(true, row)">
             {{ $t('workflow_startAdhocWorkflow_approve') }}
           </el-button>
-          <el-button id="RetentionList__RetentionPendingList__Reject" class="approval-btn" size="small" type="danger" @click.stop="handleApprove(false, row)">
+          <el-button id="RetentionList__RetentionPendingList__Reject" class="approval-btn " size="small" type="danger" @click.stop="handleApprove(false, row)">
             {{ $t('workflow_startAdhocWorkflow_reject') }}
           </el-button>
         </template>
         <template v-else>
           <el-button id="RetentionList__RetentionPendingList__PendingApproval" text :disabled="true">
-            {{ t('retention_statuspendingApproval') }} 
+            {{ $t('workflow_statuspendingApproval') }}
           </el-button>
         </template>
       </template>
@@ -96,7 +96,7 @@ const { tableConfig, tableEvent, tableRef, reload, query } = useVxeTable({
       slots: {
         default: 'commonActions'
       },
-      width: 100
+      width: 200
     }
   ],
   dblClickAction: ({ row, column, event }: any) => {
@@ -228,15 +228,6 @@ onMounted(() => {
 
     .el-button {
       margin-left: unset;
-      width: 80px;
-
-      &:first-child {
-        margin-top: var(--app-space-xs);
-      }
-
-      &:last-child {
-        margin-bottom: var(--app-space-xs);
-      }
     }
   }
 }

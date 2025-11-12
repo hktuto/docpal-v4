@@ -1,6 +1,6 @@
 import { clientApi } from 'api'
 import { caseManageDashboardPage, routeCalendarManagement } from '#imports'
-
+import { needDocHelper, openDocHelper } from './notificationDocHelper'
 export function notiShowView(row: any) {
   if ('Workflow' === row.type && '' !== row.content?.message) {
     try {
@@ -8,20 +8,17 @@ export function notiShowView(row: any) {
       if (!!message.additionalContent) {
         return true
       }
-    } catch (e) {
-    }
+    } catch (e) {}
   }
 
-  const isCancel = ['TRASH', 'DELETE', 'CANCELD'].includes(row.operate) ||
-    (row.type === 'Upload-Request' && !row.content.processInstanceId)
-  const showView = row.content.documentId ||
-    row.content.uploadId ||
-    row.content.processInstanceId
+  const isCancel = ['TRASH', 'DELETE', 'CANCELD'].includes(row.operate) || (row.type === 'Upload-Request' && !row.content.processInstanceId)
+  const showView = row.content.documentId || row.content.uploadId || row.content.processInstanceId
   return !isCancel && showView
 }
-
 export async function notiHandleView(row: any, tabProvider: any) {
-  // const router = useRouter()
+  if (needDocHelper(row, tabProvider)) {
+    return
+  }
   if (row.content.processInstanceId && !row.content?.processDefinitionId?.includes('adhocApproval')) {
     if (row.type === 'Upload-Request') {
       // router.push(`/fileRequest/${row.content.processInstanceId}`)
@@ -34,17 +31,7 @@ export async function notiHandleView(row: any, tabProvider: any) {
       if (!!newItem) tabProvider?.openTab(newItem, true)
     }
   } else if (row.content.documentId) {
-    const params: any = { idOrPath: row.content.documentId }
-    if (row.content.commentId) {
-      params.commentId = row.content.commentId
-    }
-    if (row?.content?.processDefinitionId?.includes('adhocApproval')) {
-      params.showInfo = true
-    }
-    const newItem = createBrowseListPageParams({
-      ...params
-    })
-    tabProvider?.openTab(newItem, true)
+    openDocHelper(row, tabProvider)
   } else if (row.content.caseInstanceId) {
     // TODO: get case instance
     const caseInstance = await clientApi.api.getCaseInstanceCaseidCaseid(row.content.caseInstanceId).then((res) => res.data)
