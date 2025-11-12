@@ -9,7 +9,6 @@ const routerProvider = inject(MenuRouterKey)
 if( !routerProvider) {
     throw new Error('MenuRouterKey is not provided')
 }
-const isLdapMode: boolean = useIsLDAP();
 const state = reactive<{
   curUser: UserDTO | null;
 }>({
@@ -78,7 +77,6 @@ onMounted(() => {
     <UserInfo
       class="info"
       :user="state.curUser"
-      :isLdapMode="isLdapMode"
       @refresh="getUser"
     ></UserInfo>
     <UserGroupTable class="group" :user="state.curUser">group</UserGroupTable>

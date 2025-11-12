@@ -53,10 +53,13 @@ onMounted(async () => {
     case "/browse":
       const idOrPath = (route.query.id || route.query.path || "/") as string;
       console.log('idOrPath', idOrPath, decodeURI(idOrPath))
-      const newTab = createBrowseListPageParams({
-        idOrPath: decodeURI(idOrPath),
-      });
-      openTab(newTab);
+      if(idOrPath){
+
+        const newTab = createBrowseListPageParams({
+          idOrPath: decodeURI(idOrPath),
+        });
+        openTab(newTab);
+      }
       break;
     case "/workflow/link":
       const workflowItem = await getWorkflowRoute(

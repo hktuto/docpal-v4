@@ -9,11 +9,10 @@ import type { UserDTO } from 'api/src/generate/client'
 
 export const useDesktopMode = () => useState<boolean>('is-desktop')
 export const useUserState = () => useState<UserDTO | null>('auth-user')
-export const useKeyCloakState = () => useState<Keycloak | null>('keycloak-state')
+
 export const usePublicPageState = () => useState<string[]>('auth-public-page', () => ['/forgetPassword', '/forgetPassword/', '/resetPassword/','/resetPassword','/login/', '/login', '/initPassword/', '/initPassword'])
 export const useLoginHook = () => useState<any>(() => shallowRef([]))
-export const useIsSSO = () => useState<boolean>(() => false)
-export const useIsLDAP = () => useState<boolean>(() => false)
+
 export const useUserId = () => useState<string>(() => '')
 export const useUserPreference = () => useState<Record<string, any>>()
 export const useFeature = () => useState<Record<string, boolean>>('app-feature')
@@ -114,36 +113,21 @@ function parseJwt(token: string) {
   return JSON.parse(window.atob(base64));
 }
 export async function login() {
-  const keyCloakState = useKeyCloakState()
-  const token = useToken()
+  // const keyCloakState = useKeyCloakState()
+  
+  
   // check route is superAdmin
-  const rotue = useRoute()
-  if (rotue.query.superAdmin) {
-    const router = useRouter()
-    router.push('/login')
-  }
   try {
-    if (!keyCloakState.value) {
-      throw createError('Keycloak is not define')
+    // get access token from local storage
+    const storageToken = localStorage.getItem('access_token')
+    if(!storageToken){
+      throw new Error('access token not found')
     }
-    await keyCloakState.value.init({
-      onLoad: 'login-required'
-    })
-    keyCloakState.value.updateToken(10)
-    localStorage.setItem('access_token', keyCloakState.value.token || '')
-    const { data } = await clientApi.api.getSystemfeatureKeycloakTokenVerification()
-    if (!data) {
-      throw new Error('token not valid')
-    }
-    localStorage.setItem('access_token', data.access_token)
-    localStorage.setItem('token', data.access_token)
-    localStorage.setItem('refresh_token', data.refresh_token)
-
-    // decode token to get user info
-    
-    token.value = data.access_token
-    await checkPassword()
+    const token = useToken()
+    token.value = storageToken
     await verifly()
+    await checkPassword()
+    
   } catch (error) {
     console.log('login error', error)
     logout()
@@ -175,19 +159,19 @@ export function canOCR(extension: string): boolean {
 }
 
 export function logout() {
-  const keyCloakState = useKeyCloakState()
+  
   const logedIn = useLoginState()
 
   const userState = useUserState()
   const router = useRouter()
-  const isSuperAdmin = sessionStorage.getItem('superAdmin')
-  if (isSuperAdmin) {
-    router.push('/login')
-  } else {
-    keyCloakState.value?.logout()
-
-    userState.value = null
-  }
+  const route = useRoute()
+  router.push({
+    path: '/login',
+    query: {
+      ...route.query,
+      redirect: route.path
+    }
+  })
   // clean up local storage
   
   localStorage.clear();
