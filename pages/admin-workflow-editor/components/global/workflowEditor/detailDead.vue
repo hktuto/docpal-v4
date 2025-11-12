@@ -105,7 +105,6 @@ function openVersionList() {
     productionVersion: workflowData.value.productionVersion
   }
   const newItem = newWorkflowEditorVerionList(params)
-  console.log('newItem', newItem)
   routerProvider?.navigateTo(newItem)
 }
 
