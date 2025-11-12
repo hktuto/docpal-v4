@@ -36,6 +36,14 @@ onMounted(() => {
   }
 })
 
+watch(props.json, (newVal) => {
+  if (newVal) {
+    initEditor(props.options, newVal)
+  }
+},{
+  deep: true,
+})
+
 onUnmounted(() => {
   if (editor.value) {
     editor.value.destroy()
