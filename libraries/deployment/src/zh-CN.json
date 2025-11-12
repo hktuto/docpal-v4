@@ -4113,6 +4113,7 @@
   "workflow_startTime": "开始日期",
   "workflow_startUser": "工作流程创建者",
   "workflow_startWorkflow": "开始任务",
+  "workflow_statuspendingApproval": "待批准",
   "workflow_task": "任务",
   "workflow_taskCreateDate": "任务创建日期",
   "workflow_taskInfo": "任务信息",
