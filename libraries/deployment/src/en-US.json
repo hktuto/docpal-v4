@@ -4111,6 +4111,7 @@
   "workflow_startTime": "Start Time",
   "workflow_startUser": "Workflow Initiator",
   "workflow_startWorkflow": "Start Workflow",
+  "workflow_statuspendingApproval": "Pending Approval",
   "workflow_task": "Task",
   "workflow_taskCreateDate": "Task Creation Date",
   "workflow_taskInfo": "Task info",
