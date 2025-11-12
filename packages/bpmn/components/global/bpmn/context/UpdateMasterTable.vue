@@ -192,7 +192,7 @@ onMounted(async () => {
     <BpmnSidebarEditLabel :node="node" />
     <div class="formContainer">
       <ElForm :model="form" label-position="top" ref="formRef" :disabled="editorProvider.readonly.value">
-        <ElFormItem label="allow Update">
+        <ElFormItem label="Allow Update">
           <ElSwitch v-model="form.attr_allowUpdate" @change="updateData"></ElSwitch>
         </ElFormItem>
         <ElFormItem label="Master Table:">

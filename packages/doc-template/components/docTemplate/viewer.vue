@@ -95,7 +95,7 @@ defineExpose({ initEditor })
 
     td,
     th {
-      border: 1px solid var(--app-grey-900);
+      /* border: 1px solid var(--app-grey-900); */
       box-sizing: border-box;
       min-width: 1em;
       padding: 6px 8px;
@@ -108,7 +108,7 @@ defineExpose({ initEditor })
     }
 
     th {
-      background-color: var(--app-grey-800);
+      /* background-color: var(--app-grey-800); */
       font-weight: bold;
       text-align: left;
     }

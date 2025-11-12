@@ -190,5 +190,8 @@ function handleCancel() {
     gap: 1rem;
     margin-top: 1rem;
   }
+  :deep(.el-form-item__content) {
+    overflow: auto;
+  }
 }
 </style> 

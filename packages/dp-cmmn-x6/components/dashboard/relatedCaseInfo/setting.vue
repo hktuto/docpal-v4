@@ -21,7 +21,7 @@
         prop="relatedCaseField"
         :rules="{ required: true, message: getTip('caseManagement.id') }"
       >
-        <el-select v-model="state.setting.id" filterable allow-create :placeholder="$t('masterTable_id')">
+        <el-select v-model="state.setting.relatedCaseField" filterable allow-create :placeholder="$t('caseManagement.id')">
           <el-option v-for="item in state.caseFields" :key="item.name" :label="item.label" :value="item.name" />
         </el-select>
       </el-form-item>
