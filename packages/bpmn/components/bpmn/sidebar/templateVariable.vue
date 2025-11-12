@@ -10,7 +10,7 @@ const props = defineProps<{
   allFields: any[],
   disabled: boolean
 }>()
-const emits = defineEmits(['updateCData'])
+const emits = defineEmits(['updateVariables'])
 const { templateId } = toRefs(props)
 const variableList = ref<any>([])
 
@@ -77,13 +77,32 @@ async function getTemplateVariableList() {
   })
 }
 
-function updateData() {
-  const newCDate = Object.fromEntries(
-    variableList.value
-      .filter(item => item.value)
-      .map(item => [item.id, `\${variables:get(${item.value})}`])
-  )
-  emits('updateCData', JSON.stringify(newCDate))
+function updateData(variableItem: any) {
+  // const newCDate = Object.fromEntries(
+  //   variableList.value
+  //     .filter(item => item.value)
+  //     .map(item => [item.id, `\${variables:get(${item.value})}`])
+  // )
+  let fields: any = deepCopy(props.node.data.data.extensionElements['flowable:field'])
+
+  // update
+  if (!!variableItem.value && '' !== variableItem.value) {
+    let find = fields.find((item: any) => item.attr_name == variableItem.id);
+    if (find) {
+      find['flowable:expression'].__cdata = '${variables:get(' + variableItem.value + ')}'
+    } else {
+      // insert
+      fields.push({
+        attr_name: variableItem.id,
+        ['flowable:expression']: {__cdata: '${variables:get(' + variableItem.value + ')}'}
+      })
+    }
+  } else {
+    // delete
+    fields = fields.filter((item: any) => item.attr_name !== variableItem.id)
+  }
+
+  emits('updateVariables', fields)
 }
 
 function isEmptyObj(obj: any) {
@@ -104,8 +123,8 @@ watch(templateId, () => {
       <el-divider />
       <span>Variables</span>
 
-      <ElFormItem v-for="(value, key) in variableList" :key="value.id" :label="value.name">
-        <ElSelect v-model="value.value" @change="updateData" clearable filterable>
+      <ElFormItem v-for="variableItem in variableList" :key="variableItem.id" :label="variableItem.name">
+        <ElSelect v-model="variableItem.value" @change="updateData(variableItem)" clearable filterable>
           <ElOption v-for="item in allFields" :key="item.id" :label="item.name" :value="item.id" />
         </ElSelect>
       </ElFormItem>
