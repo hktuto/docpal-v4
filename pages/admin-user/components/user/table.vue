@@ -7,7 +7,7 @@
           <Icon id="UserList__ClearSelected" name="ic:baseline-clear" class="normal cursor-pointer" @click="cleanSelectedRows"></Icon>
         </div>
         <div class="flex-x-end">
-          <el-button id="UserList__Delete" v-if="!isLdapMode" type="danger" @click="handleDeleteSelected()">
+          <el-button id="UserList__Delete"  type="danger" @click="handleDeleteSelected()">
             {{ $t('common_delete') }}
           </el-button>
           <el-divider direction="vertical" />
@@ -42,7 +42,7 @@
           id="UserList__CreateNewUser"
           class="el-icon--right"
           type="primary"
-          :disabled="state.activeUsers >= state.licenseUsers || isLdapMode"
+          :disabled="state.activeUsers >= state.licenseUsers"
           @click="handleUserDialogShow()"
           >{{ $t('user_newUser') }} ({{ state.activeUsers }} / {{ state.licenseUsers }})
         </el-button>
@@ -79,7 +79,7 @@ const { t } = useI18n()
 const routerProvider = inject(MenuRouterKey)
 const emits = defineEmits(['filter-change', 'refresh'])
 const userProvider = inject(userProviderKey)
-const isLdapMode: boolean = useIsLDAP()
+
 const props = defineProps(['condition'])
 
 type TableState = {

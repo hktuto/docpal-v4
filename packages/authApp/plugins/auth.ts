@@ -1,12 +1,10 @@
-import { defineNuxtPlugin, useAuth, useKeyCloakState } from '#imports';
+import { defineNuxtPlugin, useAuth,  } from '#imports';
 import { clientApi, adminApi, publicApi } from 'api';
 import Keycloak from 'keycloak-js';
 import { requestSuccessHelper, requestErrorHelper, responseSuccessHelper, responseErrorHelper } from '~/utils/axiosResponseHelper';
 
 export default defineNuxtPlugin(async (nuxtApp) => {
-  const keyCloakState = useKeyCloakState();
-  const isSSO = useIsSSO();
-  const isLDAP = useIsLDAP();
+
   nuxtApp.hook('app:created', async () => {
     const publicPage = usePublicPageState();
     // check is path public
@@ -14,18 +12,18 @@ export default defineNuxtPlugin(async (nuxtApp) => {
       console.log("publicPage", publicPage.value)
       return;
     }
-    const { data } = await clientApi.api.getRelationGetkeycloakproperty();
-    keyCloakState.value = new Keycloak({
-      "url": data?.keyCloakProperty?.url,
-      "realm": data?.keyCloakProperty?.realm || "", // ldap: docpal_third_party
-      "clientId": data?.keyCloakProperty?.clientId || "",
-      // @ts-ignore
-      "ssl-required": data?.keyCloakProperty.sslRequired || "",
-      "public-client": data?.keyCloakProperty?.publicClient || "",
-      "confidential-port": data?.keyCloakProperty?.confidentialPort || ""
-    });
-    isSSO.value = !!data?.keyCloakProperty?.enableSSO;
-    isLDAP.value = !!data?.isLdap;
+    // const { data } = await clientApi.api.getRelationGetkeycloakproperty();
+    // keyCloakState.value = new Keycloak({
+    //   "url": data?.keyCloakProperty?.url,
+    //   "realm": data?.keyCloakProperty?.realm || "", // ldap: docpal_third_party
+    //   "clientId": data?.keyCloakProperty?.clientId || "",
+    //   // @ts-ignore
+    //   "ssl-required": data?.keyCloakProperty.sslRequired || "",
+    //   "public-client": data?.keyCloakProperty?.publicClient || "",
+    //   "confidential-port": data?.keyCloakProperty?.confidentialPort || ""
+    // });
+    // isSSO.value = !!data?.keyCloakProperty?.enableSSO;
+    // isLDAP.value = !!data?.isLdap;
   });
 
   nuxtApp.hook('app:mounted', async () => {
@@ -34,12 +32,7 @@ export default defineNuxtPlugin(async (nuxtApp) => {
     if (publicPage.value.includes(window.location.pathname) || window.location.pathname.startsWith('/public')) {
       return;
     }
-    const isSuperAdmin = sessionStorage.getItem('superAdmin');
-    if (isSuperAdmin) {
-      await useAuth().verifly();
-    } else {
-      await useAuth().login();
-    }
+    await useAuth().login();
   });
 
   // set refresh token to clientApi and adminApi

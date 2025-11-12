@@ -103,7 +103,12 @@ async function handleSubmitSignature(signature: string) {
 function confirmApplySignature() {
   // step 1 , create current user info
   const signatureData = {
-    ...currenUserDetail.value,
+    username: currenUserDetail.value?.username ?? '',
+    userId: currenUserDetail.value?.userId ?? '',
+    email: currenUserDetail.value?.email ?? '',
+    phone: currenUserDetail.value?.phone ?? '',
+    firstName: currenUserDetail.value?.firstName ?? '',
+    lastName: currenUserDetail.value?.lastName ?? '',
     role: currenUserDetail.value?.aclUserDetail?.roleName ?? '',
     signature: JSON.parse(JSON.stringify(signatures.value)),
     signDate: Date.now()

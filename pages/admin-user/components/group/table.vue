@@ -24,7 +24,7 @@ import { groupProviderKey } from '~/util/userProvider'
 const routerProvider = inject(MenuRouterKey)
 const emits = defineEmits(['filter-change', 'refresh'])
 const groupProvider = inject(groupProviderKey)
-const isLdapMode: boolean = useIsLDAP()
+
 type State = {
   groupList: any
   _groupList: any[]
