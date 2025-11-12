@@ -1,9 +1,6 @@
 <script lang="ts" setup>
 import { clientApi } from 'api'
 
-const isLDAP = useIsLDAP()
-const isSSO = useIsSSO()
-const showForgetPassword = computed(() => !isLDAP.value && !isSSO.value)
 const loading = ref(false);
 const form = reactive({
       username: '',
@@ -88,7 +85,7 @@ onMounted(async() => {
                         <ElButton class="fullSize"  size="large"  type="primary" @click="submit" :loading="loading">Submit</ElButton>
                     </ElFormItem>
                 </ElForm>
-                <el-button v-if="showForgetPassword" @click="forgetPassword" link>
+                <el-button  @click="forgetPassword" link>
                     {{ $t('login_forgetPassword') }}
                 </el-button>
             </div>
