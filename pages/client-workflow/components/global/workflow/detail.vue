@@ -82,8 +82,43 @@ async function handleGetActivity() {
 // #region module: form
 const vFormRef = ref()
 const displayMode = ref<'form' | 'signature'>()
+
 const showForm = ref(true)
 const formDataValue = ref<any>(null)
+
+/// #region full screen logic
+const workflowFormContainerRef = ref<any>(null)
+const isFullScreenForm = ref(false)
+function fullscreenEventListen() {
+  if(document.fullscreenElement) {
+    isFullScreenForm.value = true
+  } else {
+    isFullScreenForm.value = false
+  }
+}
+
+watch(isFullScreenForm, (newVal) => {
+  if(newVal) {
+    document.addEventListener('fullscreenchange', fullscreenEventListen)
+  } else {
+    document.removeEventListener('fullscreenchange', fullscreenEventListen)
+  }
+},{
+  immediate: true,
+})
+/// #endregion
+
+function toggleFullScreenForm() {
+  isFullScreenForm.value = !isFullScreenForm.value
+  if(isFullScreenForm.value) {
+  const el = workflowFormContainerRef.value
+    if(el) {
+      el.requestFullscreen()
+    }
+  } else {
+    document.exitFullscreen()
+  }
+}
 async function handleFormDataGet() {
   let formJson
   let formData
@@ -286,7 +321,6 @@ async function handleAdditionalSetting(xml: any, taskDetail: any, formData: any)
   }
   if(signatureSetting) {
     signatureDetail.value = signatureSetting
-    console.log("signatureDetail", signatureDetail.value)
     nextTick(() => {
       displayMode.value = 'signature'
     })
@@ -297,6 +331,17 @@ async function handleAdditionalSetting(xml: any, taskDetail: any, formData: any)
       displayMode.value = 'form'
     })
     
+  }
+}
+
+async function handleFormChange() {
+  if(displayMode.value === 'signature') {
+    // get new form data and update signature preview
+    let data = await vFormRef.value.getFormData(true, false)
+    const templateVariables = convertWorkflowVariableToTemplateVariable(data, signatureDetail.value.workflowToTemplateMapping)
+    const newVariables = generateData(templateVariables, JSON.parse(JSON.stringify(signatureDetail.value.templateDetail)))
+    const content = signatureDetail.value.templateDetail.json.content.content
+    signatureDetail.value.templateDetail.json.content.content = replaceVariables(content, newVariables.variables)
   }
 }
 
@@ -390,16 +435,25 @@ onMounted(() => {
                             @change="handleTaskInfoChange"></WorkflowDetailInfo>
       </el-tab-pane>
       <el-tab-pane class="workflow-detail-pane" :label="$t('workflow_form')" name="form" v-loading="state.loading">
-          <div :class="
+          <div 
+            ref="workflowFormContainerRef"
+          :class="
             { workflowFormContainer:true, 
               [displayMode]:true, 
-              glass: displayMode === 'signature',
+              glass: displayMode === 'signature' && !isFullScreenForm,
               showForm
              }">
                <div v-if="displayMode === 'signature'" class="toggleFormButton">
                   <Icon :name="showForm ? 'tabler:arrow-right' : 'tabler:arrow-left'  " size="20" @click="toggleShowForm"/>
                </div>
-            <WorkflowDetailFormRender ref="vFormRef" :taskDetail="state.taskDetail">
+               <div v-if="displayMode === 'signature'" class="toggleFullScreenButton">
+                <Icon :name="isFullScreenForm ? 'tabler:minimize' : 'tabler:maximize'" size="20" @click="toggleFullScreenForm" />
+               </div>
+            <WorkflowDetailFormRender 
+              ref="vFormRef" 
+              :taskDetail="state.taskDetail"
+              @formChange="handleFormChange"
+              >
                 <template #action>
                   <div class="workflow-detail-pane--btns" v-if="isAssigneeUser">
                     <template v-for="(item, index) in additionalButton" :key="index">
@@ -508,6 +562,7 @@ onMounted(() => {
   &.form{}
   &.signature{
     position: fixed;
+    background: var(--app-grey-950);
     top: var(--app-space-xs);
     right: var(--app-space-xs);
     width: clamp(120px, 30vw, 400px);
@@ -520,6 +575,21 @@ onMounted(() => {
     &.showForm{
       transform: translateX(0);
     }
+    &.glass{
+      background-color: transparent;
+      background-image: linear-gradient(to bottom, rgba(255,255,255,0.3) 0%, var(--app-primary-alpha-30) 2%, var(--app-primary-alpha-50) 100%);
+
+    }
+  }
+}
+.toggleFullScreenButton{
+  position: absolute;
+  top: var(--app-space-s);
+  right: var(--app-space-s);
+  z-index: 2;
+  cursor: pointer;
+  &:hover{
+    color: var(--app-primary-color);
   }
 }
 .toggleFormButton{

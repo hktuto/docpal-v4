@@ -23,7 +23,6 @@ async function submit() {
             username: form.username,
             password: form.password,
         }).then(res => res.data);
-        console.log('data', data)
         localStorage.setItem('access_token', data.access_token)
         localStorage.setItem('token', data.access_token)
         localStorage.setItem('refresh_token', data.refresh_token)
@@ -35,7 +34,7 @@ async function submit() {
         form.password = "";
         verifly();
         const route = useRoute()
-        if(route.query.redirect){
+        if(route.query.redirect && route.query.redirect !== '/login'){
             router.push({
               path: route.query.redirect as string,
               query: {

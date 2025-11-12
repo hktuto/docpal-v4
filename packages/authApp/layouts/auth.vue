@@ -14,14 +14,6 @@ const { globalSlots } = useGlobalSetting();
 
 const config = useAppConfig()
 
-const emptyTab = {
-  id: "new-tab-001",
-  label: "New Tab",
-  name: "new-tab-001",
-  parent: "dummy-tab-container",
-  component: "LazyTabEmpty",
-};
-
 
 const inited = ref(false)
 
@@ -73,7 +65,6 @@ async function getTabsFromServer() {
         tabs: [defaultTab.value],
       },
     ]);
-    console.log("set default tab", error);
   }finally {
 
     inited.value = true;
