@@ -7,11 +7,8 @@
 - User 的數據
 
 ### Composable
-- useIsLDAP <- 從 KeyCloak config 拿回來的數據
-- useIsSSO  <- 從 KeyCloak config 拿回來的數據
 - useLoginHook  <- 放用戶登入後會執行的數列，可由其他模組插入需要再用戶登入後執行的邏輯
 - usePublicPageState <- 網站內不用登入頁面的數列
-- useKeyCloakState <- KeyCloak 實例 
 - useAuthReadyState <- 用來記錄 KeyCloak 是否已經預備好
 - useUserState <-  用戶資料
 - useAuth
