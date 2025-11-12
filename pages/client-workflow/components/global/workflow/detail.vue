@@ -300,6 +300,20 @@ async function handleAdditionalSetting(xml: any, taskDetail: any, formData: any)
   }
 }
 
+async function handleFormChange() {
+  if(displayMode.value === 'signature') {
+    console.log('handleFormChange')
+    // get new form data and update signature preview
+    let data = await vFormRef.value.getFormData(true, false)
+    console.log('data', data)
+    const templateVariables = convertWorkflowVariableToTemplateVariable(data, signatureDetail.value.workflowToTemplateMapping)
+    const newVariables = generateData(templateVariables, JSON.parse(JSON.stringify(signatureDetail.value.templateDetail)))
+    const content = signatureDetail.value.templateDetail.json.content.content
+    signatureDetail.value.templateDetail.json.content.content = replaceVariables(content, newVariables.variables)
+    console.log('signatureDetail.value.templateDetail', signatureDetail.value.templateDetail)
+  }
+}
+
 async function addtionalSubmit({formData,attr_booleanValue}: any) {
   state.loading = true
   if (state.taskDetail?.assignee !== userId) {
@@ -399,7 +413,11 @@ onMounted(() => {
                <div v-if="displayMode === 'signature'" class="toggleFormButton">
                   <Icon :name="showForm ? 'tabler:arrow-right' : 'tabler:arrow-left'  " size="20" @click="toggleShowForm"/>
                </div>
-            <WorkflowDetailFormRender ref="vFormRef" :taskDetail="state.taskDetail">
+            <WorkflowDetailFormRender 
+              ref="vFormRef" 
+              :taskDetail="state.taskDetail"
+              @formChange="handleFormChange"
+              >
                 <template #action>
                   <div class="workflow-detail-pane--btns" v-if="isAssigneeUser">
                     <template v-for="(item, index) in additionalButton" :key="index">
