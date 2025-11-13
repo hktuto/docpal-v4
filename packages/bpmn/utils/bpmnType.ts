@@ -44,8 +44,13 @@ export interface EditorProvider {
     copyForm: (node:Node, obj:any) => void
     copyObj: Ref<any>,
     copyKey: Ref<string | undefined>,
+    currentVersionId: string,
     conditionSetting: Ref<any>
+    processKey: string,
+    currentVersion: string,
+    draftId: string,
     readonly: Ref<boolean>
+    BpmnRule: any
 }
 export type BPMNJSON = {
     definitions :{
