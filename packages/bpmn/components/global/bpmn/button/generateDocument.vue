@@ -149,45 +149,45 @@ function init(){
 }
 
 async function beforeSubmit(){
-  // because backend can not handle loop data in workflow generate template, so we need to upload file to server
-  const res = await generatePreview() as blob
-  // will set default file name to 'preview'
-  // default filed name is 'file'
-  // get  file extension from blob
-  const ext = mimeTypeToExtension(res.type)
+  // // because backend can not handle loop data in workflow generate template, so we need to upload file to server
+  // const res = await generatePreview() as blob
+  // // will set default file name to 'preview'
+  // // default filed name is 'file'
+  // // get  file extension from blob
+  // const ext = mimeTypeToExtension(res.type)
 
   
-  const fileName = 'preview' + Date.now() + '.'+ ext
-  // return null 
-  const formData = new FormData()
+  // const fileName = 'preview' + Date.now() + '.'+ ext
+  // // return null 
+  // const formData = new FormData()
   
-  const params = {
-    type:"File",
-    properties: {
-      'dc:title': fileName
-    },
+  // const params = {
+  //   type:"File",
+  //   properties: {
+  //     'dc:title': fileName
+  //   },
             
-  }
-  formData.append('document', JSON.stringify(params))
-  formData.append('file', res, fileName)
-  formData.append('nonPermission', true)
+  // }
+  // formData.append('document', JSON.stringify(params))
+  // formData.append('file', res, fileName)
+  // formData.append('nonPermission', true)
   
-  const uploadRes = await clientApi.instance.post('/docpal/workflow/upload/file', formData, {
-    headers: {
-      'Content-Type': 'multipart/form-data'
-    }
-  }).then(res => res.data.data)
-  console.log("res", uploadRes.id)
-  return {
-    file: uploadRes.id,
-    hasFile: true
-  }
+  // const uploadRes = await clientApi.instance.post('/docpal/workflow/upload/file', formData, {
+  //   headers: {
+  //     'Content-Type': 'multipart/form-data'
+  //   }
+  // }).then(res => res.data.data)
+  // console.log("res", uploadRes.id)
+  // return {
+  //   file: uploadRes.id,
+  //   hasFile: true
+  // }
 }
 
 onMounted(() => {
     init()
 })
-defineExpose({ beforeSubmit })
+// defineExpose({ beforeSubmit })
 </script>
 
 <template>
