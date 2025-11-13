@@ -84,6 +84,7 @@ function init(bpmnXml: string, x6Json?: any) {
     }
   }
   bpmn.value = bpmnXml
+  console.log('init bpmn',props)
   nextTick(() => {
     viewerRef.value.init(bpmnXml, x6Json)
   })
@@ -321,6 +322,50 @@ async function pasteForm(node: Node) {
 }
 
 /// #endregion
+type ExportWorkflowResult = {
+  json: any,
+  x6Json: any,
+  bpmnGlobalRules: any,
+  allForms: any[]
+}
+async function exportWorkflow() {
+  const { xml, json, x6Json } = getData()
+  const bpmnGlobalRules = BpmnRule.bpmnGlobalRules.value
+  const allForms = await getAllFormFromXML(xml, props.processKey, props.currentVersionId)
+  const result = {
+    json: json,
+    x6Json: x6Json,
+    bpmnGlobalRules: bpmnGlobalRules,
+    allForms
+  }
+  console.log('exportWorkflow', result)
+  return result
+}
+
+async function importWorkflow(importData:ExportWorkflowResult) {
+  const { json, x6Json, bpmnGlobalRules, allForms } = importData
+  const newBpmnJson = json
+  newBpmnJson.definitions.process.attr_id = props.processKey
+  newBpmnJson.definitions.process.attr_name = props.workflowData.name
+  // convert to newBpmnJson to bpmn xml
+  const newBpmnXml = jsonToBpmn(newBpmnJson)
+  init(newBpmnXml, x6Json)
+  // save bpmnGlobalRules
+  await BpmnRule.setBpmnRules(bpmnGlobalRules, null)
+  // save form to 
+  const version = props.currentVersionId
+  const processKey = props.processKey
+  allForms.forEach(async (form) => {
+    const res = await adminApi.api.postRelationSave({
+      processKey: processKey,
+      userTaskId: form.formId,
+      jsonValue: form.json,
+      versionId: version,
+    })
+  })
+  await workflowDetail?.saveDraft()
+}
+
 const conditionSetting = ref<Record<string, object>[]>([])
 
 async function getConditionSetting() {
@@ -379,13 +424,15 @@ provide(EDITOR_PROVIDER, {
   processKey: props.processKey,
   currentVersion: props.currentVersion,
   draftId: props.id,
-  BpmnRule
+  BpmnRule,
 })
 
 defineExpose({
   init,
   getData,
-  getGraphValue
+  getGraphValue,
+  exportWorkflow,
+  importWorkflow
 })
 </script>
 

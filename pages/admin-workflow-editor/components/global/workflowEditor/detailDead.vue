@@ -164,6 +164,31 @@ async function saveAsNewVersion() {
   })
 }
 
+async function exportWorkflow() {
+  // ot export workflow to a single json file for migrate to new workflow
+  // step 1 get workflow bpmn xml and json 
+  const result = await WorkflowEditorRef.value.exportWorkflow()
+  // download json as a file name  ${workflowName}_${currentVersion}.json
+  const fileName = `${workflowData.value.name}_${currentVersion}.json`
+  const blob = new Blob([JSON.stringify(result)], { type: 'application/json' })
+  const url = URL.createObjectURL(blob)
+  const a = document.createElement('a')
+  a.href = url
+  a.download = fileName
+  a.click()
+  URL.revokeObjectURL(url)
+  a.remove()
+}
+
+async function importWorkflow(importData: any) {
+  await WorkflowEditorRef.value.importWorkflow(importData)
+}
+
+const WorkflowEditorImportDialogRef = ref()
+function openImportDialog() {
+  WorkflowEditorImportDialogRef.value.open()
+}
+
 watch(
   () => [id, versionId],
   (newWorkflowId) => {
@@ -204,12 +229,15 @@ watch(
         <ElButton id="WorkflowEditor__DetailDead__VersionList" type="primary" @click="openVersionList">
           {{ $t('workflowEditor_versionList') }}
         </ElButton>
+        <ElButton id="WorkflowEditor__DetailDead__ExportWorkflow" type="primary" @click="exportWorkflow">Export Workflow</ElButton>
+        <ElButton id="WorkflowEditor__DetailDead__ExportWorkflow" type="primary" @click="openImportDialog">Import Workflow</ElButton>
         <!-- <el-button v-if="state.detail.publishStatus === 'A' && state.detail.status === 'A'" :loading="state.loading" type="info" @click="handleDeactive()">{{$t('actions.inactive')}}</el-button> -->
         <!-- <el-button v-else-if="state.detail.status === 'A'" :loading="state.loading" type="info" @click="handleActive()">{{$t('actions.active')}}</el-button> -->
         <!-- <el-button :loading="state.loading" type="primary" @click="handleSave(true)">{{$t('button.saveDraft')}}</el-button> -->
         <!-- <el-button v-if="state.detail.status !== 'A'" :loading="state.loading" type="primary" @click="handleSave(false)">{{$t('button.publish')}}</el-button> -->
       </template>
     </BpmnEditor>
+    <WorkflowEditorImportDialog ref="WorkflowEditorImportDialogRef" @submit="importWorkflow" />
   </div>
 </template>
 
