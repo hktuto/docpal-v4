@@ -1,7 +1,8 @@
 <script lang="ts" setup>
-import {adminApi} from 'api'
-import type {Node} from '@antv/x6'
-import {QuestionFilled} from '@element-plus/icons-vue'
+import { adminApi } from 'api'
+import type { Node } from '@antv/x6'
+import { QuestionFilled } from '@element-plus/icons-vue'
+import { JsonSchemaToJsonData } from 'docpal-document-editor/src/client'
 
 const editorProvider = inject(EDITOR_PROVIDER)
 if (!editorProvider) {
@@ -26,6 +27,17 @@ const allFields = computed(() => {
   return bpmnGlobalRules.value.map((item: any) => {
     return {
       id: item.id,
+      name: item.name
+    }
+  })
+})
+
+const allFieldWithVariableGet = computed(() => {
+  if (!bpmnGlobalRules.value || bpmnGlobalRules.value.length === 0) return []
+
+  return bpmnGlobalRules.value.map((item: any) => {
+    return {
+      id: '${variables:get(' + item.id + ')}',
       name: item.name
     }
   })
@@ -59,15 +71,15 @@ const state = reactive({
 
 const allDocumentTemplates = ref<any[]>([])
 
-const form = ref({
+const form = ref<any>({
   parentPath: '',
   storeValue: '',
   documentName: '',
   documentType: '',
   templateId: '',
-  variables: ''
 })
-
+const variableForm = ref<any>([])
+const defaultField = ['parentPath', 'storeValue', 'documentName', 'documentType', 'templateId']
 async function init() {
   const documentTypeData: any = await adminApi.api.getTypesActive().then(res => res.data)
   documentTypeList.value = documentTypeData.filter((item: any) => !item.isFolder)
@@ -88,31 +100,101 @@ async function init() {
 }
 
 function getForm() {
-  const fields: any = node.data.data.extensionElements['flowable:field']
-  if (fields && fields.lenght < 1) {
+  const fields: any[] = node.data.data.extensionElements['flowable:field']
+  if (fields && fields.length === 0) {
     return
   }
-
+  let variableCData:any = {}
   fields.forEach((item: any) => {
-    switch (item.attr_name) {
-      case 'storeValue':
-        form.value.storeValue = item['flowable:expression'].__cdata
-        break
-      case 'parentPath':
-        form.value.parentPath = item['flowable:expression'].__cdata
-        break
-      case 'documentName':
-        form.value.documentName = item['flowable:expression'].__cdata
-        break
-      case 'documentType':
-        form.value.documentType = item['flowable:expression'].__cdata
-        break
-      case 'templateId':
-        form.value.templateId = item['flowable:expression'].__cdata
-        break
-      case 'variables':
-        form.value.variables = item['flowable:expression'].__cdata
-        break
+    if(defaultField.includes(item.attr_name)) {
+      form.value[item.attr_name] = item['flowable:expression'].__cdata
+    } else {
+      if(item.attr_name !== 'variables') {
+        variableCData[item.attr_name] = item['flowable:expression'].__cdata
+      }else{
+        // mirgate old variable to new 
+        const oldVariable = item['flowable:expression'].__cdata
+        try {
+          const oldVariableData = JSON.parse(oldVariable)
+          console.log('oldVariableData', oldVariableData)
+          variableCData = oldVariableData
+          // remove old variable field
+          graphProvider?.graph.value?.startBatch('remove-old-variable-field')
+          const nodeData = node.getData()
+          const newData = {
+            ...nodeData,
+            version: (nodeData.version || 0) + 1
+          }
+          newData.data.extensionElements['flowable:field'] = newData.data.extensionElements['flowable:field'].filter((f: any) => f.attr_name !== 'variables')
+          Object.keys(oldVariableData).forEach((key: string) => {
+            newData.data.extensionElements['flowable:field'].push({
+              'attr_name': key,
+              'flowable:expression': {
+                '__cdata': oldVariableData[key]
+              }
+            })
+          })
+          node.setData(newData, { overwrite: true, deep: true })
+          graphProvider?.graph.value?.stopBatch('remove-old-variable-field')
+
+        }catch(e){
+
+        }
+      }
+    }
+  })
+
+  // if templateId has value, get template variable
+  if(form.value.templateId) {
+    getTemplateVariableList(form.value.templateId, variableCData)
+  }
+}
+
+async function getTemplateVariableList(templateId:string, cdata:any) {
+  const { data }: any = await adminApi.api.getTemplateDocumentRefreshId(templateId)
+  if (data.fileType === 'Word') {
+    const variable = JsonSchemaToJsonData(data.templateVariable)
+    if (!variable) {
+      return
+    }
+
+    // File type used for template output
+    variable.splice(0, 0, {
+      id: 'system_output_file_type',
+      name: 'Output File Type',
+      type: 'text',
+      value: ''
+    })
+
+    variable.map((item: any) => {
+      const rawValue = cdata[item.id] || ''
+      item.value = rawValue
+      return item
+    })
+    variableForm.value = variable
+    return
+  }
+  const fullVarList = JSON.parse(data.templateVariable as any).reduce((prev: any, curr: any) => {
+    try {
+      const data = JSON.parse(curr)
+      Object.keys(data).forEach(key => {
+        prev.push(key)
+      })
+    } catch (err) {
+      prev.push(curr)
+    }
+    return prev
+  }, [])
+  const varList = [...new Set(fullVarList)]
+  // check if templateCData is in varList
+  variableForm.value = varList.map((key: string) => {
+    const rawValue = cdata[key] || ''
+    const value = rawValue.replace('${variables:get(', '').replace(')}', '')
+
+    return {
+      id: key,
+      name: key,
+      value
     }
   })
 }
@@ -127,11 +209,22 @@ function updateFieldData(key: string, newVal: string) {
   }
 
   const index = newData.data.extensionElements['flowable:field'].findIndex((f: any) => f.attr_name === key)
-  newData.data.extensionElements['flowable:field'][index]['flowable:expression'].__cdata = newVal || ''
+  if(index !== -1) {
+
+    newData.data.extensionElements['flowable:field'][index]['flowable:expression'].__cdata = newVal || ''
+  }else{
+    newData.data.extensionElements['flowable:field'].push({
+      'attr_name': key,
+      'flowable:expression': {
+        '__cdata': newVal || ''
+      }
+    })
+  }
 
   node.setData(newData, { overwrite: true, deep: true })
   graphProvider?.graph.value?.stopBatch('update-new-document-field-data')
 }
+
 
 function setUpListener() {
   graphProvider?.graph.value?.on('history:undo', () => {
@@ -140,20 +233,6 @@ function setUpListener() {
   graphProvider?.graph.value?.on('history:redo', () => {
     getForm()
   })
-}
-
-function handleUpdateVariables(fields: any[]) {
-  graphProvider?.graph.value?.startBatch('update-new-document-field-data')
-
-  const nodeData = node.getData()
-  const newData = {
-    ...nodeData,
-    version: (nodeData.version || 0) + 1
-  }
-  newData.data.extensionElements['flowable:field'] = fields
-
-  node.setData(newData, {overwrite: true, deep: true})
-  graphProvider?.graph.value?.stopBatch('update-new-document-field-data')
 }
 
 function handleStatus() {
@@ -244,12 +323,20 @@ onMounted(async () => {
               <el-option v-for="item in allDocumentTemplates" :key="item.id" :label="item.name" :value="item.id" />
             </el-select>
           </el-form-item>
+          <el-divider />
+        <template v-for="item in variableForm" :key="item.id">
+          <el-form-item :label="item.name" >
+            <el-select v-model="item.value" :placeholder="t('common_selectedIsRequiredMsg')" 
+              filterable clearable @change="(val:any) => updateFieldData(item.id, val)" >
+              <el-option v-for="item in allFieldWithVariableGet" :key="item.id" :label="item.name" :value="item.id" />
+            </el-select>
+          </el-form-item>
+        </template>
         </el-form>
-
-        <BpmnSidebarTemplateVariable v-if="form.templateId && ''!= form.templateId" :node="node"
+        <!-- <BpmnSidebarTemplateVariable v-if="form.templateId && ''!= form.templateId" :node="node"
                                      :templateCData="form.variables" :allFields="allFields"
                                      :templateId="form.templateId" :disabled="editorProvider.readonly.value"
-                                     @updateVariables="handleUpdateVariables"/>
+                                     @updateCData="(val:string) => updateFieldData('variables', val)" /> -->
       </div>
     </div>
   </div>
