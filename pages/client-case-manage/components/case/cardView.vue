@@ -61,7 +61,7 @@ defineExpose({ initFields })
   .row {
     margin-bottom: var(--app-space-xs);
     .title {
-      color: #687a8f;
+      color: var(--app-grey-600);
     }
   }
 }
