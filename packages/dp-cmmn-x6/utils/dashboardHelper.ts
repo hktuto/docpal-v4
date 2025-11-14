@@ -12,27 +12,29 @@ import RelatedMaster from '../components/dashboard/relatedMaster/index.vue'
 import MasterTableInfo from '../components/dashboard/masterTableInfo/index.vue'
 import RelatedCaseInfo from '../components/dashboard/relatedCaseInfo/index.vue'
 import CaseFieldNum from '../components/caseStatistics/fieldNum/index.vue'
-import CaseGroupFieldNum from '../components/caseStatistics/groupFieldNum/index.vue'
 import CaseMonthlyAverage from '../components/caseStatistics/monthlyAverage/index.vue'
-import CaseMonthlyDateRange from '../components/caseStatistics/monthlyDateRange/index.vue'
 import CaseFieldLifecycle from '../components/caseStatistics/fieldLifecycle/index.vue'
-export type CmmnDashboardWidget = 
-'Action' | 
-'BasicInfo' | 
-'Process' | 
-'TaskPage' | 
-'WorkflowPage' | 
-'Activity' | 
-'DocumentRoot' | 
-'RelatedCase' | 
-'RelatedMaster' | 
-'MasterTableInfo' | 
-'RelatedCaseInfo' | 
-'CaseFieldNum' |
-'CaseGroupFieldNum' |
-'CaseMonthlyAverage' |
-'CaseMonthlyDateRange' |
-'CaseFieldLifecycle'
+import CaseFieldTotal from '../components/caseStatistics/fieldTotal/index.vue'
+import CaseLimitFieldNum from '../components/caseStatistics/limitFieldNum/index.vue'
+import CaseLimitGroupFieldNum from '../components/caseStatistics/limitGroupFieldNum/index.vue'
+export type CmmnDashboardWidget =
+  | 'Action'
+  | 'BasicInfo'
+  | 'Process'
+  | 'TaskPage'
+  | 'WorkflowPage'
+  | 'Activity'
+  | 'DocumentRoot'
+  | 'RelatedCase'
+  | 'RelatedMaster'
+  | 'MasterTableInfo'
+  | 'RelatedCaseInfo'
+  | 'CaseFieldNum'
+  | 'CaseMonthlyAverage'
+  | 'CaseFieldLifecycle'
+  | 'CaseFieldTotal'
+  | 'CaseLimitFieldNum'
+  | 'CaseLimitGroupFieldNum'
 export const CmmnDashboardWidgetSetting: { [key in CmmnDashboardWidget]: DashboardWidgetSetting } = {
   BasicInfo: {
     label: 'cmmnBasicInfo',
@@ -164,7 +166,7 @@ export const CmmnDashboardWidgetSetting: { [key in CmmnDashboardWidget]: Dashboa
       layout: [],
       masterTableId: '',
       masterTableName: '',
-      relatedField: '',
+      relatedField: ''
     }
   },
   RelatedCaseInfo: {
@@ -182,7 +184,7 @@ export const CmmnDashboardWidgetSetting: { [key in CmmnDashboardWidget]: Dashboa
       caseId: '',
       caseLabel: '',
       caseVersionId: '', // 初始化 case list
-      relatedCaseField: '',
+      relatedCaseField: ''
     }
   },
 
@@ -199,23 +201,39 @@ export const CmmnDashboardWidgetSetting: { [key in CmmnDashboardWidget]: Dashboa
     setting: {
       name: '',
       prefix: '',
-      displayMethod: '',
+      displayMethod: ''
     }
   },
-  CaseGroupFieldNum: {
+  CaseLimitFieldNum: {
     type: DASHBOARD_TYPE.caseCount,
-    label: 'cmmnCaseGroupFieldNum',
+    label: 'cmmnCaseLimitFieldNum',
     minW: 2,
     minH: 2,
     maxW: 12,
     maxH: 12,
     w: 3,
     h: 4,
-    component: 'CaseGroupFieldNum',
+    component: 'CaseLimitFieldNum',
     setting: {
       name: '',
       prefix: '',
-      displayMethod: '',
+      displayMethod: ''
+    }
+  },
+  CaseLimitGroupFieldNum: {
+    type: DASHBOARD_TYPE.caseCount,
+    label: 'cmmnCaseLimitGroupFieldNum',
+    minW: 2,
+    minH: 2,
+    maxW: 12,
+    maxH: 12,
+    w: 3,
+    h: 4,
+    component: 'CaseLimitGroupFieldNum',
+    setting: {
+      name: '',
+      prefix: '',
+      displayMethod: ''
     }
   },
   CaseMonthlyAverage: {
@@ -237,27 +255,7 @@ export const CmmnDashboardWidgetSetting: { [key in CmmnDashboardWidget]: Dashboa
       title: 'Number of Cases',
       dialogSettingTitle: '',
       displayColumns: [],
-      fields: '[]',
-    }
-  },
-  CaseMonthlyDateRange: {
-    type: DASHBOARD_TYPE.caseCount,
-    label: 'cmmnCaseMonthlyDateRange',
-    minW: 2,
-    minH: 2,
-    maxW: 12,
-    maxH: 12,
-    w: 6,
-    h: 4,
-    component: 'CaseMonthlyDateRange',
-    setting: {
-      caseId: '',
-      relatedField: '',
-      dateField: '',
-      title: 'Monthly Date Range',
-      dialogSettingTitle: '',
-      displayColumns: [],
-      fields: '[]',
+      fields: '[]'
     }
   },
   CaseFieldLifecycle: {
@@ -277,7 +275,29 @@ export const CmmnDashboardWidgetSetting: { [key in CmmnDashboardWidget]: Dashboa
       title: 'Field Lifecycle',
       dialogSettingTitle: '',
       displayColumns: [],
+      fields: '[]'
+    }
+  },
+  CaseFieldTotal: {
+    type: DASHBOARD_TYPE.caseCount,
+    label: 'cmmnCaseFieldTotal',
+    minW: 1,
+    minH: 1,
+    maxW: 12,
+    maxH: 12,
+    w: 2,
+    h: 2,
+    component: 'CaseFieldTotal',
+    setting: {
+      caseId: '',
+      relatedField: '',
+      dateField: '',
+      title: 'Field Lifecycle',
+      dialogSettingTitle: '',
+      displayColumns: [],
       fields: '[]',
+      displayMethod: '',
+      prefix: '',
     }
   }
 }
@@ -307,8 +327,9 @@ export const CmmnWidgetComponent = {
   RelatedMaster: RelatedMaster,
   MasterTableInfo: MasterTableInfo,
   CaseFieldNum: CaseFieldNum,
-  CaseGroupFieldNum: CaseGroupFieldNum,
+  CaseLimitFieldNum: CaseLimitFieldNum,
+  CaseLimitGroupFieldNum: CaseLimitGroupFieldNum,
   CaseMonthlyAverage: CaseMonthlyAverage,
-  CaseMonthlyDateRange: CaseMonthlyDateRange,
-  CaseFieldLifecycle: CaseFieldLifecycle
+  CaseFieldLifecycle: CaseFieldLifecycle,
+  CaseFieldTotal: CaseFieldTotal
 }

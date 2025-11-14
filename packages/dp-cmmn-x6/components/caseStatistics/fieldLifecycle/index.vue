@@ -12,7 +12,7 @@
     <div id="myEcharts" ref="chartRef" class="echart"></div>
     <CaseStatisticsTableDialog :setting="setting" :dates="tableDates" ref="dialogRef"> </CaseStatisticsTableDialog>
 
-    <DashboardSetting ref="settingRef" :formJson="formJson" @delete="handleDelete" @refresh="handleRefresh" />
+    <DashboardSetting ref="settingRef" :title="title" :formJson="formJson" @delete="handleDelete" @refresh="handleRefresh" />
   </DashboardCard>
 </template>
 
@@ -32,7 +32,7 @@ const props = withDefaults(
   }
 )
 const { t } = useI18n()
-const title = ref('dashboard.documentSize')
+const title = $t('dashboard.cmmnCaseFieldLifecycle')
 const total = ref(0)
 const tableDates = ref([])
 const emits = defineEmits(['refreshSetting', 'delete'])
@@ -97,6 +97,10 @@ const { cardRef, chartRef, settingRef, resize, handleInitCard, loading } = useDa
 
   getOptions: async (chartSetting) => {
     option.series = []
+    option.legend = {
+      data: [],
+      bottom: '0%',
+    }
     if (props.setting.filterList) {
       props.setting.filterList.forEach((item) => {
         const config = JSON.parse(JSON.stringify(seriesConfig))
@@ -106,6 +110,8 @@ const { cardRef, chartRef, settingRef, resize, handleInitCard, loading } = useDa
           name: item.filterValue,
           data: [2.0, 4.9, 7.0, 23.2, 25.6, 76.7, 135.6, 162.2, 32.6, 20.0, 6.4, 3.3]
         })
+
+        option.legend.data.push(item.filterValue)
       })
     }
     return option

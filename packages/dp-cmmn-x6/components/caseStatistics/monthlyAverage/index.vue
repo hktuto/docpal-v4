@@ -12,12 +12,13 @@
     <div id="myEcharts" ref="chartRef" class="echart"></div>
     <CaseStatisticsTableDialog :setting="setting" :dates="tableDates" ref="dialogRef"> </CaseStatisticsTableDialog>
 
-    <DashboardSetting ref="settingRef" :formJson="formJson" @delete="handleDelete" @refresh="handleRefresh" />
+    <DashboardSetting ref="settingRef" :formJson="formJson" :title="title" @delete="handleDelete" @refresh="handleRefresh" />
   </DashboardCard>
 </template>
 
 <script lang="ts" setup>
 import { restApi, PostgREST_Decorate } from 'api'
+import axios from 'axios'
 import formJson from './setting.vform.json'
 import dayjs from 'dayjs'
 const props = withDefaults(
@@ -32,7 +33,7 @@ const props = withDefaults(
   }
 )
 const { t } = useI18n()
-const title = ref('dashboard.documentSize')
+const title = $t('dashboard.cmmnCaseMonthlyAverage')
 const total = ref(0)
 const tableDates = ref([])
 const emits = defineEmits(['refreshSetting', 'delete'])
@@ -52,10 +53,6 @@ const option = {
       }
     }
   },
-  legend: {
-    bottom: '5%',
-    data: ['Number of Cases', 'Average Duration']
-  },
   xAxis: [
     {
       type: 'category',
@@ -65,7 +62,7 @@ const option = {
       }
     }
   ],
-   grid: {
+  grid: {
     left: '10%', // 调整整个图表左侧的留白，增加偏移
     right: '10%',
     bottom: '15%',
@@ -80,7 +77,7 @@ const option = {
       axisLabel: {
         formatter: '{value}',
         margin: -8
-      },
+      }
     },
     {
       type: 'value',
@@ -99,10 +96,10 @@ const option = {
       type: 'bar',
       tooltip: {
         valueFormatter: function (value) {
-          return value
+          return value + ' ' + props.setting.yAxisUnit
         }
       },
-      data: [2.0, 4.9, 7.0, 23.2, 25.6, 76.7, 135.6, 162.2, 32.6, 20.0, 6.4, 3.3]
+      data: []
     },
     {
       name: 'Average Duration',
@@ -110,11 +107,11 @@ const option = {
       yAxisIndex: 1,
       tooltip: {
         valueFormatter: function (value) {
-          return value
+          return FinancialComputing(Number(value))
         }
       },
       smooth: true,
-      data: [2.0, 2.2, 3.3, 4.5, 6.3, 10.2, 135.6, 23.4, 23.0, 16.5, 12.0, 6.2]
+      data: []
     }
   ]
 }
@@ -125,21 +122,30 @@ const { cardRef, chartRef, settingRef, resize, handleInitCard, loading } = useDa
 
   getOptions: async (chartSetting) => {
     if (props.setting.averageTitle) {
-      option.legend.data[1] = props.setting.averageTitle
+      option.legend = {
+        bottom: '5%',
+        data: ['Number of Cases', props.setting.averageTitle]
+      }
       option.series[1].name = props.setting.averageTitle
       if (props.setting.averageUnit) {
         option.yAxis[1].name = props.setting.averageUnit
         // option.yAxis[1].axisLabel.formatter = '{value} ' + props.setting.averageUnit
         option.series[1].tooltip.valueFormatter = function (value) {
-          return value + ' ' + props.setting.averageUnit
+          return FinancialComputing(Number(value)) + ' ' + props.setting.averageUnit
         }
       }
+      if(props.setting.averageField) {
+        option.series[1].data = await getAverageDuration(chartSetting)
+      }
+      // option.series[0].data = chartSetting.data.map(item => item.value)
+      // option.series[1].data = chartSetting.data.map(item => item.average)
     }
+    option.series[0].data = await getCaseCount(chartSetting)
     return option
   },
   clickAction: (params: any) => {
-    let dates: any 
-    if(!props.dates) {
+    let dates: any
+    if (!props.dates) {
       dates = [dayjs(new Date()).format('YYYY-MM-DD'), dayjs(new Date()).format('YYYY-MM-DD')]
     } else {
       console.log('props.datesJSON', props.dates)
@@ -150,11 +156,49 @@ const { cardRef, chartRef, settingRef, resize, handleInitCard, loading } = useDa
     const startDate = dayjs(`${year}-${month}-01`).format('YYYY-MM-DD 00:00:00')
     const endDate = dayjs(`${year}-${month}-01`).endOf('month').format('YYYY-MM-DD 23:59:59')
     tableDates.value = [startDate, endDate]
-    console.log('tableDates', tableDates.value)
-    dialogRef.value.handleOpen()
+    const sortBy = props.setting.sortBy || 'created_date'
+    const sqlParams = [
+      {
+        key: 'created_date',
+        type: 'gt',
+        value: startDate
+      },
+      {
+        key: 'created_date',
+        type: 'lt',
+        value: endDate
+      },
+      {
+        type: 'order',
+        value: `${sortBy}.desc`
+      }
+    ]
+    dialogRef.value.handleOpen(sqlParams)
   }
 })
-
+async function getCaseCount(chartSetting) {
+  const rpcParams = {
+    _table_name: chartSetting.tableName,
+    _date_column: 'created_date', // 合同到期日期字段
+    "_schema_name": "app10",
+    _target_year: dayjs().year()
+  }
+  const url = `http://132.148.160.188:3003/rpc/count_by_month_generic`
+  const response = await axios.post(url, rpcParams).then((res) => res.data)
+  return response.map(item => item.count_value)
+}
+async function getAverageDuration(chartSetting) {
+  const rpcParams = {
+    _table_name: chartSetting.tableName,
+    _date_column: 'created_date', // 合同到期日期字段
+    "_schema_name": "app10",
+    _target_year: dayjs().year(),
+    _value_column: chartSetting.averageField
+  }
+  const url = `http://132.148.160.188:3003/rpc/avg_by_month_generic`
+  const response = await axios.post(url, rpcParams).then((res) => res.data)
+  return response.map(item => item.avg_value)
+}
 // #endregion
 
 // #endregion

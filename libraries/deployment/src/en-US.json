@@ -384,12 +384,15 @@
     "UserGroupId": "User Group",
     "UserId": "User",
     "condition": "Condition",
+    "dateField": "Date Field",
     "filterKey": "Filter Key",
     "filterValue": "Filter Value",
     "groupName": "Group Name",
     "relatedField": "Related Key",
     "value": "Value",
-    "value_tip": "use \"currentUser\" to use viewer userId as value"
+    "value_tip": "use \"currentUser\" to use viewer userId as value",
+    "yAxisTitle": "Y Axis Title",
+    "yAxisUnit": "Y Axis Unit"
   },
   "caseManage": {
     "avalibleFields": "Avalible Fields",
@@ -644,6 +647,12 @@
     "cmmnAction": "My Action",
     "cmmnActivity": "Activity",
     "cmmnBasicInfo": "Info",
+    "cmmnCaseFieldLifecycle": "Case Field Lifecycle",
+    "cmmnCaseFieldNum": "Case Field Num",
+    "cmmnCaseFieldTotal": "Case Field Total",
+    "cmmnCaseGroupFieldNum": "Case Group Field Num",
+    "cmmnCaseMonthlyAverage": "Case Monthly Average",
+    "cmmnCaseMonthlyDateRange": "Case Monthly Date Range",
     "cmmnDocumentRoot": "File",
     "cmmnMasterTableInfo": "Related Master Table Info",
     "cmmnProcess": "Process",
@@ -687,6 +696,7 @@
   },
   "dashboardType": {
     "case": "@:adminMenu.caseManagement",
+    "caseCount": "Case Statistics",
     "default": "Common",
     "document": "Document",
     "documentCount": "File Statistics",

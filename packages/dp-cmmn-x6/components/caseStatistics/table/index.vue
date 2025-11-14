@@ -2,18 +2,20 @@
 import { clientApi } from 'api'
 import { MoreFilled } from '@element-plus/icons-vue'
 import { ElMessage } from 'element-plus'
+import axios from 'axios'
 const platform = useAppPlatform()
-const { setting, displayColumns, dates } = defineProps<{
+const { setting, displayColumns, dates, sql } = defineProps<{
   setting: any
   displayColumns: any
   dates: any
+  sql: string
 }>()
 
 const CMDProvider = inject(CaseManagementDashboardKey)
 const caseId = CMDProvider?.instanceId?.value || null
 let where = ref({})
 const { t } = useI18n()
-const emits = defineEmits(['filter-change', 'refresh'])
+const emits = defineEmits(['close'])
 const routerProvider = inject(MenuRouterKey)
 const tabProvider = inject(TabManagerKey)
 type TableState = {
@@ -28,28 +30,26 @@ const pageParams: any = {
   orderBy: 'created_date',
   isDesc: true
 }
-const extraParams: any = {
-  q: '',
-  where: {}
-}
+
 const { tableConfig, tableEvent, tableRef, query, reload, cleanSelectedRows } = useVxeTable({
   id: 'dashboardRelatedCaseTable',
   refresh: false,
+  virtualScroll: true,
   api: async (params: any) => {
-    if (platform.value === 'admin') {
-      return {
-        entryList: [],
-        totalSize: 0
-      }
-    }
-    if (setting.relatedField) extraParams.where[setting.relatedField] = caseId
-    return clientApi.api.postCaseTypesCasetypeidRecordsPage(id, { ...pageParams, ...params, ...extraParams })
+    // if (platform.value === 'admin') {
+    //   return {
+    //     entryList: [],
+    //     totalSize: 0
+    //   }
+    // }
+    const url = `http://132.148.160.188:3003/${setting.tableName}?${sql}`
+    const response = await axios.get(url)
+    return response.data
   },
   columns: [],
   dblClickAction: ({ row }) => {
-    const newItem = caseManageDashboardPage({ ...row, id, instanceId: row.case_id, versionId: row.caseDefinitionVersionId, data: detail })
-    console.log(newItem)
-    tabProvider?.openTab(newItem)
+    notiHandleView({ content: { caseInstanceId: row.case_id } }, tabProvider)
+    emits('close')
   },
   zoom: false,
   saveColumnOrder: false
@@ -57,15 +57,6 @@ const { tableConfig, tableEvent, tableRef, query, reload, cleanSelectedRows } = 
 
 const dialogRef = ref()
 
-const responsiveFilterRef = ref()
-function handleFilterFormChange(formModel) {
-  if (formModel.q) {
-    extraParams.q = formModel.q
-  } else {
-    delete extraParams.q
-  }
-  reload()
-}
 async function reorderColumn(fields: any) {
   try {
     const columns = []
@@ -77,8 +68,8 @@ async function reorderColumn(fields: any) {
           minWidth: 200
         }
         if (item.type === 'date') {
-          newItem.formatter = (row: any) => {
-            return formatDate(row[item.id])
+          newItem.formatter = ({ cellValue }) => {
+            return formatDate(cellValue)
           }
         } else if (item.formatter) {
           newItem.formatter = item.formatter
@@ -132,11 +123,7 @@ defineExpose({ reorderColumn, reload, query })
 </script>
 
 <template>
-  <VxeGrid v-if="tableReady" ref="tableRef" v-bind="tableConfig" v-on="tableEvent">
-    <template #toolbar_buttons>
-      {{ dates }}
-      <ResponsiveFilter ref="responsiveFilterRef" @form-change="handleFilterFormChange" inputKey="q" inputPlaceHolder="caseManagement_filter" />
-    </template>
+  <VxeGrid ref="tableRef" v-bind="tableConfig" v-on="tableEvent">
   </VxeGrid>
   <DashboardActionHumanTaskDialog ref="dialogRef" @refresh="reload()" />
 </template>
