@@ -18,7 +18,17 @@ export default defineAppConfig({
           orderBy: 'modifiedDate',
           isDesc: true
       },
+    },
+    "admin-case-management-import-export":{
+      id:"admin-case-management-import-export",
+      name: 'admin-case-management-import-export',
+      label: "adminMenu.caseManagementImportExport",
+      icon: "dp-icon:case",
+      hoverIcon: "dp-icon:case",
+      component: "LazyCaseManagementImportExport",
+      feature: "WORKFLOW",
     }
    } ,
+   
 
 })

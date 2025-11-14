@@ -216,6 +216,9 @@ export default defineAppConfig({
     {
       name: 'admin-case-management'
     },
+    {
+      name: 'admin-case-management-import-export'
+    },
     // {
     //   name: 'admin-dashboard'
     // },
