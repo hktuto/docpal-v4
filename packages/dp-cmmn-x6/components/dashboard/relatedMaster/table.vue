@@ -52,7 +52,7 @@ const dialogRef = ref()
 
 async function reorderColumn(fields: any) {
   try {
-    const columns = []
+    const columns: any = []
     if (fields.length > 0) {
       const columneFromSetting = fields.reduce((prev: any, item: any) => {
         const newItem: any = {

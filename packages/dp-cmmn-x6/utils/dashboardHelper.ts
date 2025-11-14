@@ -114,7 +114,7 @@ export const CmmnDashboardWidgetSetting: { [key in CmmnDashboardWidget]: Dashboa
   },
   RelatedMaster: {
     label: 'cmmnRelatedMaster',
-    minW: 4,
+    minW: 2,
     minH: 4,
     maxW: 12,
     maxH: 12,
