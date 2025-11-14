@@ -10,7 +10,7 @@
   >
     <div class="quantity-container" @click="handleDrillDown">
       <div class="quantity-title">{{ setting.title }}</div>
-      <div class="quantity-total">{{ total }}</div>
+      <div class="quantity-total">{{ setting.prefix }}{{ handleCompute(total) }}</div>
     </div>
     <!-- <div id="myEcharts" ref="chartRef" class="echart"></div> -->
     <CaseStatisticsTableDialog :setting="setting" :dates="dates" ref="dialogRef" />
@@ -20,8 +20,8 @@
 
 <script lang="ts" setup>
 import { restApi, PostgREST_Decorate } from 'api'
-import formJson from './setting.vform.json'
 import axios from 'axios'
+import formJson from './setting.vform.json'
 const props = withDefaults(
   defineProps<{
     dates?: any
@@ -34,7 +34,7 @@ const props = withDefaults(
   }
 )
 const { t } = useI18n()
-const title = $t('dashboard.cmmnCaseFieldNum')
+const title = $t('dashboard.cmmnCaseFieldTotal')
 const total = ref(0)
 const emits = defineEmits(['refreshSetting', 'delete'])
 function handleRefresh(chartSetting) {
@@ -47,32 +47,26 @@ const { cardRef, settingRef, resize, handleInitCard, loading } = useDashboardCar
   props,
 
   getOptions: async (chartSetting) => {
-    // TODO: 需要filter company_id
-    const sql = PostgREST_Decorate([
+    const sqlParams = [
       {
         key: 'created_date',
         type: 'gt',
         value: '2024-10-27 00:44:40'
       },
       {
-        key: 'created_date',  
+        key: 'created_date',
         type: 'lt',
         value: '2026-11-03 17:12:00'
       },
       {
         type: 'select',
-        value: `${chartSetting.filterKey}.count()`
-      },
-      {
-        key: `${chartSetting.filterKey}`,
-        type: 'eq',
-        value: `${chartSetting.filterValue}`
+        value: `${chartSetting.filterKey}.sum()`
       }
-    ])  
+    ]
+    const sql = PostgREST_Decorate(sqlParams)
     const url = `http://132.148.160.188:3003/${chartSetting.tableName}?${sql}`
     const response = await axios.get(url)
-    const data = response.data[0]
-    total.value = data.count
+    total.value = response.data[0].sum
     return {
       total: total.value
     }
@@ -81,9 +75,7 @@ const { cardRef, settingRef, resize, handleInitCard, loading } = useDashboardCar
 
 const dialogRef = ref()
 function handleDrillDown() {
-  const sortBy = props.setting.sortBy || 'created_date'
-  const sortOrder = props.setting.sortOrder || 'desc'
-  const sqlParams =[
+  const sqlParams = [
     {
       key: 'created_date',
       type: 'gt',
@@ -94,21 +86,24 @@ function handleDrillDown() {
       type: 'lt',
       value: '2026-11-03 17:12:00'
     },
-    // {
-    //   type: 'select',
-    //   value: `${chartSetting.filterKey}.count()`
-    // },
-    {
-      key: `${props.setting.filterKey}`,
-      type: 'eq',
-      value: `${props.setting.filterValue}`
-    },
     {
       type: 'order',
-      value: `${sortBy}.${sortOrder}`
+      value: `${props.setting.filterKey}.desc`
     }
   ]
   dialogRef.value.handleOpen(sqlParams)
+}
+function handleCompute(value: number) {
+  try {
+    if (props.setting.displayMethod === 'FinancialComputing') {
+      return FinancialComputing(value)
+    } else if (props.setting.displayMethod === 'fileSize') {
+      return fileSize(value)
+    }
+  } catch (error) {
+    return value
+  }
+  return value
 }
 // #endregion
 

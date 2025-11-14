@@ -47,7 +47,7 @@ export function fileSize(value: number, sizeList: string[] = ['B', 'KB', 'MB', '
   let size = (value / Math.pow(a, logaN)).toFixed(2)
   return `${size}${sizeList[logaN]}`
 }
-export function getYearMonthDates(startDate, endDate, mode) {
+export function getYearMonthDates(startDate: string, endDate: string, mode: string) {
   try {
     const format = mode === 'yearMonth' ? 'YYYYMM' : 'YYYYMMDD'
     const _mode = mode === 'yearMonth' ? 'year' : 'month'
@@ -66,5 +66,27 @@ export function getYearMonthDates(startDate, endDate, mode) {
     return result
   } catch (error) {
     return []
+  }
+}
+export const digitalConversion = (value: number, section: number = 100000): string => {
+  let i = 0
+  let sum = value - section
+  while (sum > 0) {
+    sum = sum - section
+    i++
+  }
+  const data = ['千', '万', '十万', '百万', '千万', '亿']
+  const color = data[i]
+  return color
+}
+export const FinancialComputing = (num: number): string => {
+  if (num >= 1e9) {
+    return (num / 1e9).toFixed(0) + 'B' // 亿
+  } else if (num >= 1e6) {
+    return (num / 1e6).toFixed(0) + 'M' // 百万
+  } else if (num >= 1e3) {
+    return (num / 1e3).toFixed(0) + 'K' // 千
+  } else {
+    return num.toString() // 小于千的数字
   }
 }

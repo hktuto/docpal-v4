@@ -384,12 +384,15 @@
     "UserGroupId": "用户组",
     "UserId": "用户",
     "condition": "条件",
+    "dateField": "日期字段",
     "filterKey": "筛选键",
     "filterValue": "筛选值",
     "groupName": "组名",
     "relatedField": "相关关键词",
     "value": "填值",
-    "value_tip": "使用'currentUser'可當用户 ID 为值"
+    "value_tip": "使用'currentUser'可當用户 ID 为值",
+    "yAxisTitle": "Y轴标题",
+    "yAxisUnit": "Y轴单位"
   },
   "caseManage": {
     "avalibleFields": "可用字段",
@@ -644,6 +647,12 @@
     "cmmnAction": "我的行动",
     "cmmnActivity": "活动",
     "cmmnBasicInfo": "基础信息",
+    "cmmnCaseFieldLifecycle": "Case Field Lifecycle",
+    "cmmnCaseFieldNum": "Case Field Num",
+    "cmmnCaseFieldTotal": "Case Field Total",
+    "cmmnCaseGroupFieldNum": "Case Group Field Num",
+    "cmmnCaseMonthlyAverage": "Case Monthly Average",
+    "cmmnCaseMonthlyDateRange": "Case Monthly Date Range",
     "cmmnDocumentRoot": "档案",
     "cmmnMasterTableInfo": "相关主表信息",
     "cmmnProcess": "流程",
@@ -687,6 +696,7 @@
   },
   "dashboardType": {
     "case": "@:adminMenu.caseManagement",
+    "caseCount": "Case 统计",
     "default": "普通",
     "document": "文件",
     "documentCount": "文件统计",
