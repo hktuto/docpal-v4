@@ -197,7 +197,7 @@ async function getTemplateVariableList() {
   const fields: any[] = node.data.data.extensionElements['flowable:field']
 
   if (data.fileType === 'Word') {
-    const variable = JsonSchemaToJsonData(data.templateVariable)
+    const variable = await JsonSchemaToJsonData(data.templateVariable)
     if (!variable) {
       return
     }
