@@ -86,8 +86,7 @@ export async function getBpmnAddtionalElement(xml: any, taskDefinitionKey: strin
         return curr
       },{})
     // step 5, get which workflow information to store signature
-    const found = workflowToTemplateMapping[signatureSettingFromTask.attr_signature]
-    const workflowKeyToStoreSignature = found || ''
+    const workflowKeyToStoreSignature = workflowToTemplateMapping[signatureSettingFromTask.attr_signature] || ''
 
     // step 6, get template detail and setting json
     const { data: detail } = await clientApi.api.getNuxeoTemplateTemplateid(templateId)
