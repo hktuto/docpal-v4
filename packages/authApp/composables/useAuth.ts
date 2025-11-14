@@ -169,7 +169,7 @@ export function logout() {
     path: '/login',
     query: {
       ...route.query,
-      redirect: route.path
+      redirect: route.path === '/login' ? '/' : route.path
     }
   })
   // clean up local storage
