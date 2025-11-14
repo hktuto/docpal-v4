@@ -139,12 +139,13 @@ function handlePickerClose() {
   </el-dialog>
 
   <!-- edit visible-->
-  <el-dialog v-model="state.mangerVisible">
+  <el-dialog v-model="state.mangerVisible" style="width: 800px">
     <Manager />
   </el-dialog>
 
   <!-- insert visible -->
   <VariablePicker
+
     :variables="variables"
     :visible="state.insertVariableVisible"
     @select="handlePickerSelect"
