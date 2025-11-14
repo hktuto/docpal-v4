@@ -72,9 +72,9 @@ function handlePickerSelect(variable: DocTemplateVariable) {
   if (nodeType === 'variableSignature') {
     editor.value.commands.insertContent({
       type: nodeType,
-      attrs: { id: Date.now().toString(), name: variable.name, type: 'signature', value: [ variable ] }
+      attrs: { id: Date.now().toString(), name: variable.name, type: 'signature', value: [variable] }
     })
-  }else{
+  } else {
     editor.value.commands.insertContent({
       type: nodeType,
       attrs: { ...variable }
@@ -127,7 +127,7 @@ function handlePickerClose() {
              class="big"
              destroy-on-close
              append-to-body
-             >
+  >
     <VariableForm
       v-if="state.addVisible"
       :mode="formMode"
@@ -139,7 +139,7 @@ function handlePickerClose() {
   </el-dialog>
 
   <!-- edit visible-->
-  <el-dialog v-model="state.mangerVisible" style="width: 800px">
+  <el-dialog v-model="state.mangerVisible" class="big">
     <Manager />
   </el-dialog>
 
