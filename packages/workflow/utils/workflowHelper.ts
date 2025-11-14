@@ -81,13 +81,13 @@ export async function getBpmnAddtionalElement(xml: any, taskDefinitionKey: strin
     // step 4, get all variable from template task and convert to workflow to template mapping
     const defaultField: any = ['parentPath', 'storeValue', 'documentName', 'documentType', 'templateId']
     const workflowToTemplateMapping: any = (signatureTask.extensionElements['flowable:field'] || []).filter((item: any) => !defaultField.includes(item.attr_name))
-      .map((item: any) => ({
-        [item.attr_name]: item['flowable:expression'].__cdata.replace('${variables:get(', '').replace(')}', '')
-      }))
-
+      .reduce((curr:any, item: any) => {
+        curr[item.attr_name]= item['flowable:expression'].__cdata.replace('${variables:get(', '').replace(')}', '')
+        return curr
+      },{})
     // step 5, get which workflow information to store signature
-    const found = workflowToTemplateMapping.find((item: any) => item.hasOwnProperty(signatureSettingFromTask.attr_signature))
-    const workflowKeyToStoreSignature = found ? found[signatureSettingFromTask.attr_signature] : ''
+    const found = workflowToTemplateMapping[signatureSettingFromTask.attr_signature]
+    const workflowKeyToStoreSignature = found || ''
 
     // step 6, get template detail and setting json
     const { data: detail } = await clientApi.api.getNuxeoTemplateTemplateid(templateId)
@@ -101,7 +101,7 @@ export async function getBpmnAddtionalElement(xml: any, taskDefinitionKey: strin
     // replace signature variable
     // convert workflow variable to template variable
     const templateVariables = convertWorkflowVariableToTemplateVariable(formData, workflowToTemplateMapping)
-    console.log('templateVariables', templateVariables, formData)
+    console.log('templateVariables', workflowToTemplateMapping, formData)
     // get current user detail
     const currenUserDetail = useUserState()
     const userSignatureInfo = {
