@@ -37,9 +37,13 @@
       </ElTabPane>
     </ElTabs>
     <template #footer>
-      <el-button id="Workflow__NewWorkflow__StartWorkflow" type="primary" v-if="activeName === 'Form'"
-                 :loading="state.loading" @click="checkAndSubmit">
-        {{ $t('workflow_startWorkflow') }}
+      <el-button v-if="!pageButtonSetting || pageButtonSetting.showSumBitButton" id="Workflow__NewWorkflow__StartWorkflow" type="primary" @click="checkAndSubmit">
+        <template v-if="pageButtonSetting && pageButtonSetting.submitButtonLabel">
+          {{ pageButtonSetting.submitButtonLabel }}
+        </template>
+        <template v-else>
+          {{ $t('common_submit') }}
+        </template>
       </el-button>
     </template>
   </el-dialog>
@@ -158,7 +162,19 @@ async function checkAndSubmit() {
   }
   state.loading = false
 }
-
+type AdditionalButton = {
+  props: any
+  component: string
+}
+const additionalButton = ref<AdditionalButton[]>([])
+const pageButtonSetting = ref<any>(null)
+async function handleAdditionalSetting(xml: any, taskDetail: any, formData: any) {
+  const { buttons, components, signatureSetting, buttonSetting } = await getBpmnAddtionalElement(xml, "Start", taskDetail, formData)
+  additionalButton.value = buttons
+  if(buttonSetting) {
+    pageButtonSetting.value = buttonSetting
+  }
+}
 async function initForm(processKey: string, versionId: string) {
   const props = await clientApi.api.postWorkflowProperties({processKey}).then(res => res.data)
   const formData = formDataGet(props)
@@ -171,7 +187,7 @@ async function initForm(processKey: string, versionId: string) {
   })
   const text = await blob.text()
   state.bpmnXml = text
-
+  await handleAdditionalSetting(text, processKey, {}, {})
 }
 
 function graphReady() {
