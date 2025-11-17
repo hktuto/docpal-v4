@@ -68,7 +68,23 @@ export async function getBpmnAddtionalElement(xml: any, taskDefinitionKey: strin
   // TODO : get buttonSetting
   if (currentTask.extensionElements && currentTask.extensionElements['docpal:buttonSetting']) {
     const buttonSettingFromTask = currentTask.extensionElements['docpal:buttonSetting']
-    buttonSetting = buttonSettingFromTask
+    buttonSetting = Object.keys(buttonSettingFromTask).reduce((prev: any, key: string) => {
+      if(!buttonSettingFromTask[key]) {
+        return prev
+      }
+      const value = buttonSettingFromTask[key]
+      if(typeof value === 'object') {
+        // something the bpmn will convert the value to a cdata, so we need to check it
+        if(value["__cdata"]) {
+          prev[key] = value["__cdata"]
+        } else {
+          prev[key] = JSON.parse(JSON.stringify(value))
+        }
+      } else {
+        prev[key] = value
+      }
+      return prev
+    }, {})
   }
   if (currentTask.extensionElements && currentTask.extensionElements['docpal:signatureSetting']) {
     // if docpal:signatureSetting' is in current Task , that mean it is a signature task
@@ -100,7 +116,6 @@ export async function getBpmnAddtionalElement(xml: any, taskDefinitionKey: strin
     // replace signature variable
     // convert workflow variable to template variable
     const templateVariables = convertWorkflowVariableToTemplateVariable(formData, workflowToTemplateMapping)
-    console.log('templateVariables', workflowToTemplateMapping, formData)
     // get current user detail
     const currenUserDetail = useUserState()
     const userSignatureInfo = {
