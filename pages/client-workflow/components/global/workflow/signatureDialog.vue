@@ -21,7 +21,10 @@ function ensureUserId(): string {
 const signatureCanvasRef = ref<any>(null)
 
 async function getUserSignature(){
- const signature = await clientApi.api.getUserProfileUseridSignature(ensureUserId(),{format: 'blob'}) as unknown as Blob
+ const signature = await clientApi.api.getUserProfileUseridSignature(ensureUserId(),{format: 'blob', headers: {
+  'noThrowError': true
+ }}) as unknown as Blob
+
  if(!signature || signature.size === 0) {
   signaturePreview.value.push({
       type: "user", img:""
@@ -40,7 +43,9 @@ async function getUserSignature(){
 }
 
 async function getCompanyChop(chopId:string){
-  const signature = await clientApi.api.getCompanyprofilesChopsCompanychopidFile(chopId,{format: 'blob'}) as unknown as Blob
+  const signature = await clientApi.api.getCompanyprofilesChopsCompanychopidFile(chopId,{format: 'blob', headers: {
+    'noThrowError': true
+  }}) as unknown as Blob
   const reader = new FileReader();
   reader.readAsDataURL(signature); 
   reader.onloadend = function() {
@@ -90,7 +95,7 @@ async function handleSubmitSignature(signature: string) {
   const userSignature = signaturePreview.value.find((item: any) => item.type === 'user')
 
   // TODO: swagger APi 文檔需要移除 query 參數
-  if (!userSignature.img) {
+  if (!userSignature ||!userSignature.img) {
     await clientApi.api.postUserprofileUseridSignature(ensureUserId(), {} as any, form as any)
   } else {
     await clientApi.api.putUserprofileUseridSignature(ensureUserId(), {} as any, form as any)
