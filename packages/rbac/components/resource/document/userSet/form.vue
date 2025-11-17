@@ -60,7 +60,7 @@ defineExpose({
 </script>
 <template>
   <h3>
-    {{ $t('user_role') }}
+    {{ $t('rbac.permission.user_rules') }}
   </h3>
   <FormLogicalSelector ref="SelectorRoleRef" v-model:form-data="formData" :resource-attributes="targetOptions" :is-or="true" />
 </template>

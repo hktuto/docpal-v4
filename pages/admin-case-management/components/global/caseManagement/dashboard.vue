@@ -44,7 +44,7 @@
 </template>
 <script lang="ts" setup>
 import { adminApi } from 'api'
-
+const { t } = useI18n()
 const props = defineProps<{
   id: string
   caseTypeId: string
@@ -92,6 +92,7 @@ async function handleSave() {
       id: props.id,
       styleJson: JSON.stringify(state.layout)
     })
+    routerProvider?.message.success(t('dpMsg_success'))
   } catch (error) {
   } finally {
     state.saveLoading = false

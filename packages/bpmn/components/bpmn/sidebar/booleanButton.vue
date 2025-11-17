@@ -165,9 +165,9 @@ watch(buttonSetting, () => {
             </ElSelect>
           </ElFormItem>
           <ElFormItem label="What State to apply">
-            <ElSwitch v-model="item.attr_applyState" active-text="true" inactive-text="false" />
+            <ElSwitch v-model="item.attr_applyState" active-text="True" inactive-text="False" />
           </ElFormItem>
-          <ElFormItem label="Button Style">
+          <ElFormItem label="Button Color">
             <ElSelect v-model="item.attr_buttonStyle" placeholder="Button Style" filterable>
               <ElOption v-for="item in buttonStyle" :key="item" :label="item" :value="item">
                 <div class="flex items-center">
@@ -176,11 +176,11 @@ watch(buttonSetting, () => {
               </ElOption>
             </ElSelect>
           </ElFormItem>
-          <ElFormItem label="Preview Button Text">
-            <ElInput v-model="item.attr_buttonText" placeholder="Preview Button Text" />
+          <ElFormItem label="Button Text">
+            <ElInput v-model="item.attr_buttonText" placeholder="Button Text" />
           </ElFormItem>
           <ElFormItem>
-            <ElButton text @click="form.splice(index, 1)">Remove</ElButton>
+            <ElButton type="danger" @click="form.splice(index, 1)">Remove</ElButton>
           </ElFormItem>
         </ElForm>
       </template>

@@ -14,7 +14,7 @@
             <template v-for="(c, cIndex) in q.matchs" :key="'qc' + qIndex">
               <div class="search-child-child">
                 <el-tag class="el-icon--left el-tag--ellipsis search-recent-tag" type="info" size="small" effect="dark">
-                  {{ c.queryType }}：
+                  {{ $t(`searchGroup.${c.queryType}`) }}：
                   <b>{{ displayValueMap(c.queryType, c.value) }}</b>
                 </el-tag>
               </div>
@@ -125,13 +125,12 @@ defineExpose({
 }
 .search-child {
   // background-color: var(--app-primary-color);
-  padding: var(--app-space-xs);
-  background: var(--el-color-info-light-5);
+
   margin-bottom: var(--app-space-xs);
 }
 .search-child-child {
   // background-color: var(--app-primary-color);
-  background: var(--el-color-info-light-7);
+  background: var(--app-grey-900);
   margin-bottom: var(--app-space-xs);
   padding: var(--app-space-xs);
   border-radius: 4px;

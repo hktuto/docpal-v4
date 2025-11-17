@@ -55,7 +55,7 @@
       <template #reference>
         <BrowseActionsButton id="shareActionButton" :label="svgContent">
           <SvgIcon
-            class="hd-pending-approval-img"
+            class="hd-pending-approval-img icon-hold"
             disabled
             :src="hold.removeProcessInstanceId ? '/icons/file/lock.svg' : '/icons/file/unlock.svg'"
             round
@@ -186,5 +186,11 @@ onMounted(() => {
 <style lang="scss" scoped>
 .el-dropdown {
   color: var(--app-grey-300);
+}
+.hd-unlock-img{
+  color: var(--app-accent-color);
+}
+.icon-hold{
+  color: var(--app-error-color);
 }
 </style>

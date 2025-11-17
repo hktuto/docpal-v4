@@ -4,7 +4,7 @@
     v-model="state.visible"
     :title="$t('folderCabinet.newItem')"
     :close-on-click-modal="false"
-    class="scroll-dialog"
+    class="scroll-dialog big"
     append-to-body
   >
     <main>

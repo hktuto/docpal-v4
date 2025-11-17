@@ -73,7 +73,7 @@ function init(bpmnXml :string, x6Json?:any){
         const {json} = bpmnStringToJson(bpmnXml)
         bpmnJson.value = json;
         x6Json = checkX6Json(x6Json, json)
-
+        
         graph.value.fromJSON(x6Json)
         // remove all tools
         graph.value.getNodes().forEach((node:any) => {

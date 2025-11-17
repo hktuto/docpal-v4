@@ -17,7 +17,7 @@ const workflowTemplateList = [
   {
     id: 'Single',
     name: 'Single Approval',
-    icon: '/icons/workflow/singleStepIcon.svg',
+    icon: '/icons/workflow/multipleStepIcon.svg',
     tip: 'blankStepTip',
     url: '/bpmn/single.xml'
   }

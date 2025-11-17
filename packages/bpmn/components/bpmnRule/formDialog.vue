@@ -131,7 +131,7 @@ defineExpose({
     :title="isEdit ? $t('bpmn.updateRule') : mode === 'global' ? $t('bpmn.addGlobalRule') : $t('bpmn.addRule')"
   >
     <ElForm ref="FormRef" :model="formData" :rules="newFieldRules" label-position="top" status-icon @submit.stop>
-      <ElFormItem label="Id" prop="id">
+      <ElFormItem label="ID" prop="id">
         <ElInput ref="idFieldRef" v-model="formData.id" placeholder="id" :disabled="isEdit" />
       </ElFormItem>
       <ElFormItem label="Name" prop="name">

@@ -20,7 +20,7 @@
                 {{ data.label || data.title || data.name }}
               </span>
             </div>
-            <div style="--icon-size: 18px">
+            <div style="--icon-size: var(--app-space-s)">
               <div v-if="showFolderError(data)" class="color__danger size12">{{ $t('msg.NoOtherFilesAllowed') }}</div>
               <div v-if="showError(data)" class="color__danger size12">{{ $t('msg.onlyOneFileAllow') }}</div>
               <SvgIcon v-if="showAddButton(data)" src="/icons/file/newFolder.svg" @click="handleAddFile(data)"></SvgIcon>

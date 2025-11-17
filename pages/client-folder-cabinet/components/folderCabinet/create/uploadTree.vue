@@ -27,7 +27,7 @@
         </div>
       </template>
     </el-tree>
-    <div>
+    <div class="upload-tree-content">
       <template v-if="state.selectedRow && state.selectedRow.folder !== false">
         <div class="flex-x-start">
           <SvgIcon v-if="state.selectedRow.folder" class="el-icon--left" src="/icons/folder-general.svg"></SvgIcon>
@@ -41,10 +41,10 @@
             <template v-if="index !== getLabelList(state.selectedRow.labelRule).length - 1"> -</template>
           </template>
         </div>
-        <el-text :type="hasPreviewName(state.selectedRow.previewName) ? '': 'danger'" style="margin-bottom: 15px">
+        <el-text :type="hasPreviewName(state.selectedRow.previewName) ? '': 'danger'" style="margin-bottom: 15px; align-self: flex-start;">
           {{ $t('folderCabinet.previewName') }}：{{ state.selectedRow.previewName }}
         </el-text>
-        <MetaRenderForm2 ref="MetaFormRef" mode="folderCabinet" @formChange="handleMetaChange"></MetaRenderForm2>
+        <MetaRenderForm2 class="upload-tree-meta-form" ref="MetaFormRef" mode="folderCabinet" @formChange="handleMetaChange"></MetaRenderForm2>
       </template>
       <template v-else>
         {{ $t('tip.clickFolderOrFileToSetMeta') }}
@@ -267,7 +267,7 @@ defineExpose({
   width: 100%;
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: var(--app-space-xs);
+  gap: var(--app-space-m);
   @media (max-width: 640px) {
     grid-template-columns: 1fr;
     grid-template-rows: 1fr 1fr;
@@ -298,5 +298,18 @@ defineExpose({
 .msg-h4 {
   margin: unset;
   padding: unset;
+}
+
+.upload-tree-content{
+  --icon-size: var(--app-space-m);
+    display: flex;
+    width: 100%;
+    flex-flow: column nowrap;
+    justify-content: flex-start;
+    align-items: flex-start;
+    gap: var(--app-space-s);
+}
+.upload-tree-meta-form{
+  width: 100%;
 }
 </style>
