@@ -65,7 +65,7 @@ export default defineAppConfig({
       name: 'client-workflow'
     },
     {
-      name: 'client-retention',
+      label: 'client_retention_item',
       icon: 'ic:outline-lock-clock',
       children: [
         {
@@ -223,7 +223,7 @@ export default defineAppConfig({
     //   name: 'admin-dashboard'
     // },
     {
-      label: 'adminMenu.policy',
+      label: 'client_retention_item',
       icon: 'lucide:book-lock',
       children: [
         {
@@ -271,9 +271,9 @@ export default defineAppConfig({
     {
       name: 'admin-external-storage'
     },
-    {
-      name: 'admin-bulk-import'
-    },
+    // {
+    //   name: 'admin-bulk-import'
+    // },
     {
       name: 'admin-import-jobs'
     },

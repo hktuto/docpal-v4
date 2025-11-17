@@ -460,6 +460,7 @@
   "clientAIUpload": "上传",
   "client_holdPolicies": "保留政策",
   "client_retention": "保留政策列表",
+  "client_retention_item": "保留政策",
   "close": "关闭",
   "cmmn": {
     "input": "Input",
