@@ -48,11 +48,17 @@ async function handleShowColumn() {
   const list = props.setting.displayColumnSetting;
   if(list && list.length > 0) {
     result = list.map((item: any) => {
-      return {
+      const newItem:any = {
         id: item.field,
         name: item.label,
         minWidth: 200
       }
+      if(item.displayType === 'Date') {
+        newItem.formatter = ({ cellValue }: any) => {
+          return formatDate(cellValue)
+        }
+      }
+      return newItem
     })
   }else{
     result = props.setting.displayColumns.reduce((prev: any, columnId: any) => {
