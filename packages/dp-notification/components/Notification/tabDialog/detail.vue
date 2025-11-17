@@ -154,7 +154,14 @@ function handleMessage(message: any) {
       }
       return msg
     }
-    return message
+    console.log('message', message, typeof message)
+    // message maybe a  json string
+    try {
+      const content = JSON.parse(message)
+      return content.message || content.additionalContent || 'No Message'
+    } catch (e) {
+      return message
+    }
   } catch (e) {
     return message
   }
