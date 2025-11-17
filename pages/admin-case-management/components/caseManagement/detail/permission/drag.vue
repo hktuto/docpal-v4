@@ -1,7 +1,7 @@
 <template>
   <div class="drag-container">
     <div v-for="(item,lIndex) in list" :key="lIndex">
-      <div>{{lIndex}}</div>
+      <div>{{convertToTitleCase(lIndex)}}</div>
       <draggable
           class="list-group"
           :list="item"
@@ -21,7 +21,9 @@
 <script lang="ts" setup>
 import draggable from "vuedraggable";
 const props = defineProps(['list'])
-
+function convertToTitleCase(value: string) {
+  return value.charAt(0).toUpperCase() + value.slice(1)
+}
 </script>
 <style lang="scss" scoped>
 .drag-container {

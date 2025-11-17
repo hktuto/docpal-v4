@@ -55,6 +55,7 @@ async function getDetail() {
     idOrPath: doc.parentRef
   })
   routerProvider?.addToHistory(newItem)
+  routerProvider?.updateTabName(docDetail.value.name)
 }
 const isPdf = ref(false)
 
@@ -107,6 +108,7 @@ useEventListener(document, 'closeFilePreview', closePreview)
 
 function switchFile(newFileId: string) {
   routerProvider?.updateProps({ idOrPath: newFileId })
+ 
 }
 
 watch(

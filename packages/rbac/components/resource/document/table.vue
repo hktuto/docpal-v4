@@ -133,7 +133,7 @@ const { tableConfig, tableEvent, tableRef, reload, query } = useVxeTable({
     [
       {
         code: 'detail',
-        name: 'view detail',
+        name: 'View Details',
         action: ({ row }: any) => {
           console.log(row)
           tableDialogRef.value.open({ ...row })
@@ -334,9 +334,13 @@ watch(
     <div style="overflow: hidden"> -->
   <VxeGrid ref="tableRef" v-bind="tableConfig" v-on="tableEvent">
     <template #toolbar_buttons>
-      <ResponsiveFilter ref="ResponsiveFilterRef" @form-change="handleFilterFormChange" />
+      <div class="action_list_container">
+
+     
       <!-- <el-button type="primary" @click="getTable()">Clear</el-button> -->
       <ResourceDocumentBreadcrumb :id="id" @idChange="emits('idChange', $event)" />
+      <ResponsiveFilter ref="ResponsiveFilterRef" @form-change="handleFilterFormChange" />
+      </div>
     </template>
   </VxeGrid>
   <!-- </div> -->
@@ -361,6 +365,21 @@ watch(
     align-items: center;
     gap: var(--app-space-s);
     cursor: pointer;
+  }
+}
+
+.action_list_container{
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: flex-start;
+  align-items: center;
+  gap: var(--app-space-s);
+  .breadcrumbContainer{
+    flex: 1 0 auto;
+  }
+  .responsive-container{
+    flex: 0 0 auto;
+    border-left: 1px solid var(--app-grey-800);
   }
 }
 </style>

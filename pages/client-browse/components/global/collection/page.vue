@@ -27,7 +27,7 @@
       <VxeGrid ref="tableRef" v-bind="tableConfig" v-on="tableEvent">
         <template #toolbar_buttons>
           <div class="flex-x-between">
-            {{ state.curCollection.name }}
+            <div class="title">{{ state.curCollection.name }}</div>
             <SvgIcon id="Collection__EditCollectionInfo" src="/icons/edit.svg" class="el-icon--right el-icon--left" @click="openEditCollectionDialog" />
           </div>
           <div class="flex-x-end">
@@ -320,7 +320,11 @@ onMounted(() => {
   display: flex;
   justify-content: flex-end;
 }
-
+.title{
+  font-size: var(--app-font-size-xl);
+  font-weight: 600;
+  margin-right: var(--app-space-xs);
+}
 .collection-container {
   display: grid;
   grid-template-columns: min-content 1fr;

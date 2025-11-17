@@ -60,7 +60,6 @@ const { tableConfig, tableEvent, tableRef, reload } = useVxeTable({
       title: 'rbac.permission.isInherit',
       type: 'html',
       width: 80,
-      align: 'center',
       formatter: ({ cellValue, row }: any) => {
         let icon = row.isInherit ? '/icons/check2.svg' : '/icons/close.svg'
         return `<span class="browseNameCell"><img src="${icon}" class="browseFileIcon" /> </span> `

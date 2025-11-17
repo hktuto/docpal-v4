@@ -114,7 +114,7 @@ export type BpmnElement = {
 export const bpmnElement: BpmnElement = {
   startEvent: {
     nodeStyle: () => ({
-      ...squareNodeStyle('#0099ff', 'StartEvent', '/bpmn/icons/form.svg', 120, 64),
+      ...squareNodeStyle('#0099ff', 'Start Event', '/bpmn/icons/form.svg', 120, 64),
       // ...circleNodeStyle('#0099ff', '/bpmn/icons/form.svg'),
       shape: 'bpmn-node',
       ports: {
@@ -140,7 +140,7 @@ export const bpmnElement: BpmnElement = {
   },
   endEvent: {
     nodeStyle: () => ({
-      ...squareNodeStyle('#ddd', 'EndEvent', '/bpmn/icons/close.svg', 120, 64),
+      ...squareNodeStyle('#ddd', 'End Event', '/bpmn/icons/close.svg', 120, 64),
 
       shape: 'bpmn-node',
       ports: {
@@ -168,7 +168,7 @@ export const bpmnElement: BpmnElement = {
     nodeStyle: (item: any) => {
       let icon = '/bpmn/icons/form.svg'
       let color = '#0099ff'
-      let type = 'UserTask'
+      let type = 'User Task'
       let bgColor = '#fff'
       let textColor = '#000'
       if (item && item['attr_docpal:formType']) {
@@ -436,7 +436,7 @@ export const bpmnElement: BpmnElement = {
             break
           case '${conditionValidateDelegate}':
             icon = '/bpmn/icons/condition.svg'
-            type = 'condition'
+            type = 'Condition'
             color = '#7B61FF'
             bgColor = '#0F2037'
             textColor = '#fff'

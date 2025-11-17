@@ -1,6 +1,6 @@
 <template>
   <el-dialog
-    class="scroll-dialog"
+    class="scroll-dialog big"
     v-model="state.visible" :title="state.isEdit ? $t('holdPolicies.edit') : $t('holdPolicies.create')"
     :close-on-click-modal="false" append-to-body
   >

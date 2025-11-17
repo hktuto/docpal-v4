@@ -2472,6 +2472,9 @@
     "Everything": "管理",
     "Read": "读取",
     "ReadWrite": "读写",
+    "allManage": "所有管理权限",
+    "allRead": "所有阅读权限",
+    "allWrite": "所有写作权限",
     "create": "创建",
     "custom": "自定义",
     "delete": "删除",
@@ -2519,6 +2522,7 @@
       "resource_rules": "资源规则",
       "targetName": "用户/角色/组/细控",
       "userSetName": "细控名称",
+      "user_rules": "用户/用户组/角色",
       "viewFolder": "查看文件夹/文件",
       "viewMetadata": "查看元数据"
     },
