@@ -87,7 +87,9 @@ onMounted(() => {
       <template v-for="column in columnsSetting" :key="column.field">
         <div class="card-item-label">{{ column.title }}</div>
         <!-- value -->
-        <div class="card-item-value">{{ item[column.field] }}</div>
+        <div class="card-item-value">
+          {{ column.formatter ? column.formatter(item[column.field]) : item[column.field] }}
+        </div>
     </template>
   </div>
 </div>
