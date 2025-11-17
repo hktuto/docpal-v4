@@ -139,7 +139,7 @@ watch(
     <div v-if="setting.view === 'card'" class="cards-container">
       <Cards ref="cardsRef" :name="setting.name" :detail="state.detail" :relatedField="setting.relatedField"></Cards>
     </div>
-    <DashboardRelatedMasterSetting ref="settingRef" @delete="handleDelete" @refresh="handleRefresh" />
+    <DashboardRelatedMasterSetting v-if="!hideSetting" ref="settingRef" @delete="handleDelete" @refresh="handleRefresh" />
   </DashboardCard>
 </template>
 <style lang="scss" scoped>
