@@ -131,7 +131,6 @@ watch(
     @delete="handleDelete"
     @refresh="refresh"
   >
-  
     <div v-if="setting.view === 'table'" class="table-container">
       <DashboardRelatedMasterTable ref="tableRef" :relatedField="setting.relatedField" :name="setting.name" :detail="state.detail">
       </DashboardRelatedMasterTable>
