@@ -37,7 +37,7 @@ function ruleAdd(newField: any, callback: () => void) {
   const taskField = {
     attr_id: newField.id,
     attr_name: newField.name,
-    attr_type: getBpmnRuleType(newField.validationRule.type) 
+    attr_type: getBpmnRuleType(newField.validationRule.type || newField.type)
   }
   formItems.value.push(taskField)
   formChange()
@@ -50,7 +50,7 @@ function fieldUpdate(newFields: any) {
     return {
       attr_id: item.id,
       attr_name: item.name,
-      attr_type: getBpmnRuleType(item.validationRule.type)
+      attr_type: getBpmnRuleType(item.validationRule.type || newField.type)
     }
   })
   formItems.value = newFormItems
@@ -86,7 +86,7 @@ function updateRule(newField: any) {
     formItems.value[index] = {
       attr_id: newField.id,
       attr_name: newField.name,
-      attr_type: getBpmnRuleType(newField.validationRule.type) || 'string'
+      attr_type: getBpmnRuleType(newField.validationRule.type || newField.type) || 'string'
     }
   }
   graphProvider?.graph.value?.cleanHistory()
@@ -239,8 +239,8 @@ watch(
     </div>
     <div class="actionsContainer">
       <ElButton type="primary" @click="editField" :disabled="editorProvider.readonly.value"> Edit Field</ElButton>
-      
-      <ElButton type="primary"  @click="editorProvider.openForm(node)">
+
+      <ElButton type="primary" @click="editorProvider.openForm(node)">
         Edit Form
       </ElButton>
       <ElButton type="primary" @click="editorProvider.previewForm(node)"> Preview Form</ElButton>
