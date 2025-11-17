@@ -18,7 +18,7 @@
         </div>
       </div>
     </div>
-    <DashboardMasterTableInfoSetting ref="settingRef" @delete="handleDelete" @refresh="handleRefresh" />
+    <DashboardMasterTableInfoSetting v-if="!hideSetting" ref="settingRef" @delete="handleDelete" @refresh="handleRefresh" />
   </DashboardCard>
 </template>
 <script lang="ts" setup>
