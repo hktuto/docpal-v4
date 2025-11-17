@@ -11,7 +11,7 @@ const state = reactive<{
   loading: boolean;
   visible: boolean;
   setting: {
-    displayColumnSetting?: Array<{ field: string; label: string }>;
+    displayColumnSetting?: Array<{ field: string; label: string; displayType?: 'text' | 'Date' | 'tag' }>;
     [key: string]: unknown;
   };
 }>({
@@ -25,6 +25,12 @@ const FormRendererRef = ref();
 function ensureDisplayColumnSetting() {
   if (!Array.isArray(state.setting.displayColumnSetting)) {
     state.setting.displayColumnSetting = [];
+  } else {
+    // Ensure all items have displayType
+    state.setting.displayColumnSetting = state.setting.displayColumnSetting.map((item: any) => ({
+      ...item,
+      displayType: item.displayType || 'text',
+    }));
   }
 }
 
@@ -46,9 +52,10 @@ function updateDisplayColumnChange({ fieldName, newValue, oldValue }: any) {
         ...existing,
         field,
         label: existing?.label || field.replace(/_/g, ' '),
+        displayType: existing?.displayType || 'text',
       };
     }
-    return { field, label: field };
+    return { field, label: field, displayType: 'text' as const };
   });
   state.setting.displayColumnSetting = nextSettings;
 }
@@ -142,6 +149,16 @@ defineExpose({ handleOpen });
                   :aria-label="`${t('tableHeader_displayColumn')} ${column.field}`"
                   size="small"
                 />
+                <el-select
+                  v-model="state.setting.displayColumnSetting[index].displayType"
+                  :aria-label="`${t('tableHeader_displayColumn')} ${column.field} ${t('common_displayType') || 'Display Type'}`"
+                  size="small"
+                  class="display-type-select"
+                >
+                  <el-option label="Text" value="text" />
+                  <el-option label="Date" value="Date" />
+                  <el-option label="Tag" value="tag" />
+                </el-select>
               </div>
             </li>
           </template>
@@ -209,6 +226,10 @@ defineExpose({ handleOpen });
   display: flex;
   flex-direction: column;
   gap: 4px;
+}
+
+.display-type-select {
+  width: 100%;
 }
 
 .column-field {
