@@ -19,7 +19,7 @@
         </template>
         <template v-else>
           <el-button id="RetentionList__RetentionPendingList__PendingApproval" text :disabled="true">
-            {{ $t('workflow_statuspendingApproval') }}
+            {{ $t('workflow_statuspendingApproval') }} 
           </el-button>
         </template>
       </template>
