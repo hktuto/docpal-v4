@@ -33,6 +33,8 @@ const props = withDefaults(
     hideSetting: false
   }
 )
+const CMDProvider = inject(CaseManagementDashboardKey)
+const caseInstanceId = CMDProvider?.instanceId?.value || null
 const { t } = useI18n()
 const title = $t('dashboard.cmmnCaseLimitFieldNum')
 const total = ref(0)
@@ -123,6 +125,13 @@ const { cardRef, chartRef, settingRef, resize, handleInitCard, loading } = useDa
         value: 0
       }
     ]
+    if (chartSetting.relatedField && caseInstanceId) {
+      sqlParams.push({
+        key: chartSetting.relatedField,
+        type: 'eq',
+        value: caseInstanceId
+      })
+    }
     if (chartSetting.filterKey && chartSetting.filterValue) {
       sqlParams.push({
         key: `${chartSetting.filterKey}`,
@@ -169,6 +178,13 @@ function handleShowAll() {
       value: `${props.setting.sortBy}.desc`
     }
   ]
+  if (chartSetting.relatedField && caseInstanceId) {
+    sqlParams.push({
+      key: chartSetting.relatedField,
+      type: 'eq',
+      value: caseInstanceId
+    })
+  }
   if(props.setting.filterKey && props.setting.filterValue) {
     sqlParams.push({
       key: `${props.setting.filterKey}`,

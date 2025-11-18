@@ -33,6 +33,8 @@ const props = withDefaults(
     hideSetting: false
   }
 )
+const CMDProvider = inject(CaseManagementDashboardKey)
+const caseInstanceId = CMDProvider?.instanceId?.value || null
 const { t } = useI18n()
 const title = $t('dashboard.cmmnCaseLimitGroupFieldNum')
 const total = ref(0)
@@ -107,6 +109,9 @@ const { cardRef, chartRef, settingRef, resize, handleInitCard, loading } = useDa
     if (chartSetting.filterKey && chartSetting.filterValue) {
       rpcParams._filters[chartSetting.filterKey] = chartSetting.filterValue
     }
+    if (chartSetting.relatedField && caseInstanceId) {
+      rpcParams._filters[chartSetting.relatedField] = caseInstanceId
+    }
     if (Object.keys(rpcParams._filters).length === 0) {
       delete rpcParams._filters
     }
@@ -162,6 +167,13 @@ function handleShowAll(groupField: string = '') {
         value: `${props.setting.filterValue}`
       })
     }
+  }
+  if (chartSetting.relatedField && caseInstanceId) {
+    sqlParams.push({
+      key: chartSetting.relatedField,
+      type: 'eq',
+      value: caseInstanceId
+    })
   }
   if (groupField) {
     if (groupField !== '-') {
