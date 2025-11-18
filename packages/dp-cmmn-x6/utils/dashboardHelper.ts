@@ -10,7 +10,9 @@ import RelatedCase from '../components/dashboard/relatedCase/index.vue'
 import RelatedMaster from '../components/dashboard/relatedMaster/index.vue'
 import MasterTableInfo from '../components/dashboard/masterTableInfo/index.vue'
 import RelatedCaseInfo from '../components/dashboard/relatedCaseInfo/index.vue'
-export type CmmnDashboardWidget = 'Action' | 'BasicInfo' | 'Process' | 'TaskPage' | 'WorkflowPage' | 'Activity' | 'DocumentRoot' | 'RelatedCase' | 'RelatedMaster' | 'MasterTableInfo' | 'RelatedCaseInfo'
+import { CaseStatisticsWidgetSetting, CaseStatisticsWidgetComponent } from './dashboardCaseStatistics'
+import type { CaseStatisticsWidget as CaseStatisticsWidgetType } from './dashboardCaseStatistics'
+export type CmmnDashboardWidget = CaseStatisticsWidgetType | 'Action' | 'BasicInfo' | 'Process' | 'TaskPage' | 'WorkflowPage' | 'Activity' | 'DocumentRoot' | 'RelatedCase' | 'RelatedMaster' | 'MasterTableInfo' | 'RelatedCaseInfo'
 export const CmmnDashboardWidgetSetting: { [key in CmmnDashboardWidget]: DashboardWidgetSetting } = {
   BasicInfo: {
     label: 'cmmnBasicInfo',
@@ -142,7 +144,7 @@ export const CmmnDashboardWidgetSetting: { [key in CmmnDashboardWidget]: Dashboa
       layout: [],
       masterTableId: '',
       masterTableName: '',
-      relatedField: '',
+      relatedField: ''
     }
   },
   RelatedCaseInfo: {
@@ -160,9 +162,10 @@ export const CmmnDashboardWidgetSetting: { [key in CmmnDashboardWidget]: Dashboa
       caseId: '',
       caseLabel: '',
       caseVersionId: '', // 初始化 case list
-      relatedCaseField: '',
+      relatedCaseField: ''
     }
   },
+  ...CaseStatisticsWidgetSetting,
 }
 
 export function getCmmnWidgetSetting(widget: CmmnDashboardWidget) {
@@ -188,5 +191,6 @@ export const CmmnWidgetComponent = {
   RelatedCase: RelatedCase,
   RelatedCaseInfo: RelatedCaseInfo,
   RelatedMaster: RelatedMaster,
-  MasterTableInfo: MasterTableInfo
+  MasterTableInfo: MasterTableInfo,
+  ...CaseStatisticsWidgetComponent,
 }

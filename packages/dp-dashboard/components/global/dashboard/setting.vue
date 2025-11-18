@@ -1,12 +1,14 @@
 <template>
-  <el-dialog v-model="state.visible" :title="$t('dashboard.setting')"
-             class="scroll-dialog"
-             append-to-body
-             :close-on-click-modal="false"
-             @close="state.visible = false"
+  <el-dialog
+    v-model="state.visible"
+    :title="title ? title : $t('dashboard.setting')"
+    class="scroll-dialog"
+    append-to-body
+    :close-on-click-modal="false"
+    @close="state.visible = false"
   >
     <slot></slot>
-    <FormRenderer ref="FormRendererRef" :form-json="formJson"/>
+    <FormRenderer ref="FormRendererRef" :form-json="formJson" />
     <template #footer>
       <div class="footer-grid">
         <el-button id="" type="danger" @click="handleDelete">
@@ -20,18 +22,14 @@
   </el-dialog>
 </template>
 <script lang="ts" setup>
-import {ElMessageBox} from 'element-plus'
+import { ElMessageBox } from 'element-plus'
 
-const props = defineProps([
-  'formJson'
-])
-const emits = defineEmits([
-  'refresh', 'delete'
-])
+const props = defineProps(['formJson', 'title'])
+const emits = defineEmits(['refresh', 'delete'])
 const state = reactive({
   loading: false,
   visible: false,
-  setting: {},
+  setting: {}
 })
 const FormRendererRef = ref()
 
@@ -57,15 +55,12 @@ function handleOpen(setting) {
 }
 
 async function handleDelete() {
-  const action = await ElMessageBox.confirm(`${$i18n.t('msg_confirmWhetherToDelete')}`).catch(action => action)
+  const action = await ElMessageBox.confirm(`${$i18n.t('msg_confirmWhetherToDelete')}`).catch((action) => action)
   if (action !== 'confirm') return
   emits('delete')
   state.visible = false
 }
 
-defineExpose({handleOpen})
+defineExpose({ handleOpen })
 </script>
-<style lang="scss" scoped>
-
-</style>
-    
+<style lang="scss" scoped></style>
