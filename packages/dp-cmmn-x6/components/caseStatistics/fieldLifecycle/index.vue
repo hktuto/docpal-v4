@@ -31,6 +31,8 @@ const props = withDefaults(
     hideSetting: false
   }
 )
+const CMDProvider = inject(CaseManagementDashboardKey)
+const caseInstanceId = CMDProvider?.instanceId?.value || null
 const { t } = useI18n()
 const title = $t('dashboard.cmmnCaseFieldLifecycle')
 const total = ref(0)
@@ -110,7 +112,9 @@ const { cardRef, chartRef, settingRef, resize, handleInitCard, loading } = useDa
       _status_list: chartSetting.filterList.map((item) => item.filterValue),
       _filters: {}
     }
-
+    if (chartSetting.relatedField && caseInstanceId) {
+      rpcParams._filters[chartSetting.relatedField] = caseInstanceId
+    }
     if (Object.keys(rpcParams._filters).length === 0) {
       delete rpcParams._filters
     }
@@ -119,9 +123,7 @@ const { cardRef, chartRef, settingRef, resize, handleInitCard, loading } = useDa
     return option
   },
   clickAction: (params: any) => {
-    console.log(params)
-    const daysRange = params.name.split('-') // [31,60]
-    // today - 60 days
+    const daysRange = params.name.split('-') 
     const startDate = dayjs(new Date()).subtract(daysRange[1], 'day').format('YYYY-MM-DD 00:00:00')
     const endDate = dayjs(new Date()).subtract(daysRange[0], 'day').format('YYYY-MM-DD 23:59:59')
 
@@ -148,6 +150,13 @@ const { cardRef, chartRef, settingRef, resize, handleInitCard, loading } = useDa
         value: `${sortBy}.${sortOrder}`
       }
     ]
+    if (chartSetting.relatedField && caseInstanceId) {
+      sqlParams.push({
+        key: chartSetting.relatedField,
+        type: 'eq',
+        value: caseInstanceId
+      })
+    }
     dialogRef.value.handleOpen(sqlParams)
   }
 })

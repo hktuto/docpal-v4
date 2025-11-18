@@ -32,6 +32,8 @@ const props = withDefaults(
     hideSetting: false
   }
 )
+const CMDProvider = inject(CaseManagementDashboardKey)
+const caseInstanceId = CMDProvider?.instanceId?.value || null
 const { t } = useI18n()
 const title = $t('dashboard.cmmnCaseFieldTotal')
 const total = ref(0)
@@ -62,6 +64,13 @@ const { cardRef, settingRef, resize, handleInitCard, loading } = useDashboardCar
         value: `${chartSetting.filterKey}.sum()`
       }
     ]
+    if (chartSetting.relatedField && caseInstanceId) {
+      sqlParams.push({
+        key: chartSetting.relatedField,
+        type: 'eq',
+        value: caseInstanceId
+      })
+    }
     const sql = PostgREST_Decorate(sqlParams)
     const response = await clientApi.api.getPostgrestTable(`${chartSetting.tableName}?${sql}`)
     total.value = response.data[0].sum
@@ -89,6 +98,13 @@ function handleDrillDown() {
       value: `${props.setting.filterKey}.desc`
     }
   ]
+  if (chartSetting.relatedField && caseInstanceId) {
+    sqlParams.push({
+      key: chartSetting.relatedField,
+      type: 'eq',
+      value: caseInstanceId
+    })
+  }
   dialogRef.value.handleOpen(sqlParams)
 }
 function handleCompute(value: number) {

@@ -31,6 +31,8 @@ const props = withDefaults(
     hideSetting: false
   }
 )
+const CMDProvider = inject(CaseManagementDashboardKey)
+const caseInstanceId = CMDProvider?.instanceId?.value || null
 const { t } = useI18n()
 const title = $t('dashboard.cmmnCaseMonthlyAverage')
 const total = ref(0)
@@ -118,7 +120,6 @@ const dialogRef = ref()
 
 const { cardRef, chartRef, settingRef, resize, handleInitCard, loading } = useDashboardCard({
   props,
-
   getOptions: async (chartSetting) => {
     if (props.setting.averageTitle) {
       option.legend = {
@@ -172,6 +173,13 @@ const { cardRef, chartRef, settingRef, resize, handleInitCard, loading } = useDa
         value: `${sortBy}.desc`
       }
     ]
+    if (chartSetting.relatedField && caseInstanceId) {
+      sqlParams.push({
+        key: chartSetting.relatedField,
+        type: 'eq',
+        value: caseInstanceId
+      })
+    }
     dialogRef.value.handleOpen(sqlParams)
   }
 })
@@ -180,6 +188,11 @@ async function getCaseCount(chartSetting) {
     _table_name: chartSetting.tableName,
     _date_column: 'created_date', // 合同到期日期字段
     _target_year: dayjs().year()
+  }
+  if (chartSetting.relatedField && caseInstanceId) {
+    rpcParams._filters = {
+      [chartSetting.relatedField]: caseInstanceId
+    }
   }
   const response = await clientApi.api.postPostgrestRpcFunc('count_by_month_generic', rpcParams).then(res => res.data)
   return response.map(item => item.count_value)
@@ -190,6 +203,11 @@ async function getAverageDuration(chartSetting) {
     _date_column: 'created_date', // 合同到期日期字段
     _target_year: dayjs().year(),
     _value_column: chartSetting.averageField
+  }
+  if (chartSetting.relatedField && caseInstanceId) {
+    rpcParams._filters = {
+      [chartSetting.relatedField]: caseInstanceId
+    }
   }
   const response = await clientApi.api.postPostgrestRpcFunc('avg_by_month_generic', rpcParams).then((res) => res.data)
   return response.map(item => item.avg_value)
