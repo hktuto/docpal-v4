@@ -34,7 +34,7 @@ const props = withDefaults(
   }
 )
 const { t } = useI18n()
-const title = $t('dashboard.cmmnCaseGroupFieldNum')
+const title = $t('dashboard.cmmnCaseLimitFieldNum')
 const total = ref(0)
 const tabProvider = inject(TabManagerKey)
 const emits = defineEmits(['refreshSetting', 'delete'])

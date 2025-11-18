@@ -26,15 +26,15 @@ export const useDashboardCard = (params: useDashboardCardParams) => {
     if (params.initStyleAction) {
       params.initStyleAction(cardRef, chartRef)
     } else {
-      // TODO: cardRef 可能为空
-      if (!cardRef.value) return
-      console.log('cardRef', { a: cardRef.value })
-      const cardEl = cardRef.value.$el ? cardRef.value.$el : cardRef.value.parentNode ? cardRef.value.parentNode : cardRef.value
-      const pHeight = cardEl.offsetHeight - 36 // - header
-      const pWidth = cardEl.offsetWidth - 20
-      console.log('pHeight', pHeight, 'pWidth', pWidth)
-      if (chartRef.value) chartRef.value.style = `height: ${pHeight}px; width: ${pWidth}px`
-      if (params.initStyleActionExtend) params.initStyleActionExtend(pHeight, pWidth)
+      setTimeout(() => {
+        // TODO: cardRef 可能为空
+        if (!cardRef.value) return
+        const cardEl = cardRef.value.$el ? cardRef.value.$el : cardRef.value.parentNode ? cardRef.value.parentNode : cardRef.value
+        const pHeight = cardEl.offsetHeight - 36 // - header
+        const pWidth = cardEl.offsetWidth - 20
+        if (chartRef.value) chartRef.value.style = `height: ${pHeight}px; width: ${pWidth}px`
+        if (params.initStyleActionExtend) params.initStyleActionExtend(pHeight, pWidth)
+      }, 100)
     }
   }
 
@@ -87,12 +87,10 @@ export const useDashboardCard = (params: useDashboardCardParams) => {
     return echartInstance
   }
   const resize = () => {
-    console.log('in resize')
     setTimeout(() => {
       if (params.resizeAction) {
         params.resizeAction(echartInstance)
       } else {
-        console.log('in resize')
         initStyle()
         if (echartInstance) echartInstance.resize()
       }
@@ -100,7 +98,6 @@ export const useDashboardCard = (params: useDashboardCardParams) => {
   }
 
   onMounted(async () => {
-    console.log('????onMounted?????')
     setTimeout(async () => {
       initStyle()
       // 随着屏幕大小调节图表
