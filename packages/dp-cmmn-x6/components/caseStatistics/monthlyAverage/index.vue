@@ -12,13 +12,12 @@
     <div id="myEcharts" ref="chartRef" class="echart"></div>
     <CaseStatisticsTableDialog :setting="setting" :dates="tableDates" ref="dialogRef"> </CaseStatisticsTableDialog>
 
-    <DashboardSetting ref="settingRef" :formJson="formJson" :title="title" @delete="handleDelete" @refresh="handleRefresh" />
+    <DashboardSetting v-if="!hideSetting" ref="settingRef" :formJson="formJson" :title="title" @delete="handleDelete" @refresh="handleRefresh" />
   </DashboardCard>
 </template>
 
 <script lang="ts" setup>
-import { restApi, PostgREST_Decorate } from 'api'
-import axios from 'axios'
+import { clientApi, PostgREST_Decorate } from 'api'
 import formJson from './setting.vform.json'
 import dayjs from 'dayjs'
 const props = withDefaults(
@@ -183,8 +182,7 @@ async function getCaseCount(chartSetting) {
     "_schema_name": "app10",
     _target_year: dayjs().year()
   }
-  const url = `http://132.148.160.188:3003/rpc/count_by_month_generic`
-  const response = await axios.post(url, rpcParams).then((res) => res.data)
+  const response = await clientApi.api.postPostgrestRpcFunc('count_by_month_generic', rpcParams).then(res => res.data)
   return response.map(item => item.count_value)
 }
 async function getAverageDuration(chartSetting) {
@@ -195,8 +193,7 @@ async function getAverageDuration(chartSetting) {
     _target_year: dayjs().year(),
     _value_column: chartSetting.averageField
   }
-  const url = `http://132.148.160.188:3003/rpc/avg_by_month_generic`
-  const response = await axios.post(url, rpcParams).then((res) => res.data)
+  const response = await clientApi.api.postPostgrestRpcFunc('avg_by_month_generic', rpcParams).then((res) => res.data)
   return response.map(item => item.avg_value)
 }
 // #endregion

@@ -15,16 +15,12 @@
       <el-button type="primary" @click="handleShowAll">{{ $t('button.showAll') }}</el-button>
     </div>
     <CaseStatisticsTableDialog :setting="setting" :dates="dates" ref="dialogRef"> </CaseStatisticsTableDialog>
-    <CaseStatisticsTableDialog :setting="setting" :dates="dates" ref="groupDialogRef">
-      <CaseStatisticsTableGroup :setting="setting" :dates="dates" ref="groupTableRef" />
-    </CaseStatisticsTableDialog>
-    <DashboardSetting ref="settingRef" :formJson="formJson" :title="title" @delete="handleDelete" @refresh="handleRefresh" />
+    <DashboardSetting v-if="!hideSetting" ref="settingRef" :formJson="formJson" :title="title" @delete="handleDelete" @refresh="handleRefresh" />
   </DashboardCard>
 </template>
 
 <script lang="ts" setup>
-import { restApi, PostgREST_Decorate } from 'api'
-import axios from 'axios'
+import {  clientApi, PostgREST_Decorate } from 'api'
 import formJson from './setting.vform.json'
 const props = withDefaults(
   defineProps<{
@@ -135,8 +131,7 @@ const { cardRef, chartRef, settingRef, resize, handleInitCard, loading } = useDa
       })
     }
     const sql = PostgREST_Decorate(sqlParams)
-    const url = `http://132.148.160.188:3003/${chartSetting.tableName}?${sql}`
-    const response = await axios.get(url)
+    const response = await clientApi.api.getPostgrestTable(`${chartSetting.tableName}?${sql}`)
     response.data.forEach((item) => {
       data.push({
         value: item[chartSetting.sortBy],

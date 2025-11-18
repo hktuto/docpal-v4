@@ -14,13 +14,12 @@
     </div>
     <!-- <div id="myEcharts" ref="chartRef" class="echart"></div> -->
     <CaseStatisticsTableDialog :setting="setting" :dates="dates" ref="dialogRef" />
-    <DashboardSetting ref="settingRef" :title="title" :formJson="formJson" @delete="handleDelete" @refresh="handleRefresh" />
+    <DashboardSetting v-if="!hideSetting" ref="settingRef" :title="title" :formJson="formJson" @delete="handleDelete" @refresh="handleRefresh" />
   </DashboardCard>
 </template>
 
 <script lang="ts" setup>
-import { restApi, PostgREST_Decorate } from 'api'
-import axios from 'axios'
+import {  clientApi, PostgREST_Decorate } from 'api'
 import formJson from './setting.vform.json'
 const props = withDefaults(
   defineProps<{
@@ -64,8 +63,7 @@ const { cardRef, settingRef, resize, handleInitCard, loading } = useDashboardCar
       }
     ]
     const sql = PostgREST_Decorate(sqlParams)
-    const url = `http://132.148.160.188:3003/${chartSetting.tableName}?${sql}`
-    const response = await axios.get(url)
+    const response = await clientApi.api.getPostgrestTable(`${chartSetting.tableName}?${sql}`)
     total.value = response.data[0].sum
     return {
       total: total.value

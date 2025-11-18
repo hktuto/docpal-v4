@@ -12,19 +12,15 @@
       <div ref="cardRef">
         <div id="myEcharts" ref="chartRef" class="echart"></div>
       </div>
-      <el-button type="primary" @click="handleShowAll">{{ $t('button.showAll') }}</el-button>
+      <el-button type="primary" @click="handleShowAll()">{{ $t('button.showAll') }}</el-button>
     </div>
     <CaseStatisticsTableDialog :setting="setting" :dates="dates" ref="dialogRef"> </CaseStatisticsTableDialog>
-    <CaseStatisticsTableDialog :setting="setting" :dates="dates" ref="groupDialogRef">
-      <CaseStatisticsTableGroup :setting="setting" :dates="dates" ref="groupTableRef" />
-    </CaseStatisticsTableDialog>
-    <DashboardSetting ref="settingRef" :formJson="formJson" :title="title" @delete="handleDelete" @refresh="handleRefresh" />
+    <DashboardSetting v-if="!hideSetting" ref="settingRef" :formJson="formJson" :title="title" @delete="handleDelete" @refresh="handleRefresh" />
   </DashboardCard>
 </template>
 
 <script lang="ts" setup>
-import { restApi, PostgREST_Decorate } from 'api'
-import axios from 'axios'
+import { clientApi, PostgREST_Decorate } from 'api'
 import formJson from './setting.vform.json'
 const props = withDefaults(
   defineProps<{
@@ -98,62 +94,42 @@ const { cardRef, chartRef, settingRef, resize, handleInitCard, loading } = useDa
   getOptions: async (chartSetting) => {
     option.series[0].data = []
     const data = option.series[0].data
-    const sqlParams = [
-      {
-        key: 'created_date',
-        type: 'gt',
-        value: '2024-10-27 00:44:40'
-      },
-      {
-        key: 'created_date',
-        type: 'lt',
-        value: '2026-11-03 17:12:00'
-      },
-      {
-        type: 'select',
-        value: `${chartSetting.sortBy},case_id`
-      },
-      {
-        type: 'order',
-        value: `${chartSetting.sortBy}.desc`
-      },
-      {
-        type: 'limit',
-        value: 5
-      },
-      {
-        key: `${chartSetting.sortBy}`,
-        type: 'neq',
-        value: 0
-      }
-    ]
-    if (chartSetting.filterKey && chartSetting.filterValue) {
-      sqlParams.push({
-        key: `${chartSetting.filterKey}`,
-        type: 'eq',
-        value: `${chartSetting.filterValue}`
-      })
+    const rpcParams = {
+      _table_name: chartSetting.tableName,
+      _date_column: 'created_date',
+      _schema_name: 'app10',
+      _top_n: 5,
+      _group_column: chartSetting.groupField,
+      _tcv_column: chartSetting.sortBy,
+      _start_date: '2024-10-27 00:44:40',
+      _end_date: '2026-11-03 17:12:00',
+      _filters: {}
     }
-    const sql = PostgREST_Decorate(sqlParams)
-    const url = `http://132.148.160.188:3003/${chartSetting.tableName}?${sql}`
-    const response = await axios.get(url)
+    if (chartSetting.filterKey && chartSetting.filterValue) {
+      rpcParams._filters[chartSetting.filterKey] = chartSetting.filterValue
+    }
+    if (Object.keys(rpcParams._filters).length === 0) {
+      delete rpcParams._filters
+    }
+    const response = await clientApi.api.postPostgrestRpcFunc('top_group_column_with_total', rpcParams)
     response.data.forEach((item) => {
       data.push({
-        value: item[chartSetting.sortBy],
-        name: item.case_id
+        value: item.total_tcv,
+        name: !item.group_value ? '-' : item.group_value
       })
     })
     console.log(data)
     return option
   },
   clickAction: (params: any) => {
-    notiHandleView({ content: { caseInstanceId: params.name } }, tabProvider)
+    console.log(params)
+    handleShowAll(params.name)
   }
 })
 
 const dialogRef = ref()
 const groupDialogRef = ref()
-function handleShowAll() {
+function handleShowAll(groupField: string = '') {
   const sqlParams = [
     {
       key: 'created_date',
@@ -174,18 +150,36 @@ function handleShowAll() {
       value: `${props.setting.sortBy}.desc`
     }
   ]
-  if(props.setting.filterKey && props.setting.filterValue) {
-    sqlParams.push({
-      key: `${props.setting.filterKey}`,
-      type: 'eq',
-      value: `${props.setting.filterValue}`
-    })
+  if (props.setting.filterKey && props.setting.filterValue) {
+    if (Array.isArray(props.setting.filterValue)) {
+      sqlParams.push({
+        key: `${props.setting.filterKey}`,
+        type: 'in',
+        value: props.setting.filterValue
+      })
+    } else {
+      sqlParams.push({
+        key: `${props.setting.filterKey}`,
+        type: 'eq',
+        value: `${props.setting.filterValue}`
+      })
+    }
   }
-  if (props.setting.groupField) {
-    groupDialogRef.value.handleOpen(sqlParams)
-  } else {
-    dialogRef.value.handleOpen(sqlParams)
+  if (groupField) {
+    if (groupField !== '-') {
+      sqlParams.push({
+        key: `${props.setting.groupField}`,
+        type: 'eq',
+        value: `${groupField}`
+      })
+    } else {
+      sqlParams.push({
+        key: `${props.setting.groupField}`,
+        type: 'isNull'
+      })
+    }
   }
+  dialogRef.value.handleOpen(sqlParams)
 }
 // #endregion
 

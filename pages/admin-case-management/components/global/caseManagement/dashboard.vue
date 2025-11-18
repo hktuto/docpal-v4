@@ -20,6 +20,7 @@
         <DashboardDetail
           ref="DashboardDetailRef"
           v-model:layout="state.layout"
+          :dates="state.dates"
           :componentMap="CmmnWidgetComponent"
           :resizable="true"
           :draggable="true"
@@ -34,7 +35,7 @@
 </template>
 <script lang="ts" setup>
 import { adminApi } from 'api'
-
+import dayjs from 'dayjs'
 const props = defineProps<{
   id: string
   caseTypeId: string
@@ -48,7 +49,8 @@ const state = reactive({
   } as any,
   layout: [] as DashboardWidgetSetting[],
   saveLoading: false,
-  detail: {}
+  detail: {},
+  dates: [dayjs().startOf('year').format('YYYY-MM-DD'), formatDate(new Date(), 'YYYY-MM-DD')],
 })
 let dashboardWidgetByType = getDashboardWidgetByType(CmmnDashboardWidgetSetting)
 function createDashboard(command: CmmnDashboardWidget) {

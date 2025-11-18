@@ -2,6 +2,5 @@
   "CLIENT_URL": "https://sit-v2.wclsolution.com",
   "ADMIN_URL": "https://sit-v2.wclsolution.com/admin",
   "PUBLIC_URL": "https://sit-v2.wclsolution.com/public-api/report/v1",
-  "TEMPLATE_URL": "https://sit-v2.wclsolution.com/open-api/template",
-  "POSTGREST_URL": "http://132.148.160.188:3003"
+  "TEMPLATE_URL": "https://sit-v2.wclsolution.com/open-api/template"
 }

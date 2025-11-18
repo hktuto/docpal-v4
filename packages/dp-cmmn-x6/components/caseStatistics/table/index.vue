@@ -2,7 +2,6 @@
 import { clientApi } from 'api'
 import { MoreFilled } from '@element-plus/icons-vue'
 import { ElMessage } from 'element-plus'
-import axios from 'axios'
 const platform = useAppPlatform()
 const { setting, displayColumns, dates, sql } = defineProps<{
   setting: any
@@ -35,6 +34,15 @@ const { tableConfig, tableEvent, tableRef, query, reload, cleanSelectedRows } = 
   id: 'dashboardRelatedCaseTable',
   refresh: false,
   virtualScroll: true,
+  optionalConfig: {
+    treeConfig: {
+      // expandAll: true,
+      rowField: 'id',
+      parentField: 'parent_id',
+      transform: true,
+      indent: 20
+    }
+  },
   api: async (params: any) => {
     // if (platform.value === 'admin') {
     //   return {
@@ -42,12 +50,16 @@ const { tableConfig, tableEvent, tableRef, query, reload, cleanSelectedRows } = 
     //     totalSize: 0
     //   }
     // }
-    const url = `http://132.148.160.188:3003/${setting.tableName}?${sql}`
-    const response = await axios.get(url)
-    return response.data
+    const response = await clientApi.api.getPostgrestTable(`${setting.tableName}?${sql}`)
+    const data = groupTree(response.data)
+    // setTimeout(() => {
+    //   tableRef.value.setAllTreeExpand(true)
+    // })
+    return data
   },
   columns: [],
   dblClickAction: ({ row }) => {
+    if (!row.case_id) return
     notiHandleView({ content: { caseInstanceId: row.case_id } }, tabProvider)
     emits('close')
   },
@@ -74,10 +86,26 @@ async function reorderColumn(fields: any) {
         } else if (item.formatter) {
           newItem.formatter = item.formatter
         }
+
+        if (setting.groupField === item.id) {
+          newItem.treeNode = true
+        }
         prev.push(newItem)
         return prev
       }, [])
       columns.splice(0, 0, ...columneFromSetting)
+    }
+    const index = columns.findIndex((item: any) => item.treeNode)
+    if (index !== -1) {
+      // tableConfig.treeConfig = {
+      //   // expandAll: true,
+      //   rowField: 'id',
+      //   parentField: 'parent_id',
+      //   transform: true,
+      //   indent: 20
+      // }
+      const removedElement = columns.splice(index, 1)[0]
+      columns.unshift(removedElement)
     }
     tableConfig.columns = columns
   } catch (e) {
@@ -91,19 +119,17 @@ watch(
     try {
       const fields = JSON.parse(setting.fields)
       const columns = newVal.reduce((prev: any, columnId: any) => {
+        const columnItem = {
+          id: columnId,
+          name: columnId
+        }
         const field = fields.find((item: any) => item.value === columnId)
         if (field) {
-          prev.push({
-            id: field.value,
-            name: field.label,
-            type: field.type
-          })
-        } else {
-          prev.push({
-            id: columnId,
-            name: columnId
-          })
+          columnItem.id = field.value
+          columnItem.name = field.label
+          columnItem.type = field.type
         }
+        prev.push(columnItem)
         return prev
       }, [])
       reorderColumn(columns)
@@ -116,6 +142,32 @@ watch(
     immediate: true
   }
 )
+function groupTree(data: any[]) {
+  let treeData: any = []
+  if (setting.groupField && setting.sortBy) {
+    const groupData = data.reduce((prev: any, item: any) => {
+      const groupField = item[setting.groupField] === 'null' || !item[setting.groupField] ? '-' : item[setting.groupField]
+      const sortBy = item[setting.sortBy]
+      if (!prev[groupField]) {
+        prev[groupField] = {
+          id: groupField,
+          [setting.groupField]: groupField,
+          [setting.sortBy]: 0,
+          parent_id: null
+        }
+      }
+      prev[groupField][setting.sortBy] += sortBy
+      treeData.push({ ...item, parent_id: prev[groupField].id, id: item.case_id })
+      return prev
+    }, {})
+    Object.values(groupData).forEach((item: any) => {
+      treeData.push(item)
+    })
+  } else {
+    treeData = data
+  }
+  return treeData
+}
 onMounted(() => {
   console.log('setting', setting)
 })
@@ -123,8 +175,7 @@ defineExpose({ reorderColumn, reload, query })
 </script>
 
 <template>
-  <VxeGrid ref="tableRef" v-bind="tableConfig" v-on="tableEvent">
-  </VxeGrid>
+  <VxeGrid ref="tableRef" v-bind="tableConfig" v-on="tableEvent"> </VxeGrid>
   <DashboardActionHumanTaskDialog ref="dialogRef" @refresh="reload()" />
 </template>
 

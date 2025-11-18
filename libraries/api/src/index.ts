@@ -2,7 +2,6 @@ import { Client } from './generate/client'
 import { Admin } from './generate/admin'
 import { Public } from './generate/public'
 import { Template } from './generate/template'
-// import { PostgREST } from './generate/postgrest'
 import { ElMessage } from 'element-plus'
 // import {logout} from '~/utils/auth'
 
@@ -10,17 +9,12 @@ let clientBaseURL = '/api'
 let adminBaseURL = '/adminApi/api'
 let publicBaseURL = '/public-api/report/v1/api'
 let templateBaseURL = '/open-api/template'
-let postgrestBaseURL = '/'
-export const restApi = new Client({
-  baseURL: postgrestBaseURL,
-  timeout: 50000
-})
 
 export const clientApi = new Client({
   baseURL: clientBaseURL,
   timeout: 50000
 })
-
+export const restApi = {}
 export const adminApi = new Admin({
   baseURL: adminBaseURL,
   timeout: 50000
@@ -66,7 +60,7 @@ export function PostgREST_Decorate(params: any) {
         break
       case 'in':
         const values = item.value.join(',')
-        prev.push(`${item.key}=(${values})`)
+        prev.push(`${item.key}=in.(${values})`)
         break
       case 'cs':
         const jsonValue = JSON.stringify(item.value)  
