@@ -3,7 +3,7 @@
 </template>
 
 <script lang="ts" setup>
-
+import { clientApi } from 'api';
 let index = 0;
 const route = useRoute();
 const router = useRouter();
@@ -52,7 +52,6 @@ onMounted(async () => {
   switch (path) {
     case "/browse":
       const idOrPath = (route.query.id || route.query.path || "/") as string;
-      console.log('idOrPath', idOrPath, decodeURI(idOrPath))
       if(idOrPath){
 
         const newTab = createBrowseListPageParams({
@@ -68,10 +67,14 @@ onMounted(async () => {
       openTab(workflowItem);
       break;
     case "/case":
-      const caseItem = await getCaseRoute(
-        route.query.caseId as string
-      );
-      openTab(caseItem);
+      if(route.query.caseId) {
+        const caseInstance = await clientApi.api.getCaseInstanceCaseidCaseid(route.query.caseId).then((res) => res.data)
+        const newItem = caseManageDashboardPage({
+          instanceId: route.query.caseId,
+          versionId: caseInstance?.cmmnVersionId
+        })
+        openTab(newItem);
+      }
       break;
     default:
       router.push("/");
