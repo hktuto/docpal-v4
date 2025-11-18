@@ -10,18 +10,17 @@
   >
     <div class="quantity-container" @click="handleDrillDown">
       <div class="quantity-title">{{ setting.title }}</div>
-      <div class="quantity-total">{{ total }}</div>
+      <div class="quantity-total">{{ setting.prefix }}{{ handleCompute(total) }}</div>
     </div>
     <!-- <div id="myEcharts" ref="chartRef" class="echart"></div> -->
     <CaseStatisticsTableDialog :setting="setting" :dates="dates" ref="dialogRef" />
-    <DashboardSetting ref="settingRef" :title="title" :formJson="formJson" @delete="handleDelete" @refresh="handleRefresh" />
+    <DashboardSetting v-if="!hideSetting" ref="settingRef" :title="title" :formJson="formJson" @delete="handleDelete" @refresh="handleRefresh" />
   </DashboardCard>
 </template>
 
 <script lang="ts" setup>
-import { restApi, PostgREST_Decorate } from 'api'
+import { clientApi, PostgREST_Decorate } from 'api'
 import formJson from './setting.vform.json'
-import axios from 'axios'
 const props = withDefaults(
   defineProps<{
     dates?: any
@@ -51,13 +50,13 @@ const { cardRef, settingRef, resize, handleInitCard, loading } = useDashboardCar
     const sql = PostgREST_Decorate([
       {
         key: 'created_date',
-        type: 'gt',
-        value: '2024-10-27 00:44:40'
+        type: 'gte',
+        value: props.dates[0]
       },
       {
-        key: 'created_date',  
-        type: 'lt',
-        value: '2026-11-03 17:12:00'
+        key: 'created_date',
+        type: 'lte',
+        value: props.dates[1]
       },
       {
         type: 'select',
@@ -68,9 +67,8 @@ const { cardRef, settingRef, resize, handleInitCard, loading } = useDashboardCar
         type: 'eq',
         value: `${chartSetting.filterValue}`
       }
-    ])  
-    const url = `http://132.148.160.188:3003/${chartSetting.tableName}?${sql}`
-    const response = await axios.get(url)
+    ])
+    const response = await clientApi.api.getPostgrestTable(`${chartSetting.tableName}?${sql}`)
     const data = response.data[0]
     total.value = data.count
     return {
@@ -83,16 +81,16 @@ const dialogRef = ref()
 function handleDrillDown() {
   const sortBy = props.setting.sortBy || 'created_date'
   const sortOrder = props.setting.sortOrder || 'desc'
-  const sqlParams =[
+  const sqlParams = [
     {
       key: 'created_date',
-      type: 'gt',
-      value: '2024-10-27 00:44:40'
+      type: 'gte',
+      value: props.dates[0]
     },
     {
       key: 'created_date',
-      type: 'lt',
-      value: '2026-11-03 17:12:00'
+      type: 'lte',
+      value: props.dates[1]
     },
     // {
     //   type: 'select',
@@ -110,9 +108,18 @@ function handleDrillDown() {
   ]
   dialogRef.value.handleOpen(sqlParams)
 }
-// #endregion
-
-// #endregion
+function handleCompute(value: number) {
+  try {
+    if (props.setting.displayMethod === 'FinancialComputing') {
+      return FinancialComputing(value)
+    } else if (props.setting.displayMethod === 'fileSize') {
+      return fileSize(value)
+    }
+  } catch (error) {
+    return value
+  }
+  return value
+}
 defineExpose({ resize })
 </script>
 

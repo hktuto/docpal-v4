@@ -1891,7 +1891,10 @@ export interface SubNotificationRequest {
         | "DOCUMENT_SHARE_DOWNLOAD_FILE"
         | "DOCUMENT_FOLDER_CABINET_NOTIFICATION"
         | "DOCUMENT_FOLDER_CABINET_SUMMARY_REPORT"
-        | "WORKFLOW_CUSTOM";
+        | "WORKFLOW_CUSTOM"
+        | "WORKFLOW_APPLY"
+        | "WORKFLOW_SUCCESS"
+        | "WORKFLOW_REJECTED";
     variables?: Record<string, object>;
     notificationUserId?: string[];
     businessId?: string;
@@ -5558,6 +5561,7 @@ export interface CaseType {
     latestVersion?: string;
     latestVersionId?: string;
     productionVersionId?: string;
+    tableName?: string;
 }
 
 export interface PaginationDTOCaseType {
@@ -11423,6 +11427,46 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
             }),
 
         /**
+         * @description 以查询参数方式调用 `/rpc/{func}`。不注入 `_schema_name`，不转发任何请求头。建议使用 POST 方式。
+         *
+         * @tags PostgREST 代理
+         * @name GetPostgrestRpcFunc
+         * @summary 调用自定义 RPC（GET，兼容模式）
+         * @request GET:/api/postgrest/rpc/{func}
+         */
+        getPostgrestRpcFunc: (
+            func: string,
+            query?: {
+                /** 动态查询参数（按 PostgREST 语法） */
+                params?: any;
+            },
+            params: RequestParams = {},
+        ) =>
+            this.request<ResultObject, ResultString | (ResultString | Result)>({
+                path: `/postgrest/rpc/${func}`,
+                method: "GET",
+                query: query,
+                ...params,
+            }),
+
+        /**
+         * @description 向 PostgREST 的 `/rpc/{func}` 发送 JSON 请求体。控制器会自动在请求体中注入 `_schema_name` = 当前租户 ID（来自 RequestContext）。不转发任何请求头。
+         *
+         * @tags PostgREST 代理
+         * @name PostPostgrestRpcFunc
+         * @summary 调用自定义 RPC（POST）
+         * @request POST:/api/postgrest/rpc/{func}
+         */
+        postPostgrestRpcFunc: (func: string, data: string, params: RequestParams = {}) =>
+            this.request<ResultObject, ResultString | (ResultString | Result)>({
+                path: `/postgrest/rpc/${func}`,
+                method: "POST",
+                body: data,
+                type: ContentType.Json,
+                ...params,
+            }),
+
+        /**
          * No description
          *
          * @tags AclPermissionController
@@ -13241,6 +13285,25 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
         postNuxeoDocumentTemplatesGenerateDocument: (data: WorkflowGenerateDocumentReq, params: RequestParams = {}) =>
             this.request<ResultDocumentDTO, ResultString | (ResultString | Result)>({
                 path: `/nuxeo/document/templates/generate/document`,
+                method: "POST",
+                body: data,
+                type: ContentType.Json,
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags Document Template
+         * @name PostNuxeoDocumentTemplatesFoldercabinetCreateDocuments
+         * @request POST:/api/nuxeo/document/templates/folderCabinet/create/documents
+         */
+        postNuxeoDocumentTemplatesFoldercabinetCreateDocuments: (
+            data: FCCreateDocsRequestDTO,
+            params: RequestParams = {},
+        ) =>
+            this.request<ResultListDocumentDTO, ResultString | (ResultString | Result)>({
+                path: `/nuxeo/document/templates/folderCabinet/create/documents`,
                 method: "POST",
                 body: data,
                 type: ContentType.Json,
@@ -18917,6 +18980,29 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
             this.request<ResultListAclPermissionDTO, ResultString | (ResultString | Result)>({
                 path: `/user/permission/all/${userId}`,
                 method: "GET",
+                ...params,
+            }),
+
+        /**
+         * @description 透传查询参数到 PostgREST 目标表 `/{table}`。支持常规筛选与 JSONB 操作符（例如 `metadata->>key=eq.value`）。不转发任何请求头。
+         *
+         * @tags PostgREST 代理
+         * @name GetPostgrestTable
+         * @summary 基础查询（支持 JSONB 操作符）
+         * @request GET:/api/postgrest/{table}
+         */
+        getPostgrestTable: (
+            table: string,
+            query?: {
+                /** 动态查询参数，按 PostgREST 语法传递（如 `status=eq.completed`、`metadata->>key=eq.value`） */
+                params?: any;
+            },
+            params: RequestParams = {},
+        ) =>
+            this.request<ResultObject, ResultString | (ResultString | Result)>({
+                path: `/postgrest/${table}`,
+                method: "GET",
+                query: query,
                 ...params,
             }),
 

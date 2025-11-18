@@ -83,17 +83,6 @@ export interface ResultListDocumentTypeDTO {
     locale?: string;
 }
 
-export interface ResultSetString {
-    result?: boolean;
-    /** @format int32 */
-    code?: number;
-    message?: string;
-    /** @uniqueItems true */
-    data?: string[];
-    messageKey?: string;
-    locale?: string;
-}
-
 /** Document */
 export interface DocumentDTO {
     /** Document ID */
@@ -1482,6 +1471,7 @@ export interface CaseType {
     productionVersionId?: string;
     latestVersion?: string;
     latestVersionId?: string;
+    tableName?: string;
 }
 
 export interface ResultCaseType {
@@ -2514,6 +2504,17 @@ export interface PasswordConfigDTO {
     reusePasswordCount?: number;
 }
 
+export interface ResultSetString {
+    result?: boolean;
+    /** @format int32 */
+    code?: number;
+    message?: string;
+    /** @uniqueItems true */
+    data?: string[];
+    messageKey?: string;
+    locale?: string;
+}
+
 /** EasyShare (Request) */
 export interface SharePageRequestDTO {
     /**
@@ -2604,107 +2605,6 @@ export interface SmartFolderResponseDTO {
     bind?: string;
     json_value?: string;
     userGroups?: string[];
-}
-
-export interface ElasticSearchFilterDTO {
-    documentTypes?: string[];
-    collections?: string[];
-    tags?: string[];
-    creators?: string[];
-    lastModifyBy?: string[];
-    authors?: string[];
-    createdDate?: string;
-    modified?: string;
-}
-
-export interface MatchDTO {
-    queryType?: string;
-    type?: string;
-    value?: object;
-    option?: OptionDTO;
-}
-
-export interface OptionDTO {
-    matchCase?: boolean;
-    fullMatch?: boolean;
-    synonyms?: boolean;
-    includeLanguages?: string[];
-}
-
-export interface QueryConditionDTO {
-    condition?: string;
-    matchs?: MatchDTO[];
-}
-
-export interface SearchRequestDTO {
-    condition?: string;
-    docId?: string;
-    /** @format int32 */
-    pageSize?: number;
-    /** @format int32 */
-    pageNum?: number;
-    isExport?: boolean;
-    filter?: ElasticSearchFilterDTO;
-    query?: QueryConditionDTO[];
-}
-
-/** NestedSearch (Request) */
-export interface NestedSearchRequestDTO {
-    /**
-     * Page Size
-     * @format int32
-     */
-    pageSize?: number;
-    /**
-     * Current Page Index
-     * @format int32
-     */
-    currentPageIndex?: number;
-    /** type */
-    type?: string[];
-    /** query params in text search */
-    paramsInTextSearch?: string[];
-    /** Include full text search,all meta or ocr content */
-    textSearchType?: string;
-    /** like */
-    like?: string[];
-    /** tags */
-    tags?: string[];
-    /** collections */
-    collections?: string[];
-    /** or */
-    or?: string[];
-    /** authors */
-    authors?: string[];
-    /** creator */
-    creator?: string[];
-    /** modified */
-    modified?: string;
-    /**
-     * size
-     * @format int32
-     */
-    size?: number;
-    /** assetType */
-    assetType?: string;
-    /** duration */
-    duration?: string[];
-    /** mimeType */
-    mimeType?: string[];
-    /** height */
-    height?: string[];
-    /** width */
-    width?: string[];
-    /** includeFolder */
-    includeFolder?: boolean;
-    /** Document Properties */
-    properties?: Record<string, object>;
-    /** @uniqueItems true */
-    orderList?: string[];
-    emailId?: string;
-    isExport?: boolean;
-    orderBy?: string;
-    isDesc?: boolean;
 }
 
 /** Versioning (Request) */
@@ -3753,22 +3653,6 @@ export interface MetaDataDefinitionRequestDTO {
         empty?: boolean;
         [key: string]: any;
     };
-}
-
-export interface ImportDocPalTypeDTO {
-    name?: string;
-    category?: string;
-    dataType?: string;
-    metadata?: MetadataOption[];
-}
-
-export interface MetadataOption {
-    schemaName?: string;
-    metadata?: string;
-    dataType?: string;
-    display?: boolean;
-    isRequire?: boolean;
-    options?: string;
 }
 
 export interface DocpalTypeRequestV2DTO {
@@ -4922,6 +4806,22 @@ export interface MailSendRequest {
     files?: File[];
     userId?: string;
     accessToken?: string;
+}
+
+export interface ResultSendEmailResponseDTO {
+    result?: boolean;
+    /** @format int32 */
+    code?: number;
+    message?: string;
+    data?: SendEmailResponseDTO;
+    messageKey?: string;
+    locale?: string;
+}
+
+export interface SendEmailResponseDTO {
+    /** @format int64 */
+    emailLogId?: number;
+    successSendEmail?: boolean;
 }
 
 /** Email Layout RequestDTO */
@@ -6097,6 +5997,7 @@ export interface BatchMailSendRequest {
     tos: string[];
     ccs?: string[];
     bcc?: string[];
+    files?: File[];
     variables?: Record<string, object>;
     userId?: string;
     accessToken?: string;
@@ -7945,47 +7846,6 @@ export interface ResultListSmartFolderResponseDTO {
     locale?: string;
 }
 
-/** Access Control Entry */
-export interface AccessControlEntryDTO {
-    /** Access Control Entry ID */
-    id?: string;
-    /** User ID */
-    userId?: string;
-    /** User Permission */
-    permission?: string;
-    /** Granted By */
-    grarntedBy?: string;
-    /**
-     * Start Date
-     * @format date-time
-     */
-    startDate?: string;
-    /**
-     * End Date
-     * @format date-time
-     */
-    endDate?: string;
-}
-
-/** Document Access Control List */
-export interface DocAccessControlListDTO {
-    /** Inherited Access Control Entries */
-    inherited?: AccessControlEntryDTO[];
-    /** Local Access Control Entries */
-    local?: AccessControlEntryDTO[];
-}
-
-export interface ResultDocAccessControlListDTO {
-    result?: boolean;
-    /** @format int32 */
-    code?: number;
-    message?: string;
-    /** Document Access Control List */
-    data?: DocAccessControlListDTO;
-    messageKey?: string;
-    locale?: string;
-}
-
 export interface ResultObjects {
     result?: boolean;
     /** @format int32 */
@@ -8234,59 +8094,6 @@ export interface ResultListLong {
     locale?: string;
 }
 
-export interface DirectoryEntryDTO {
-    id?: string;
-    directoryName?: string;
-    properties?: Record<string, object>;
-}
-
-export interface MSOptions {
-    dropdownType?: string;
-    vocabulary?: string;
-    masterTable?: string;
-    masterTableColumn?: string;
-    documentType?: string;
-    displayField?: string;
-    isMultiple?: boolean;
-    /** @format int32 */
-    length?: number;
-    regex?: string;
-    formatDate?: string;
-}
-
-export interface MetadataSettingResponseDTO {
-    /** @format int64 */
-    id?: number;
-    documentType?: string;
-    metaData?: string;
-    metaDataType?: string;
-    isRequire?: boolean;
-    display?: boolean;
-    creatorId?: string;
-    creatorName?: string;
-    /** @format date-time */
-    creationTime?: string;
-    modifiedId?: string;
-    modifiedName?: string;
-    /** @format date-time */
-    modifiedTime?: string;
-    /** @format int32 */
-    status?: number;
-    dataType?: string;
-    directoryEntries?: DirectoryEntryDTO[];
-    options?: MSOptions;
-}
-
-export interface ResultListMetadataSettingResponseDTO {
-    result?: boolean;
-    /** @format int32 */
-    code?: number;
-    message?: string;
-    data?: MetadataSettingResponseDTO[];
-    messageKey?: string;
-    locale?: string;
-}
-
 export interface ResultListDocumentTypeProfileSetting {
     result?: boolean;
     /** @format int32 */
@@ -8420,17 +8227,6 @@ export interface ResultListProcessDefinitionDraft {
     code?: number;
     message?: string;
     data?: ProcessDefinitionDraft[];
-    messageKey?: string;
-    locale?: string;
-}
-
-export interface ResultKeywordDTO {
-    result?: boolean;
-    /** @format int32 */
-    code?: number;
-    message?: string;
-    /** Keyword */
-    data?: KeywordDTO;
     messageKey?: string;
     locale?: string;
 }
@@ -9540,7 +9336,7 @@ export class Admin<SecurityDataType extends unknown> extends HttpClient<Security
         /**
          * No description
          *
-         * @tags Configuration (Nuxeo)
+         * @tags Configuration
          * @name GetNuxeoTypes
          * @summary Get all document types
          * @request GET:/api/nuxeo/types
@@ -9555,7 +9351,7 @@ export class Admin<SecurityDataType extends unknown> extends HttpClient<Security
         /**
          * No description
          *
-         * @tags Configuration (Nuxeo)
+         * @tags Configuration
          * @name PostNuxeoTypes
          * @summary Get all document types
          * @request POST:/api/nuxeo/types
@@ -9564,128 +9360,6 @@ export class Admin<SecurityDataType extends unknown> extends HttpClient<Security
             this.request<ResultListDocumentTypeDTO, Result | (ResultObject | Result | ResultString)>({
                 path: `/nuxeo/types`,
                 method: "POST",
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Configuration (Nuxeo)
-         * @name GetNuxeoTypesDeprecate
-         * @summary Get all document types
-         * @request GET:/api/nuxeo/types/
-         */
-        getNuxeoTypesDeprecate: (params: RequestParams = {}) =>
-            this.request<ResultListDocumentTypeDTO, Result | (ResultObject | Result | ResultString)>({
-                path: `/nuxeo/types/`,
-                method: "GET",
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Configuration (Nuxeo)
-         * @name PostNuxeoTypesDeprecate
-         * @summary Get all document types
-         * @request POST:/api/nuxeo/types/
-         */
-        postNuxeoTypesDeprecate: (params: RequestParams = {}) =>
-            this.request<ResultListDocumentTypeDTO, Result | (ResultObject | Result | ResultString)>({
-                path: `/nuxeo/types/`,
-                method: "POST",
-                ...params,
-            }),
-
-        /**
-         * @description Retrieve a list of existing values of a document type and key
-         *
-         * @tags Form (Nuxeo)
-         * @name GetNuxeoFormMetadataList
-         * @request GET:/api/nuxeo/form/metadata/list
-         */
-        getNuxeoFormMetadataList: (
-            query: {
-                docType: string;
-                filterKey?: string;
-                filterValue?: string;
-                key: string;
-            },
-            params: RequestParams = {},
-        ) =>
-            this.request<ResultSetString, Result | (ResultObject | Result | ResultString)>({
-                path: `/nuxeo/form/metadata/list`,
-                method: "GET",
-                query: query,
-                ...params,
-            }),
-
-        /**
-         * @description Retrieve a list of existing values of a document type and key
-         *
-         * @tags Form (Nuxeo)
-         * @name PostNuxeoFormMetadataList
-         * @request POST:/api/nuxeo/form/metadata/list
-         */
-        postNuxeoFormMetadataList: (
-            query: {
-                docType: string;
-                filterKey?: string;
-                filterValue?: string;
-                key: string;
-            },
-            params: RequestParams = {},
-        ) =>
-            this.request<ResultSetString, Result | (ResultObject | Result | ResultString)>({
-                path: `/nuxeo/form/metadata/list`,
-                method: "POST",
-                query: query,
-                ...params,
-            }),
-
-        /**
-         * @description Retrieve a list of existing values of a document type and key
-         *
-         * @tags Form (Nuxeo)
-         * @name GetNuxeoFormMetadataListDeprecate
-         * @request GET:/api/nuxeo/form/metadata/list/
-         */
-        getNuxeoFormMetadataListDeprecate: (
-            query: {
-                docType: string;
-                filterKey?: string;
-                filterValue?: string;
-                key: string;
-            },
-            params: RequestParams = {},
-        ) =>
-            this.request<ResultSetString, Result | (ResultObject | Result | ResultString)>({
-                path: `/nuxeo/form/metadata/list/`,
-                method: "GET",
-                query: query,
-                ...params,
-            }),
-
-        /**
-         * @description Retrieve a list of existing values of a document type and key
-         *
-         * @tags Form (Nuxeo)
-         * @name PostNuxeoFormMetadataListDeprecate
-         * @request POST:/api/nuxeo/form/metadata/list/
-         */
-        postNuxeoFormMetadataListDeprecate: (
-            query: {
-                docType: string;
-                filterKey?: string;
-                filterValue?: string;
-                key: string;
-            },
-            params: RequestParams = {},
-        ) =>
-            this.request<ResultSetString, Result | (ResultObject | Result | ResultString)>({
-                path: `/nuxeo/form/metadata/list/`,
-                method: "POST",
-                query: query,
                 ...params,
             }),
 
@@ -12672,56 +12346,6 @@ export class Admin<SecurityDataType extends unknown> extends HttpClient<Security
         /**
          * No description
          *
-         * @tags Search (Nuxeo)
-         * @name PostNuxeoSearchOpenSearch
-         * @summary Open Search
-         * @request POST:/api/nuxeo/search/open-search
-         */
-        postNuxeoSearchOpenSearch: (data: SearchRequestDTO, params: RequestParams = {}) =>
-            this.request<ResultMapStringObject, Result | (ResultObject | Result | ResultString)>({
-                path: `/nuxeo/search/open-search`,
-                method: "POST",
-                body: data,
-                type: ContentType.Json,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Search (Nuxeo)
-         * @name PostNuxeoSearchNestedsearchV2
-         * @request POST:/api/nuxeo/search/nestedSearch_v2
-         */
-        postNuxeoSearchNestedsearchV2: (data: SearchRequestDTO, params: RequestParams = {}) =>
-            this.request<ResultMapStringObject, Result | (ResultObject | Result | ResultString)>({
-                path: `/nuxeo/search/nestedSearch_v2`,
-                method: "POST",
-                body: data,
-                type: ContentType.Json,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Search (Nuxeo)
-         * @name PostNuxeoSearchNestedsearch
-         * @summary Nested Search
-         * @request POST:/api/nuxeo/search/nestedSearch
-         */
-        postNuxeoSearchNestedsearch: (data: NestedSearchRequestDTO, params: RequestParams = {}) =>
-            this.request<ResultPaginationDTODocumentDTO, Result | (ResultObject | Result | ResultString)>({
-                path: `/nuxeo/search/nestedSearch`,
-                method: "POST",
-                body: data,
-                type: ContentType.Json,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
          * @tags Versioning Controller
          * @name PostNuxeoRestoreversionDeprecate
          * @summary Restores a document to the input version document
@@ -12750,20 +12374,6 @@ export class Admin<SecurityDataType extends unknown> extends HttpClient<Security
                 method: "POST",
                 body: data,
                 type: ContentType.Json,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Configuration (Nuxeo)
-         * @name PostNuxeoRegisteredgrpcservice
-         * @request POST:/api/nuxeo/registeredGrpcService
-         */
-        postNuxeoRegisteredgrpcservice: (params: RequestParams = {}) =>
-            this.request<Result, Result | (ResultObject | Result | ResultString)>({
-                path: `/nuxeo/registeredGrpcService`,
-                method: "POST",
                 ...params,
             }),
 
@@ -13231,38 +12841,6 @@ export class Admin<SecurityDataType extends unknown> extends HttpClient<Security
         postNuxeoGetlatestversion: (data: VersioningRequestDTO, params: RequestParams = {}) =>
             this.request<ResultDocumentDTO, Result | (ResultObject | Result | ResultString)>({
                 path: `/nuxeo/getLatestVersion`,
-                method: "POST",
-                body: data,
-                type: ContentType.Json,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Configuration (Nuxeo)
-         * @name PostNuxeoFolderstructureExport
-         * @request POST:/api/nuxeo/folderStructure/export
-         */
-        postNuxeoFolderstructureExport: (data: DocumentRequestDTO, params: RequestParams = {}) =>
-            this.request<File, Result | (ResultObject | Result | ResultString)>({
-                path: `/nuxeo/folderStructure/export`,
-                method: "POST",
-                body: data,
-                type: ContentType.Json,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Configuration (Nuxeo)
-         * @name PostNuxeoFolderstructureExportDeprecate
-         * @request POST:/api/nuxeo/folderStructure/export/
-         */
-        postNuxeoFolderstructureExportDeprecate: (data: DocumentRequestDTO, params: RequestParams = {}) =>
-            this.request<File, Result | (ResultObject | Result | ResultString)>({
-                path: `/nuxeo/folderStructure/export/`,
                 method: "POST",
                 body: data,
                 type: ContentType.Json,
@@ -14179,61 +13757,6 @@ export class Admin<SecurityDataType extends unknown> extends HttpClient<Security
          * No description
          *
          * @tags DocPalTypeSettingController
-         * @name PostDocpaltypeSettingsInitializedocumenttype
-         * @request POST:/api/docpalType/settings/initializeDocumentType
-         */
-        postDocpaltypeSettingsInitializedocumenttype: (params: RequestParams = {}) =>
-            this.request<ResultVoid, Result | (ResultObject | Result | ResultString)>({
-                path: `/docpalType/settings/initializeDocumentType`,
-                method: "POST",
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags DocPalTypeSettingController
-         * @name PostDocpaltypeSettingsImport
-         * @summary Batch upload docpal type
-         * @request POST:/api/docpalType/settings/import
-         * @deprecated
-         */
-        postDocpaltypeSettingsImport: (
-            query: {
-                /** @format binary */
-                file: File;
-            },
-            params: RequestParams = {},
-        ) =>
-            this.request<ResultMapStringObject, Result | (ResultObject | Result | ResultString)>({
-                path: `/docpalType/settings/import`,
-                method: "POST",
-                query: query,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags DocPalTypeSettingController
-         * @name PostDocpaltypeSettingsImportSingleDocpaltype
-         * @summary Upload single docpal type
-         * @request POST:/api/docpalType/settings/import/single/docpalType
-         * @deprecated
-         */
-        postDocpaltypeSettingsImportSingleDocpaltype: (data: ImportDocPalTypeDTO, params: RequestParams = {}) =>
-            this.request<ResultMapStringObject, Result | (ResultObject | Result | ResultString)>({
-                path: `/docpalType/settings/import/single/docpalType`,
-                method: "POST",
-                body: data,
-                type: ContentType.Json,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags DocPalTypeSettingController
          * @name PostDocpaltypeSettingsDocpalTypeV2Update
          * @request POST:/api/docpalType/settings/docpal-type-v2/update
          */
@@ -14961,6 +14484,61 @@ export class Admin<SecurityDataType extends unknown> extends HttpClient<Security
          * No description
          *
          * @tags Workflow Process Definition Controller
+         * @name PostWorkflowProcessDefinitionDraftDraftidImport
+         * @summary Import zip file for create new process definition
+         * @request POST:/api/docpal/workflow/process/definition/draft/{draftId}/import
+         */
+        postWorkflowProcessDefinitionDraftDraftidImport: (
+            draftId: string,
+            query: {
+                /** @format binary */
+                file: File;
+                versionNumber?: string;
+            },
+            data: {
+                /** @format string */
+                draftId?: string;
+                /** @format binary */
+                file?: File;
+                versionNumber?: string;
+            },
+            params: RequestParams = {},
+        ) =>
+            this.request<ResultProcessDefinitionResponseDTO, Result | (ResultObject | Result | ResultString)>({
+                path: `/docpal/workflow/process/definition/draft/${draftId}/import`,
+                method: "POST",
+                query: query,
+                body: data,
+                type: ContentType.FormData,
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags Workflow Process Definition Controller
+         * @name PostWorkflowProcessDefinitionDraftDraftidExport
+         * @summary Export process definition
+         * @request POST:/api/docpal/workflow/process/definition/draft/{draftId}/export
+         */
+        postWorkflowProcessDefinitionDraftDraftidExport: (
+            draftId: string,
+            query?: {
+                versionNumber?: string;
+            },
+            params: RequestParams = {},
+        ) =>
+            this.request<string[], Result | (ResultObject | Result | ResultString)>({
+                path: `/docpal/workflow/process/definition/draft/${draftId}/export`,
+                method: "POST",
+                query: query,
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags Workflow Process Definition Controller
          * @name PostWorkflowProcessDefinitionDraftPage
          * @summary Pagination search of process definition model
          * @request POST:/api/docpal/workflow/process/definition/draft/page
@@ -15388,7 +14966,7 @@ export class Admin<SecurityDataType extends unknown> extends HttpClient<Security
          * @request POST:/api/docpal/template/email/send/customize
          */
         postTemplateEmailSendCustomize: (data: MailSendRequest, params: RequestParams = {}) =>
-            this.request<ResultBoolean, Result | (ResultObject | Result | ResultString)>({
+            this.request<ResultSendEmailResponseDTO, Result | (ResultObject | Result | ResultString)>({
                 path: `/docpal/template/email/send/customize`,
                 method: "POST",
                 body: data,
@@ -16969,6 +16547,31 @@ export class Admin<SecurityDataType extends unknown> extends HttpClient<Security
                 method: "POST",
                 body: data,
                 type: ContentType.Json,
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags DocPalEmailController
+         * @name PostEmailBatchSendundefined
+         * @request POST:/api/docpal/email/batch-send
+         */
+        postEmailBatchSendundefined: (
+            query: {
+                request: string;
+            },
+            data: {
+                files?: File[];
+            },
+            params: RequestParams = {},
+        ) =>
+            this.request<ResultBatchSendEmailResponseDTO, Result | (ResultObject | Result | ResultString)>({
+                path: `/docpal/email/batch-send`,
+                method: "POST",
+                query: query,
+                body: data,
+                type: ContentType.FormData,
                 ...params,
             }),
 
@@ -19421,20 +19024,6 @@ export class Admin<SecurityDataType extends unknown> extends HttpClient<Security
         /**
          * No description
          *
-         * @tags system-admin-controller
-         * @name GetSystemAdminSetupFileModifiedDate
-         * @request GET:/api/system_admin/setup_file_modified_date
-         */
-        getSystemAdminSetupFileModifiedDate: (params: RequestParams = {}) =>
-            this.request<ResultVoid, Result | (ResultObject | Result | ResultString)>({
-                path: `/system_admin/setup_file_modified_date`,
-                method: "GET",
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
          * @tags Document
          * @name GetRegisteredServerContactgroupIdUserUseridPermission
          * @summary Get permission of contact group
@@ -19812,7 +19401,7 @@ export class Admin<SecurityDataType extends unknown> extends HttpClient<Security
         /**
          * No description
          *
-         * @tags Configuration (Nuxeo)
+         * @tags Configuration
          * @name GetNuxeoTypeDocumenttype
          * @summary Obtain metadata list of this documentType
          * @request GET:/api/nuxeo/type/{documentType}
@@ -19820,21 +19409,6 @@ export class Admin<SecurityDataType extends unknown> extends HttpClient<Security
         getNuxeoTypeDocumenttype: (documentType: string, params: RequestParams = {}) =>
             this.request<ResultDocumentTypeDTO, Result | (ResultObject | Result | ResultString)>({
                 path: `/nuxeo/type/${documentType}`,
-                method: "GET",
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Configuration (Nuxeo)
-         * @name GetNuxeoTypeDocumenttypeMetadata
-         * @summary Obtain metadata list of this documentType
-         * @request GET:/api/nuxeo/type/{documentType}/metadata
-         */
-        getNuxeoTypeDocumenttypeMetadata: (documentType: string, params: RequestParams = {}) =>
-            this.request<ResultObject, Result | (ResultObject | Result | ResultString)>({
-                path: `/nuxeo/type/${documentType}/metadata`,
                 method: "GET",
                 ...params,
             }),
@@ -19885,78 +19459,6 @@ export class Admin<SecurityDataType extends unknown> extends HttpClient<Security
         /**
          * No description
          *
-         * @tags Search (Nuxeo)
-         * @name GetNuxeoSearchTextsearchtypesDeprecate
-         * @summary Get all text search types
-         * @request GET:/api/nuxeo/search/textSearchTypes/
-         */
-        getNuxeoSearchTextsearchtypesDeprecate: (params: RequestParams = {}) =>
-            this.request<ResultListString, Result | (ResultObject | Result | ResultString)>({
-                path: `/nuxeo/search/textSearchTypes/`,
-                method: "GET",
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Search (Nuxeo)
-         * @name GetNuxeoSearchTextsearchtypes
-         * @summary Get all text search types
-         * @request GET:/api/nuxeo/search/textSearchTypes
-         */
-        getNuxeoSearchTextsearchtypes: (params: RequestParams = {}) =>
-            this.request<ResultListString, Result | (ResultObject | Result | ResultString)>({
-                path: `/nuxeo/search/textSearchTypes`,
-                method: "GET",
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Search (Nuxeo)
-         * @name GetNuxeoSearchGetsearchextends
-         * @summary getMimiType
-         * @request GET:/api/nuxeo/search/getSearchExtends
-         */
-        getNuxeoSearchGetsearchextends: (
-            query: {
-                primaryType: string;
-            },
-            params: RequestParams = {},
-        ) =>
-            this.request<ResultMapStringObject, Result | (ResultObject | Result | ResultString)>({
-                path: `/nuxeo/search/getSearchExtends`,
-                method: "GET",
-                query: query,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Search (Nuxeo)
-         * @name GetNuxeoSearchGetsearchextendsDeprecate
-         * @summary getMimiType
-         * @request GET:/api/nuxeo/search/getSearchExtends/
-         */
-        getNuxeoSearchGetsearchextendsDeprecate: (
-            query: {
-                primaryType: string;
-            },
-            params: RequestParams = {},
-        ) =>
-            this.request<ResultMapStringObject, Result | (ResultObject | Result | ResultString)>({
-                path: `/nuxeo/search/getSearchExtends/`,
-                method: "GET",
-                query: query,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
          * @tags Identity
          * @name GetNuxeoIdentitySendInitPasswordEmailUserid
          * @request GET:/api/nuxeo/identity/send-init-password-email/{userId}
@@ -19978,20 +19480,6 @@ export class Admin<SecurityDataType extends unknown> extends HttpClient<Security
         getNuxeoGetofficetokenId: (id: string, params: RequestParams = {}) =>
             this.request<ResultString, Result | (ResultObject | Result | ResultString)>({
                 path: `/nuxeo/getOfficeToken/${id}`,
-                method: "GET",
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Document (Nuxeo)
-         * @name GetNuxeoDocumentDocumentidAcls
-         * @request GET:/api/nuxeo/document/{documentId}/acls
-         */
-        getNuxeoDocumentDocumentidAcls: (documentId: string, params: RequestParams = {}) =>
-            this.request<ResultDocAccessControlListDTO, Result | (ResultObject | Result | ResultString)>({
-                path: `/nuxeo/document/${documentId}/acls`,
                 method: "GET",
                 ...params,
             }),
@@ -20033,21 +19521,7 @@ export class Admin<SecurityDataType extends unknown> extends HttpClient<Security
         /**
          * No description
          *
-         * @tags Configuration (Nuxeo)
-         * @name GetNuxeoConfig
-         * @request GET:/api/nuxeo/config
-         */
-        getNuxeoConfig: (params: RequestParams = {}) =>
-            this.request<ResultString, Result | (ResultObject | Result | ResultString)>({
-                path: `/nuxeo/config`,
-                method: "GET",
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Configuration (Nuxeo)
+         * @tags Configuration
          * @name GetNuxeoConfigRefresh
          * @request GET:/api/nuxeo/config-refresh
          */
@@ -20683,50 +20157,6 @@ export class Admin<SecurityDataType extends unknown> extends HttpClient<Security
          * No description
          *
          * @tags Workflow
-         * @name GetWorkflowQuerymetavalidationrule
-         * @request GET:/api/docpal/workflow/queryMetaValidationRule
-         */
-        getWorkflowQuerymetavalidationrule: (
-            query?: {
-                /** @format int64 */
-                id?: number;
-                documentType?: string;
-                metaData?: string;
-                dataType?: string;
-                operation?: string;
-                isRequire?: boolean;
-                display?: boolean;
-                /**
-                 * @deprecated
-                 * @format int32
-                 */
-                length?: number;
-                /** @deprecated */
-                vocabulary?: string;
-                /** @format int32 */
-                status?: number;
-                creatorId?: string;
-                creatorName?: string;
-                /** @format date-time */
-                creationTime?: string;
-                modifiedId?: string;
-                modifiedName?: string;
-                /** @format date-time */
-                modifiedTime?: string;
-            },
-            params: RequestParams = {},
-        ) =>
-            this.request<ResultListMetadataSettingResponseDTO, Result | (ResultObject | Result | ResultString)>({
-                path: `/docpal/workflow/queryMetaValidationRule`,
-                method: "GET",
-                query: query,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Workflow
          * @name GetWorkflowQuerydocumenttypeprofile
          * @request GET:/api/docpal/workflow/queryDocumentTypeProfile
          */
@@ -20984,40 +20414,6 @@ export class Admin<SecurityDataType extends unknown> extends HttpClient<Security
          * No description
          *
          * @tags Workflow
-         * @name GetWorkflowGetdocumenttypes
-         * @request GET:/api/docpal/workflow/getDocumentTypes
-         */
-        getWorkflowGetdocumenttypes: (params: RequestParams = {}) =>
-            this.request<ResultListDocumentTypeDTO, Result | (ResultObject | Result | ResultString)>({
-                path: `/docpal/workflow/getDocumentTypes`,
-                method: "GET",
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Workflow
-         * @name GetWorkflowGetdatatypebyname
-         * @request GET:/api/docpal/workflow/getDataTypeByName
-         */
-        getWorkflowGetdatatypebyname: (
-            query: {
-                name: string;
-            },
-            params: RequestParams = {},
-        ) =>
-            this.request<ResultKeywordDTO, Result | (ResultObject | Result | ResultString)>({
-                path: `/docpal/workflow/getDataTypeByName`,
-                method: "GET",
-                query: query,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Workflow
          * @name GetWorkflowForms
          * @summary Get the list of form properties associated with the process definition
          * @request GET:/api/docpal/workflow/forms
@@ -21054,28 +20450,6 @@ export class Admin<SecurityDataType extends unknown> extends HttpClient<Security
         ) =>
             this.request<ResultListFormPropertyDTO, Result | (ResultObject | Result | ResultString)>({
                 path: `/docpal/workflow/forms/${elementKey}`,
-                method: "GET",
-                query: query,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Workflow
-         * @name GetWorkflowCheckmetadatavalues
-         * @request GET:/api/docpal/workflow/checkMetaDataValues
-         */
-        getWorkflowCheckmetadatavalues: (
-            query: {
-                documentType: string;
-                metaData: string;
-                value: string;
-            },
-            params: RequestParams = {},
-        ) =>
-            this.request<ResultObject, Result | (ResultObject | Result | ResultString)>({
-                path: `/docpal/workflow/checkMetaDataValues`,
                 method: "GET",
                 query: query,
                 ...params,
@@ -22131,21 +21505,6 @@ export class Admin<SecurityDataType extends unknown> extends HttpClient<Security
          * No description
          *
          * @tags MasterTableController
-         * @name GetMasterTablesRepairStructure
-         * @summary For repair structure of master table ( Add column [status] if does not exist )
-         * @request GET:/api/docpal/master/tables/repair/structure
-         */
-        getMasterTablesRepairStructure: (params: RequestParams = {}) =>
-            this.request<Record<string, object>, Result | (ResultObject | Result | ResultString)>({
-                path: `/docpal/master/tables/repair/structure`,
-                method: "GET",
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags MasterTableController
          * @name GetMasterTablesRelationId
          * @summary query relation of master table
          * @request GET:/api/docpal/master/tables/relation/{id}
@@ -22791,6 +22150,28 @@ export class Admin<SecurityDataType extends unknown> extends HttpClient<Security
         ) =>
             this.request<ResultListPlanItemDefinitionDTO, Result | (ResultObject | Result | ResultString)>({
                 path: `/docpal/case/types/${id}/startTask`,
+                method: "GET",
+                query: query,
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags CaseTypeController
+         * @name GetCaseTypesIdExport
+         * @summary Export case type data, including CaseType, CaseModelDraft, CmmnVersion and CMMN XML file
+         * @request GET:/api/docpal/case/types/{id}/export
+         */
+        getCaseTypesIdExport: (
+            id: string,
+            query?: {
+                versionNumber?: string;
+            },
+            params: RequestParams = {},
+        ) =>
+            this.request<string[], Result | (ResultObject | Result | ResultString)>({
+                path: `/docpal/case/types/${id}/export`,
                 method: "GET",
                 query: query,
                 ...params,

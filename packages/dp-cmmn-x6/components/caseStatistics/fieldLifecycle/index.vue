@@ -12,12 +12,12 @@
     <div id="myEcharts" ref="chartRef" class="echart"></div>
     <CaseStatisticsTableDialog :setting="setting" :dates="tableDates" ref="dialogRef"> </CaseStatisticsTableDialog>
 
-    <DashboardSetting ref="settingRef" :title="title" :formJson="formJson" @delete="handleDelete" @refresh="handleRefresh" />
+    <DashboardSetting v-if="!hideSetting" ref="settingRef" :title="title" :formJson="formJson" @delete="handleDelete" @refresh="handleRefresh" />
   </DashboardCard>
 </template>
 
 <script lang="ts" setup>
-import { restApi, PostgREST_Decorate } from 'api'
+import { clientApi } from 'api'
 import formJson from './setting.vform.json'
 import dayjs from 'dayjs'
 const props = withDefaults(
@@ -70,7 +70,7 @@ const option = {
   xAxis: [
     {
       type: 'category',
-      data: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+      data: [],
       axisPointer: {
         type: 'shadow'
       }
@@ -82,6 +82,7 @@ const option = {
       name: 'Number of Cases',
       nameRotate: 90,
       nameLocation: 'middle',
+      minInterval: 1,
       axisLabel: {
         formatter: '{value}',
         margin: -8
@@ -99,42 +100,77 @@ const { cardRef, chartRef, settingRef, resize, handleInitCard, loading } = useDa
     option.series = []
     option.legend = {
       data: [],
-      bottom: '0%',
+      bottom: '0%'
     }
-    if (props.setting.filterList) {
-      props.setting.filterList.forEach((item) => {
-        const config = JSON.parse(JSON.stringify(seriesConfig))
-        config.itemStyle.color = item.color
-        option.series.push({
-          ...config,
-          name: item.filterValue,
-          data: [2.0, 4.9, 7.0, 23.2, 25.6, 76.7, 135.6, 162.2, 32.6, 20.0, 6.4, 3.3]
-        })
+    const rpcParams = {
+      _table_name: chartSetting.tableName,
+      _create_date_column: 'created_date',
+      _target_date_column: chartSetting.dateField,
+      _status_column: chartSetting.filterKey,
+      _status_list: chartSetting.filterList.map((item) => item.filterValue),
+      _filters: {}
+    }
 
-        option.legend.data.push(item.filterValue)
-      })
+    if (Object.keys(rpcParams._filters).length === 0) {
+      delete rpcParams._filters
     }
+    const response = await clientApi.api.postPostgrestRpcFunc('case_status_lifecycle_stats', rpcParams)
+    getData(response.data)
     return option
   },
   clickAction: (params: any) => {
-    let dates: any
-    if (!props.dates) {
-      dates = [dayjs(new Date()).format('YYYY-MM-DD'), dayjs(new Date()).format('YYYY-MM-DD')]
-    } else {
-      console.log('props.datesJSON', props.dates)
-      dates = JSON.parse(JSON.stringify(props.dates))
-    }
-    const year = dayjs(dates[0]).year()
-    const month = params.dataIndex + 1
-    const startDate = dayjs(`${year}-${month}-01`).format('YYYY-MM-DD 00:00:00')
-    const endDate = dayjs(`${year}-${month}-01`).endOf('month').format('YYYY-MM-DD 23:59:59')
-    tableDates.value = [startDate, endDate]
-    dialogRef.value.handleOpen()
+    console.log(params)
+    const daysRange = params.name.split('-') // [31,60]
+    // today - 60 days
+    const startDate = dayjs(new Date()).subtract(daysRange[1], 'day').format('YYYY-MM-DD 00:00:00')
+    const endDate = dayjs(new Date()).subtract(daysRange[0], 'day').format('YYYY-MM-DD 23:59:59')
+
+    const sortBy = props.setting.sortBy || 'created_date'
+    const sortOrder = props.setting.sortOrder || 'desc'
+    const sqlParams = [
+      {
+        key: `${props.setting.dateField}`,
+        type: 'gte',
+        value: `${startDate}`
+      },
+      {
+        key: `${props.setting.dateField}`,
+        type: 'lte',
+        value: `${endDate}`
+      },
+      {
+        key: `${props.setting.filterKey}`,
+        type: 'eq',
+        value: `${params.seriesName}`
+      },
+      {
+        type: 'order',
+        value: `${sortBy}.${sortOrder}`
+      }
+    ]
+    dialogRef.value.handleOpen(sqlParams)
   }
 })
 
 // #endregion
-
+function getData(data: any) {
+  option.xAxis[0].data = data.map((item) => item.day_range.replace('天', ''))
+  data.forEach((item) => {
+    Object.keys(item.status_counts).forEach((status) => {
+      const sIndex = option.series.findIndex((s) => s.name === status)
+      if (sIndex === -1) {
+        option.series.push({
+          ...seriesConfig,
+          name: status,
+          data: [item.status_counts[status]]
+        })
+        option.legend.data.push(status)
+      } else {
+        option.series[sIndex].data.push(item.status_counts[status])
+      }
+    })
+  })
+}
 // #endregion
 defineExpose({ resize })
 </script>

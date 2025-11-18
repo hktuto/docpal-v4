@@ -6,6 +6,7 @@ import { CmmnWidgetComponent } from '../../../../../packages/dp-cmmn-x6/utils/da
 import { onMounted } from 'vue'
 import { clientApi } from 'api'
 import { MenuRouterKey } from '#imports'
+import dayjs from 'dayjs'
 
 const routerProvider = inject(MenuRouterKey)
 const props = defineProps<{
@@ -20,7 +21,8 @@ const state = reactive<any>({
   layout: [] as DashboardWidgetSetting[],
   dashboardList: [],
   selectedDashboard: {},
-  time: 3
+  time: 3,
+  dates: [dayjs().startOf('year').format('YYYY-MM-DD'), formatDate(new Date(), 'YYYY-MM-DD')],
 })
 const { t } = useI18n()
 
@@ -126,6 +128,7 @@ onMounted(() => {
         id="CaseDashboard__Main"
         ref="DashboardDetailRef"
         v-model:layout="state.layout"
+        :dates="state.dates"
         :componentMap="CmmnWidgetComponent"
         :hideSetting="true"
         :resizable="false"
