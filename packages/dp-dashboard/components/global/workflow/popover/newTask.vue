@@ -4,7 +4,7 @@
     <el-button type="primary" :loading="state.loading">
       {{ $t('workflow_newWorkflow') }}
       <el-icon class="el-icon--right">
-        <arrow-down/>
+        <arrow-down />
       </el-icon>
     </el-button>
     <template #dropdown>
@@ -23,21 +23,26 @@
              class="scroll-dialog big"
   >
     <template #header>
-      <div class="float-right">
-        <Icon name="mdi:fullscreen" class="cursor-pointer" @click="isFullScreen = !isFullScreen" />
+      <div class="dialog-title">
+        <h3>{{ state.selectedWorkflow.name }}</h3>
+        <div class="float-right">
+          <Icon name="mdi:fullscreen" class="cursor-pointer" @click="isFullScreen = !isFullScreen" />
+        </div>
       </div>
     </template>
-    <ElTabs v-if="state.formDialogVisible" v-model="activeName" v-loading="state.loading" @tab-change="tabChangeHandler">
+    <ElTabs v-if="state.formDialogVisible" v-model="activeName" v-loading="state.loading"
+            @tab-change="tabChangeHandler">
       <ElTabPane v-loading="state.loading" :label="$t('workflow_form')" name="Form">
-        <WorkflowDetailFormRender ref="vFormRef"/>
+        <WorkflowDetailFormRender ref="vFormRef" />
       </ElTabPane>
       <ElTabPane :label="$t('workflow_graph')" name="Graph">
         <BpmnViewer v-if="activeName === 'Graph'" ref="graphEl" class="graphContent" step="start"
-                    @graphReady="graphReady"/>
+                    @graphReady="graphReady" />
       </ElTabPane>
     </ElTabs>
     <template #footer>
-      <el-button v-if="!pageButtonSetting || pageButtonSetting.showSumBitButton" id="Workflow__NewWorkflow__StartWorkflow" type="primary" @click="checkAndSubmit">
+      <el-button v-if="!pageButtonSetting || pageButtonSetting.showSumBitButton"
+                 id="Workflow__NewWorkflow__StartWorkflow" type="primary" @click="checkAndSubmit">
         <template v-if="pageButtonSetting && pageButtonSetting.submitButtonLabel">
           {{ pageButtonSetting.submitButtonLabel }}
         </template>
@@ -47,20 +52,19 @@
       </el-button>
     </template>
   </el-dialog>
-
 </template>
 
 <script lang="ts" setup>
-import {ElMessage} from 'element-plus'
-import {ArrowDown} from '@element-plus/icons-vue'
+import { ElMessage } from 'element-plus'
+import { ArrowDown } from '@element-plus/icons-vue'
 // @ts-ignore
-import {clientApi} from 'api';
+import { clientApi } from 'api'
 
-const {formStartHandle} = useWorkflow()
+const { formStartHandle } = useWorkflow()
 const isFullScreen = ref(false)
 // @ts-ignore
 const graphEl = ref()
-const emits = defineEmits(['created']);
+const emits = defineEmits(['created'])
 // @ts-ignore
 const activeName = ref('Form')
 // @ts-ignore
@@ -91,11 +95,11 @@ async function getAvailableWorkflow() {
 async function workflowClickHandler(item: any) {
   let step = 'Start'
   state.loading = true
-  
+
   //TODO : get xml and check if need to open new page
   const xml = await clientApi.api.getWorkflowVersionVersionidBpmnxml(item.versionId)
-  const {flatObj} = bpmnStringToJson(xml)
-  const startEvent = flatObj.Start;
+  const { flatObj } = bpmnStringToJson(xml)
+  const startEvent = flatObj.Start
   state.formDialogVisible = true
   // check start event additional setting
   if (startEvent?.extensionElements && startEvent?.extensionElements['docpal:additionaSetting']) {
@@ -105,7 +109,7 @@ async function workflowClickHandler(item: any) {
       state.loading = false
       const link = newWorkflowStartPage(item.name, step, item.key, item.versionId)
       routerProvider?.navigateTo(link)
-      return;
+      return
     }
   }
   // get bpmn
@@ -118,8 +122,8 @@ async function workflowClickHandler(item: any) {
       return
     }
   }
-  
-  
+
+
   // @ts-ignore
   state.selectedWorkflow = deepCopy(item)
   initForm(item.key, item.versionId)
@@ -144,11 +148,11 @@ async function checkAndSubmit() {
   if (data) {
     const form = {
       processKey: state.selectedWorkflow.key,
-      businessKey: data.businessKey || "",
+      businessKey: data.businessKey || '',
       properties: Object.entries(data).reduce((newObj, [key, val]) => {
         if (val || val === false || val == '0') newObj[key] = val
-        return newObj;
-      }, {}),
+        return newObj
+      }, {})
     }
     state.loading = true
     try {
@@ -162,27 +166,35 @@ async function checkAndSubmit() {
   }
   state.loading = false
 }
+
 type AdditionalButton = {
   props: any
   component: string
 }
 const additionalButton = ref<AdditionalButton[]>([])
 const pageButtonSetting = ref<any>(null)
+
 async function handleAdditionalSetting(xml: any, taskDetail: any, formData: any) {
-  const { buttons, components, signatureSetting, buttonSetting } = await getBpmnAddtionalElement(xml, "Start", taskDetail, formData)
+  const {
+    buttons,
+    components,
+    signatureSetting,
+    buttonSetting
+  } = await getBpmnAddtionalElement(xml, 'Start', taskDetail, formData)
   additionalButton.value = buttons
-  if(buttonSetting) {
+  if (buttonSetting) {
     pageButtonSetting.value = buttonSetting
   }
 }
+
 async function initForm(processKey: string, versionId: string) {
-  const props = await clientApi.api.postWorkflowProperties({processKey}).then(res => res.data)
+  const props = await clientApi.api.postWorkflowProperties({ processKey }).then(res => res.data)
   const formData = formDataGet(props)
   const formJson = await formJsonGet('start', processKey, versionId)
   setTimeout(() => {
     vFormRef.value.setForm(formJson, formData, props)
   })
-  const blob: any = await clientApi.api.postWorkflowProcessModel({processKey}, {
+  const blob: any = await clientApi.api.postWorkflowProcessModel({ processKey }, {
     format: 'blob'
   })
   const text = await blob.text()
@@ -202,7 +214,11 @@ function formDataGet(propList = []) {
 }
 
 async function formJsonGet(userTaskId: string, processKey: string, versionId: string) {
-  const response: any = await clientApi.api.getRelationQuery({userTaskId, processKey, versionId}).then(res => res.data)
+  const response: any = await clientApi.api.getRelationQuery({
+    userTaskId,
+    processKey,
+    versionId
+  }).then(res => res.data)
   if (!response[0] ||
     response[0] && !response[0].jsonValue) return {}
   return JSON.parse(response[0].jsonValue)
@@ -213,16 +229,18 @@ async function formJsonGet(userTaskId: string, processKey: string, versionId: st
 onMounted(() => {
   getAvailableWorkflow()
 })
-defineExpose({workflowClickHandler})
+defineExpose({ workflowClickHandler })
 </script>
 <style lang="scss" scoped>
-.float-right{
-  width: 100%;
+.dialog-title {
   display: flex;
-  justify-content: flex-end;
-  align-items: center;
+  justify-content: space-between;
+}
+
+.float-right {
   padding-right: 10px;
 }
+
 .graphContent {
   height: 500px;
 }

@@ -225,7 +225,7 @@ onMounted(async () => {
           </el-button>
         </h4>
         <ElFormItem v-for="item in form.field" :key="item.attr_tableColumn" :label="item.attr_tableColumn">
-          <ElSelect v-model="item.attr_formProperty" placeholder="Field" @change="updateData">
+          <ElSelect v-model="item.attr_formProperty" placeholder="Field" @change="updateData" filterable>
             <el-option v-for="item in allFields" :key="item.id" :label="item.name" :value="item.id" />
           </ElSelect>
         </ElFormItem>
