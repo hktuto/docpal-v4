@@ -111,7 +111,9 @@ async function reorderColumn(fields: any) {
   } catch (e) {
     console.log('error', e)
   }
-  tableReady.value = true
+  setTimeout(() => {
+    tableReady.value = true
+  }, 200)
 }
 watch(
   () => setting?.displayColumns,
@@ -175,7 +177,7 @@ defineExpose({ reorderColumn, reload, query })
 </script>
 
 <template>
-  <VxeGrid ref="tableRef" v-bind="tableConfig" v-on="tableEvent"> </VxeGrid>
+  <VxeGrid v-if="tableReady" ref="tableRef" v-bind="tableConfig" v-on="tableEvent"> </VxeGrid>
   <DashboardActionHumanTaskDialog ref="dialogRef" @refresh="reload()" />
 </template>
 

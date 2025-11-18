@@ -173,9 +173,9 @@ const { cardRef, chartRef, settingRef, resize, handleInitCard, loading } = useDa
         value: `${sortBy}.desc`
       }
     ]
-    if (chartSetting.relatedField && caseInstanceId) {
+    if (props.setting.relatedField && caseInstanceId) {
       sqlParams.push({
-        key: chartSetting.relatedField,
+        key: props.setting.relatedField,
         type: 'eq',
         value: caseInstanceId
       })
