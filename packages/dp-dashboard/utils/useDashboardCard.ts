@@ -34,7 +34,7 @@ export const useDashboardCard = (params: useDashboardCardParams) => {
         const pWidth = cardEl.offsetWidth - 20
         if (chartRef.value) chartRef.value.style = `height: ${pHeight}px; width: ${pWidth}px`
         if (params.initStyleActionExtend) params.initStyleActionExtend(pHeight, pWidth)
-      }, 100)
+      }, 10)
     }
   }
 
