@@ -34,7 +34,7 @@ const props = withDefaults(
   }
 )
 const { t } = useI18n()
-const title = $t('dashboard.cmmnCaseGroupFieldNum')
+const title = $t('dashboard.cmmnCaseLimitGroupFieldNum')
 const total = ref(0)
 const tabProvider = inject(TabManagerKey)
 const emits = defineEmits(['refreshSetting', 'delete'])
@@ -97,7 +97,6 @@ const { cardRef, chartRef, settingRef, resize, handleInitCard, loading } = useDa
     const rpcParams = {
       _table_name: chartSetting.tableName,
       _date_column: 'created_date',
-      _schema_name: 'app10',
       _top_n: 5,
       _group_column: chartSetting.groupField,
       _tcv_column: chartSetting.sortBy,
@@ -118,7 +117,6 @@ const { cardRef, chartRef, settingRef, resize, handleInitCard, loading } = useDa
         name: !item.group_value ? '-' : item.group_value
       })
     })
-    console.log(data)
     return option
   },
   clickAction: (params: any) => {

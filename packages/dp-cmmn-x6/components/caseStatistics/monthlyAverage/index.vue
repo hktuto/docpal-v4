@@ -179,7 +179,6 @@ async function getCaseCount(chartSetting) {
   const rpcParams = {
     _table_name: chartSetting.tableName,
     _date_column: 'created_date', // 合同到期日期字段
-    "_schema_name": "app10",
     _target_year: dayjs().year()
   }
   const response = await clientApi.api.postPostgrestRpcFunc('count_by_month_generic', rpcParams).then(res => res.data)
@@ -189,7 +188,6 @@ async function getAverageDuration(chartSetting) {
   const rpcParams = {
     _table_name: chartSetting.tableName,
     _date_column: 'created_date', // 合同到期日期字段
-    "_schema_name": "app10",
     _target_year: dayjs().year(),
     _value_column: chartSetting.averageField
   }

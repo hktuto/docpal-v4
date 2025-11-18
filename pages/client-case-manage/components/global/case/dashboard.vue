@@ -22,7 +22,7 @@ const state = reactive<any>({
   dashboardList: [],
   selectedDashboard: {},
   time: 3,
-  dates: [dayjs().startOf('year').format('YYYY-MM-DD'), formatDate(new Date(), 'YYYY-MM-DD')],
+  dates: [dayjs().startOf('year').format('YYYY-MM-DD'), formatDate(new Date(), 'YYYY-MM-DD')]
 })
 const { t } = useI18n()
 
@@ -100,26 +100,29 @@ onMounted(() => {
 <template>
   <div class="pageContainer--padding case-dashboard">
     <div class="case-dashboard-header">
-      <el-dropdown trigger="click">
-        <span class="el-dropdown-link">
-          <div class="ellipsis">{{ state.selectedDashboard.label }}</div>
-          <el-icon class="el-icon--right" v-if="state.dashboardList.length > 1">
-            <ArrowDown />
-          </el-icon>
-        </span>
-        <template #dropdown>
-          <el-dropdown-menu v-if="state.dashboardList.length > 1">
-            <el-dropdown-item
-              v-for="item in state.dashboardList"
-              :command="item.id"
-              :disabled="item.id === state.selectedDashboard.id"
-              @click="getLayout(item.id, item)"
-            >
-              {{ item.label }}
-            </el-dropdown-item>
-          </el-dropdown-menu>
-        </template>
-      </el-dropdown>
+      <div style="display: flex; align-items: center; gap: var(--app-space-s);">
+        <el-dropdown trigger="click">
+          <span class="el-dropdown-link">
+            <div class="ellipsis">{{ state.selectedDashboard.label }}</div>
+            <el-icon class="el-icon--right" v-if="state.dashboardList.length > 1">
+              <ArrowDown />
+            </el-icon>
+          </span>
+          <template #dropdown>
+            <el-dropdown-menu v-if="state.dashboardList.length > 1">
+              <el-dropdown-item
+                v-for="item in state.dashboardList"
+                :command="item.id"
+                :disabled="item.id === state.selectedDashboard.id"
+                @click="getLayout(item.id, item)"
+              >
+                {{ item.label }}
+              </el-dropdown-item>
+            </el-dropdown-menu>
+          </template>
+        </el-dropdown>
+        <DashboardDate v-model="state.dates" />
+      </div>
       <el-button :loading="exportLoading" type="primary" @click="handleExportPdf">{{ $t('dpTool_downloadPDF') }}</el-button>
     </div>
     <div class="case-dashboard-main" v-loading="state.loading">
