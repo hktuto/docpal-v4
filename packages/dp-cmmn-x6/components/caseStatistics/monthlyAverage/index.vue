@@ -214,22 +214,20 @@ async function getCaseCount(chartSetting) {
   const rpcParams = {
     _table_name: chartSetting.tableName,
     _date_column: 'created_date', // 合同到期日期字段
-    _target_year: dayjs().year()
+    _target_year: dayjs().year(),
+    _filters: {}
   }
   if (chartSetting.relatedField && caseInstanceId) {
-    rpcParams._filters = {
-      [chartSetting.relatedField]: caseInstanceId
-    }
+    rpcParams._filters[chartSetting.relatedField] = caseInstanceId
   }
   if (chartSetting.filterKey && chartSetting.filterValue) {
-    rpcParams._filters = {
-      [chartSetting.filterKey]: chartSetting.filterValue
-    }
+    rpcParams._filters[chartSetting.filterKey] = chartSetting.filterValue
   }
   if (props.setting.currentUserField) {
-    rpcParams._filters = {
-      [props.setting.currentUserField]: userId
-    }
+    rpcParams._filters[props.setting.currentUserField] = userId
+  }
+  if (Object.keys(rpcParams._filters).length === 0) {
+    delete rpcParams._filters
   }
   const response = await clientApi.api.postPostgrestRpcFunc('count_by_month_generic', rpcParams).then((res) => res.data)
   return response.map((item) => item.count_value)

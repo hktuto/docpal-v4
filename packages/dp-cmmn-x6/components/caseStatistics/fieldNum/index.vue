@@ -60,7 +60,9 @@ const { cardRef, settingRef, resize, handleInitCard, loading } = useDashboardCar
 
   getOptions: async (chartSetting) => {
     if (!chartSetting.tableName) {
-      return option
+      return {
+        total: 0
+      }
     }
     const sqlParams = [
       {
