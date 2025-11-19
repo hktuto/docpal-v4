@@ -113,7 +113,7 @@ function updateData() {
 
   const newData = {
     ...nodeData,
-    version: nodeData.versioin + 1 || 1,
+    version: nodeData.version + 1 || 1,
     data: {
       ...nodeData.data,
       extensionElements: {
@@ -153,7 +153,7 @@ function updateData() {
   })
 
   graphProvider?.graph.value?.stopBatch('update-auditLog-field-data')
-  console.log(22, fields, node.data.data)
+  console.log(22, fields, node.data)
 }
 
 onMounted(async () => {
