@@ -42,6 +42,7 @@ const props = withDefaults(
   }
 )
 
+const userId: string = useUserId().value
 const CMDProvider = inject(CaseManagementDashboardKey)
 const caseInstanceId = CMDProvider?.instanceId?.value || null
 const { t } = useI18n()
@@ -89,6 +90,9 @@ const { cardRef, settingRef, resize, handleInitCard, loading } = useDashboardCar
         value: caseInstanceId
       })
     }
+    if (chartSetting.currentUserField) {
+      rpcParams._filters[chartSetting.currentUserField] = userId
+    }
     const sql = PostgREST_Decorate(sqlParams)
     const response = await clientApi.api.getPostgrestTable(`${chartSetting.tableName}?${sql}`)
     const data = response.data[0]
@@ -133,6 +137,13 @@ function handleDrillDown() {
       key: props.setting.relatedField,
       type: 'eq',
       value: caseInstanceId
+    })
+  }
+  if (chartSetting.currentUserField) {
+    sqlParams.push({
+      key: chartSetting.currentUserField,
+      type: 'eq',
+      value: userId
     })
   }
   dialogRef.value.handleOpen(sqlParams)

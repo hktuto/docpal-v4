@@ -40,6 +40,7 @@ const props = withDefaults(
     hideSetting: false
   }
 )
+const userId: string = useUserId().value
 const CMDProvider = inject(CaseManagementDashboardKey)
 const caseInstanceId = CMDProvider?.instanceId?.value || null
 const { t } = useI18n()
@@ -127,6 +128,9 @@ const { cardRef, chartRef, settingRef, resize, handleInitCard, loading } = useDa
     if (chartSetting.relatedField && caseInstanceId) {
       rpcParams._filters[chartSetting.relatedField] = caseInstanceId
     }
+    if(chartSetting.currentUserField ) {
+      rpcParams._filters[chartSetting.currentUserField] = userId
+    }
     if (Object.keys(rpcParams._filters).length === 0) {
       delete rpcParams._filters
     }
@@ -167,6 +171,13 @@ const { cardRef, chartRef, settingRef, resize, handleInitCard, loading } = useDa
         key: props.setting.relatedField,
         type: 'eq',
         value: caseInstanceId
+      })
+    }
+    if (props.setting.currentUserField) {
+      sqlParams.push({
+        key: props.setting.currentUserField,
+        type: 'eq',
+        value: userId
       })
     }
     dialogRef.value.handleOpen(sqlParams)

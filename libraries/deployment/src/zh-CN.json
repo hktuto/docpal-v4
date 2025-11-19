@@ -387,6 +387,7 @@
     "averageTitle": "平均线标题",
     "averageUnit": "平均线单位",
     "condition": "条件",
+    "currentUserField": "用户字段（仅显示当前用户数据）",
     "dateField": "日期字段",
     "filterKey": "筛选键",
     "filterValue": "筛选值",

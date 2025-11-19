@@ -41,6 +41,8 @@ const props = withDefaults(
     hideSetting: false
   }
 )
+
+const userId: string = useUserId().value
 const CMDProvider = inject(CaseManagementDashboardKey)
 const caseInstanceId = CMDProvider?.instanceId?.value || null
 const { t } = useI18n()
@@ -84,6 +86,13 @@ const { cardRef, settingRef, resize, handleInitCard, loading } = useDashboardCar
         value: caseInstanceId
       })
     }
+    if (chartSetting.currentUserField) {
+      sqlParams.push({
+        key: chartSetting.currentUserField,
+        type: 'eq',
+        value: userId
+      })
+    }
     const sql = PostgREST_Decorate(sqlParams)
     const response = await clientApi.api.getPostgrestTable(`${chartSetting.tableName}?${sql}`)
     total.value = response.data[0].sum
@@ -111,6 +120,13 @@ function handleDrillDown() {
       value: `${props.setting.filterKey}.desc`
     }
   ]
+  if (props.setting.currentUserField) {
+    sqlParams.push({
+      key: props.setting.currentUserField,
+      type: 'eq',
+      value: userId
+    })
+  }
   if (props.setting.relatedField && caseInstanceId) {
     sqlParams.push({
       key: props.setting.relatedField,
