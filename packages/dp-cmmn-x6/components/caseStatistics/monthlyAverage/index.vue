@@ -84,6 +84,7 @@ const option = {
       name: 'Number of Cases',
       nameRotate: 90,
       nameLocation: 'middle',
+      minInterval: 1,
       axisLabel: {
         formatter: '{value}',
         margin: -8
@@ -192,6 +193,13 @@ const { cardRef, chartRef, settingRef, resize, handleInitCard, loading } = useDa
         value: caseInstanceId
       })
     }
+    if (props.setting.filterKey && props.setting.filterValue) {
+      sqlParams.push({
+        key: props.setting.filterKey,
+        type: 'eq',
+        value: props.setting.filterValue
+      })
+    }
     dialogRef.value.handleOpen(sqlParams)
   }
 })
@@ -204,6 +212,11 @@ async function getCaseCount(chartSetting) {
   if (chartSetting.relatedField && caseInstanceId) {
     rpcParams._filters = {
       [chartSetting.relatedField]: caseInstanceId
+    }
+  }
+  if (chartSetting.filterKey && chartSetting.filterValue) {
+    rpcParams._filters = {
+      [chartSetting.filterKey]: chartSetting.filterValue
     }
   }
   const response = await clientApi.api.postPostgrestRpcFunc('count_by_month_generic', rpcParams).then((res) => res.data)
@@ -219,6 +232,11 @@ async function getAverageDuration(chartSetting) {
   if (chartSetting.relatedField && caseInstanceId) {
     rpcParams._filters = {
       [chartSetting.relatedField]: caseInstanceId
+    }
+  }
+  if (chartSetting.filterKey && chartSetting.filterValue) {
+    rpcParams._filters = {
+      [chartSetting.filterKey]: chartSetting.filterValue
     }
   }
   const response = await clientApi.api.postPostgrestRpcFunc('avg_by_month_generic', rpcParams).then((res) => res.data)
