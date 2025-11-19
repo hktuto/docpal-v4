@@ -141,9 +141,9 @@ function handleDrillDown() {
       value: caseInstanceId
     })
   }
-  if (chartSetting.currentUserField) {
+  if (props.setting.currentUserField) {
     sqlParams.push({
-      key: chartSetting.currentUserField,
+      key: props.setting.currentUserField,
       type: 'eq',
       value: userId
     })
