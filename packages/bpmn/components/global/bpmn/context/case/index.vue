@@ -142,7 +142,7 @@ function setData() {
   const nodeData = node.getData()
   const newData = {
     ...nodeData,
-    version: nodeData.versioin + 1 || 1,
+    version: nodeData.version + 1 || 1,
     data: {
       ...nodeData.data,
       extensionElements: {
