@@ -12,7 +12,15 @@
     <div id="myEcharts" ref="chartRef" class="echart"></div>
     <CaseStatisticsTableDialog :setting="setting" :dates="tableDates" ref="dialogRef"> </CaseStatisticsTableDialog>
 
-    <DashboardSetting v-if="!hideSetting" ref="settingRef" :title="title" :formJson="formJson" @delete="handleDelete" @refresh="handleRefresh" />
+    <DashboardSetting
+      v-if="!hideSetting"
+      ref="settingRef"
+      :after-open="handleAfterOpen"
+      :title="title"
+      :formJson="formJson"
+      @delete="handleDelete"
+      @refresh="handleRefresh"
+    />
   </DashboardCard>
 </template>
 
@@ -25,6 +33,7 @@ const props = withDefaults(
     dates?: any
     setting?: any
     hideSetting?: boolean
+    type?: string
   }>(),
   {
     setting: {},
@@ -99,6 +108,9 @@ const { cardRef, chartRef, settingRef, resize, handleInitCard, loading } = useDa
   props,
 
   getOptions: async (chartSetting) => {
+    if (!chartSetting.tableName) {
+      return option
+    }
     option.series = []
     option.legend = {
       data: [],
@@ -123,7 +135,7 @@ const { cardRef, chartRef, settingRef, resize, handleInitCard, loading } = useDa
     return option
   },
   clickAction: (params: any) => {
-    const daysRange = params.name.split('-') 
+    const daysRange = params.name.split('-')
     const startDate = dayjs(new Date()).subtract(daysRange[1], 'day').format('YYYY-MM-DD 00:00:00')
     const endDate = dayjs(new Date()).subtract(daysRange[0], 'day').format('YYYY-MM-DD 23:59:59')
 
@@ -160,7 +172,11 @@ const { cardRef, chartRef, settingRef, resize, handleInitCard, loading } = useDa
     dialogRef.value.handleOpen(sqlParams)
   }
 })
-
+function handleAfterOpen(formRendererRef: any) {
+  if (props.type === 'caseManagement') {
+    displaySettingFields(['relatedField'], formRendererRef)
+  }
+}
 // #endregion
 function getData(data: any) {
   option.xAxis[0].data = data.map((item) => item.day_range.replace('天', ''))

@@ -15,7 +15,15 @@
       <el-button type="primary" @click="handleShowAll()">{{ $t('button.showAll') }}</el-button>
     </div>
     <CaseStatisticsTableDialog :setting="setting" :dates="dates" ref="dialogRef"> </CaseStatisticsTableDialog>
-    <DashboardSetting v-if="!hideSetting" ref="settingRef" :formJson="formJson" :title="title" @delete="handleDelete" @refresh="handleRefresh" />
+    <DashboardSetting
+      v-if="!hideSetting"
+      ref="settingRef"
+      :after-open="handleAfterOpen"
+      :formJson="formJson"
+      :title="title" 
+      @delete="handleDelete"
+      @refresh="handleRefresh"
+    />
   </DashboardCard>
 </template>
 
@@ -27,6 +35,7 @@ const props = withDefaults(
     dates?: any
     setting?: any
     hideSetting?: boolean
+    type?: string
   }>(),
   {
     setting: {},
@@ -94,6 +103,9 @@ const { cardRef, chartRef, settingRef, resize, handleInitCard, loading } = useDa
   props,
 
   getOptions: async (chartSetting) => {
+    if (!chartSetting.tableName) {
+      return option
+    }
     option.series[0].data = []
     const data = option.series[0].data
     const rpcParams = {
@@ -191,9 +203,11 @@ function handleShowAll(groupField: string = '') {
   }
   dialogRef.value.handleOpen(sqlParams)
 }
-// #endregion
-
-// #endregion
+function handleAfterOpen(formRendererRef: any) {
+  if (props.type === 'caseManagement') {
+    displaySettingFields(['relatedField'], formRendererRef)
+  }
+}
 defineExpose({ resize })
 </script>
 

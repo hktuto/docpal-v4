@@ -14,18 +14,27 @@
     </div>
     <!-- <div id="myEcharts" ref="chartRef" class="echart"></div> -->
     <CaseStatisticsTableDialog :setting="setting" :dates="dates" ref="dialogRef" />
-    <DashboardSetting v-if="!hideSetting" ref="settingRef" :title="title" :formJson="formJson" @delete="handleDelete" @refresh="handleRefresh" />
+    <DashboardSetting
+      v-if="!hideSetting"
+      ref="settingRef"
+      :after-open="handleAfterOpen"
+      :title="title"
+      :formJson="formJson"
+      @delete="handleDelete"
+      @refresh="handleRefresh"
+    />
   </DashboardCard>
 </template>
 
 <script lang="ts" setup>
-import {  clientApi, PostgREST_Decorate } from 'api'
+import { clientApi, PostgREST_Decorate } from 'api'
 import formJson from './setting.vform.json'
 const props = withDefaults(
   defineProps<{
     dates?: any
     setting?: any
     hideSetting?: boolean
+    type?: string
   }>(),
   {
     setting: {},
@@ -44,10 +53,14 @@ function handleRefresh(chartSetting) {
 function handleDelete() {
   emits('delete')
 }
+
 const { cardRef, settingRef, resize, handleInitCard, loading } = useDashboardCard({
   props,
 
   getOptions: async (chartSetting) => {
+    if (!chartSetting.tableName) {
+      return option
+    }
     const sqlParams = [
       {
         key: 'created_date',
@@ -119,9 +132,11 @@ function handleCompute(value: number) {
   }
   return value
 }
-// #endregion
-
-// #endregion
+function handleAfterOpen(formRendererRef: any) {
+  if (props.type === 'caseManagement') {
+    displaySettingFields(['relatedField'], formRendererRef)
+  }
+}
 defineExpose({ resize })
 </script>
 
