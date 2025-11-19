@@ -26,7 +26,7 @@
     <div  v-for="(item, key) in fieldList" :class="{fieldList:true, hidden:key === 'hidden' }" >
       <template v-if="key !== 'hidden'">
         <el-row class="title">{{key}}</el-row>
-        <el-tag type="primary" effect="plain" v-for="(field,index) in item">{{field.id}}</el-tag>
+        <el-tag type="primary" effect="plain" v-for="(field,index) in item">{{field.name || field.id}}</el-tag>
       </template>
     </div>
     <el-icon class="absoluteTop" @click="handleEdit"><Setting /></el-icon>
