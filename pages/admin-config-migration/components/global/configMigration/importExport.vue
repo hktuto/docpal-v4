@@ -9,7 +9,7 @@
     <div class="importFromContainer">
 
     </div>
-    <CaseManagementExportForm />
+    <ConfigMigrationExportForm />
   </div>
 </template>
 
