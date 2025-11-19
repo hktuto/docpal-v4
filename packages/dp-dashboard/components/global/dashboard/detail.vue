@@ -206,7 +206,7 @@ const gridLayout = ref()
 const { handleDragStart, handleDragOver, handleDrop, handleDragEnd, placeholder } = useDashboardDrag({
   wrapper,
   layout: layout as Ref<DashboardWidgetSetting[]>,
-  colNum: colNum,
+  colNum: calColNum,
   rowHeight: props.rowHeight,
   onAdd: (item) => {
     // 触发保存事件
