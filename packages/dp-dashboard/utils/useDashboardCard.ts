@@ -26,15 +26,18 @@ export const useDashboardCard = (params: useDashboardCardParams) => {
     if (params.initStyleAction) {
       params.initStyleAction(cardRef, chartRef)
     } else {
-      setTimeout(() => {
+      console.log('initStyle');
+      
+      // setTimeout(() => {
         // TODO: cardRef 可能为空
+        console.log('cardRef', cardRef.value);
         if (!cardRef.value) return
         const cardEl = cardRef.value.$el ? cardRef.value.$el : cardRef.value.parentNode ? cardRef.value.parentNode : cardRef.value
         const pHeight = cardEl.offsetHeight - 36 // - header
         const pWidth = cardEl.offsetWidth - 20
         if (chartRef.value) chartRef.value.style = `height: ${pHeight}px; width: ${pWidth}px`
         if (params.initStyleActionExtend) params.initStyleActionExtend(pHeight, pWidth)
-      }, 10)
+      // }, 10)
     }
   }
 
@@ -87,6 +90,8 @@ export const useDashboardCard = (params: useDashboardCardParams) => {
     return echartInstance
   }
   const resize = () => {
+    console.log('resize');
+    
     setTimeout(() => {
       if (params.resizeAction) {
         params.resizeAction(echartInstance)
