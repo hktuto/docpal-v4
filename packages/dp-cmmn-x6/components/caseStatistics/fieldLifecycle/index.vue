@@ -140,17 +140,12 @@ const { cardRef, chartRef, settingRef, resize, handleInitCard, loading } = useDa
   },
   clickAction: (params: any) => {
     const daysRange = params.name.split('-')
-    const startDate = dayjs(new Date()).subtract(daysRange[1], 'day').format('YYYY-MM-DD 00:00:00')
+    const startDate = daysRange[1] ? dayjs(new Date()).subtract(daysRange[1], 'day').format('YYYY-MM-DD 00:00:00') : ''
     const endDate = dayjs(new Date()).subtract(daysRange[0], 'day').format('YYYY-MM-DD 23:59:59')
 
     const sortBy = props.setting.sortBy || 'created_date'
     const sortOrder = props.setting.sortOrder || 'desc'
     const sqlParams = [
-      {
-        key: `${props.setting.dateField}`,
-        type: 'gte',
-        value: `${startDate}`
-      },
       {
         key: `${props.setting.dateField}`,
         type: 'lte',
@@ -166,6 +161,13 @@ const { cardRef, chartRef, settingRef, resize, handleInitCard, loading } = useDa
         value: `${sortBy}.${sortOrder}`
       }
     ]
+    if (startDate) {
+      sqlParams.push({
+        key: `${props.setting.dateField}`,
+        type: 'gte',
+        value: `${startDate}`
+      })
+    }
     if (props.setting.relatedField && caseInstanceId) {
       sqlParams.push({
         key: props.setting.relatedField,
