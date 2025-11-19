@@ -22,19 +22,21 @@ export const useDashboardCard = (params: useDashboardCardParams) => {
   const settingRef = ref<any>()
   const loading = ref(false)
 
-  const initStyle = () => {
+  const initStyle = async () => {
     if (params.initStyleAction) {
       params.initStyleAction(cardRef, chartRef)
     } else {
-      setTimeout(() => {
-        // TODO: cardRef 可能为空
-        if (!cardRef.value) return
-        const cardEl = cardRef.value.$el ? cardRef.value.$el : cardRef.value.parentNode ? cardRef.value.parentNode : cardRef.value
-        const pHeight = cardEl.offsetHeight - 36 // - header
-        const pWidth = cardEl.offsetWidth - 20
-        if (chartRef.value) chartRef.value.style = `height: ${pHeight}px; width: ${pWidth}px`
-        if (params.initStyleActionExtend) params.initStyleActionExtend(pHeight, pWidth)
-      }, 10)
+      await new Promise((resolve) =>
+        setTimeout(() => {
+          if (!cardRef.value) return
+          const cardEl = cardRef.value.$el ? cardRef.value.$el : cardRef.value.parentNode ? cardRef.value.parentNode : cardRef.value
+          const pHeight = cardEl.offsetHeight - 36 // - header
+          const pWidth = cardEl.offsetWidth - 20
+          if (chartRef.value) chartRef.value.style = `height: ${pHeight}px; width: ${pWidth}px`
+          if (params.initStyleActionExtend) params.initStyleActionExtend(pHeight, pWidth)
+          resolve(true)
+        }, 10)
+      )
     }
   }
 
@@ -87,11 +89,11 @@ export const useDashboardCard = (params: useDashboardCardParams) => {
     return echartInstance
   }
   const resize = () => {
-    setTimeout(() => {
+    setTimeout(async () => {
       if (params.resizeAction) {
         params.resizeAction(echartInstance)
       } else {
-        initStyle()
+        await initStyle()
         if (echartInstance) echartInstance.resize()
       }
     })

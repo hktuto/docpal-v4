@@ -12,7 +12,15 @@
     <div id="myEcharts" ref="chartRef" class="echart"></div>
     <CaseStatisticsTableDialog :setting="setting" :dates="tableDates" ref="dialogRef"> </CaseStatisticsTableDialog>
 
-    <DashboardSetting v-if="!hideSetting" ref="settingRef" :title="title" :formJson="formJson" @delete="handleDelete" @refresh="handleRefresh" />
+    <DashboardSetting
+      v-if="!hideSetting"
+      ref="settingRef"
+      :after-open="handleAfterOpen"
+      :title="title"
+      :formJson="formJson"
+      @delete="handleDelete"
+      @refresh="handleRefresh"
+    />
   </DashboardCard>
 </template>
 
@@ -25,12 +33,14 @@ const props = withDefaults(
     dates?: any
     setting?: any
     hideSetting?: boolean
+    type?: string
   }>(),
   {
     setting: {},
     hideSetting: false
   }
 )
+const userId: string = useUserId().value
 const CMDProvider = inject(CaseManagementDashboardKey)
 const caseInstanceId = CMDProvider?.instanceId?.value || null
 const { t } = useI18n()
@@ -99,6 +109,9 @@ const { cardRef, chartRef, settingRef, resize, handleInitCard, loading } = useDa
   props,
 
   getOptions: async (chartSetting) => {
+    if (!chartSetting.tableName) {
+      return option
+    }
     option.series = []
     option.legend = {
       data: [],
@@ -115,6 +128,9 @@ const { cardRef, chartRef, settingRef, resize, handleInitCard, loading } = useDa
     if (chartSetting.relatedField && caseInstanceId) {
       rpcParams._filters[chartSetting.relatedField] = caseInstanceId
     }
+    if(chartSetting.currentUserField ) {
+      rpcParams._filters[chartSetting.currentUserField] = userId
+    }
     if (Object.keys(rpcParams._filters).length === 0) {
       delete rpcParams._filters
     }
@@ -123,18 +139,13 @@ const { cardRef, chartRef, settingRef, resize, handleInitCard, loading } = useDa
     return option
   },
   clickAction: (params: any) => {
-    const daysRange = params.name.split('-') 
-    const startDate = dayjs(new Date()).subtract(daysRange[1], 'day').format('YYYY-MM-DD 00:00:00')
+    const daysRange = params.name.split('-')
+    const startDate = daysRange[1] ? dayjs(new Date()).subtract(daysRange[1], 'day').format('YYYY-MM-DD 00:00:00') : ''
     const endDate = dayjs(new Date()).subtract(daysRange[0], 'day').format('YYYY-MM-DD 23:59:59')
 
     const sortBy = props.setting.sortBy || 'created_date'
     const sortOrder = props.setting.sortOrder || 'desc'
     const sqlParams = [
-      {
-        key: `${props.setting.dateField}`,
-        type: 'gte',
-        value: `${startDate}`
-      },
       {
         key: `${props.setting.dateField}`,
         type: 'lte',
@@ -150,6 +161,13 @@ const { cardRef, chartRef, settingRef, resize, handleInitCard, loading } = useDa
         value: `${sortBy}.${sortOrder}`
       }
     ]
+    if (startDate) {
+      sqlParams.push({
+        key: `${props.setting.dateField}`,
+        type: 'gte',
+        value: `${startDate}`
+      })
+    }
     if (props.setting.relatedField && caseInstanceId) {
       sqlParams.push({
         key: props.setting.relatedField,
@@ -157,10 +175,21 @@ const { cardRef, chartRef, settingRef, resize, handleInitCard, loading } = useDa
         value: caseInstanceId
       })
     }
+    if (props.setting.currentUserField) {
+      sqlParams.push({
+        key: props.setting.currentUserField,
+        type: 'eq',
+        value: userId
+      })
+    }
     dialogRef.value.handleOpen(sqlParams)
   }
 })
-
+function handleAfterOpen(formRendererRef: any) {
+  if (props.type === 'caseManagement') {
+    displaySettingFields(['relatedField'], formRendererRef)
+  }
+}
 // #endregion
 function getData(data: any) {
   option.xAxis[0].data = data.map((item) => item.day_range.replace('天', ''))

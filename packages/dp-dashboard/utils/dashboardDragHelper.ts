@@ -6,12 +6,12 @@ import type { DashboardWidgetSetting } from './dashboardWidgetHelper'
 export function useDashboardDrag(options: {
   wrapper: Ref<HTMLElement | undefined>
   layout: Ref<DashboardWidgetSetting[]>
-  colNum: number
+  colNum: Ref<number>
   rowHeight: number
   onAdd?: (item: DashboardWidgetSetting) => void
 }) {
-  const { wrapper, layout, colNum, rowHeight, onAdd } = options
-
+  const { wrapper, layout, colNum: colNumRef, rowHeight, onAdd } = options
+  const _colNum = colNumRef.value
   // 存储拖拽数据
   const dragData = ref<DashboardWidgetSetting | null>(null)
 
@@ -80,14 +80,14 @@ export function useDashboardDrag(options: {
 
     // 计算grid位置 (考虑margin)
     const margin = 12
-    const colWidth = (wrapper.value.offsetWidth - margin * (colNum + 1)) / colNum
+    const colWidth = (wrapper.value.offsetWidth - margin * (_colNum + 1)) / _colNum
     const effectiveRowHeight = rowHeight + margin
 
     let x = Math.floor(mouseX / (colWidth + margin))
     let y = Math.floor(mouseY / effectiveRowHeight)
 
     // 确保x在有效范围内
-    x = Math.max(0, Math.min(x, colNum - 1))
+    x = Math.max(0, Math.min(x, _colNum - 1))
     y = Math.max(0, y)
 
     return { x, y }

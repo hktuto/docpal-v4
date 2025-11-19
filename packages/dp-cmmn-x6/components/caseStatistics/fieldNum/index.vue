@@ -14,7 +14,15 @@
     </div>
     <!-- <div id="myEcharts" ref="chartRef" class="echart"></div> -->
     <CaseStatisticsTableDialog :setting="setting" :dates="dates" ref="dialogRef" />
-    <DashboardSetting v-if="!hideSetting" ref="settingRef" :title="title" :formJson="formJson" @delete="handleDelete" @refresh="handleRefresh" />
+    <DashboardSetting
+      v-if="!hideSetting"
+      ref="settingRef"
+      :after-open="handleAfterOpen"
+      :title="title"
+      :formJson="formJson"
+      @delete="handleDelete"
+      @refresh="handleRefresh"
+    />
   </DashboardCard>
 </template>
 
@@ -26,6 +34,7 @@ const props = withDefaults(
     dates?: any
     setting?: any
     hideSetting?: boolean
+    type?: string
   }>(),
   {
     setting: {},
@@ -33,6 +42,7 @@ const props = withDefaults(
   }
 )
 
+const userId: string = useUserId().value
 const CMDProvider = inject(CaseManagementDashboardKey)
 const caseInstanceId = CMDProvider?.instanceId?.value || null
 const { t } = useI18n()
@@ -49,7 +59,11 @@ const { cardRef, settingRef, resize, handleInitCard, loading } = useDashboardCar
   props,
 
   getOptions: async (chartSetting) => {
-    // TODO: 需要filter company_id
+    if (!chartSetting.tableName) {
+      return {
+        total: 0
+      }
+    }
     const sqlParams = [
       {
         key: 'created_date',
@@ -77,6 +91,9 @@ const { cardRef, settingRef, resize, handleInitCard, loading } = useDashboardCar
         type: 'eq',
         value: caseInstanceId
       })
+    }
+    if (chartSetting.currentUserField) {
+      rpcParams._filters[chartSetting.currentUserField] = userId
     }
     const sql = PostgREST_Decorate(sqlParams)
     const response = await clientApi.api.getPostgrestTable(`${chartSetting.tableName}?${sql}`)
@@ -124,7 +141,19 @@ function handleDrillDown() {
       value: caseInstanceId
     })
   }
+  if (props.setting.currentUserField) {
+    sqlParams.push({
+      key: props.setting.currentUserField,
+      type: 'eq',
+      value: userId
+    })
+  }
   dialogRef.value.handleOpen(sqlParams)
+}
+function handleAfterOpen(formRendererRef: any) {
+  if (props.type === 'caseManagement') {
+    displaySettingFields(['relatedField'], formRendererRef)
+  }
 }
 function handleCompute(value: number) {
   try {

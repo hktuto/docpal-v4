@@ -12,7 +12,15 @@
     <div id="myEcharts" ref="chartRef" class="echart"></div>
     <CaseStatisticsTableDialog :setting="setting" :dates="tableDates" ref="dialogRef"> </CaseStatisticsTableDialog>
 
-    <DashboardSetting v-if="!hideSetting" ref="settingRef" :formJson="formJson" :title="title" @delete="handleDelete" @refresh="handleRefresh" />
+    <DashboardSetting
+      v-if="!hideSetting"
+      ref="settingRef"
+      :after-open="handleAfterOpen"
+      :formJson="formJson"
+      :title="title"
+      @delete="handleDelete"
+      @refresh="handleRefresh"
+    />
   </DashboardCard>
 </template>
 
@@ -25,12 +33,14 @@ const props = withDefaults(
     dates?: any
     setting?: any
     hideSetting?: boolean
+    type?: string
   }>(),
   {
     setting: {},
     hideSetting: false
   }
 )
+const userId: string = useUserId().value
 const CMDProvider = inject(CaseManagementDashboardKey)
 const caseInstanceId = CMDProvider?.instanceId?.value || null
 const { t } = useI18n()
@@ -75,6 +85,7 @@ const option = {
       name: 'Number of Cases',
       nameRotate: 90,
       nameLocation: 'middle',
+      minInterval: 1,
       axisLabel: {
         formatter: '{value}',
         margin: -8
@@ -121,6 +132,9 @@ const dialogRef = ref()
 const { cardRef, chartRef, settingRef, resize, handleInitCard, loading } = useDashboardCard({
   props,
   getOptions: async (chartSetting) => {
+    if (!chartSetting.tableName) {
+      return option
+    }
     if (props.setting.averageTitle) {
       option.legend = {
         bottom: '5%',
@@ -134,7 +148,7 @@ const { cardRef, chartRef, settingRef, resize, handleInitCard, loading } = useDa
           return FinancialComputing(Number(value)) + ' ' + props.setting.averageUnit
         }
       }
-      if(props.setting.averageField) {
+      if (props.setting.averageField) {
         option.series[1].data = await getAverageDuration(chartSetting)
       }
       // option.series[0].data = chartSetting.data.map(item => item.value)
@@ -148,7 +162,6 @@ const { cardRef, chartRef, settingRef, resize, handleInitCard, loading } = useDa
     if (!props.dates) {
       dates = [dayjs(new Date()).format('YYYY-MM-DD'), dayjs(new Date()).format('YYYY-MM-DD')]
     } else {
-      console.log('props.datesJSON', props.dates)
       dates = JSON.parse(JSON.stringify(props.dates))
     }
     const year = dayjs(dates[0]).year()
@@ -173,11 +186,25 @@ const { cardRef, chartRef, settingRef, resize, handleInitCard, loading } = useDa
         value: `${sortBy}.desc`
       }
     ]
+    if (props.setting.currentUserField) {
+      sqlParams.push({
+        key: props.setting.currentUserField,
+        type: 'eq',
+        value: userId
+      })
+    }
     if (props.setting.relatedField && caseInstanceId) {
       sqlParams.push({
         key: props.setting.relatedField,
         type: 'eq',
         value: caseInstanceId
+      })
+    }
+    if (props.setting.filterKey && props.setting.filterValue) {
+      sqlParams.push({
+        key: props.setting.filterKey,
+        type: 'eq',
+        value: props.setting.filterValue
       })
     }
     dialogRef.value.handleOpen(sqlParams)
@@ -187,34 +214,54 @@ async function getCaseCount(chartSetting) {
   const rpcParams = {
     _table_name: chartSetting.tableName,
     _date_column: 'created_date', // 合同到期日期字段
-    _target_year: dayjs().year()
+    _target_year: dayjs().year(),
+    _filters: {}
   }
   if (chartSetting.relatedField && caseInstanceId) {
-    rpcParams._filters = {
-      [chartSetting.relatedField]: caseInstanceId
-    }
+    rpcParams._filters[chartSetting.relatedField] = caseInstanceId
   }
-  const response = await clientApi.api.postPostgrestRpcFunc('count_by_month_generic', rpcParams).then(res => res.data)
-  return response.map(item => item.count_value)
+  if (chartSetting.filterKey && chartSetting.filterValue) {
+    rpcParams._filters[chartSetting.filterKey] = chartSetting.filterValue
+  }
+  if (props.setting.currentUserField) {
+    rpcParams._filters[props.setting.currentUserField] = userId
+  }
+  if (Object.keys(rpcParams._filters).length === 0) {
+    delete rpcParams._filters
+  }
+  const response = await clientApi.api.postPostgrestRpcFunc('count_by_month_generic', rpcParams).then((res) => res.data)
+  return response.map((item) => item.count_value)
 }
 async function getAverageDuration(chartSetting) {
   const rpcParams = {
     _table_name: chartSetting.tableName,
     _date_column: 'created_date', // 合同到期日期字段
     _target_year: dayjs().year(),
-    _value_column: chartSetting.averageField
+    _value_column: chartSetting.averageField,
+    _filters: {}
   }
   if (chartSetting.relatedField && caseInstanceId) {
     rpcParams._filters = {
       [chartSetting.relatedField]: caseInstanceId
     }
   }
+  if (chartSetting.filterKey && chartSetting.filterValue) {
+    rpcParams._filters[chartSetting.filterKey] = chartSetting.filterValue
+  }
+  if (props.setting.currentUserField) {
+    rpcParams._filters[props.setting.currentUserField] = userId
+  }
+  if (Object.keys(rpcParams._filters).length === 0) {
+    delete rpcParams._filters
+  }
   const response = await clientApi.api.postPostgrestRpcFunc('avg_by_month_generic', rpcParams).then((res) => res.data)
-  return response.map(item => item.avg_value)
+  return response.map((item) => item.avg_value)
 }
-// #endregion
-
-// #endregion
+function handleAfterOpen(formRendererRef: any) {
+  if (props.type === 'caseManagement') {
+    displaySettingFields(['relatedField'], formRendererRef)
+  }
+}
 defineExpose({ resize })
 </script>
 

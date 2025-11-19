@@ -15,7 +15,15 @@
       <el-button type="primary" @click="handleShowAll()">{{ $t('button.showAll') }}</el-button>
     </div>
     <CaseStatisticsTableDialog :setting="setting" :dates="dates" ref="dialogRef"> </CaseStatisticsTableDialog>
-    <DashboardSetting v-if="!hideSetting" ref="settingRef" :formJson="formJson" :title="title" @delete="handleDelete" @refresh="handleRefresh" />
+    <DashboardSetting
+      v-if="!hideSetting"
+      ref="settingRef"
+      :after-open="handleAfterOpen"
+      :formJson="formJson"
+      :title="title" 
+      @delete="handleDelete"
+      @refresh="handleRefresh"
+    />
   </DashboardCard>
 </template>
 
@@ -27,12 +35,14 @@ const props = withDefaults(
     dates?: any
     setting?: any
     hideSetting?: boolean
+    type?: string
   }>(),
   {
     setting: {},
     hideSetting: false
   }
 )
+const userId: string = useUserId().value
 const CMDProvider = inject(CaseManagementDashboardKey)
 const caseInstanceId = CMDProvider?.instanceId?.value || null
 const { t } = useI18n()
@@ -94,6 +104,9 @@ const { cardRef, chartRef, settingRef, resize, handleInitCard, loading } = useDa
   props,
 
   getOptions: async (chartSetting) => {
+    if (!chartSetting.tableName) {
+      return option
+    }
     option.series[0].data = []
     const data = option.series[0].data
     const rpcParams = {
@@ -111,6 +124,9 @@ const { cardRef, chartRef, settingRef, resize, handleInitCard, loading } = useDa
     }
     if (chartSetting.relatedField && caseInstanceId) {
       rpcParams._filters[chartSetting.relatedField] = caseInstanceId
+    }
+    if (chartSetting.currentUserField) {
+      rpcParams._filters[chartSetting.currentUserField] = userId
     }
     if (Object.keys(rpcParams._filters).length === 0) {
       delete rpcParams._filters
@@ -153,6 +169,13 @@ function handleShowAll(groupField: string = '') {
       value: `${props.setting.sortBy}.desc`
     }
   ]
+  if (props.setting.currentUserField) {
+    sqlParams.push({
+      key: props.setting.currentUserField,
+      type: 'eq',
+      value: userId
+    })
+  }
   if (props.setting.filterKey && props.setting.filterValue) {
     if (Array.isArray(props.setting.filterValue)) {
       sqlParams.push({
@@ -191,9 +214,11 @@ function handleShowAll(groupField: string = '') {
   }
   dialogRef.value.handleOpen(sqlParams)
 }
-// #endregion
-
-// #endregion
+function handleAfterOpen(formRendererRef: any) {
+  if (props.type === 'caseManagement') {
+    displaySettingFields(['relatedField'], formRendererRef)
+  }
+}
 defineExpose({ resize })
 </script>
 

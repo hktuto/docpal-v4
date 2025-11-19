@@ -388,6 +388,7 @@
     "averageTitle": "Average Line Title",
     "averageUnit": "Average Line Unit",
     "condition": "Condition",
+    "currentUserField": "User field (only displays data for the current user)",
     "dateField": "Date Field",
     "filterKey": "Filter Key",
     "filterValue": "Filter Value",
