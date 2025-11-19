@@ -12,7 +12,15 @@
     <div id="myEcharts" ref="chartRef" class="echart"></div>
     <CaseStatisticsTableDialog :setting="setting" :dates="tableDates" ref="dialogRef"> </CaseStatisticsTableDialog>
 
-    <DashboardSetting v-if="!hideSetting" ref="settingRef" :formJson="formJson" :title="title" @delete="handleDelete" @refresh="handleRefresh" />
+    <DashboardSetting
+      v-if="!hideSetting"
+      ref="settingRef"
+      :after-open="handleAfterOpen"
+      :formJson="formJson"
+      :title="title"
+      @delete="handleDelete"
+      @refresh="handleRefresh"
+    />
   </DashboardCard>
 </template>
 
@@ -25,6 +33,7 @@ const props = withDefaults(
     dates?: any
     setting?: any
     hideSetting?: boolean
+    type?: string
   }>(),
   {
     setting: {},
@@ -121,6 +130,9 @@ const dialogRef = ref()
 const { cardRef, chartRef, settingRef, resize, handleInitCard, loading } = useDashboardCard({
   props,
   getOptions: async (chartSetting) => {
+    if (!chartSetting.tableName) {
+      return option
+    }
     if (props.setting.averageTitle) {
       option.legend = {
         bottom: '5%',
@@ -134,7 +146,7 @@ const { cardRef, chartRef, settingRef, resize, handleInitCard, loading } = useDa
           return FinancialComputing(Number(value)) + ' ' + props.setting.averageUnit
         }
       }
-      if(props.setting.averageField) {
+      if (props.setting.averageField) {
         option.series[1].data = await getAverageDuration(chartSetting)
       }
       // option.series[0].data = chartSetting.data.map(item => item.value)
@@ -194,8 +206,8 @@ async function getCaseCount(chartSetting) {
       [chartSetting.relatedField]: caseInstanceId
     }
   }
-  const response = await clientApi.api.postPostgrestRpcFunc('count_by_month_generic', rpcParams).then(res => res.data)
-  return response.map(item => item.count_value)
+  const response = await clientApi.api.postPostgrestRpcFunc('count_by_month_generic', rpcParams).then((res) => res.data)
+  return response.map((item) => item.count_value)
 }
 async function getAverageDuration(chartSetting) {
   const rpcParams = {
@@ -210,11 +222,13 @@ async function getAverageDuration(chartSetting) {
     }
   }
   const response = await clientApi.api.postPostgrestRpcFunc('avg_by_month_generic', rpcParams).then((res) => res.data)
-  return response.map(item => item.avg_value)
+  return response.map((item) => item.avg_value)
 }
-// #endregion
-
-// #endregion
+function handleAfterOpen(formRendererRef: any) {
+  if (props.type === 'caseManagement') {
+    displaySettingFields(['relatedField'], formRendererRef)
+  }
+}
 defineExpose({ resize })
 </script>
 

@@ -26,6 +26,28 @@ export const CaseStatisticsWidgetSetting: { [key in CaseStatisticsWidget]: Dashb
       displayMethod: ''
     }
   },
+  CaseFieldTotal: {
+    type: CASE_STATISTICS_TYPE.caseCount,
+    label: 'cmmnCaseFieldTotal',
+    minW: 1,
+    minH: 1,
+    maxW: 12,
+    maxH: 12,
+    w: 2,
+    h: 2,
+    component: 'CaseFieldTotal',
+    setting: {
+      caseId: '',
+      relatedField: '',
+      dateField: '',
+      title: 'Total',
+      dialogSettingTitle: '',
+      displayColumns: [],
+      fields: '[]',
+      displayMethod: '',
+      prefix: '',
+    }
+  },
   CaseLimitFieldNum: {
     type: CASE_STATISTICS_TYPE.caseCount,
     label: 'cmmnCaseLimitFieldNum',
@@ -99,35 +121,24 @@ export const CaseStatisticsWidgetSetting: { [key in CaseStatisticsWidget]: Dashb
       displayColumns: [],
       fields: '[]'
     }
-  },
-  CaseFieldTotal: {
-    type: CASE_STATISTICS_TYPE.caseCount,
-    label: 'cmmnCaseFieldTotal',
-    minW: 1,
-    minH: 1,
-    maxW: 12,
-    maxH: 12,
-    w: 2,
-    h: 2,
-    component: 'CaseFieldTotal',
-    setting: {
-      caseId: '',
-      relatedField: '',
-      dateField: '',
-      title: 'Field Lifecycle',
-      dialogSettingTitle: '',
-      displayColumns: [],
-      fields: '[]',
-      displayMethod: '',
-      prefix: '',
-    }
   }
 }
 export const CaseStatisticsWidgetComponent: { [key in CaseStatisticsWidget]: Component } = {
   CaseFieldNum: CaseFieldNum,
+  CaseFieldTotal: CaseFieldTotal,
   CaseMonthlyAverage: CaseMonthlyAverage,
   CaseFieldLifecycle: CaseFieldLifecycle,
-  CaseFieldTotal: CaseFieldTotal,
   CaseLimitFieldNum: CaseLimitFieldNum,
   CaseLimitGroupFieldNum: CaseLimitGroupFieldNum,
+}
+
+export function displaySettingFields(fields: string[], formRendererRef: any) {
+  setTimeout(async () => {
+    fields.forEach((field) => {
+      const widgetRef = formRendererRef.vFormRenderRef.getWidgetRef(field)
+      if (widgetRef) {
+        widgetRef.setHidden(false)
+      }
+    })
+  }, 100)
 }

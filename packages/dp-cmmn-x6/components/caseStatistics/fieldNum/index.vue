@@ -14,7 +14,15 @@
     </div>
     <!-- <div id="myEcharts" ref="chartRef" class="echart"></div> -->
     <CaseStatisticsTableDialog :setting="setting" :dates="dates" ref="dialogRef" />
-    <DashboardSetting v-if="!hideSetting" ref="settingRef" :title="title" :formJson="formJson" @delete="handleDelete" @refresh="handleRefresh" />
+    <DashboardSetting
+      v-if="!hideSetting"
+      ref="settingRef"
+      :after-open="handleAfterOpen"
+      :title="title"
+      :formJson="formJson"
+      @delete="handleDelete"
+      @refresh="handleRefresh"
+    />
   </DashboardCard>
 </template>
 
@@ -26,6 +34,7 @@ const props = withDefaults(
     dates?: any
     setting?: any
     hideSetting?: boolean
+    type?: string
   }>(),
   {
     setting: {},
@@ -49,7 +58,9 @@ const { cardRef, settingRef, resize, handleInitCard, loading } = useDashboardCar
   props,
 
   getOptions: async (chartSetting) => {
-    // TODO: 需要filter company_id
+    if (!chartSetting.tableName) {
+      return option
+    }
     const sqlParams = [
       {
         key: 'created_date',
@@ -125,6 +136,11 @@ function handleDrillDown() {
     })
   }
   dialogRef.value.handleOpen(sqlParams)
+}
+function handleAfterOpen(formRendererRef: any) {
+  if (props.type === 'caseManagement') {
+    displaySettingFields(['relatedField'], formRendererRef)
+  }
 }
 function handleCompute(value: number) {
   try {
