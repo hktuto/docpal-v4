@@ -40,6 +40,7 @@ const props = withDefaults(
     hideSetting: false
   }
 )
+const userId: string = useUserId().value
 const CMDProvider = inject(CaseManagementDashboardKey)
 const caseInstanceId = CMDProvider?.instanceId?.value || null
 const { t } = useI18n()
@@ -161,7 +162,6 @@ const { cardRef, chartRef, settingRef, resize, handleInitCard, loading } = useDa
     if (!props.dates) {
       dates = [dayjs(new Date()).format('YYYY-MM-DD'), dayjs(new Date()).format('YYYY-MM-DD')]
     } else {
-      console.log('props.datesJSON', props.dates)
       dates = JSON.parse(JSON.stringify(props.dates))
     }
     const year = dayjs(dates[0]).year()
@@ -186,6 +186,13 @@ const { cardRef, chartRef, settingRef, resize, handleInitCard, loading } = useDa
         value: `${sortBy}.desc`
       }
     ]
+    if (props.setting.currentUserField) {
+      sqlParams.push({
+        key: props.setting.currentUserField,
+        type: 'eq',
+        value: userId
+      })
+    }
     if (props.setting.relatedField && caseInstanceId) {
       sqlParams.push({
         key: props.setting.relatedField,
@@ -219,6 +226,11 @@ async function getCaseCount(chartSetting) {
       [chartSetting.filterKey]: chartSetting.filterValue
     }
   }
+  if (props.setting.currentUserField) {
+    rpcParams._filters = {
+      [props.setting.currentUserField]: userId
+    }
+  }
   const response = await clientApi.api.postPostgrestRpcFunc('count_by_month_generic', rpcParams).then((res) => res.data)
   return response.map((item) => item.count_value)
 }
@@ -227,7 +239,8 @@ async function getAverageDuration(chartSetting) {
     _table_name: chartSetting.tableName,
     _date_column: 'created_date', // 合同到期日期字段
     _target_year: dayjs().year(),
-    _value_column: chartSetting.averageField
+    _value_column: chartSetting.averageField,
+    _filters: {}
   }
   if (chartSetting.relatedField && caseInstanceId) {
     rpcParams._filters = {
@@ -235,9 +248,13 @@ async function getAverageDuration(chartSetting) {
     }
   }
   if (chartSetting.filterKey && chartSetting.filterValue) {
-    rpcParams._filters = {
-      [chartSetting.filterKey]: chartSetting.filterValue
-    }
+    rpcParams._filters[chartSetting.filterKey] = chartSetting.filterValue
+  }
+  if (props.setting.currentUserField) {
+    rpcParams._filters[props.setting.currentUserField] = userId
+  }
+  if (Object.keys(rpcParams._filters).length === 0) {
+    delete rpcParams._filters
   }
   const response = await clientApi.api.postPostgrestRpcFunc('avg_by_month_generic', rpcParams).then((res) => res.data)
   return response.map((item) => item.avg_value)

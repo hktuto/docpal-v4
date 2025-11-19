@@ -42,6 +42,7 @@ const props = withDefaults(
     hideSetting: false
   }
 )
+const userId: string = useUserId().value
 const CMDProvider = inject(CaseManagementDashboardKey)
 const caseInstanceId = CMDProvider?.instanceId?.value || null
 const { t } = useI18n()
@@ -137,6 +138,13 @@ const { cardRef, chartRef, settingRef, resize, handleInitCard, loading } = useDa
         value: 0
       }
     ]
+    if (chartSetting.currentUserField) {
+      sqlParams.push({
+        key: chartSetting.currentUserField,
+        type: 'eq',
+        value: userId
+      })
+    }
     if (chartSetting.relatedField && caseInstanceId) {
       sqlParams.push({
         key: chartSetting.relatedField,
@@ -202,6 +210,13 @@ function handleShowAll() {
       key: `${props.setting.filterKey}`,
       type: 'eq',
       value: `${props.setting.filterValue}`
+    })
+  }
+  if (props.setting.currentUserField) {
+    sqlParams.push({
+      key: props.setting.currentUserField,
+      type: 'eq',
+      value: userId
     })
   }
   if (props.setting.groupField) {
