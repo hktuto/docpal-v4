@@ -24,7 +24,7 @@
 <script lang="ts" setup>
 import { ElMessageBox } from 'element-plus'
 
-const props = defineProps(['formJson', 'title'])
+const props = defineProps(['formJson', 'title', 'after-open'])
 const emits = defineEmits(['refresh', 'delete'])
 const state = reactive({
   loading: false,
@@ -51,6 +51,9 @@ function handleOpen(setting) {
     state.setting = setting
     await FormRendererRef.value.vFormRenderRef.setFormData(setting)
     state.loading = false
+    if (props.afterOpen) {
+      props.afterOpen(FormRendererRef.value)
+    }
   })
 }
 
@@ -61,6 +64,6 @@ async function handleDelete() {
   state.visible = false
 }
 
-defineExpose({ handleOpen })
+defineExpose({ handleOpen, FormRendererRef })
 </script>
 <style lang="scss" scoped></style>

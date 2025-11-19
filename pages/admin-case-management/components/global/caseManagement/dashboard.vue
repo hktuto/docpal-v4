@@ -26,6 +26,7 @@
           :draggable="true"
           :editMode="true"
           :dashboardSettingList="dashboardWidgetByType"
+          type="caseManagement"
           @delete="handleDelete"
           @refreshSetting="handleRefresh"
         ></DashboardDetail>

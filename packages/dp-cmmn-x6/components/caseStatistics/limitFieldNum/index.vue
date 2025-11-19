@@ -15,24 +15,34 @@
       <el-button type="primary" @click="handleShowAll">{{ $t('button.showAll') }}</el-button>
     </div>
     <CaseStatisticsTableDialog :setting="setting" :dates="dates" ref="dialogRef"> </CaseStatisticsTableDialog>
-    <DashboardSetting v-if="!hideSetting" ref="settingRef" :formJson="formJson" :title="title" @delete="handleDelete" @refresh="handleRefresh" />
+    <DashboardSetting
+      v-if="!hideSetting"
+      ref="settingRef"
+      :after-open="handleAfterOpen"
+      :formJson="formJson"
+      :title="title"
+      @delete="handleDelete"
+      @refresh="handleRefresh"
+    />
   </DashboardCard>
 </template>
 
 <script lang="ts" setup>
-import {  clientApi, PostgREST_Decorate } from 'api'
+import { clientApi, PostgREST_Decorate } from 'api'
 import formJson from './setting.vform.json'
 const props = withDefaults(
   defineProps<{
     dates?: any
     setting?: any
     hideSetting?: boolean
+    type?: string
   }>(),
   {
     setting: {},
     hideSetting: false
   }
 )
+const userId: string = useUserId().value
 const CMDProvider = inject(CaseManagementDashboardKey)
 const caseInstanceId = CMDProvider?.instanceId?.value || null
 const { t } = useI18n()
@@ -94,6 +104,9 @@ const { cardRef, chartRef, settingRef, resize, handleInitCard, loading } = useDa
   props,
 
   getOptions: async (chartSetting) => {
+    if (!chartSetting.tableName) {
+      return option
+    }
     option.series[0].data = []
     const data = option.series[0].data
     const sqlParams = [
@@ -125,6 +138,13 @@ const { cardRef, chartRef, settingRef, resize, handleInitCard, loading } = useDa
         value: 0
       }
     ]
+    if (chartSetting.currentUserField) {
+      sqlParams.push({
+        key: chartSetting.currentUserField,
+        type: 'eq',
+        value: userId
+      })
+    }
     if (chartSetting.relatedField && caseInstanceId) {
       sqlParams.push({
         key: chartSetting.relatedField,
@@ -134,9 +154,9 @@ const { cardRef, chartRef, settingRef, resize, handleInitCard, loading } = useDa
     }
     if (chartSetting.filterKey && chartSetting.filterValue) {
       sqlParams.push({
-        key: `${chartSetting.filterKey}`,
-        type: 'eq',
-        value: `${chartSetting.filterValue}`
+        key: chartSetting.filterKey,
+        type: 'in',
+        value: chartSetting.filterValue
       })
     }
     const sql = PostgREST_Decorate(sqlParams)
@@ -185,11 +205,18 @@ function handleShowAll() {
       value: caseInstanceId
     })
   }
-  if(props.setting.filterKey && props.setting.filterValue) {
+  if (props.setting.filterKey && props.setting.filterValue) {
     sqlParams.push({
-      key: `${props.setting.filterKey}`,
+      key: props.setting.filterKey,
+      type: 'in',
+      value: props.setting.filterValue
+    })
+  }
+  if (props.setting.currentUserField) {
+    sqlParams.push({
+      key: props.setting.currentUserField,
       type: 'eq',
-      value: `${props.setting.filterValue}`
+      value: userId
     })
   }
   if (props.setting.groupField) {
@@ -198,9 +225,11 @@ function handleShowAll() {
     dialogRef.value.handleOpen(sqlParams)
   }
 }
-// #endregion
-
-// #endregion
+function handleAfterOpen(formRendererRef: any) {
+  if (props.type === 'caseManagement') {
+    displaySettingFields(['relatedField'], formRendererRef)
+  }
+}
 defineExpose({ resize })
 </script>
 

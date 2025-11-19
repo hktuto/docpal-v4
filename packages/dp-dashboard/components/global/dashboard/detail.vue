@@ -96,6 +96,7 @@
                 :setting="item.setting"
                 :hideSetting="hideSetting"
                 :dates="dates"
+                :type="type"
                 @delete="handleDelete(item)"
                 @refreshSetting="(setting) => handleRefreshSetting(setting, item)"
               >
@@ -148,6 +149,7 @@ const props = withDefaults(
     editMode?: boolean
     dashboardSettingList?: any
     componentMap?: any
+    type?: string
   }>(),
   {
     // layout: [],
@@ -181,7 +183,7 @@ function handleResize() {
     if (sheetRefs.value[key] && sheetRefs.value[key].resize) {
       setTimeout(() => {
         sheetRefs.value[key].resize()
-      },100)
+      }, 100)
     }
   })
 }
@@ -195,7 +197,8 @@ const chartResize = useDebounceFn(
   1000,
   { maxWait: 5000 }
 )
-
+const windowWidth = ref(0)
+const calColNum = ref(props.colNum)
 const wrapper = ref<HTMLElement>()
 const gridLayout = ref()
 
@@ -203,7 +206,7 @@ const gridLayout = ref()
 const { handleDragStart, handleDragOver, handleDrop, handleDragEnd, placeholder } = useDashboardDrag({
   wrapper,
   layout: layout as Ref<DashboardWidgetSetting[]>,
-  colNum: props.colNum,
+  colNum: calColNum,
   rowHeight: props.rowHeight,
   onAdd: (item) => {
     // 触发保存事件

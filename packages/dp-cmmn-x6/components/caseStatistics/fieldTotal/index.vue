@@ -14,24 +14,35 @@
     </div>
     <!-- <div id="myEcharts" ref="chartRef" class="echart"></div> -->
     <CaseStatisticsTableDialog :setting="setting" :dates="dates" ref="dialogRef" />
-    <DashboardSetting v-if="!hideSetting" ref="settingRef" :title="title" :formJson="formJson" @delete="handleDelete" @refresh="handleRefresh" />
+    <DashboardSetting
+      v-if="!hideSetting"
+      ref="settingRef"
+      :after-open="handleAfterOpen"
+      :title="title"
+      :formJson="formJson"
+      @delete="handleDelete"
+      @refresh="handleRefresh"
+    />
   </DashboardCard>
 </template>
 
 <script lang="ts" setup>
-import {  clientApi, PostgREST_Decorate } from 'api'
+import { clientApi, PostgREST_Decorate } from 'api'
 import formJson from './setting.vform.json'
 const props = withDefaults(
   defineProps<{
     dates?: any
     setting?: any
     hideSetting?: boolean
+    type?: string
   }>(),
   {
     setting: {},
     hideSetting: false
   }
 )
+
+const userId: string = useUserId().value
 const CMDProvider = inject(CaseManagementDashboardKey)
 const caseInstanceId = CMDProvider?.instanceId?.value || null
 const { t } = useI18n()
@@ -44,10 +55,14 @@ function handleRefresh(chartSetting) {
 function handleDelete() {
   emits('delete')
 }
+
 const { cardRef, settingRef, resize, handleInitCard, loading } = useDashboardCard({
   props,
 
   getOptions: async (chartSetting) => {
+    if (!chartSetting.tableName) {
+      return option
+    }
     const sqlParams = [
       {
         key: 'created_date',
@@ -69,6 +84,13 @@ const { cardRef, settingRef, resize, handleInitCard, loading } = useDashboardCar
         key: chartSetting.relatedField,
         type: 'eq',
         value: caseInstanceId
+      })
+    }
+    if (chartSetting.currentUserField) {
+      sqlParams.push({
+        key: chartSetting.currentUserField,
+        type: 'eq',
+        value: userId
       })
     }
     const sql = PostgREST_Decorate(sqlParams)
@@ -98,6 +120,13 @@ function handleDrillDown() {
       value: `${props.setting.filterKey}.desc`
     }
   ]
+  if (props.setting.currentUserField) {
+    sqlParams.push({
+      key: props.setting.currentUserField,
+      type: 'eq',
+      value: userId
+    })
+  }
   if (props.setting.relatedField && caseInstanceId) {
     sqlParams.push({
       key: props.setting.relatedField,
@@ -119,9 +148,11 @@ function handleCompute(value: number) {
   }
   return value
 }
-// #endregion
-
-// #endregion
+function handleAfterOpen(formRendererRef: any) {
+  if (props.type === 'caseManagement') {
+    displaySettingFields(['relatedField'], formRendererRef)
+  }
+}
 defineExpose({ resize })
 </script>
 
