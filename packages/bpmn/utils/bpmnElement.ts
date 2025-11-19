@@ -1086,11 +1086,13 @@ export const bpmnElement: BpmnElement = {
               ['flowable:field']: [
                 {
                   attr_name: 'userId',
+                  attr_label:'User ID',
                   'flowable:expression': { __cdata: '' }
                 },
                 {
                   attr_name: 'category',
-                  'flowable:expression': { __cdata: '' }
+                  attr_label:'Category',
+                  'flowable:expression': { __cdata: 'case' }
                 }
               ]
             }
@@ -1104,10 +1106,12 @@ export const bpmnElement: BpmnElement = {
               ['flowable:field']: [
                 {
                   attr_name: 'userId',
+                  attr_label:'User ID',
                   'flowable:expression': { __cdata: '' }
                 },
                 {
                   attr_name: 'category',
+                  attr_label:'Category',
                   'flowable:expression': { __cdata: 'case' }
                 }
               ]

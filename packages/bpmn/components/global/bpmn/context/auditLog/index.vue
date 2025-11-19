@@ -55,7 +55,7 @@ async function init() {
     if (item.attr_name !== 'userId' && item.attr_name !== 'category') {
       tableData.value.push({
         id: item.attr_name,
-        name: item.attr_name.split('_').map((name: string) => name.charAt(0).toUpperCase() + name.slice(1)).join(' ')
+        name: item.attr_label
       })
     }
   })
@@ -90,7 +90,7 @@ function handleAddColumns() {
     return
   }
 
-  const id = newColumnName.value.toLocaleLowerCase().replace(/ /g, '_')
+  const id = `${newColumnName.value.toLocaleLowerCase().replace(/ /g, '_')}_${Date.now()}`
   tableData.value.push({
     id: id,
     name: newColumnName.value
@@ -130,8 +130,10 @@ function updateData() {
     if (field) {
       field['flowable:expression'].__cdata = form.value[key]
     } else {
+      const label = tableData.value.find((item: any) => item.id == key).name
       fields.push({
         attr_name: key,
+        attr_label: label,
         'flowable:expression': {
           __cdata: form.value[key]
         }
@@ -153,7 +155,6 @@ function updateData() {
   })
 
   graphProvider?.graph.value?.stopBatch('update-auditLog-field-data')
-  console.log(22, fields, node.data)
 }
 
 onMounted(async () => {
