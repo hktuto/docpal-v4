@@ -207,9 +207,9 @@ function handleShowAll() {
   }
   if (props.setting.filterKey && props.setting.filterValue) {
     sqlParams.push({
-      key: `${props.setting.filterKey}`,
-      type: 'eq',
-      value: `${props.setting.filterValue}`
+      key: props.setting.filterKey,
+      type: 'in',
+      value: props.setting.filterValue
     })
   }
   if (props.setting.currentUserField) {
