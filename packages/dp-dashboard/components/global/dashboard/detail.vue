@@ -24,13 +24,12 @@
         <div v-if="layout.length === 0 && editMode" class="dashboard-null-placeholder">
           {{ $t('dashboard.dragToHere') }}
         </div>
-        {{calColNum}}{{windowWidth}}
         <GridLayout
           ref="gridLayout"
           :style="`--grid-row-height: ${rowHeight}px; --grid-row-margin: 20px;`"
           :class="{ 'vue-grid-layout--edit': editMode }"
           v-model:layout="layout"
-          :col-num="calColNum"
+          :col-num="colNum"
           :margin="[12, 12]"
           :row-height="rowHeight"
           :is-draggable="draggable"
@@ -207,7 +206,7 @@ const gridLayout = ref()
 const { handleDragStart, handleDragOver, handleDrop, handleDragEnd, placeholder } = useDashboardDrag({
   wrapper,
   layout: layout as Ref<DashboardWidgetSetting[]>,
-  colNum: calColNum,
+  colNum: colNum,
   rowHeight: props.rowHeight,
   onAdd: (item) => {
     // 触发保存事件
