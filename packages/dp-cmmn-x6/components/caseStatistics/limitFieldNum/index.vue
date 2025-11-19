@@ -154,9 +154,9 @@ const { cardRef, chartRef, settingRef, resize, handleInitCard, loading } = useDa
     }
     if (chartSetting.filterKey && chartSetting.filterValue) {
       sqlParams.push({
-        key: `${chartSetting.filterKey}`,
-        type: 'eq',
-        value: `${chartSetting.filterValue}`
+        key: chartSetting.filterKey,
+        type: 'in',
+        value: chartSetting.filterValue
       })
     }
     const sql = PostgREST_Decorate(sqlParams)
