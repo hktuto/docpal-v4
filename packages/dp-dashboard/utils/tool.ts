@@ -80,6 +80,7 @@ export const digitalConversion = (value: number, section: number = 100000): stri
   return color
 }
 export const FinancialComputing = (num: number): string => {
+  if (!num) return '0'
   if (num >= 1e9) {
     return (num / 1e9).toFixed(0) + 'B' // 亿
   } else if (num >= 1e6) {
