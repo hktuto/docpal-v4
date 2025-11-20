@@ -213,7 +213,7 @@ const { cardRef, chartRef, settingRef, resize, handleInitCard, loading } = useDa
 async function getCaseCount(chartSetting) {
   const rpcParams = {
     _table_name: chartSetting.tableName,
-    _date_column: 'created_date', // 合同到期日期字段
+    _date_column: chartSetting.dateField, // 合同到期日期字段
     _target_year: dayjs().year(),
     _filters: {}
   }
@@ -235,7 +235,7 @@ async function getCaseCount(chartSetting) {
 async function getAverageDuration(chartSetting) {
   const rpcParams = {
     _table_name: chartSetting.tableName,
-    _date_column: 'created_date', // 合同到期日期字段
+    _date_column: chartSetting.dateField, // 合同到期日期字段
     _target_year: dayjs().year(),
     _value_column: chartSetting.averageField,
     _filters: {}
