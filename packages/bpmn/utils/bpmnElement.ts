@@ -287,7 +287,7 @@ export const bpmnElement: BpmnElement = {
       }
       return 'LazyBpmnContextUserTask'
     },
-    
+
     validator: async (nodeData) => {
       // check if candidate or assignee is set
       const candidate = nodeData['attr_flowable:candidateGroups']
@@ -494,6 +494,11 @@ export const bpmnElement: BpmnElement = {
           case '${updateCaseInstanceInfoDelegate}':
             icon = '/bpmn/icons/case.svg'
             type = 'Update Case Data Task'
+            color = '#7B61FF'
+            break
+          case '${createAuditLogDelegate}':
+            icon = '/bpmn/icons/case.svg'
+            type = 'Audit Log Task'
             color = '#7B61FF'
             break
         }
@@ -1009,7 +1014,7 @@ export const bpmnElement: BpmnElement = {
       {
         icon: 'bpmn:case',
         label: 'Case Task',
-        group: '',
+        group: 'case',
         order: 0,
         dropData: (id: string) => ({
           id,
@@ -1041,7 +1046,7 @@ export const bpmnElement: BpmnElement = {
       {
         icon: 'bpmn:case',
         label: 'Update Case Data Task',
-        group: '',
+        group: 'case',
         order: 0,
         dropData: (id: string) => ({
           id,
@@ -1064,6 +1069,52 @@ export const bpmnElement: BpmnElement = {
                 attr_caseTypeId: '',
                 attr_name: ''
               }
+            }
+          })
+        })
+      },
+      {
+        icon: 'bpmn:case',
+        label: 'Audit Log',
+        group: 'case',
+        order: 0,
+        dropData: (id: string) => ({
+          id,
+          ...bpmnElement.serviceTask.nodeStyle({
+            ['attr_flowable:delegateExpression']: '${createAuditLogDelegate}',
+            extensionElements: {
+              ['flowable:field']: [
+                {
+                  attr_name: 'userId',
+                  attr_label:'User ID',
+                  'flowable:expression': { __cdata: '' }
+                },
+                {
+                  attr_name: 'category',
+                  attr_label:'Category',
+                  'flowable:expression': { __cdata: 'case' }
+                }
+              ]
+            }
+          }),
+          label: 'New Audit Log Task',
+          data: bpmnElement.serviceTask.newNodeData(id, 'New Audit Log Task', {
+            attr_id: id,
+            attr_name: 'Audit Log Task',
+            ['attr_flowable:delegateExpression']: '${createAuditLogDelegate}',
+            extensionElements: {
+              ['flowable:field']: [
+                {
+                  attr_name: 'userId',
+                  attr_label:'User ID',
+                  'flowable:expression': { __cdata: '' }
+                },
+                {
+                  attr_name: 'category',
+                  attr_label:'Category',
+                  'flowable:expression': { __cdata: 'case' }
+                }
+              ]
             }
           })
         })
@@ -1115,6 +1166,8 @@ export const bpmnElement: BpmnElement = {
           return 'LazyBpmnContextCase'
         case '${updateCaseInstanceInfoDelegate}':
           return 'LazyBpmnContextCaseUpdate'
+        case '${createAuditLogDelegate}':
+          return 'LazyBpmnContextAuditLog'
         default:
           return 'LazyBpmnContextCustomeService'
       }

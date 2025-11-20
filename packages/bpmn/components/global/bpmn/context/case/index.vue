@@ -2,6 +2,7 @@
 import { adminApi } from 'api'
 import type { Node } from '@antv/x6'
 import { ElMessage } from 'element-plus'
+
 const { t } = useI18n()
 const { node } = defineProps<{
   node: Node
@@ -141,7 +142,7 @@ function setData() {
   const nodeData = node.getData()
   const newData = {
     ...nodeData,
-    version: nodeData.versioin + 1 || 1,
+    version: nodeData.version + 1 || 1,
     data: {
       ...nodeData.data,
       extensionElements: {
@@ -160,6 +161,7 @@ function setData() {
   })
   graphProvider?.graph.value?.stopBatch('update-case-field-data')
 }
+
 async function importFields() {
   const defaultFields = ['id', 'modified_by', 'modified_date', 'created_by', 'created_date', 'status']
   const rules = caseOptionList.value
@@ -185,6 +187,7 @@ async function importFields() {
     item.formProperty = item.id.toLowerCase()
     handleCaseField(item)
   })
+
   function getType(type: string) {
     switch (type) {
       case 'timestamp':
@@ -201,6 +204,7 @@ async function importFields() {
     }
   }
 }
+
 onMounted(async () => {
   await init()
 })
@@ -211,23 +215,24 @@ onMounted(async () => {
     <BpmnSidebarEditLabel :node="node" />
     <el-form label-position="top" :disabled="editorProvider.readonly.value">
       <el-form-item label="Case" required>
-        <el-select v-model="form.attr_caseTypeId" @change="handleCase">
+        <el-select v-model="form.attr_caseTypeId" @change="handleCase" filterable>
           <el-option v-for="item in caseList" :key="item.id" :label="item.name" :value="item.id" />
         </el-select>
       </el-form-item>
 
       <el-form-item label="Case Return Column ID" required>
-        <el-select v-model="form.attr_systemCaseInstanceId" :placeholder="t('common_selectedIsRequiredMsg')" @change="handleCaseReturnId">
+        <el-select v-model="form.attr_systemCaseInstanceId" :placeholder="t('common_selectedIsRequiredMsg')"
+                   @change="handleCaseReturnId" filterable>
           <el-option v-for="item in stringFields" :key="item.id" :label="item.name" :value="item.id" />
         </el-select>
       </el-form-item>
       <template v-if="caseOptionList.length > 0">
         <el-divider />
-        <el-button size="small" type="primary" @click="importFields">Auto Import </el-button>
+        <el-button size="small" type="primary" @click="importFields">Auto Import</el-button>
       </template>
       <div v-loading="loading">
         <template v-for="item in caseOptionList" :key="item.id">
-          <el-form-item :label="item.name" >
+          <el-form-item :label="item.name">
             <el-select v-model="item.formProperty" filterable clearable @change="handleCaseField(item)">
               <el-option v-for="field in allFields" :key="field.id" :label="field.name" :value="field.id" />
             </el-select>
