@@ -213,6 +213,9 @@ const { handleDragStart, handleDragOver, handleDrop, handleDragEnd, placeholder 
     emits('save')
   }
 })
+defineExpose({
+  handleResize
+})
 onMounted(() => {
   if (props.dashboardSettingList) activeNames.value = Object.keys(props.dashboardSettingList)
 })
