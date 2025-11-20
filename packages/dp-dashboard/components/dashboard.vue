@@ -78,6 +78,7 @@ function handleAdd(data: any) {
 function handleEdit() {
   state.editMode = true
   state.editCount = 0
+  DashboardDetailRef.value.handleResize()
 }
 
 function handleRefresh(layoutSetting: any, id: any) {

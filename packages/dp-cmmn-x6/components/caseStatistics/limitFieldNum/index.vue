@@ -152,13 +152,22 @@ const { cardRef, chartRef, settingRef, resize, handleInitCard, loading } = useDa
         value: caseInstanceId
       })
     }
-    if (chartSetting.filterKey && chartSetting.filterValue) {
-      sqlParams.push({
-        key: chartSetting.filterKey,
-        type: 'in',
-        value: chartSetting.filterValue
+    if (chartSetting.filterList.length > 0) {
+      chartSetting.filterList.forEach((item) => {
+        sqlParams.push({
+          key: item.filterKey,
+          type: 'in',
+          value: item.filterValue
+        })
       })
     }
+    // if (chartSetting.filterKey && chartSetting.filterValue) {
+    //   sqlParams.push({
+    //     key: chartSetting.filterKey,
+    //     type: 'in',
+    //     value: chartSetting.filterValue
+    //   })
+    // }
     const sql = PostgREST_Decorate(sqlParams)
     const response = await clientApi.api.getPostgrestTable(`${chartSetting.tableName}?${sql}`)
     response.data.forEach((item) => {
@@ -167,7 +176,6 @@ const { cardRef, chartRef, settingRef, resize, handleInitCard, loading } = useDa
         name: item.case_id
       })
     })
-    console.log(data)
     return option
   },
   clickAction: (params: any) => {
@@ -205,13 +213,16 @@ function handleShowAll() {
       value: caseInstanceId
     })
   }
-  if (props.setting.filterKey && props.setting.filterValue) {
-    sqlParams.push({
-      key: props.setting.filterKey,
-      type: 'in',
-      value: props.setting.filterValue
+  if (props.setting.filterList.length > 0) {
+    props.setting.filterList.forEach((item) => {
+      sqlParams.push({
+        key: item.filterKey,
+        type: 'in',
+        value: item.filterValue
+      })
     })
   }
+
   if (props.setting.currentUserField) {
     sqlParams.push({
       key: props.setting.currentUserField,
