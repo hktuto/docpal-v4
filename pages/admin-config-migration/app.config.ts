@@ -8,8 +8,8 @@ export default defineAppConfig({
       id:"admin-case-management-import-export",
       name: 'admin-case-management-import-export',
       label: "adminMenu.caseManagementImportExport",
-      icon: "dp-icon:case",
-      hoverIcon: "dp-icon:case",
+      icon: "mdi:database-export-outline",
+      hoverIcon: "mdi:database-export",
       component: "LazyConfigMigrationImportExport",
     }
    } ,
