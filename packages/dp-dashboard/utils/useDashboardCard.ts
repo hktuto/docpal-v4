@@ -35,7 +35,7 @@ export const useDashboardCard = (params: useDashboardCardParams) => {
           if (chartRef.value) chartRef.value.style = `height: ${pHeight}px; width: ${pWidth}px`
           if (params.initStyleActionExtend) params.initStyleActionExtend(pHeight, pWidth)
           resolve(true)
-        }, 10)
+        }, 100)
       )
     }
   }
