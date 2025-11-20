@@ -123,7 +123,8 @@ onMounted(() => {
         </el-dropdown>
         <DashboardDate v-model="state.dates" />
       </div>
-      <el-button :loading="exportLoading" type="primary" @click="handleExportPdf">{{ $t('dpTool_downloadPDF') }}</el-button>
+      <!-- TODO : comment now, wait Sales and Marketing to confirm -->
+      <!-- <el-button :loading="exportLoading" type="primary" @click="handleExportPdf">{{ $t('dpTool_downloadPDF') }}</el-button> -->
     </div>
     <div class="case-dashboard-main" v-loading="state.loading">
       <DashboardDetail

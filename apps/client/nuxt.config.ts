@@ -57,6 +57,7 @@ export default defineNuxtConfig({
         '../../pages/admin-watermark',
         '../../pages/admin-message-template',
         '../../pages/admin-unique-id-generator',
+        '../../pages/admin-config-migration',
         // "../../pages/admin-share",
         '../../pages/admin-rbac',
         '../../pages/admin-password-policy',
