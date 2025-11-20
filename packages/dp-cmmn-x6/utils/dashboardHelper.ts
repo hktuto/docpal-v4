@@ -10,9 +10,24 @@ import RelatedCase from '../components/dashboard/relatedCase/index.vue'
 import RelatedMaster from '../components/dashboard/relatedMaster/index.vue'
 import MasterTableInfo from '../components/dashboard/masterTableInfo/index.vue'
 import RelatedCaseInfo from '../components/dashboard/relatedCaseInfo/index.vue'
+import AuditLog from '../components/dashboard/auditLog/index.vue'
 import { CaseStatisticsWidgetSetting, CaseStatisticsWidgetComponent } from './dashboardCaseStatistics'
 import type { CaseStatisticsWidget as CaseStatisticsWidgetType } from './dashboardCaseStatistics'
-export type CmmnDashboardWidget = CaseStatisticsWidgetType | 'Action' | 'BasicInfo' | 'Process' | 'TaskPage' | 'WorkflowPage' | 'Activity' | 'DocumentRoot' | 'RelatedCase' | 'RelatedMaster' | 'MasterTableInfo' | 'RelatedCaseInfo'
+
+export type CmmnDashboardWidget =
+  CaseStatisticsWidgetType
+  | 'Action'
+  | 'BasicInfo'
+  | 'Process'
+  | 'TaskPage'
+  | 'WorkflowPage'
+  | 'Activity'
+  | 'DocumentRoot'
+  | 'RelatedCase'
+  | 'RelatedMaster'
+  | 'MasterTableInfo'
+  | 'RelatedCaseInfo'
+  | 'AuditLog'
 export const CmmnDashboardWidgetSetting: { [key in CmmnDashboardWidget]: DashboardWidgetSetting } = {
   BasicInfo: {
     label: 'cmmnBasicInfo',
@@ -165,12 +180,29 @@ export const CmmnDashboardWidgetSetting: { [key in CmmnDashboardWidget]: Dashboa
       relatedCaseField: ''
     }
   },
-  ...CaseStatisticsWidgetSetting,
+  AuditLog: {
+    label: '',
+    minW: 6,
+    minH: 4,
+    maxW: 16,
+    maxH: 12,
+    w: 6,
+    h: 4,
+    component: 'AuditLog',
+    setting: {
+      caseId: '',
+      caseLabel: '',
+      newButtonLabel: 'common_add',
+      displayColumns: []
+    }
+  },
+  ...CaseStatisticsWidgetSetting
 }
 
 export function getCmmnWidgetSetting(widget: CmmnDashboardWidget) {
   return CmmnDashboardWidgetSetting[widget]
 }
+
 export const getCmmnNormalizeSetting = (setting: CmmnDashboardWidget) => {
   const item = getCmmnWidgetSetting(setting)
   return {
@@ -192,5 +224,6 @@ export const CmmnWidgetComponent = {
   RelatedCaseInfo: RelatedCaseInfo,
   RelatedMaster: RelatedMaster,
   MasterTableInfo: MasterTableInfo,
-  ...CaseStatisticsWidgetComponent,
+  AuditLog: AuditLog,
+  ...CaseStatisticsWidgetComponent
 }
