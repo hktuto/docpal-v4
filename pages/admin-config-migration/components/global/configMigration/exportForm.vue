@@ -8,7 +8,9 @@ if (!routerProvider) {
 
 const caseList = ref<any[]>([])
 const workflowList = ref<any[]>([])
+const homePageList = ref<any[]>([])
 const selectedCase = ref<any[]>([])
+const userGroupList = ref<any[]>([])
 const selectedWorkflow = ref<any[]>([])
 const selectedHomePage = ref<any[]>([])
 //  store related data
@@ -19,6 +21,9 @@ const relatedFolderCabinet = new Set<string>()
 const relatedMasterTable = new Set<string>()
 const relatedIdGenerator = new Set<string>()
 const relatedEmailTemplate = new Set<string>()
+const relatedHomePage = new Set<string>()
+const relatedUserGroup = new Set<string>()
+const relatedUserRole = new Set<string>()
 
 const exportData = ref<any>({
   case:{},
@@ -28,24 +33,43 @@ const exportData = ref<any>({
   masterTable:{},
   idGenerator:{},
   emailTemplate:{},
-  homePage:{}
+  homePage:{},
+  userGroup:{},
+  userRole:{}
 })
 
 const loading = ref(false)
 
 async function getHomePageList() {
-
+  const res = await adminApi.api.postPersonalDashboard({ pageNum: 0, pageSize: 1000 })
+  homePageList.value = res.data?.entryList || []
 }
-
+async function getListData() {
+  const promiseList = [
+    getCaseList(),
+    getWorkflowList(),
+    getHomePageList(),
+    getUserGroupList()
+  ]
+  await Promise.all(promiseList)
+}
 async function getCaseList() {
   const res = await adminApi.api.postCaseTypesPage({ pageNum: 0, pageSize: 1000 })
   caseList.value = res.data?.entryList.filter((item: any) => item.productionVersion) || []
-  await getWorkflowList()
 }
 
+async function getUserGroupList() {
+  const res = await adminApi.api.postNuxeoIdentityGroups()
+  userGroupList.value = res.data || []
+}
 async function getWorkflowList() {
   const res = await adminApi.api.postWorkflowProcessList({ pageNum: 0, pageSize: 1000 })
   workflowList.value = res.data || []
+}
+
+async function handleExportEmailTemplate(emailTemplateId: string) {
+  const emailTemplateDetail = await adminApi.api.getTemplateEmailTemplateId(emailTemplateId)
+  exportData.value.emailTemplate[emailTemplateId] = emailTemplateDetail.data
 }
 
 async function handleCaseExport(caseId: string) {
@@ -56,6 +80,22 @@ async function handleCaseExport(caseId: string) {
     relatedWorkflow.add(workflowKey)
   })
   exportData.value.case[caseId] = caseInfo.case
+}
+
+async function handleHomePageExport(homePageId: string) {
+    const homePageDetail = homePageList.value.find((item: any) => item.id === homePageId)
+    relatedHomePage.add(homePageId)
+    exportData.value.homePage[homePageId] = homePageDetail
+    const group = homePageDetail.groupId.split(',')
+    group.forEach((groupId: string) => {
+      relatedUserGroup.add(groupId)
+    })
+}
+
+async function handleUserGroupExport(groupId: string) {
+  const userGroupDetail = userGroupList.value.find((item: any) => item.id === groupId)
+  relatedUserGroup.add(groupId)
+  exportData.value.userGroup[groupId] = userGroupDetail
 }
 
 async function handleWorkflowExport(workflowKey: string) {
@@ -84,6 +124,16 @@ async function handleWorkflowExport(workflowKey: string) {
   })
 }
 
+async function handleDocumentTemplateExport(documentTemplateId: string) {
+  // const documentTemplateDetail = await adminApi.api.getTemplateDocumentTemplateId(documentTemplateId)
+  // relatedDocumentTemplate.add(documentTemplateId)
+  // exportData.value.documentTemplate[documentTemplateId] = documentTemplateDetail.data
+}
+
+async function handleFolderCabinetExport(folderCabinetId: string) {
+  
+}
+
 async function handleExport() {
   loading.value = true
 
@@ -95,6 +145,10 @@ async function handleExport() {
     relatedFolderCabinet.clear()
     relatedMasterTable.clear()
     relatedIdGenerator.clear()
+    relatedUserGroup.clear()
+    relatedUserRole.clear()
+    relatedHomePage.clear()
+    relatedEmailTemplate.clear()
     exportData.value = {
       case:{},
       workflow:{},
@@ -103,17 +157,25 @@ async function handleExport() {
       masterTable:{},
       idGenerator:{},
       emailTemplate:{},
-      homePage:{}
+      homePage:{},
+      userGroup:{},
+      userRole:{}
     }
-    if(selectedCase.value.length === 0 && selectedWorkflow.value.length === 0) {
-      routerProvider?.message.error('Please select at least one case or workflow')
+    if(selectedCase.value.length === 0 && selectedWorkflow.value.length === 0 && selectedHomePage.value.length === 0) {
+      routerProvider?.message.error('Please select at least one case, workflow or home page')
       return
     }
+    // get case export data
     for(let i = 0; i < selectedCase.value.length; i++) {
       await handleCaseExport(selectedCase.value[i])
     }
+    // get workflow export data
     for(let i = 0; i < selectedWorkflow.value.length; i++) {
       await handleWorkflowExport(selectedWorkflow.value[i])
+    }
+    // get home page export data
+    for(let i = 0; i < selectedHomePage.value.length; i++) {
+      await handleHomePageExport(selectedHomePage.value[i])
     }
     // loop case and handleCaseExport
     for( let caseId of relatedCase) {
@@ -123,12 +185,25 @@ async function handleExport() {
     for(let workflowKey of relatedWorkflow) {
       await handleWorkflowExport(workflowKey)
     }
-    console.log("relatedCase", relatedCase)
-    console.log("relatedWorkflow", relatedWorkflow)
-    console.log("relatedDocumentTemplate", relatedDocumentTemplate)
-    console.log("relatedFolderCabinet", relatedFolderCabinet)
-    console.log("relatedMasterTable", relatedMasterTable)
-    console.log("relatedIdGenerator", relatedIdGenerator)
+    // loop user group and handleUserGroupExport
+    for(let groupId of relatedUserGroup) {
+      await handleUserGroupExport(groupId)
+    }
+    // loop email template and handleExportEmailTemplate
+    for(let emailTemplateId of relatedEmailTemplate) {
+      console.log("emailTemplateId", emailTemplateId)
+      await handleExportEmailTemplate(emailTemplateId)
+    }
+
+    // loop document template and handleDocumentTemplateExport
+    for(let documentTemplateId of relatedDocumentTemplate) {
+      await handleDocumentTemplateExport(documentTemplateId)
+    }
+    // loop folder cabinet and handleFolderCabinetExport
+    for(let folderCabinetId of relatedFolderCabinet) {
+      await handleFolderCabinetExport(folderCabinetId)
+    }
+    
   }catch(err:any){
     console.error(err)
     routerProvider?.message.error(err.message)
@@ -140,7 +215,7 @@ async function handleExport() {
 
 
 onMounted(() => {
-  getCaseList()
+  getListData()
 })
 </script>
 
@@ -160,103 +235,127 @@ onMounted(() => {
           <ElOption v-for="item in workflowList" :key="item.id" :label="item.name" :value="item.key" />
         </ElSelect>
       </ElFormItem>
+      <ElFormItem label="Home Page List" >
+        <ElSelect v-model="selectedHomePage" placeholder="Select Home Page" multiple filterable clearable>
+          <ElOption v-for="item in homePageList" :key="item.id" :label="item.name" :value="item.id" />
+        </ElSelect>
+      </ElFormItem>
     </ElForm>
     <ElButton type="primary" @click="handleExport">Confirm</ElButton>
     <ElDivider />
-    <div class="relatedDataContainer">
-      <div class="relatedDataItem">
-        <div>Related Case</div>
-        <span>{{ relatedCase }}</span>
+    
+    <div v-loading="loading" class="preContainer">
+      <div class="exportedCaseContainer">
+        <template v-if="Object.keys(exportData.case).length > 0">
+          <h3>Case</h3>
+          <div v-for="item in exportData.case" :key="item.id" class="caseInfoCard">
+            <div class="cardContent">
+              {{ item.name }}
+            </div>
+          </div>
+        </template>
       </div>
-      <div class="relatedDataItem">
-        <div>Related Workflow</div>
-        <span>{{ relatedWorkflow }}</span>
+      <div class="exportedWorkflowContainer">
+        <template v-if="Object.keys(exportData.workflow).length > 0">
+          <h3>Workflow</h3>
+          <div v-for="item in exportData.workflow" :key="item.id" class="workflowInfoCard">
+            <div class="cardContent">
+              {{ item.name }}
+            </div>
+          </div>
+        </template>
       </div>
-      <div class="relatedDataItem">
-        <div>Related Document Template</div>
-        <span>{{ relatedDocumentTemplate }}</span>
+      <div class="exportedHomePageContainer">
+        <template v-if="Object.keys(exportData.homePage).length > 0">
+          <h3>Home Page</h3>
+          <div v-for="item in exportData.homePage" :key="item.id" class="homePageInfoCard">
+            <div class="cardContent">
+              {{ item.name }}
+            </div>
+          </div>
+        </template>
       </div>
-      <div class="relatedDataItem">
-        <div>Related Folder Cabinet</div>
-        <span>{{ relatedFolderCabinet }}</span>
+      <div class="exportedUserGroupContainer">
+        <template v-if="Object.keys(exportData.userGroup).length > 0">
+          <h3>User Group</h3>
+          <div v-for="item in exportData.userGroup" :key="item.id" class="userGroupInfoCard">
+            <div class="cardContent">
+              {{ item.name }}
+            </div>
+          </div>
+        </template>
       </div>
-      <div class="relatedDataItem">
-        <div>Related Master Table</div>
-        <span>{{ relatedMasterTable }}</span>
+      <div class="exportedUserRoleContainer">
+        <template v-if="Object.keys(exportData.userRole).length > 0">
+          <h3>User Role</h3>
+          <div v-for="item in exportData.userRole" :key="item.id" class="userRoleInfoCard">
+            <div class="cardContent">
+              {{ item.name }}
+            </div>
+          </div>
+        </template>
       </div>
-      <div class="relatedDataItem">
-        <div>Related Id Generator</div>
-        <span>{{ relatedIdGenerator }}</span>
+      <template v-if="Object.keys(exportData.userRole).length > 0">
+        <h3>User Role</h3>
+        <div v-for="item in exportData.userRole" :key="item.id" class="userRoleInfoCard">
+          <div class="cardContent">
+            {{ item.name }}
+          </div>
+        </div>
+      </template>
+      <div class="exportedEmailTemplateContainer">
+        <template v-if="Object.keys(exportData.emailTemplate).length > 0">
+          <h3>Email Template</h3>
+          <div v-for="item in exportData.emailTemplate" :key="item.id" class="emailTemplateInfoCard">
+            <div class="cardContent">
+              {{ item.label }}
+            </div>
+          </div>
+        </template>
       </div>
-      <div class="relatedDataItem">
-        <div>Related Email Template</div>
-        <span>{{ relatedEmailTemplate }}</span>
+      <div class="exportedDocumentTemplateContainer">
+        <template v-if="Object.keys(exportData.documentTemplate).length > 0">
+          <h3>Document Template</h3>
+          <div v-for="item in exportData.documentTemplate" :key="item.id" class="documentTemplateInfoCard">
+            <div class="cardContent">
+              {{ item.name }}
+            </div>
+          </div>
+        </template>
+      </div>
+      <div class="exportedFolderCabinetContainer">
+        <template v-if="Object.keys(exportData.folderCabinet).length > 0">
+          <h3>Folder Cabinet</h3>
+          <div v-for="item in exportData.folderCabinet" :key="item.id" class="folderCabinetInfoCard">
+            <div class="cardContent">
+              {{ item.name }}
+            </div>
+          </div>
+        </template>
+      </div>
+      <div class="exportedMasterTableContainer">
+        <template v-if="Object.keys(exportData.masterTable).length > 0">
+          <h3>Master Table</h3>
+          <div v-for="item in exportData.masterTable" :key="item.id" class="masterTableInfoCard">
+            <div class="cardContent">
+              {{ item.name }}
+            </div>
+          </div>
+        </template>
+      </div>
+      <div class="exportedIdGeneratorContainer">
+        <template v-if="Object.keys(exportData.idGenerator).length > 0">
+          <h3>Id Generator</h3>
+          <div v-for="item in exportData.idGenerator" :key="item.id" class="idGeneratorInfoCard">
+            <div class="cardContent">
+              {{ item.name }}
+            </div>
+          </div>
+        </template>
       </div>
     </div>
-    <div class="preContainer">
-      <pre>{{ exportData }}</pre>
-    </div>
-    <!-- <div v-if="selectedCase && caseInfo"   class="caseInfoContainer">
-      <div v-if="caseInfo.caseXML" class="caseInfoItem">
-        Case XML : {{ caseInfo.caseXML ? "ready" : 'no' }}
-      </div>
-      <div v-if="caseInfo.caseDashboard.length > 0" class="caseInfoItem">
-        Case Dashboard : 
-        <div class="listContainer">
+    
 
-          <template v-if="caseInfo.caseDashboard.length > 0">
-            <div v-for="item in caseInfo.caseDashboard" :key="item.id" class="caseInfoCard">
-              <div class="selectedContainer">
-                <ElCheckbox v-model="item.selected" />
-              </div>
-              <div class="cardContent">
-                {{ item.data.label }}
-              </div>
-            </div>
-          </template>
-          <template v-else>
-            no
-          </template>
-        </div>
-      </div>
-      <div v-if="caseInfo.caseForm.length > 0" class="caseInfoItem">
-        Case form : 
-        <div class="listContainer">
-          <template v-if="caseInfo.caseForm.length > 0" >
-            <div v-for="item in caseInfo.caseForm" :key="item.params.userTaskId" class="caseInfoCard">
-              <div class="selectedContainer">
-                <ElCheckbox v-model="item.selected" />
-              </div>
-              <div class="cardContent">
-
-                {{ item.params.label }}
-              </div>
-            </div>
-          </template>
-          <template v-else>
-            no
-          </template>
-        </div>
-      </div>
-      <div v-if="caseInfo.caseWorkflow.length > 0" class="caseInfoItem">
-        workflow
-        <div class="listContainer">
-          <template v-if="caseInfo.caseWorkflow.length > 0">
-            <div v-for="item in caseInfo.caseWorkflow" :key="item.data.key" class="caseInfoCard">
-              <div class="selectedContainer">
-                <ElCheckbox v-model="item.selected" />
-              </div>
-              <div class="cardContent">
-                {{ item.data.name }}
-              </div>
-            </div>
-          </template>
-        </div>
-      </div>
-    </div> -->
-    <div v-if="loading" class="loadingContainer">
-      loading...
-    </div>
   </div>
 </template>
 
