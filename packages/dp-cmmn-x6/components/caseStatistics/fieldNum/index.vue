@@ -93,7 +93,11 @@ const { cardRef, settingRef, resize, handleInitCard, loading } = useDashboardCar
       })
     }
     if (chartSetting.currentUserField) {
-      rpcParams._filters[chartSetting.currentUserField] = userId
+      sqlParams.push({
+        key: chartSetting.currentUserField,
+        type: 'eq',
+        value: userId
+      })
     }
     const sql = PostgREST_Decorate(sqlParams)
     const response = await clientApi.api.getPostgrestTable(`${chartSetting.tableName}?${sql}`)
