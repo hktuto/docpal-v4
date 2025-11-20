@@ -29,7 +29,7 @@ const tableData = ref<any[]>([])
 
 const categoryFields = ref([
   { id: 'case', name: 'Case' },
-  { id: 'workflow', name: 'Workflow' }
+  { id: 'masterTable', name: 'Master Table' }
 ])
 
 const allFields = computed(() => {
@@ -45,6 +45,8 @@ const allFields = computed(() => {
 
 const form = ref<any>({})
 
+const list = ['userId', 'uniqueIdentifier', 'category', 'id']
+
 async function init() {
   await getUserFields()
 
@@ -52,13 +54,18 @@ async function init() {
   fields.forEach((item: any) => {
     form.value[item.attr_name] = item['flowable:expression'].__cdata
 
-    if (item.attr_name !== 'userId' && item.attr_name !== 'category') {
+    if (!list.includes(item.attr_name)) {
       tableData.value.push({
         id: item.attr_name,
         name: item.attr_label
       })
     }
   })
+}
+
+function handelCategoryChange() {
+  form.value.id = ''
+  updateData()
 }
 
 const showDialog = ref(false)
@@ -90,7 +97,13 @@ function handleAddColumns() {
     return
   }
 
-  const id = `${newColumnName.value.toLocaleLowerCase().replace(/ /g, '_')}_${Date.now()}`
+  const name = newColumnName.value.trim()
+  const camelCaseId = name.includes(' ')
+    ? name.split(' ').filter((w) => w).map((word, i) =>
+      i === 0 ? word.toLowerCase() : word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
+    ).join('')
+    : name.toLowerCase()
+  const id = `${camelCaseId}${Date.now()}`
   tableData.value.push({
     id: id,
     name: newColumnName.value
@@ -164,22 +177,36 @@ onMounted(async () => {
 
 <template>
   <BpmnSidebarEditLabel :node="node" />
-  <div style="display: flex; justify-content: space-between; align-items: center;">
-    <h4>Audit Log</h4>
-    <el-button @click="openAddColumnsDialog" type="primary">Column</el-button>
-  </div>
 
+  <h4>Audit Log</h4>
   <el-form label-position="top" :disabled="editorProvider.readonly.value">
-    <el-form-item label="User ID" required>
+    <el-form-item label="Operator" required>
       <el-select v-model="form.userId" filterable :placeholder="t('common_selectedIsRequiredMsg')" @change="updateData">
         <el-option v-for="item in userFields" :key="item.id" :label="item.name" :value="item.id" />
       </el-select>
     </el-form-item>
+    <el-form-item label="Unique Identifier" required>
+      <el-input v-model="form.uniqueIdentifier" :placeholder="t('tip.input')" @blur="updateData" />
+    </el-form-item>
     <el-form-item label="Category">
-      <el-select v-model="form.category" :placeholder="t('common_selectedIsRequiredMsg')" @change="updateData">
+      <el-select v-model="form.category" :placeholder="t('common_selectedIsRequiredMsg')"
+                 @change="handelCategoryChange">
         <el-option v-for="item in categoryFields" :key="item.id" :label="item.name" :value="item.id" />
       </el-select>
     </el-form-item>
+    <el-form-item :label="form.category === 'case' ? 'Case ID' : 'Master Table ID'" required>
+      <el-select v-model="form.id" clearable filterable :placeholder="t('common_selectedIsRequiredMsg')"
+                 @change="updateData">
+        <el-option v-for="item in allFields" :key="item.id" :label="item.name" :value="item.id" />
+      </el-select>
+    </el-form-item>
+
+    <el-divider />
+
+    <div style="display: flex; justify-content: space-between; align-items: center;">
+      <h4>Columns</h4>
+      <el-button @click="openAddColumnsDialog" type="primary">Create Column</el-button>
+    </div>
     <template v-for="item in tableData" :key="item.id">
       <el-form-item :label="item.name">
         <el-select v-model="form[item.id]" clearable filterable :placeholder="t('common_selectOccupancyContent')"
