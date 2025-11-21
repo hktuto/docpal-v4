@@ -100,13 +100,14 @@ provide(BrowseListProviderKey, {
     :setting="setting"
     :settingRef="settingRef"
     :extraParams="[caseDetail? caseDetail.fields : null]"
+    :title="setting.name || ''"
     @delete="handleDelete"
     @refresh="refresh"
   >
     <div v-if="homeId" class="rootContainer">
       <BrowseMiniTable ref="tableRef" :home="homeId">
         <template #toolbar_buttons>
-          <BrowseBreadcrumb :idOrPath="homeId" :home="home" />
+          <BrowseBreadcrumb :idOrPath="idOrPath" :home="home" />
         </template>
       </BrowseMiniTable>
     </div>
