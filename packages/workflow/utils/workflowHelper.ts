@@ -117,29 +117,33 @@ export async function getBpmnAddtionalElement(xml: any, taskDefinitionKey: strin
     // convert workflow variable to template variable
     const templateVariables = convertWorkflowVariableToTemplateVariable(formData, workflowToTemplateMapping)
     // get current user detail
-    const currenUserDetail = useUserState()
-    const userSignatureInfo = {
-      ...currenUserDetail.value,
-      role: currenUserDetail.value?.aclUserDetail?.roleName,
-      signature: '',
-      signDate: Date.now()
+    if(signatureSettingFromTask.attr_signature) {
+      const currenUserDetail = useUserState()
+      const userSignatureInfo = {
+        ...currenUserDetail.value,
+        role: currenUserDetail.value?.aclUserDetail?.roleName,
+        signature: '',
+        signDate: Date.now()
+      }
+      const signatureVariableSetting = json.variables.find((item: any) => item.id === signatureSettingFromTask.attr_signature)
+      templateVariables[signatureSettingFromTask.attr_signature] = userSignatureInfo
+      if(!signatureSetting) {
+        signatureSetting = {}
+      }
+      signatureSetting.signatureVariableSetting = signatureVariableSetting
     }
-    const signatureVariableSetting = json.variables.find((item: any) => item.id === signatureSettingFromTask.attr_signature)
-    templateVariables[signatureSettingFromTask.attr_signature] = userSignatureInfo
     const newVariables = generateData(templateVariables, JSON.parse(JSON.stringify(json)))
     let templateDetail = JSON.parse(JSON.stringify(json))
     const content = templateDetail.json.content.content
     templateDetail.json.content.content = replaceVariables(content, newVariables.variables)
     // const json.json.content = replaceVariables(json.json.content, newVariables)
     // finally, store signature setting
-    signatureSetting = {
-      templateDetail,
-      workflowKeyToStoreSignature,
-      signatureVariableSetting,
-      workflowToTemplateMapping,
-      templateId,
-      templateVariables
-    }
+    signatureSetting.templateVariables = templateVariables
+    signatureSetting.workflowKeyToStoreSignature = workflowKeyToStoreSignature
+    signatureSetting.workflowToTemplateMapping = workflowToTemplateMapping
+    signatureSetting.templateId = templateId
+    signatureSetting.templateDetail = templateDetail
+    signatureSetting.templateVariables = templateVariables
     console.log('signatureSetting', signatureSetting)
     // get
   }
