@@ -180,14 +180,14 @@ defineExpose({ resize })
   align-items: center;
   flex-direction: column;
   justify-content: center;
-  height: 100%;
+  // height: 100%;
   padding-bottom: 2rem;
   .quantity-title {
-    font-size: var(--app-font-size-xl);
+    font-size: var(--app-font-size-l);
     font-weight: bold;
   }
   .quantity-total {
-    padding-top: var(--app-space-s);
+    padding-top: var(--app-space-xs);
     font-size: var(--app-font-size-xl);
     font-weight: bolder;
     color: var(--app-primary-color);
