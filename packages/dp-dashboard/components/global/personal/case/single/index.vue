@@ -50,7 +50,7 @@ function handleShowColumn() {
     const column = state.detail?.informations?.find((p: any) => p.metadata === columnId)
     // check if the field is default fields
     if (columnId === 'case_id') {
-      prev.push({ id: 'case_id', name: 'Case Id', minWidth: 200 })
+      prev.push({ id: 'case_id', name: 'Case ID', minWidth: 200 })
     } else if (columnId === 'created_date') {
       prev.push({
         id: 'created_date',
