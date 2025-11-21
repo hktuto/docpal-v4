@@ -20,7 +20,15 @@ const { tableConfig, tableEvent, tableRef, query, reload, cleanSelectedRows } = 
   api: (pageParams: any) => getData(pageParams),
   columns: [
     { field: 'taskInstance.businessKey', title: 'table_name', fixed: 'left' },
-    { field: 'name', title: 'workflow_taskName' }
+    { field: 'name', title: 'Step' },
+    {field:'taskInstance.startUserId', title: 'Creator'},
+    {
+      field: 'createDate',
+      title: 'Start Date',
+      formatter({ cellValue }: any) {
+        return formatDate(cellValue)
+      }
+    }
     // { field: "taskInstance.processDefinitionName", title: "workflow_workflowName" },
   ],
   dblClickAction: ({ row, column, event }: any) => {
@@ -35,6 +43,7 @@ async function getData(params: any = {}) {
     settingParams.processKeys = props.processKeys
   }
   const res = await clientApi.api.postWorkflowTasksUser({ ...params, ...extraParams.value, ...settingParams }).then((res) => res.data)
+  console.log(res)
   return {
     data: {
       entryList: res?.entryList,
