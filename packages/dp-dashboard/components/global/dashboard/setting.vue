@@ -2,7 +2,7 @@
   <el-dialog
     v-model="state.visible"
     :title="title ? title : $t('dashboard.setting')"
-    class="scroll-dialog"
+    :class="{'scroll-dialog': true, 'big': big}"
     append-to-body
     :close-on-click-modal="false"
     @close="state.visible = false"
@@ -24,7 +24,7 @@
 <script lang="ts" setup>
 import { ElMessageBox } from 'element-plus'
 
-const props = defineProps(['formJson', 'title', 'after-open'])
+const props = defineProps(['formJson', 'title', 'after-open', 'big'])
 const emits = defineEmits(['refresh', 'delete'])
 const state = reactive({
   loading: false,
