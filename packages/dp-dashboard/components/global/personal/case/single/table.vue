@@ -126,7 +126,7 @@ async function reorderColumn(fields: any) {
         // change name to title case
         const newItem: any = {
           field: item.id,
-          title: item.name.toLowerCase().replace(/\b\w/g, (s) => s.toUpperCase()),
+          title: item.id === 'case_id' ? 'Case ID' : item.name.toLowerCase().replace(/\b\w/g, (s) => s.toUpperCase()),
           minWidth: 200
         }
         if (item.formatter) {
