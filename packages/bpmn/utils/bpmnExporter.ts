@@ -115,6 +115,7 @@ export async function getWorkflowExportData(workflowKey:string) {
           break
         case '${masterTableRecordDelegate}':
           const masterTableData = serviceTask.extensionElements['flowable:mastertableRecord']?.attr_masterTableId
+          console.log("masterTableData", masterTableData, serviceTask)
           if(masterTableData){
             relatedMasterTable.add(masterTableData)
           }
