@@ -7,6 +7,9 @@
     :close-on-click-modal="false"
   >
     <div>
+      <el-form-item label="Name" labelPosition="top" @submit.native.prevent>
+        <el-input v-model="form.name" :placeholder="Name" />
+      </el-form-item>
       <el-form :model="form" ref="FormRef" labelPosition="top" @submit.native.prevent>
         <el-form-item :label="$t('documentId')" prop="home">
           <el-select v-model="form.home" filterable clearable>
