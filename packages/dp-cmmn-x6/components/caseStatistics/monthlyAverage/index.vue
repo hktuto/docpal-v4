@@ -18,6 +18,7 @@
       :after-open="handleAfterOpen"
       :formJson="formJson"
       :title="title"
+      :big="true"
       @delete="handleDelete"
       @refresh="handleRefresh"
     />
@@ -153,6 +154,10 @@ const { cardRef, chartRef, settingRef, resize, handleInitCard, loading } = useDa
       const unit = props.setting.barUnit ? ' ' + props.setting.barUnit : ''
       return FinancialComputing(Number(value)) + unit
     }
+    option.grid.left = props.setting.leftMargin + '%' || '10%'
+    option.grid.right = props.setting.rightMargin + '%' || '10%'
+    option.yAxis[0].nameGap = props.setting.barGap || 32
+    option.yAxis[1].nameGap = props.setting.averageGap || 32
     if (props.setting.averageField) {
       option.legend.data[1] = props.setting.averageLabel || props.setting.averageTitle
       option.series[1].name = props.setting.averageLegend || props.setting.averageTitle
