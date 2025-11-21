@@ -22,6 +22,12 @@ export const iconOptionMaker = (iconPath:string) => {
         refY: 0.15
     }
 }
+function convertToNormalTitle(text:string) {
+  // split text by capitalize
+  return text.split(/(?=[A-Z])/).join(' ')
+  // replace all first letter to uppercase
+  return text.replace(/(^\w)/g, (match) => match.toUpperCase())
+}
 export const squareNodeStyle = (color:string, nodeType:string, img:string, width=200, height=64, bgColor='#fff', textColor='#000') => {
     const style:any = {
         width,
@@ -45,7 +51,7 @@ export const squareNodeStyle = (color:string, nodeType:string, img:string, width
                 y: 12,
               },
             title: {
-                text: nodeType,
+                text: convertToNormalTitle(nodeType),
                 refX: 46,
                 refY: 12,
                 fill: textColor,
@@ -99,7 +105,6 @@ export const squareNodeStyle = (color:string, nodeType:string, img:string, width
     //         y: 12,
     //     })
     // }
-
     return style
 }
 

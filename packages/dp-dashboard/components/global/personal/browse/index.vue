@@ -41,7 +41,7 @@ function handleRefresh(data: any) {
     class="dp-dashboard--card__padding"
     :settingRef="settingRef"
     :hideSetting="hideSetting"
-    :title="$t('dashboard.Browse')"
+    :title="setting.name || $t('dashboard.Browse')"
     :setting="setting"
     @delete="handleDelete"
     @refresh="refresh"

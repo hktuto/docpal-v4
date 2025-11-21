@@ -18,7 +18,7 @@
         </div>
       </div>
     </div>
-    <DashboardRelatedCaseInfoSetting ref="settingRef" @delete="handleDelete" @refresh="handleRefresh" />
+    <DashboardRelatedCaseInfoSetting v-if="!hideSetting" ref="settingRef" @delete="handleDelete" @refresh="handleRefresh" />
   </DashboardCard>
 </template>
 <script lang="ts" setup>
@@ -151,7 +151,7 @@ const { settingRef, cardRef, refresh, loading } = useDashboardCard({
     --icon-size: 1.14rem;
     .header {
       margin: var(--app-input-padding) 0;
-      color: #687a8f;
+      color: var(--app-grey-600);
     }
     .content {
       font-size: var(--app-font-size-l);

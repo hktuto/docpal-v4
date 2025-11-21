@@ -1,5 +1,5 @@
 <template>
-  <el-dialog v-model="state.visible" :title="$t('folderCabinet.newItem')" class="scroll-dialog" append-to-body>
+  <el-dialog v-model="state.visible" :title="$t('folderCabinet.newItem')" class="scroll-dialog big" append-to-body>
     <FormRenderer ref="FormRendererRef" :form-json="formJson" v-loading="state.initLoading" @formChange="formChange">
       <template v-slot:metaForm>
         <MetaRenderForm2 ref="MetaFormRef" @formChange="formChange"></MetaRenderForm2>
@@ -213,8 +213,14 @@ main {
     padding: var(--app-space-xs) 0;
   }
 }
-
+:deep(.static-content-item){
+  min-height: unset !important;
+}
 :deep(.static-content-item) {
-  margin-bottom: 10px;
+  // margin-bottom: 10px;
+}
+.el-text{
+  display: block;
+  margin-bottom: var(--app-space-m);
 }
 </style>

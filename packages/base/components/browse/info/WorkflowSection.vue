@@ -20,7 +20,7 @@
           </el-button>
         </template>
       </div>
-      <small>{{ displayStatus }}</small>
+      <small class="small-text">{{ displayStatus }}</small>
     </div>
 
     <el-dialog :title="$t('workflow_startAdhocWorkflow')" v-model="dialogShow" append-to-body v-loading="loading">
@@ -203,3 +203,10 @@ onMounted(async () => {
   userList.value = res.sort((a, b) => a.username.localeCompare(b.username))
 })
 </script>
+
+<style lang="scss" scoped>
+.small-text{
+  display: block;
+  margin-block: var(--app-space-xs);
+}
+</style>

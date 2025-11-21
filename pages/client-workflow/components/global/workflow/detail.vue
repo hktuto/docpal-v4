@@ -427,90 +427,93 @@ onMounted(() => {
 </script>
 <template>
   <div v-if="!state.error" class="pageContainer--padding workflow-detail">
-    <el-tabs v-model="state.activeTab" class="dp-tabs--auto" @tab-change="tabChange">
-      <el-tab-pane class="workflow-detail-pane" :label="$t('workflow_info')" name="info" v-loading="state.loading">
-        <WorkflowDetailCompleteInfo v-if="state.processState[workflowType]" :taskDetail="state.taskDetail"
-                                    :state="workflowType"></WorkflowDetailCompleteInfo>
-        <WorkflowDetailInfo v-else :taskDetail="state.taskDetail" :id="id"
-                            @change="handleTaskInfoChange"></WorkflowDetailInfo>
-      </el-tab-pane>
-      <el-tab-pane class="workflow-detail-pane" :label="$t('workflow_form')" name="form" v-loading="state.loading">
-          <div 
-            ref="workflowFormContainerRef"
-          :class="
-            { workflowFormContainer:true, 
-              [displayMode]:true, 
-              glass: displayMode === 'signature' && !isFullScreenForm,
-              showForm
-             }">
-               <div v-if="displayMode === 'signature'" class="toggleFormButton">
-                  <Icon :name="showForm ? 'tabler:arrow-right' : 'tabler:arrow-left'  " size="20" @click="toggleShowForm"/>
-               </div>
-               <div v-if="displayMode === 'signature'" class="toggleFullScreenButton">
-                <Icon :name="isFullScreenForm ? 'tabler:minimize' : 'tabler:maximize'" size="20" @click="toggleFullScreenForm" />
-               </div>
-            <WorkflowDetailFormRender 
-              ref="vFormRef" 
-              :taskDetail="state.taskDetail"
-              @formChange="handleFormChange"
-              >
-                <template #action>
-                  <div class="workflow-detail-pane--btns" v-if="isAssigneeUser">
-                    <template v-for="(item, index) in additionalButton" :key="index">
-                      <component :is="item.component" ref="additionalButtonRef" v-bind="item.props"
-                                @submit="addtionalSubmit" />
-                    </template>
-                    <el-button 
-                      v-if="!pageButtonSetting || pageButtonSetting.showSaveDraft"
-                      id="Workflow__AvailableTask__Detail__Form__SaveDraft" :disabled="workflowType === 'completeTask'" @click="handleSave">
-                      <template v-if="pageButtonSetting && pageButtonSetting.saveDraftLabel">
-                        {{ pageButtonSetting.saveDraftLabel }}
+    <div class="wrapper">
+      <h3>{{ state.taskDetail.name }}</h3>
+      <el-tabs v-model="state.activeTab" class="dp-tabs--auto" @tab-change="tabChange">
+        <el-tab-pane class="workflow-detail-pane" :label="$t('workflow_info')" name="info" v-loading="state.loading">
+          <WorkflowDetailCompleteInfo v-if="state.processState[workflowType]" :taskDetail="state.taskDetail"
+                                      :state="workflowType"></WorkflowDetailCompleteInfo>
+          <WorkflowDetailInfo v-else :taskDetail="state.taskDetail" :id="id"
+                              @change="handleTaskInfoChange"></WorkflowDetailInfo>
+        </el-tab-pane>
+        <el-tab-pane class="workflow-detail-pane" :label="$t('workflow_form')" name="form" v-loading="state.loading">
+            <div 
+              ref="workflowFormContainerRef"
+            :class="
+              { workflowFormContainer:true, 
+                [displayMode]:true, 
+                glass: displayMode === 'signature' && !isFullScreenForm,
+                showForm
+              }">
+                <div v-if="displayMode === 'signature'" class="toggleFormButton">
+                    <Icon :name="showForm ? 'tabler:arrow-right' : 'tabler:arrow-left'  " size="20" @click="toggleShowForm"/>
+                </div>
+                <div v-if="displayMode === 'signature'" class="toggleFullScreenButton">
+                  <Icon :name="isFullScreenForm ? 'tabler:minimize' : 'tabler:maximize'" size="20" @click="toggleFullScreenForm" />
+                </div>
+              <WorkflowDetailFormRender 
+                ref="vFormRef" 
+                :taskDetail="state.taskDetail"
+                @formChange="handleFormChange"
+                >
+                  <template #action>
+                    <div class="workflow-detail-pane--btns" v-if="isAssigneeUser">
+                      <template v-for="(item, index) in additionalButton" :key="index">
+                        <component :is="item.component" ref="additionalButtonRef" v-bind="item.props"
+                                  @submit="addtionalSubmit" />
                       </template>
-                      <template v-else>
-                        {{ $t('workflow_save') }}
-                      </template>
-                    </el-button>
-                    <el-button v-if="!pageButtonSetting || pageButtonSetting.showSumBitButton" id="Workflow__AvailableTask__Detail__Form__Submit" type="primary" :disabled="workflowType === 'completeTask'" @click="handleSubmit">
-                      <template v-if="pageButtonSetting && pageButtonSetting.submitButtonLabel">
-                        {{ pageButtonSetting.submitButtonLabel }}
-                      </template>
-                      <template v-else>
-                        {{ $t('common_submit') }}
-                      </template>
-                    </el-button>
-                  </div>
-                </template>
-              </WorkflowDetailFormRender>
-          </div>
-          <template v-if="displayMode === 'signature'">
-            <!-- template viewer -->
-            <div class="templateViewerContainer">
-              <!-- {{ signatureDetail.templateDetail }} -->
-              <DocTemplateViewer ref="templateViewerRef" v-if="!state.isEdit && signatureDetail" :options="signatureDetail.templateDetail.json.options"
-                               :json="signatureDetail.templateDetail.json.content" />
+                      <el-button 
+                        v-if="!pageButtonSetting || pageButtonSetting.showSaveDraft"
+                        id="Workflow__AvailableTask__Detail__Form__SaveDraft" :disabled="workflowType === 'completeTask'" @click="handleSave">
+                        <template v-if="pageButtonSetting && pageButtonSetting.saveDraftLabel">
+                          {{ pageButtonSetting.saveDraftLabel }}
+                        </template>
+                        <template v-else>
+                          {{ $t('workflow_save') }}
+                        </template>
+                      </el-button>
+                      <el-button v-if="!pageButtonSetting || pageButtonSetting.showSumBitButton" id="Workflow__AvailableTask__Detail__Form__Submit" type="primary" :disabled="workflowType === 'completeTask'" @click="handleSubmit">
+                        <template v-if="pageButtonSetting && pageButtonSetting.submitButtonLabel">
+                          {{ pageButtonSetting.submitButtonLabel }}
+                        </template>
+                        <template v-else>
+                          {{ $t('common_submit') }}
+                        </template>
+                      </el-button>
+                    </div>
+                  </template>
+                </WorkflowDetailFormRender>
             </div>
-            <WorkflowSignatureDialog 
-              ref="signatureSettingDialogRef" 
-              :signatureSetting="signatureDetail"
-              @confirm="handleApplySignature"
-            />
-          </template>
-      </el-tab-pane>
-      <el-tab-pane :label="$t('workflow_graph')" name="graph">
-        <!-- need to use v-if for bpmn, if not  svg graph will not show -->
-        <WorkflowDetailGraph
-          v-if="state.activeTab === 'graph'"
-          :processDefinitionId="state.taskDetail?.processDefinitionId || state.taskDetail?.taskInstance?.processDefinitionId"
-          :processDefinitionVersionId="state.taskDetail?.processDefinitionVersionId"
-          :deploymentId="state.taskDetail?.deploymentId || state.taskDetail?.taskInstance?.deploymentId"
-          :steps="state.activityList"
-        />
-      </el-tab-pane>
-      <el-tab-pane v-if="state.taskDetail && state.taskDetail.instanceId && isMobile"
-                   :label="$t('common_discussionChannel')" name="command">
-        <WorkflowDetailDiscussionChannel :id="state.taskDetail.instanceId" :noToggle="true" />
-      </el-tab-pane>
-    </el-tabs>
+            <template v-if="displayMode === 'signature'">
+              <!-- template viewer -->
+              <div class="templateViewerContainer">
+                <!-- {{ signatureDetail.templateDetail }} -->
+                <DocTemplateViewer ref="templateViewerRef" v-if="!state.isEdit && signatureDetail" :options="signatureDetail.templateDetail.json.options"
+                                :json="signatureDetail.templateDetail.json.content" />
+              </div>
+              <WorkflowSignatureDialog 
+                ref="signatureSettingDialogRef" 
+                :signatureSetting="signatureDetail"
+                @confirm="handleApplySignature"
+              />
+            </template>
+        </el-tab-pane>
+        <el-tab-pane :label="$t('workflow_graph')" name="graph">
+          <!-- need to use v-if for bpmn, if not  svg graph will not show -->
+          <WorkflowDetailGraph
+            v-if="state.activeTab === 'graph'"
+            :processDefinitionId="state.taskDetail?.processDefinitionId || state.taskDetail?.taskInstance?.processDefinitionId"
+            :processDefinitionVersionId="state.taskDetail?.processDefinitionVersionId"
+            :deploymentId="state.taskDetail?.deploymentId || state.taskDetail?.taskInstance?.deploymentId"
+            :steps="state.activityList"
+          />
+        </el-tab-pane>
+        <el-tab-pane v-if="state.taskDetail && state.taskDetail.instanceId && isMobile"
+                    :label="$t('common_discussionChannel')" name="command">
+          <WorkflowDetailDiscussionChannel :id="state.taskDetail.instanceId" :noToggle="true" />
+        </el-tab-pane>
+      </el-tabs>
+    </div>
     <WorkflowDetailDiscussionChannel v-if="state.taskDetail && state.taskDetail.instanceId && !isMobile"
                                      :id="state.taskDetail.instanceId" />
   </div>
@@ -531,6 +534,17 @@ onMounted(() => {
   @media (max-width: 640px) {
     grid-template-columns: 1fr;
     grid-template-rows: min-content 1fr;
+  }
+  > .wrapper{
+    display: flex;
+    flex-flow: column nowrap;
+    height: 100%;
+    overflow: hidden;
+    position: relative;
+    gap: var(--app-space-s);
+    > h3 {
+      margin:  0;
+    }
   }
 }
 

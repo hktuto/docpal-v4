@@ -273,4 +273,15 @@ provide(CONDITION_PROVIDER,{
         flex: 0 0 auto;
     }
 }
+.labelContainer{
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: flex-start;
+  align-items: flex-start;
+  gap: var(--app-space-xs);
+  margin-block: var(--app-space-s);
+  > * {
+    width: 100%;
+  }
+}
 </style>

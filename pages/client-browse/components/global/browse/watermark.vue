@@ -301,4 +301,7 @@ onMounted(() => {
   gap: calc(var(--app-space-xs) / 2);
   padding-inline: var(--app-space-xs);
 }
+.message{
+  margin-block: var(--app-space-m);
+}
 </style>

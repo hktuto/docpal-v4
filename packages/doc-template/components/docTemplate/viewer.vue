@@ -93,7 +93,11 @@ defineExpose({ initEditor })
   :first-child {
     margin-top: 0;
   }
-
+  li {
+    &::marker{
+      font-size: 12px;
+    }
+  }
   table {
     border-collapse: collapse;
     margin: 0;

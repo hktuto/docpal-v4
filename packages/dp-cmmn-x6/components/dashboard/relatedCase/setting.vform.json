@@ -53,7 +53,7 @@
       "formItemFlag": true,
       "options": {
         "name": "caseLabel",
-        "label": "singleCase.caseLabel",
+        "label": "common_title",
         "labelAlign": "",
         "type": "text",
         "defaultValue": "",

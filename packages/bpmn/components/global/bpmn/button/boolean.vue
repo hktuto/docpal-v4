@@ -38,7 +38,7 @@ async function submit(){
     emits('submit', {formData, attr_booleanValue})
 }
 
-defineExpose({ beforeSubmit })
+defineExpose({ beforeSubmit, attr_booleanValue })
 </script>
 
 

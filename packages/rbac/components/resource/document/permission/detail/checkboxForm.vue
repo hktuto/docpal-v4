@@ -9,7 +9,7 @@
           CheckboxRef.read = el
         }
       "
-      :checkAllLabel="$t('permission.read')"
+      :checkAllLabel="$t('permission.allRead')"
       v-model:checkAll="formData.allRead"
       :options="[
         { label: 'rbac.permission.viewFolder', value: 1 },
@@ -29,7 +29,7 @@
           CheckboxRef.readWrite = el
         }
       "
-      :checkAllLabel="$t('permission.write')"
+      :checkAllLabel="$t('permission.allWrite')"
       v-model:checkAll="formData.allReadWrite"
       :options="[
         { label: 'rbac.permission.editFolder', value: 6 },
@@ -50,7 +50,7 @@
           CheckboxRef.manage = el
         }
       "
-      :checkAllLabel="$t('permission.manage')"
+      :checkAllLabel="$t('permission.allManage')"
       v-model:checkAll="formData.allManage"
       :options="[
         { label: 'rbac.permission.deleteFolder', value: 12 },

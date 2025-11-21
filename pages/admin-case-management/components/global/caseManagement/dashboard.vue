@@ -2,21 +2,9 @@
   <div class="pageContainer">
     <div class="dashboard-page">
       <div class="dashboard-page--header">
-        <el-dropdown trigger="click" @command="createDashboard">
-          <el-button id="CaseManagement__Detail__CaseDashboardView__ViewLayout__Add" type="primary">
-            {{ $t('common_add') }}
-          </el-button>
-          <template #dropdown>
-            <el-dropdown-menu>
-              <el-dropdown-item v-for="(item, key) in CmmnDashboardWidgetSetting" :key="key" :command="key" :divided="item.divided">
-                {{ $t(`dashboard.${item.label}`) }}
-              </el-dropdown-item>
-            </el-dropdown-menu>
-          </template>
-        </el-dropdown>
-        <!-- <el-button type="danger" @click="handleClear">
+        <el-button type="danger" @click="handleClear">
           {{ $t('common_clear') }}
-        </el-button> -->
+        </el-button>
         <el-button
           id="CaseManagement__Detail__CaseDashboardView__ViewLayout__Save"
           class="el-icon--right"
@@ -32,9 +20,13 @@
         <DashboardDetail
           ref="DashboardDetailRef"
           v-model:layout="state.layout"
+          :dates="state.dates"
           :componentMap="CmmnWidgetComponent"
           :resizable="true"
           :draggable="true"
+          :editMode="true"
+          :dashboardSettingList="dashboardWidgetByType"
+          type="caseManagement"
           @delete="handleDelete"
           @refreshSetting="handleRefresh"
         ></DashboardDetail>
@@ -44,7 +36,8 @@
 </template>
 <script lang="ts" setup>
 import { adminApi } from 'api'
-
+import dayjs from 'dayjs'
+const { t } = useI18n()
 const props = defineProps<{
   id: string
   caseTypeId: string
@@ -58,9 +51,10 @@ const state = reactive({
   } as any,
   layout: [] as DashboardWidgetSetting[],
   saveLoading: false,
-  detail: {}
+  detail: {},
+  dates: [dayjs().startOf('year').format('YYYY-MM-DD'), formatDate(new Date(), 'YYYY-MM-DD')]
 })
-
+let dashboardWidgetByType = getDashboardWidgetByType(CmmnDashboardWidgetSetting)
 function createDashboard(command: CmmnDashboardWidget) {
   const item = getCmmnWidgetSetting(command)
   state.layout.push({
@@ -92,6 +86,7 @@ async function handleSave() {
       id: props.id,
       styleJson: JSON.stringify(state.layout)
     })
+    routerProvider?.message.success(t('dpMsg_success'))
   } catch (error) {
   } finally {
     state.saveLoading = false
@@ -119,7 +114,7 @@ async function init() {
     state.layout = []
   }
 }
-onMounted( () => {
+onMounted(() => {
   init()
 })
 

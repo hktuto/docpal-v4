@@ -93,6 +93,11 @@ async function handleDownload() {
   right: calc(var(--app-space-xs) * 2);
   top: calc(var(--app-space-xs) * 2);
   z-index: 2;
+  @container (max-width: 1200px) {
+    position: relative;
+    right: auto;
+    top: auto;
+  }
 }
 
 .dp-tabs--auto {

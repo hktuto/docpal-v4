@@ -99,8 +99,8 @@ watch(form, () => {
                                 <ElOption v-for="item in allDocumentStep" :key="item.value" :label="item.label" :value="item.value" />
                             </ElSelect>
                     </ElFormItem>
-                    <ElFormItem label="Preview Button Text">
-                        <ElInput v-model="item.attr_previewButtonText" placeholder="Preview Button Text" />
+                    <ElFormItem label="Button Text">
+                        <ElInput v-model="item.attr_previewButtonText" placeholder="Button Text" />
                     </ElFormItem>
                     <ElFormItem>
                         <ElButton text @click="form.splice(index, 1)">Remove</ElButton>

@@ -54,13 +54,14 @@ const { tableConfig, tableEvent, tableRef, reload } = useVxeTable({
       }
     },
     { field: 'dataType', title: 'meta.dataTypeText' },
-    {
-      field: 'display',
-      title: 'form_display',
-      slots: {
-        default: 'display'
-      }
-    },
+    // 无效设置
+    // {
+    //   field: 'display',
+    //   title: 'form_display',
+    //   slots: {
+    //     default: 'display'
+    //   }
+    // },
     {
       field: 'lastModifiedDate',
       title: 'tableHeader_lastModified',

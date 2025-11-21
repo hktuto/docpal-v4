@@ -10,7 +10,24 @@ import RelatedCase from '../components/dashboard/relatedCase/index.vue'
 import RelatedMaster from '../components/dashboard/relatedMaster/index.vue'
 import MasterTableInfo from '../components/dashboard/masterTableInfo/index.vue'
 import RelatedCaseInfo from '../components/dashboard/relatedCaseInfo/index.vue'
-export type CmmnDashboardWidget = 'Action' | 'BasicInfo' | 'Process' | 'TaskPage' | 'WorkflowPage' | 'Activity' | 'DocumentRoot' | 'RelatedCase' | 'RelatedMaster' | 'MasterTableInfo' | 'RelatedCaseInfo'
+import AuditLog from '../components/dashboard/auditLog/index.vue'
+import { CaseStatisticsWidgetSetting, CaseStatisticsWidgetComponent } from './dashboardCaseStatistics'
+import type { CaseStatisticsWidget as CaseStatisticsWidgetType } from './dashboardCaseStatistics'
+
+export type CmmnDashboardWidget =
+  CaseStatisticsWidgetType
+  | 'Action'
+  | 'BasicInfo'
+  | 'Process'
+  | 'TaskPage'
+  | 'WorkflowPage'
+  | 'Activity'
+  | 'DocumentRoot'
+  | 'RelatedCase'
+  | 'RelatedMaster'
+  | 'MasterTableInfo'
+  | 'RelatedCaseInfo'
+  | 'AuditLog'
 export const CmmnDashboardWidgetSetting: { [key in CmmnDashboardWidget]: DashboardWidgetSetting } = {
   BasicInfo: {
     label: 'cmmnBasicInfo',
@@ -114,8 +131,8 @@ export const CmmnDashboardWidgetSetting: { [key in CmmnDashboardWidget]: Dashboa
   },
   RelatedMaster: {
     label: 'cmmnRelatedMaster',
-    minW: 4,
-    minH: 4,
+    minW: 2,
+    minH: 2,
     maxW: 12,
     maxH: 12,
     w: 4,
@@ -142,7 +159,7 @@ export const CmmnDashboardWidgetSetting: { [key in CmmnDashboardWidget]: Dashboa
       layout: [],
       masterTableId: '',
       masterTableName: '',
-      relatedField: '',
+      relatedField: ''
     }
   },
   RelatedCaseInfo: {
@@ -160,14 +177,32 @@ export const CmmnDashboardWidgetSetting: { [key in CmmnDashboardWidget]: Dashboa
       caseId: '',
       caseLabel: '',
       caseVersionId: '', // 初始化 case list
-      relatedCaseField: '',
+      relatedCaseField: ''
     }
   },
+  AuditLog: {
+    label: '',
+    minW: 6,
+    minH: 4,
+    maxW: 16,
+    maxH: 12,
+    w: 6,
+    h: 4,
+    component: 'AuditLog',
+    setting: {
+      caseId: '',
+      caseLabel: '',
+      newButtonLabel: 'common_add',
+      displayColumns: []
+    }
+  },
+  ...CaseStatisticsWidgetSetting
 }
 
 export function getCmmnWidgetSetting(widget: CmmnDashboardWidget) {
   return CmmnDashboardWidgetSetting[widget]
 }
+
 export const getCmmnNormalizeSetting = (setting: CmmnDashboardWidget) => {
   const item = getCmmnWidgetSetting(setting)
   return {
@@ -188,5 +223,7 @@ export const CmmnWidgetComponent = {
   RelatedCase: RelatedCase,
   RelatedCaseInfo: RelatedCaseInfo,
   RelatedMaster: RelatedMaster,
-  MasterTableInfo: MasterTableInfo
+  MasterTableInfo: MasterTableInfo,
+  AuditLog: AuditLog,
+  ...CaseStatisticsWidgetComponent
 }

@@ -93,7 +93,7 @@ async function getVariables(isFolder: boolean = false) {
     if (['ai', 'upload', 'folderCabinet'].includes(props.mode)) {
       state.variables.unshift({
         name: 'docName',
-        label: t('fc:docTitle'),
+        label: t('folder_cabinetNewItemTitle'),
         type: 'input',
         required: true,
         options: {
@@ -104,6 +104,7 @@ async function getVariables(isFolder: boolean = false) {
 
     nextTick(async () => {
       const formJson = await FormVariablesRendererRef.value.createJson(state.variables)
+      console.log('formJson', formJson)
       if (props.mode === 'fileRequest') {
         const newFormJson = getApplyFormJson(formJson)
         FormVariablesRendererRef.value.setFormJson(newFormJson)

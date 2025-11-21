@@ -37,7 +37,7 @@ function ruleAdd(newField: any, callback: () => void) {
   const taskField = {
     attr_id: newField.id,
     attr_name: newField.name,
-    attr_type: getBpmnRuleType(newField.type)
+    attr_type: getBpmnRuleType(newField.validationRule?.type || newField.type)
   }
   formItems.value.push(taskField)
   formChange()
@@ -46,14 +46,13 @@ function ruleAdd(newField: any, callback: () => void) {
 }
 
 function fieldUpdate(newFields: any) {
-  const newFormItems = newFields.map((item: any) => {
+  formItems.value = newFields.map((item: any) => {
     return {
       attr_id: item.id,
       attr_name: item.name,
-      attr_type: getBpmnRuleType(item.type)
+      attr_type: getBpmnRuleType(item.validationRule?.type || item.type)
     }
   })
-  formItems.value = newFormItems
   formChange()
 }
 
@@ -86,7 +85,7 @@ function updateRule(newField: any) {
     formItems.value[index] = {
       attr_id: newField.id,
       attr_name: newField.name,
-      attr_type: getBpmnRuleType(newField.type) || 'string'
+      attr_type: getBpmnRuleType(newField.validationRule?.type || newField.type) || 'string'
     }
   }
   graphProvider?.graph.value?.cleanHistory()
@@ -158,6 +157,7 @@ function editField() {
 async function copyFormAndFieldSetting() {
   const fields = JSON.parse(JSON.stringify(formItems.value))
   const form = await editorProvider?.getFormByNode(node)
+  console.log('copyFormAndFieldSetting', fields, form)
   editorProvider?.copyForm(node, {
     fields,
     form
@@ -238,8 +238,8 @@ watch(
     </div>
     <div class="actionsContainer">
       <ElButton type="primary" @click="editField" :disabled="editorProvider.readonly.value"> Edit Field</ElButton>
-      
-      <ElButton type="primary"  @click="editorProvider.openForm(node)">
+
+      <ElButton type="primary" @click="editorProvider.openForm(node)">
         Edit Form
       </ElButton>
       <ElButton type="primary" @click="editorProvider.previewForm(node)"> Preview Form</ElButton>
