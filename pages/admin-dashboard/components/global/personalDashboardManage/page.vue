@@ -13,6 +13,7 @@
       </template>
     </VxeGrid>
     <PersonalDashboardDialog ref="DashboardDialogRef" @refresh="query({})" @add="handleDblclick" />
+    <PersonalDashboardDuplicateDialog ref="PersonalDashboardDuplicateDialogRef" @refresh="query({})" @add="handleDblclick" />
   </div>
 </template>
 <script lang="ts" setup>
@@ -23,6 +24,7 @@ import { routePersonalDashboardDetail } from '~/utils/routerHelper'
 const routerProvider = inject(MenuRouterKey)
 const { t } = useI18n()
 let extraParams: any = {}
+const PersonalDashboardDuplicateDialogRef = ref()
 const { tableConfig, tableEvent, tableRef, query, reload, cleanSelectedRows } = useVxeTable({
   id: 'personalDashboardManage',
   api: (pageParams: any) => adminApi.api.postPersonalDashboard({ ...pageParams, ...extraParams }),
@@ -55,6 +57,15 @@ const { tableConfig, tableEvent, tableRef, query, reload, cleanSelectedRows } = 
         disabled: false,
         action: ({ row }: any) => {
           handleConfig(row)
+        }
+      },
+      {
+        code: 'hold_duplicate',
+        name: t('actions.duplicate'),
+        visible: true,
+        disabled: false,
+        action: ({ row }: any) => {
+          PersonalDashboardDuplicateDialogRef.value.handleOpen(row)
         }
       },
       {
