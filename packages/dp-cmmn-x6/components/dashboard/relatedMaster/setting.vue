@@ -11,7 +11,7 @@ const state = reactive<{
   loading: boolean;
   visible: boolean;
   setting: {
-    displayColumnSetting?: Array<{ field: string; label: string; displayType?: 'text' | 'Date' | 'tag' }>;
+    displayColumnSetting?: Array<{ field: string; label: string; displayType?: 'text' | 'Date' | 'tag'; dateFormat?: string }>;
     [key: string]: unknown;
   };
 }>({
@@ -159,6 +159,7 @@ defineExpose({ handleOpen });
                   <el-option label="Date" value="Date" />
                   <el-option label="Tag" value="tag" />
                 </el-select>
+                <el-input v-if="column.displayType === 'date'" v-model="state.setting.displayColumnSetting[index].dateFormat" :placeholder="t('common_dateFormat')" size="small" />
               </div>
             </li>
           </template>
