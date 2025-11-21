@@ -138,6 +138,9 @@ export async function getBpmnAddtionalElement(xml: any, taskDefinitionKey: strin
     templateDetail.json.content.content = replaceVariables(content, newVariables.variables)
     // const json.json.content = replaceVariables(json.json.content, newVariables)
     // finally, store signature setting
+    if(!signatureSetting){
+      signatureSetting = {}
+    }
     signatureSetting.templateVariables = templateVariables
     signatureSetting.workflowKeyToStoreSignature = workflowKeyToStoreSignature
     signatureSetting.workflowToTemplateMapping = workflowToTemplateMapping
