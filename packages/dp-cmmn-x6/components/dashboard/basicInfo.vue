@@ -53,7 +53,8 @@ function displayValue(item: any) {
     return state.defaultValue[item.id]
   }
   if (item.type === 'date') {
-    return formatDate(item.value)
+    const format = item.dateFormat || 'DD-MMM-YYYY'
+    return formatDate(item.value, format)
   }
   if (item.type === 'boolean') {
     // TODO: translate later
