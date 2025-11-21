@@ -14,7 +14,7 @@ export const CaseStatisticsWidgetSetting: { [key in CaseStatisticsWidget]: Dashb
     type: CASE_STATISTICS_TYPE.caseCount,
     label: 'cmmnCaseFieldNum',
     minW: 1,
-    minH: 2,
+    minH: 1,
     maxW: 12,
     maxH: 12,
     w: 2,
