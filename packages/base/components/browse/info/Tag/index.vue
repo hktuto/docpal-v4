@@ -86,11 +86,28 @@ onMounted(() => getAllTags());
 
 
 .tags-input-root{
-  font-size: 1rem;
+  font-size: var(--app-font-size-m);
   :deep(.tags-input-wrapper-default.active)
     {
       border-color: var(--primary-color);
       box-shadow: none;
+    }
+    :deep(.tags-input-wrapper-default){
+      padding: var(--app-space-xxs);
+    }
+    :deep(input) {
+      font-size: var(--app-font-size-s);
+    }
+    :deep(.typeahead-badges){
+      margin-block: var(--app-space-xxs);
+    }
+    :deep(.tags-input-typeahead-item-default){
+      background-color: var(--app-grey-900) !important;
+      color: var(--app-text-color-primary) !important;
+      font-style: normal !important;
+    }
+    :deep(.tags-input-typeahead-item-highlighted-default){
+      background-color: var(--app-primary-color) !important;
     }
 }
 </style>

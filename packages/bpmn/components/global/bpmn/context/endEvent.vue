@@ -40,5 +40,9 @@ function editCompleteForm() {
 <style lang="scss" scoped>
 .fromContainer{
     overflow: auto;
+    margin-top: var(--app-space-m);
+}
+.actionsContainer{
+  margin-top: var(--app-space-m);
 }
 </style>

@@ -192,7 +192,7 @@ function needRefresh(detail: any) {
     --icon-size: 1.14rem;
     .header {
       margin: var(--app-input-padding) 0;
-      color: #687a8f;
+      color: var(--app-grey-600);
     }
     .content {
       font-size: var(--app-font-size-l);

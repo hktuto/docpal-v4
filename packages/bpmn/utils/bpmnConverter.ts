@@ -205,6 +205,15 @@ export const checkX6Json = function(x6Json:any, bpmnJson:BPMNJSON){
             // delete node.labels
         }
     })
+    // check startEvent node and endEvent node to clean up old title
+    const startEventNode = x6Json.cells.find((node:any) => node.id === 'Start')
+    const endEventNode = x6Json.cells.find((node:any) => node.id === 'end')
+    if(startEventNode){
+      startEventNode.attrs.title.text = 'Start Event'
+    }
+    if(endEventNode){
+      endEventNode.attrs.title.text = 'End Event'
+    }
     if(!x6Json.cells.find((node:any) => node.id === processId)) {
         x6Json.cells.push({
             id: processId,

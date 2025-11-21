@@ -1,6 +1,6 @@
 <template>
   <el-dialog
-    class="scroll-dialog retention-add-dialog"
+    class="scroll-dialog retention-add-dialog big"
     v-model="state.visible" :title="t('filePolicies_RetentionPolicyCreate')"
     :close-on-click-modal="false" append-to-body
   >

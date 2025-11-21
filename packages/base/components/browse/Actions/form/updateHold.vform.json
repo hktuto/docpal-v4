@@ -236,7 +236,7 @@
                             "formItemFlag": true,
                             "options": {
                                 "name": "approvedBy",
-                                "label": "user_approver_id",
+                                "label": "Approver",
                                 "labelAlign": "",
                                 "defaultValue": "",
                                 "placeholder": "",

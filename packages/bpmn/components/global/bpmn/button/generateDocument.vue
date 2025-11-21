@@ -68,6 +68,7 @@ async function generateNewTemplatePreview(templateId: string, map:any){
     },{
       format: 'blob'
     })
+    console.log("blob", blob)
     return blob;
   }catch(e) {
     console.log("e", e)
@@ -82,6 +83,7 @@ async function generatePreview(){
     const xmlJson = bpmnStringToJson(props.xml)
     const targetTask = xmlJson.flatObj[props.attr_documentStepId]
     const latestFormData = await workflowFormDetail?.getFormData(false)
+    console.log("latestFormData", latestFormData)
     // merge latestFormData and props.formData, if item in object is null, use latestFormData
     // merge form data and latest form data keys
     const mergeKeys = [...new Set([...Object.keys(props.formData), ...Object.keys(latestFormData)])]
@@ -93,39 +95,44 @@ async function generatePreview(){
       }
       return prev
     }, {})
+    console.log("mergeFormData", mergeFormData)
     // get template id
-        const templateId = targetTask.extensionElements['flowable:field'].find((field:any) => field.attr_name === "templateId")
-        const varible = targetTask.extensionElements['flowable:field'].find((field:any) => field.attr_name === "variables")
+    const templateId = targetTask.extensionElements['flowable:field'].find((field:any) => field.attr_name === "templateId")
 
-        if(!templateId || !varible) return;
-        const templateIdValue = templateId['flowable:expression']['__cdata']
-        // get template path from template id
-        const varibleList = varible['flowable:expression']['__cdata'] ? JSON.parse(varible['flowable:expression']['__cdata']) : {}
+    if(!templateId ) return;
+    const templateIdValue = templateId['flowable:expression']['__cdata']
+    const defaultField: any = ['parentPath', 'storeValue', 'documentName', 'documentType', 'templateId']
+    const workflowToTemplateMapping: any = (targetTask.extensionElements['flowable:field'] || []).filter((item: any) => !defaultField.includes(item.attr_name))
+      .map((item: any) => ({
+        key:item.attr_name, value: item['flowable:expression'].__cdata.replace('${variables:get(', '').replace(')}', '')
+      }))
+    console.log("workflowToTemplateMapping", workflowToTemplateMapping)
+    // create mapping 
+    let map:any = {}
+    console.log("workflowToTemplateMapping", workflowToTemplateMapping.length)
+    workflowToTemplateMapping.forEach((obj:any) => {
+        if(obj ) {
+            const value = mergeFormData[obj.value]
+            if(value) {
+                try{
+                  let data = JSON.parse(value)
+                  if(typeof data === 'number') {
+                    data = data.toString()
+                  }
+                  map[obj.key] = data
+                }catch(err){
 
-        // create mapping 
-        let map:any = {}
-        Object.keys(varibleList).forEach((key:string) => {
-            if(varibleList[key] ) {
-              console.log("key", key, varibleList[key])
-                const vari = varibleList[key].replace('${variables:get(','').replace(')}', '')
-                const value = mergeFormData[vari]
-                if(value) {
-                    try{
-                      const data = JSON.parse(value)
-                      map[key] = data
-                    }catch(err){
-
-                      map[key] = value
-                    }
-                }else{
-                    map[key] = ""
+                  map[obj.key] = value
                 }
+            }else{
+                map[obj.key] = " "
             }
-        })
-        console.log("map", map)
-        return await generateNewTemplatePreview(templateIdValue, map)
-        // 
-  }catch(err){
+        }
+    })
+    console.log("map", map)
+    return await generateNewTemplatePreview(templateIdValue, map)
+    // 
+  }catch(err:any){
     console.log(err)
     if(err.name !== "AxiosError"){
           routerProvider?.message.error(err.message)
@@ -141,7 +148,9 @@ async function openPreivew(){
   dialogHeight.value = window.innerHeight - 60;
   dialogOpened.value = true
   setTimeout(() => {
-    previewFile.blob = res
+    if(res) {
+      previewFile.blob = res
+    }
   },100)
 }
 function init(){
@@ -149,45 +158,45 @@ function init(){
 }
 
 async function beforeSubmit(){
-  // because backend can not handle loop data in workflow generate template, so we need to upload file to server
-  const res = await generatePreview() as blob
-  // will set default file name to 'preview'
-  // default filed name is 'file'
-  // get  file extension from blob
-  const ext = mimeTypeToExtension(res.type)
+  // // because backend can not handle loop data in workflow generate template, so we need to upload file to server
+  // const res = await generatePreview() as blob
+  // // will set default file name to 'preview'
+  // // default filed name is 'file'
+  // // get  file extension from blob
+  // const ext = mimeTypeToExtension(res.type)
 
   
-  const fileName = 'preview' + Date.now() + '.'+ ext
-  // return null 
-  const formData = new FormData()
+  // const fileName = 'preview' + Date.now() + '.'+ ext
+  // // return null 
+  // const formData = new FormData()
   
-  const params = {
-    type:"File",
-    properties: {
-      'dc:title': fileName
-    },
+  // const params = {
+  //   type:"File",
+  //   properties: {
+  //     'dc:title': fileName
+  //   },
             
-  }
-  formData.append('document', JSON.stringify(params))
-  formData.append('file', res, fileName)
-  formData.append('nonPermission', true)
+  // }
+  // formData.append('document', JSON.stringify(params))
+  // formData.append('file', res, fileName)
+  // formData.append('nonPermission', true)
   
-  const uploadRes = await clientApi.instance.post('/docpal/workflow/upload/file', formData, {
-    headers: {
-      'Content-Type': 'multipart/form-data'
-    }
-  }).then(res => res.data.data)
-  console.log("res", uploadRes.id)
-  return {
-    file: uploadRes.id,
-    hasFile: true
-  }
+  // const uploadRes = await clientApi.instance.post('/docpal/workflow/upload/file', formData, {
+  //   headers: {
+  //     'Content-Type': 'multipart/form-data'
+  //   }
+  // }).then(res => res.data.data)
+  // console.log("res", uploadRes.id)
+  // return {
+  //   file: uploadRes.id,
+  //   hasFile: true
+  // }
 }
 
 onMounted(() => {
     init()
 })
-defineExpose({ beforeSubmit })
+// defineExpose({ beforeSubmit })
 </script>
 
 <template>

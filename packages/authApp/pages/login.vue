@@ -34,17 +34,16 @@ async function submit() {
         form.password = "";
         verifly();
         const route = useRoute()
+        let url
         if(route.query.redirect && route.query.redirect !== '/login'){
-            router.push({
-              path: route.query.redirect as string,
-              query: {
-                ...route.query,
-                redirect: undefined
-              }
-            })
+            url = route.query.redirect as string
+            if(route.query){
+              url += `?${Object.keys(route.query).map(key => `${key}=${route.query[key]}`).join('&')}`
+            }
         }else{
-          router.push('/')
+          url = '/'
         }
+        window.location.href = url
     } catch (error) {
         // form.username = "";
         // form.password = "";

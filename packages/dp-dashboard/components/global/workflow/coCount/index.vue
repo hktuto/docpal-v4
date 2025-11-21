@@ -92,45 +92,19 @@ defineExpose({
 </script>
 
 <style lang="scss" scoped>
-.dashboard-item-main {
-  display: grid;
-  grid-template-rows: min-content 1fr;
-  overflow: hidden;
-  background-color: var(--setting-color, #fff);
-}
-.dashboard-item-main :deep(.el-card__body) {
-  height: 100%;
-  overflow-y: auto;
-  overflow-x: hidden;
-}
-.dashboard-item-main :deep(.el-card__header) {
-  display: flex;
-  justify-content: space-between;
-  border-bottom: unset;
-  padding: var(--app-space-xs);
-  h4 {
-    padding: unset;
-    margin: unset;
-    color: #464646;
-    font-size: var(--app-font-size-l);
-    font-family: Arial;
-  }
-}
 .chartContainer {
   height: 100%;
   max-width: 100%;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
   overflow-y: auto;
-  display: flex;
-  flex-flow: row wrap;
   container-type: inline-size;
-  &-item {
-    min-height: 300px;
+  .chartContainer-item {
+    height: 100%;
+    min-height: 200px;
+    width: 100%;
   }
 }
-@container (min-width: 640px) {
-  .co-count {
-    flex: 1 0 50%;
-    max-width: 50%;
-  }
-}
+
 </style>

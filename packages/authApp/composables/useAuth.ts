@@ -165,11 +165,12 @@ export function logout() {
   const userState = useUserState()
   const router = useRouter()
   const route = useRoute()
+  const ignoreRedirectPath = ['/login', '/forgetPassword', '/resetPassword', '/admin']
   router.push({
     path: '/login',
     query: {
       ...route.query,
-      redirect: route.path
+      redirect: ignoreRedirectPath.includes(route.path) ? '/' : route.path
     }
   })
   // clean up local storage

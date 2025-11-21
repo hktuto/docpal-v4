@@ -26,21 +26,21 @@
     <div class="collection-main">
       <VxeGrid ref="tableRef" v-bind="tableConfig" v-on="tableEvent">
         <template #toolbar_buttons>
-          <div class="flex-x-between collection-toolbar-title">
-            {{ state.curCollection.name }}
+          <div class="flex-x-between">
+            <div class="title">{{ state.curCollection.name }}</div>
             <SvgIcon id="Collection__EditCollectionInfo" src="/icons/edit.svg" class="el-icon--right el-icon--left" @click="openEditCollectionDialog" />
+          </div>
+          <div class="flex-x-end">
             <template v-if="state">
               <SvgIcon
                 v-if="state.tableData && state.tableData.length > 0"
                 src="/icons/file/share.svg"
+                round
                 :content="t('tip.addToShare')"
                 @click="handleShare"
               />
             </template>
-            <SvgIcon id="shareToQueue" src="/icons/file/share.svg" ></SvgIcon>
-          </div>
-          <div class="flex-x-end">
-            
+            <SvgIcon id="shareToQueue" src="/icons/file/share.svg" round></SvgIcon>
           </div>
         </template>
       </VxeGrid>
@@ -320,9 +320,10 @@ onMounted(() => {
   display: flex;
   justify-content: flex-end;
 }
-.collection-toolbar-title{
-  font-size: var(--app-font-size-l);
-  color: var(--app-text-color-primary);
+.title{
+  font-size: var(--app-font-size-xl);
+  font-weight: 600;
+  margin-right: var(--app-space-xs);
 }
 .collection-container {
   display: grid;

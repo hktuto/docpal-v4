@@ -39,6 +39,7 @@ const defaultSetting = {
   },
   series: {
     type: 'pie',
+    center: ['50%', '50%'],
     label: {
       normal: {
         position: 'inside', // 在内部显示，outseide 是在外部显示

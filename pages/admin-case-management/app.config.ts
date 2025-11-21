@@ -18,7 +18,8 @@ export default defineAppConfig({
           orderBy: 'modifiedDate',
           isDesc: true
       },
-    }
-   } ,
+    },
+  }
+   
 
 })

@@ -19,7 +19,7 @@
         </el-collapse-item>
       </el-collapse>
     </el-splitter-panel>
-    <el-splitter-panel>
+    <el-splitter-panel @update:size="handleResize">
       <div ref="wrapper" style="position: relative; height: 100%; overflow: auto" @drop="handleDrop" @dragover="handleDragOver">
         <div v-if="layout.length === 0 && editMode" class="dashboard-null-placeholder">
           {{ $t('dashboard.dragToHere') }}
@@ -96,6 +96,7 @@
                 :setting="item.setting"
                 :hideSetting="hideSetting"
                 :dates="dates"
+                :type="type"
                 @delete="handleDelete(item)"
                 @refreshSetting="(setting) => handleRefreshSetting(setting, item)"
               >
@@ -148,6 +149,7 @@ const props = withDefaults(
     editMode?: boolean
     dashboardSettingList?: any
     componentMap?: any
+    type?: string
   }>(),
   {
     // layout: [],
@@ -176,7 +178,15 @@ function handleRefreshSetting(setting: any, row: any) {
   row.setting = setting
   emits('refreshSetting', row)
 }
-
+function handleResize() {
+  Object.keys(sheetRefs.value).forEach((key) => {
+    if (sheetRefs.value[key] && sheetRefs.value[key].resize) {
+      setTimeout(() => {
+        sheetRefs.value[key].resize()
+      }, 100)
+    }
+  })
+}
 const chartResize = useDebounceFn(
   (row: any) => {
     if (sheetRefs.value[row.i] && sheetRefs.value[row.i].resize) {
@@ -187,7 +197,8 @@ const chartResize = useDebounceFn(
   1000,
   { maxWait: 5000 }
 )
-
+const windowWidth = ref(0)
+const calColNum = ref(props.colNum)
 const wrapper = ref<HTMLElement>()
 const gridLayout = ref()
 
@@ -195,15 +206,18 @@ const gridLayout = ref()
 const { handleDragStart, handleDragOver, handleDrop, handleDragEnd, placeholder } = useDashboardDrag({
   wrapper,
   layout: layout as Ref<DashboardWidgetSetting[]>,
-  colNum: props.colNum,
+  colNum: calColNum,
   rowHeight: props.rowHeight,
   onAdd: (item) => {
     // 触发保存事件
     emits('save')
   }
 })
+defineExpose({
+  handleResize
+})
 onMounted(() => {
-  if(props.dashboardSettingList) activeNames.value = Object.keys(props.dashboardSettingList)
+  if (props.dashboardSettingList) activeNames.value = Object.keys(props.dashboardSettingList)
 })
 </script>
 
@@ -354,7 +368,7 @@ onMounted(() => {
   transform: translate(-50%, -50%);
   font-size: var(--app-font-size-xxl);
 }
-:deep(.el-collapse-item__header) ,
+:deep(.el-collapse-item__header),
 :deep(.el-collapse-item__wrap) {
   padding-left: var(--app-space-xs);
 }

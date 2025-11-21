@@ -69,7 +69,7 @@ async function ruleChange(newField: any) {
   align-items: center;
   padding-block: var(--app-space-s);
   gap: calc(var(--app-space-s) / 2);
-  font-size: var(--app-font-size-s);
+  font-size: var(--app-font-size-m);
   transition: all 0.2s ease-in-out;
 }
 .formFieldItem + .formFieldItem {

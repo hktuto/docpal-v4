@@ -125,7 +125,7 @@ defineExpose({
 
 <template>
   <ElDialog v-model="opened" width="80%" draggable append-to-body class="big">
-    <template #header> Edit Field </template>
+    <template #header> <span style="font-size: var(--app-font-size-m);font-weight: bold;">Edit Field </span></template>
     <template #default>
       <div class="selecteAndCreateContainer">
         <ElSelect v-model="selectedField" multiple allow-create filterable default-first-option @change="taskAddField">
