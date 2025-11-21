@@ -567,7 +567,14 @@ onMounted(() => {
   &--btns {
     box-shadow: var(--el-box-shadow-light);
     padding: var(--app-space-s);
+    display: flex;
+    flex-flow: row nowrap;
+    gap: var(--app-space-s);
+    justify-content: flex-start;
     // text-align: right;
+    :deep(.el-button + .el-button){
+      margin-left: 0;
+    }
   }
 }
 
