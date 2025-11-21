@@ -226,7 +226,7 @@ function openSignatureSettingDialog() {
 }
 async function handleSubmit() {
   // if displayMode is signature, and signSubmitStage is beforeSubmit, do not submit form, open signature setting dialog
-  if(displayMode.value === 'signature' && signSubmitStage.value === 'beforeSubmit') {
+  if(displayMode.value === 'signature' && signSubmitStage.value === 'beforeSubmit' && signatureDetail.value.signatureVariableSetting) {
     openSignatureSettingDialog()
     return
   }
