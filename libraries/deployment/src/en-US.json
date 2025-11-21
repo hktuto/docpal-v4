@@ -387,6 +387,9 @@
     "averageField": "Average by Field",
     "averageTitle": "Average Line Title",
     "averageUnit": "Average Line Unit",
+    "barLabel": "Bar Chart Label",
+    "barTitle": "Bar Chart Title",
+    "barUnit": "Bar Chart Unit",
     "condition": "Condition",
     "currentUserField": "User field (only displays data for the current user)",
     "dateField": "Date Field",
@@ -398,7 +401,8 @@
     "value": "Value",
     "value_tip": "use \"currentUser\" to use viewer userId as value",
     "yAxisTitle": "Y Axis Title",
-    "yAxisUnit": "Y Axis Unit"
+    "yAxisUnit": "Y Axis Unit",
+    "yearOffset": "Year Offset"
   },
   "caseManage": {
     "avalibleFields": "Avalible Fields",
