@@ -386,6 +386,9 @@
     "averageField": "字段平均值",
     "averageTitle": "平均线标题",
     "averageUnit": "平均线单位",
+    "barLabel": "条形图标签",
+    "barTitle": "条形图标题",
+    "barUnit": "条形图单位",
     "condition": "条件",
     "currentUserField": "用户字段（仅显示当前用户数据）",
     "dateField": "日期字段",
@@ -397,7 +400,8 @@
     "value": "填值",
     "value_tip": "使用'currentUser'可當用户 ID 为值",
     "yAxisTitle": "Y轴标题",
-    "yAxisUnit": "Y轴单位"
+    "yAxisUnit": "Y轴单位",
+    "yearOffset": "年份偏移"
   },
   "caseManage": {
     "avalibleFields": "可用字段",
