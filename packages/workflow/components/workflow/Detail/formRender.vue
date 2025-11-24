@@ -294,7 +294,7 @@ provide('workflowFormRender', {
 
 <style lang="scss" scoped>
 .workflowForm {
-  max-height: calc(100vh - 220px);
+  // max-height: calc(100vh - 220px);
   overflow: hidden;
   :deep(.el-form) {
     height: 100%;
