@@ -117,7 +117,8 @@ async function generatePreview(){
                 try{
                   let data = JSON.parse(value)
                   if(typeof data === 'number') {
-                    data = data.toString()
+                    console.log(" number data", data)
+                    data = data.toFixed(2)
                   }
                   map[obj.key] = data
                 }catch(err){
