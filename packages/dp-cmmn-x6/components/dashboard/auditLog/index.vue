@@ -99,32 +99,6 @@ async function queryLog() {
 }
 
 async function handleRefreshSetting(data: any) {
-  if (data.startDate != '') {
-    params.value.startTime = data.startDate
-  }
-  params.value.endTime = data.endDate == '' ? dayjs().format('YYYY-MM-DDTHH:mm:ss') : dayjs(data.endDate).format('YYYY-MM-DDTHH:mm:ss')
-
-  params.value.request.uniqueIdentifier = data.uniqueIdentifier
-
-  tableConfig.columns = data.columns.map((item: any) => {
-    let filed = {
-      field: item.id,
-      title: item.label || item.id,
-      width: item.width
-    }
-
-    if (item.id.includes('date')) {
-      filed = {
-        ...filed,
-        formatter: ({ cellValue }) => {
-          return formatDate(cellValue)
-        }
-      }
-    }
-
-    return filed
-  })
-
   emits('refreshSetting', data)
 }
 
