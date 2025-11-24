@@ -9,6 +9,9 @@
     @delete="handleDelete"
     @refresh="handleInitCard"
   >
+  <template #action_prefix>
+    <el-button type="primary" size="small" @click="handleOpenDialog">{{ $t('common_filter') }}</el-button>
+  </template>
     <div id="myEcharts" ref="chartRef" class="echart"></div>
     <CaseStatisticsTableDialog :setting="setting" :dates="tableDates" ref="dialogRef"> </CaseStatisticsTableDialog>
 
@@ -21,6 +24,7 @@
       @delete="handleDelete"
       @refresh="handleRefresh"
     />
+    <CaseStatisticsFieldLifecycleDialog :setting="setting" ref="filterDialogRef" @filter="handleFilter"> </CaseStatisticsFieldLifecycleDialog>
   </DashboardCard>
 </template>
 
@@ -47,6 +51,7 @@ const { t } = useI18n()
 const title = $t('dashboard.cmmnCaseFieldLifecycle')
 const total = ref(0)
 const tableDates = ref([])
+let filterParams = []
 const emits = defineEmits(['refreshSetting', 'delete'])
 function handleRefresh(chartSetting) {
   emits('refreshSetting', chartSetting)
@@ -54,6 +59,7 @@ function handleRefresh(chartSetting) {
 function handleDelete() {
   emits('delete')
 }
+
 const seriesConfig = {
   type: 'bar',
   itemStyle: {},
@@ -76,7 +82,7 @@ const option = {
   grid: {
     left: '10%', // 调整整个图表左侧的留白，增加偏移
     right: '0%',
-    bottom: '10%',
+    bottom: '12%',
     top: '10%'
   },
   xAxis: [
@@ -123,6 +129,7 @@ const { cardRef, chartRef, settingRef, resize, handleInitCard, loading } = useDa
       _target_date_column: chartSetting.dateField,
       _status_column: chartSetting.filterKey,
       _status_list: chartSetting.filterList.map((item) => item.filterValue),
+      _target_year: dayjs(props.dates[0]).year(),
       _filters: {}
     }
     if (chartSetting.relatedField && caseInstanceId) {
@@ -130,6 +137,11 @@ const { cardRef, chartRef, settingRef, resize, handleInitCard, loading } = useDa
     }
     if(chartSetting.currentUserField ) {
       rpcParams._filters[chartSetting.currentUserField] = userId
+    }
+    if (filterParams && filterParams.length > 0) {
+      filterParams.forEach((item) => {
+        rpcParams._filters[item.key] = item.value
+      })
     }
     if (Object.keys(rpcParams._filters).length === 0) {
       delete rpcParams._filters
@@ -140,12 +152,12 @@ const { cardRef, chartRef, settingRef, resize, handleInitCard, loading } = useDa
   },
   clickAction: (params: any) => {
     const daysRange = params.name.split('-')
-    const startDate = daysRange[1] ? dayjs(new Date()).subtract(daysRange[1], 'day').format('YYYY-MM-DD 00:00:00') : ''
-    const endDate = dayjs(new Date()).subtract(daysRange[0], 'day').format('YYYY-MM-DD 23:59:59')
+    const startDate = daysRange[1] ? dayjs(props.dates[0]).subtract(daysRange[1], 'day').format('YYYY-MM-DD 00:00:00') : ''
+    const endDate = dayjs(props.dates[0]).subtract(daysRange[0], 'day').format('YYYY-MM-DD 23:59:59')
 
     const sortBy = props.setting.sortBy || 'created_date'
     const sortOrder = props.setting.sortOrder || 'desc'
-    const sqlParams = [
+    let sqlParams = [
       {
         key: `${props.setting.dateField}`,
         type: 'lte',
@@ -182,6 +194,9 @@ const { cardRef, chartRef, settingRef, resize, handleInitCard, loading } = useDa
         value: userId
       })
     }
+    if (filterParams && filterParams.length > 0) {
+      sqlParams = [...sqlParams, ...filterParams]
+    }
     dialogRef.value.handleOpen(sqlParams)
   }
 })
@@ -190,7 +205,6 @@ function handleAfterOpen(formRendererRef: any) {
     displaySettingFields(['relatedField'], formRendererRef)
   }
 }
-// #endregion
 function getData(data: any) {
   option.xAxis[0].data = data.map((item) => item.day_range.replace('天', ''))
   data.forEach((item) => {
@@ -209,7 +223,14 @@ function getData(data: any) {
     })
   })
 }
-// #endregion
+const filterDialogRef = ref()
+function handleOpenDialog() {
+  filterDialogRef.value.handleOpen(JSON.parse(JSON.stringify(filterParams)))
+}
+function handleFilter(params: any) {
+  filterParams = params
+  handleInitCard()
+}
 defineExpose({ resize })
 </script>
 
