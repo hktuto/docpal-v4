@@ -98,6 +98,14 @@ describe('[client-browse]BrowseDetail', () => {
     expect(wrapper.vm.docDetail).toBeDefined()
   })
 
+  it('navigates to the parent folder when going back', async () => {
+    await wrapper.vm.getDetail(); // Fetch details first
+    await wrapper.vm.goParent(); // Simulate going to parent
+
+    // Check if the router navigation was called with the correct parameters
+    expect(wrapper.vm.routerProvider.navigateTo).toHaveBeenCalled();
+  });
+
   it('should navigate to parent when goParent is called', async () => {
     wrapper.vm.docDetail = { parentRef: 'parent/path' }
     await wrapper.vm.goParent()
