@@ -1,7 +1,11 @@
 <script setup lang="ts">
 import dayjs from 'dayjs'
+import utc from 'dayjs/plugin/utc'
+import timezone from 'dayjs/plugin/timezone'
 import { clientApi } from 'api'
 
+dayjs.extend(utc)
+dayjs.extend(timezone)
 const platform = useAppPlatform()
 const CMDProvider = inject(CaseManagementDashboardKey)
 const caseId = CMDProvider?.instanceId?.value || null
@@ -83,7 +87,7 @@ async function queryLog() {
     const data = await clientApi.api.postAuditLogWorkflowPage(params).then(r => r.data)
     tableConfig.data = data.entryList.map((item: any) => {
       return {
-        date: item.createDate,
+        date: item.logDate,
         activities: item.request.activities,
         status: item.request.status,
         user: item.userId
@@ -137,11 +141,11 @@ async function init() {
         filed = {
           ...filed,
           formatter: ({ cellValue }) => {
-            return formatDate(cellValue)
+            const utcTime = dayjs.utc(`${cellValue}.000Z`)
+            return utcTime.tz('Asia/Shanghai').format('YYYY-MM-DD HH:mm:ss')
           }
         }
       }
-
       return filed
     })
   }
