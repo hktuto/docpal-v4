@@ -14,9 +14,11 @@ const props = withDefaults(
   }>(),
   {
     setting: {
-      layout: [],
-      defaultValue: {},
-      label: {}
+      uniqueIdentifier: '',
+      category: 'case',
+      startDate: '',
+      endDate: '',
+      columns: []
     },
     hideSetting: false
   }
@@ -25,11 +27,11 @@ const props = withDefaults(
 const { settingRef, cardRef, refresh, loading } = useDashboardCard({
   props,
   handleRefreshAction: async (setting: any) => {
-    await queryLog()
+    // await queryLog()
   }
 })
 const routerProvider = inject(MenuRouterKey)
-const emits = defineEmits(['delete'])
+const emits = defineEmits(['refreshSetting','delete'])
 
 async function handleDelete() {
   emits('delete')
@@ -56,31 +58,31 @@ const params = ref({
   endTime: dayjs().format('YYYY-MM-DDTHH:mm:ss')
 })
 
-async function queryLog() {
-  // if (platform.value === 'admin') {
-  //   return
-  // }
+// async function queryLog() {
+//   // if (platform.value === 'admin') {
+//   //   return
+//   // }
 
-  await clientApi.api.postAuditLogWorkflowPage(params.value)
-}
+//   await clientApi.api.postAuditLogWorkflowPage(params.value)
+// }
 
 async function handleRefreshSetting(data: any) {
   console.log(22,data)
-  if (data.startDate != '') {
-    params.value.startTime = data.startDate
-  }
-  params.value.endTime = data.endDate == '' ? dayjs().format('YYYY-MM-DDTHH:mm:ss') : dayjs(data.endDate).format('YYYY-MM-DDTHH:mm:ss')
+  emits('refreshSetting', data)
+  // if (data.startDate != '') {
+  //   params.value.startTime = data.startDate
+  // }
+  // params.value.endTime = data.endDate == '' ? dayjs().format('YYYY-MM-DDTHH:mm:ss') : dayjs(data.endDate).format('YYYY-MM-DDTHH:mm:ss')
 
-  params.value.request.uniqueIdentifier = data.uniqueIdentifier
+  // params.value.request.uniqueIdentifier = data.uniqueIdentifier
 
-  tableConfig.columns = data.columns.map((item: any) => {
-    return {
-      field: item.id,
-      title: item.label || item.id,
-      width: item.width
-    }
-  })
-  await queryLog()
+  // tableConfig.columns = data.columns.map((item: any) => {
+  //   return {
+  //     field: item.id,
+  //     title: item.label || item.id,
+  //     width: item.width
+  //   }
+  // })
 }
 
 async function init() {
@@ -105,7 +107,8 @@ onMounted(async () => {
     @delete="handleDelete"
     @refresh="refresh"
   >
-    <VxeGrid ref="tableRef" v-bind="tableConfig" v-on="tableEvent" />
+  {{ setting }}
+    <!-- <VxeGrid ref="tableRef" v-bind="tableConfig" v-on="tableEvent" /> -->
 
     <DashboardAuditLogSetting v-if="!hideSetting" ref="settingRef" @refresh="handleRefreshSetting" />
   </DashboardCard>

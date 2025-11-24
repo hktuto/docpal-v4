@@ -57,10 +57,10 @@ function handleSubmit() {
     return
   }
 
-  if (setting.value.columns.length < 1) {
-    ElMessage.error('At least one column is required')
-    return
-  }
+  // if (setting.value.columns.length < 1) {
+  //   ElMessage.error('At least one column is required')
+  //   return
+  // }
 
   if (!!setting.value.endDate && '' !== setting.value.endDate) {
     setting.value.endDate = `${setting.value.endDate} 23:59:59`
@@ -70,8 +70,16 @@ function handleSubmit() {
 }
 
 function handleOpen(setting: any) {
+  console.log("handleOpen",setting)
   showDialog.value = true
-  setting.value = deepCopy(setting)
+
+  setting.value = {
+    uniqueIdentifier: setting.uniqueIdentifier,
+    category: setting.category,
+    startDate: setting.startDate,
+    endDate: setting.endDate,
+    columns: setting.columns
+  }
 }
 
 defineExpose({ handleOpen })
