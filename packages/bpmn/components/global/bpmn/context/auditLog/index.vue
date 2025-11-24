@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import type { Node } from '@antv/x6'
-import { getUserPermissionSelectOption } from '#imports'
+import { getUserSelectOption } from '#imports'
 import { ElMessage } from 'element-plus'
+import { adminApi } from 'api'
 
 const { t } = useI18n()
 const { node } = defineProps<{
@@ -14,13 +15,40 @@ if (!graphProvider || !editorProvider) {
 }
 const { bpmnGlobalRules } = editorProvider.BpmnRule
 const userFields = ref<any[]>([])
+const caseList = ref([])
+
+async function getCaseLise() {
+  try {
+    const data: any = await adminApi.api.getCaseTypes({ deployed: true }).then((r: any) => r.data)
+    caseList.value = data.map((item: any) => {
+      return {
+        id: item.id,
+        name: item.name
+      }
+    })
+  } catch (e) {
+    console.error(e)
+  }
+}
+
+const masterTableList = ref([])
+
+async function getMasterTableList() {
+  const { data } = await adminApi.api.postMasterTablesPage({
+    pageSize: 100
+  })
+  masterTableList.value = data.entryList.map((item) => ({
+    id: item.id,
+    name: item.name
+  }))
+}
 
 async function getUserFields() {
-  const userList = await getUserPermissionSelectOption()
-  userFields.value = userList.map((item) => {
+  const userList = await getUserSelectOption()
+  userFields.value = userList.map((item: any) => {
     return {
-      id: '${variables:get(' + item.value + ')}',
-      name: item.label
+      id: item.id,
+      name: item.name
     }
   })
 }
@@ -48,6 +76,8 @@ const form = ref<any>({})
 const list = ['userId', 'uniqueIdentifier', 'category', 'id']
 
 async function init() {
+  await getCaseLise()
+  await getMasterTableList()
   await getUserFields()
 
   const fields = node.getData().data.extensionElements['flowable:field']
@@ -65,6 +95,7 @@ async function init() {
 
 function handelCategoryChange() {
   form.value.id = ''
+  form.value.uniqueIdentifier = ''
   updateData()
 }
 
@@ -142,23 +173,24 @@ function updateData() {
     const field = fields.find((item: any) => item.attr_name === key)
     if (field) {
       field['flowable:expression'].__cdata = form.value[key]
-    } else {
-      const label = tableData.value.find((item: any) => item.id == key).name
-      fields.push({
-        attr_name: key,
-        attr_label: label,
-        'flowable:expression': {
-          __cdata: form.value[key]
-        }
-      })
     }
+    // else {
+    //     const label = tableData.value.find((item: any) => item.id == key).name
+    //     fields.push({
+    //       attr_name: key,
+    //       attr_label: label,
+    //       'flowable:expression': {
+    //         __cdata: form.value[key]
+    //       }
+    //     })
+    //   }
   })
   // delete
-  fields.forEach((item: any) => {
-    if (!Object.keys(form.value).includes(item.attr_name)) {
-      fields.splice(fields.indexOf(item), 1)
-    }
-  })
+  // fields.forEach((item: any) => {
+  //   if (!Object.keys(form.value).includes(item.attr_name)) {
+  //     fields.splice(fields.indexOf(item), 1)
+  //   }
+  // })
 
   newData.data.extensionElements['flowable:field'] = fields
 
@@ -185,16 +217,25 @@ onMounted(async () => {
         <el-option v-for="item in userFields" :key="item.id" :label="item.name" :value="item.id" />
       </el-select>
     </el-form-item>
-    <el-form-item label="Unique Identifier" required>
-      <el-input v-model="form.uniqueIdentifier" :placeholder="t('tip.input')" @blur="updateData" />
-    </el-form-item>
     <el-form-item label="Category">
       <el-select v-model="form.category" :placeholder="t('common_selectedIsRequiredMsg')"
                  @change="handelCategoryChange">
         <el-option v-for="item in categoryFields" :key="item.id" :label="item.name" :value="item.id" />
       </el-select>
     </el-form-item>
-    <el-form-item :label="form.category === 'case' ? 'Case ID' : 'Master Table ID'" required>
+
+    <el-form-item v-if="form.category=='case'" label="Case ID" required>
+      <el-select v-model="form.uniqueIdentifier" @change="updateData">
+        <el-option v-for="item in caseList" :key="item.id" :label="item.name" :value="item.id" />
+      </el-select>
+    </el-form-item>
+    <el-form-item v-if="form.category=='masterTable'" label="Master Table ID" required>
+      <el-select v-model="form.uniqueIdentifier">
+        <el-option v-for="item in masterTableList" :key="item.id" :label="item.name" :value="item.id" />
+      </el-select>
+    </el-form-item>
+
+    <el-form-item :label="form.category === 'case' ? 'Case Record ID' : 'Master Table Record ID'" required>
       <el-select v-model="form.id" clearable filterable :placeholder="t('common_selectedIsRequiredMsg')"
                  @change="updateData">
         <el-option v-for="item in allFields" :key="item.id" :label="item.name" :value="item.id" />
@@ -203,44 +244,58 @@ onMounted(async () => {
 
     <el-divider />
 
-    <div style="display: flex; justify-content: space-between; align-items: center;">
-      <h4>Columns</h4>
-      <el-button @click="openAddColumnsDialog" type="primary">Create Column</el-button>
-    </div>
-    <template v-for="item in tableData" :key="item.id">
-      <el-form-item :label="item.name">
-        <el-select v-model="form[item.id]" clearable filterable :placeholder="t('common_selectOccupancyContent')"
-                   @change="updateData">
-          <el-option v-for="item in allFields" :key="item.id" :label="item.name" :value="item.id" />
-        </el-select>
-      </el-form-item>
-    </template>
-  </el-form>
-
-  <el-dialog v-model="showDialog" calss="big" :label="t('Add Columns')" append-to-body>
-    <template #header>
-      <h4>Add Columns Name</h4>
-    </template>
-
-    <el-form-item label="Column Name">
-      <div style="width: 100%; display: flex;  align-items: center;">
-        <el-input v-model="newColumnName" />
-        <el-button type="primary" @click="handleAddColumns">Add Column</el-button>
-      </div>
+    <el-form-item label="Activities" required>
+      <el-select v-model="form.activities" filterable :placeholder="t('common_selectOccupancyContent')"
+                 @change="updateData">
+        <el-option v-for="item in allFields" :key="item.id" :label="item.name" :value="item.id" />
+      </el-select>
+    </el-form-item>
+    <el-form-item label="Status" required>
+      <el-select v-model="form.status" filterable :placeholder="t('common_selectOccupancyContent')"
+                 @change="updateData">
+        <el-option v-for="item in allFields" :key="item.id" :label="item.name" :value="item.id" />
+      </el-select>
     </el-form-item>
 
-    <el-table :data="tableData" style="width: 100%" max-height="300">
-      <el-table-column prop="id" label="ID" width="220" />
-      <el-table-column prop="name" label="Name" width="220" />
-      <el-table-column fixed="right" label="Operations" min-width="120">
-        <template #default="scope">
-          <el-button link type="primary" size="small" @click.prevent="deleteRow(scope.$index)">
-            Remove
-          </el-button>
-        </template>
-      </el-table-column>
-    </el-table>
-  </el-dialog>
+
+    <!--    <div style="display: flex; justify-content: space-between; align-items: center;">-->
+    <!--      <h4>Columns</h4>-->
+    <!--      <el-button @click="openAddColumnsDialog" type="primary">Create Column</el-button>-->
+    <!--    </div>-->
+    <!--    <template v-for="item in tableData" :key="item.id">-->
+    <!--      <el-form-item :label="item.name">-->
+    <!--        <el-select v-model="form[item.id]" clearable filterable :placeholder="t('common_selectOccupancyContent')"-->
+    <!--                   @change="updateData">-->
+    <!--          <el-option v-for="item in allFields" :key="item.id" :label="item.name" :value="item.id" />-->
+    <!--        </el-select>-->
+    <!--      </el-form-item>-->
+    <!--    </template>-->
+  </el-form>
+
+  <!--  <el-dialog v-model="showDialog" calss="big" :label="t('Add Columns')" append-to-body>-->
+  <!--    <template #header>-->
+  <!--      <h4>Add Columns Name</h4>-->
+  <!--    </template>-->
+
+  <!--    <el-form-item label="Column Name">-->
+  <!--      <div style="width: 100%; display: flex;  align-items: center;">-->
+  <!--        <el-input v-model="newColumnName" />-->
+  <!--        <el-button type="primary" @click="handleAddColumns">Add Column</el-button>-->
+  <!--      </div>-->
+  <!--    </el-form-item>-->
+
+  <!--    <el-table :data="tableData" style="width: 100%" max-height="300">-->
+  <!--      <el-table-column prop="id" label="ID" width="220" />-->
+  <!--      <el-table-column prop="name" label="Name" width="220" />-->
+  <!--      <el-table-column fixed="right" label="Operations" min-width="120">-->
+  <!--        <template #default="scope">-->
+  <!--          <el-button link type="primary" size="small" @click.prevent="deleteRow(scope.$index)">-->
+  <!--            Remove-->
+  <!--          </el-button>-->
+  <!--        </template>-->
+  <!--      </el-table-column>-->
+  <!--    </el-table>-->
+  <!--  </el-dialog>-->
 </template>
 
 <style scoped lang="scss">

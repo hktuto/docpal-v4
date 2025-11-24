@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import draggable from 'vuedraggable'
 import { ElMessage } from 'element-plus'
+import { adminApi } from 'api'
 
 const { t } = useI18n()
 const emits = defineEmits(['refresh'])
@@ -11,20 +12,21 @@ const loading = ref(false)
 const setting = ref({
   uniqueIdentifier: '',
   category: 'case',
-  startDate: '',
-  endDate: '',
-  columns: []
+  columns: [
+    { id: 'date', label: 'Date', width: 200 },
+    { id: 'activities', label: 'Activities', width: 400 },
+    { id: 'status', label: 'Status', width: 150 },
+    { id: 'user', label: 'User', width: 150 }
+  ]
 })
-
-const formRef = ref()
 
 const categoryFields = ref([
   { id: 'case', name: 'Case' },
   { id: 'masterTable', name: 'Master Table' }
 ])
 
-function disabledDate(date: Date) {
-  return date.getTime() > Date.now()
+function handleCategoryChange() {
+  setting.value.uniqueIdentifier = ''
 }
 
 const newColumnName = ref('')
@@ -41,7 +43,8 @@ function handleAddColumns() {
   }
 
   setting.value.columns.push({
-    id: newColumnName.value,
+    id: 'activities',
+    number: 0,
     width: 300
   })
 
@@ -53,25 +56,30 @@ function handleDeleteColumn(index: number) {
 }
 
 function handleSubmit() {
-  if (setting.value.uniqueIdentifier == '') {
+  if (setting.value.category === 'masterTable' && '' == setting.value.uniqueIdentifier) {
+    ElMessage.error('Please select Master Table.')
     return
   }
 
-  if (setting.value.columns.length < 1) {
-    ElMessage.error('At least one column is required')
-    return
-  }
-
-  if (!!setting.value.endDate && '' !== setting.value.endDate) {
-    setting.value.endDate = `${setting.value.endDate} 23:59:59`
-  }
   showDialog.value = false
   emits('refresh', setting.value)
 }
 
-function handleOpen(setting: any) {
+async function handleOpen(setting: any) {
   showDialog.value = true
   setting.value = deepCopy(setting)
+
+  await getMasterTableList()
+}
+
+const masterTableList = ref([])
+
+async function getMasterTableList() {
+  const { data } = await adminApi.api.postMasterTablesPage({ pageSize: 100 })
+  masterTableList.value = data.entryList.map((item) => ({
+    id: item.id,
+    name: item.name
+  }))
 }
 
 defineExpose({ handleOpen })
@@ -81,36 +89,21 @@ defineExpose({ handleOpen })
   <el-dialog v-model="showDialog" :title="$t('dashboard.setting')" class="scroll-dialog processSetting-dialog big"
              append-to-body :close-on-click-modal="false">
     <el-form ref="formRef" :model="setting" label-position="top">
-      <el-form-item label="Unique Identifier" required>
-        <el-input v-model="setting.uniqueIdentifier" />
-      </el-form-item>
       <el-form-item label="Category">
-        <el-select v-model="setting.category" :placeholder="t('common_selectedIsRequiredMsg')">
+        <el-select v-model="setting.category" :placeholder="t('common_selectedIsRequiredMsg')"
+                   @change="handleCategoryChange">
           <el-option v-for="item in categoryFields" :key="item.id" :label="item.name" :value="item.id" />
         </el-select>
       </el-form-item>
-      <el-form-item label="Date">
-        <el-date-picker
-          v-model="setting.startDate"
-          placeholder="Start Date"
-          :disabled-date="disabledDate"
-          value-format="YYYY-MM-DD HH:mm:ss"
-        />&nbsp;&nbsp;-&nbsp;&nbsp;
-        <el-date-picker
-          v-model="setting.endDate"
-          placeholder="End Date"
-          :disabled-date="disabledDate"
-          value-format="YYYY-MM-DD"
-        />
+      <el-form-item v-if="setting.category == 'masterTable'" label="Master Table ID" required>
+        <el-select v-model="setting.uniqueIdentifier">
+          <el-option v-for="item in masterTableList" :key="item.id" :label="item.name" :value="item.id" />
+        </el-select>
       </el-form-item>
     </el-form>
 
     <div style="max-height: 550px">
       <h3>{{ $t('caseManage.fieldsLayout') }}</h3>
-      <div style="width: 100%; display: flex;  align-items: center;">
-        <el-input v-model="newColumnName" />
-        <el-button type="primary" @click="handleAddColumns">Add Column</el-button>
-      </div>
 
       <draggable class="list-group" :list="setting.columns" group="people" itemKey="id">
         <template #item="{ element, index }">
@@ -118,14 +111,14 @@ defineExpose({ handleOpen })
             <div class="topRow">
               <SvgIcon class="handle-icon" src="/icons/drag.svg" />
               {{ element.id }}
-              <SvgIcon class="handle-icon" src="/icons/close.svg" @click="handleDeleteColumn(index)" />
+              <!--              <SvgIcon class="handle-icon" src="/icons/close.svg" @click="handleDeleteColumn(index)" />-->
             </div>
             <el-form label-position="top" class="row" size="small">
               <el-form-item label="Label">
                 <el-input v-model="element.label" />
               </el-form-item>
               <el-form-item label="width">
-                <el-input-number v-model="element.width" :min="20" :max="1000" />
+                <el-input-number v-model="element.width" :min="80" :max="1000" />
               </el-form-item>
             </el-form>
           </div>
