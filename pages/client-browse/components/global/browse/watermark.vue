@@ -195,7 +195,7 @@ async function confimSaveNewFile() {
     //     }
     // })
   } catch (e) {
-    console.log(e)
+    console.error(e)
   }
 }
 
