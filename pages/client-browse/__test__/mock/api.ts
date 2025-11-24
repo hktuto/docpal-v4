@@ -2,6 +2,13 @@ import { vi } from 'vitest'
 const bolb = new Blob(['Hello, world!'], { type: 'text/plain' })
 export const clientApi = {
   api: {
+    postNuxeoDocumentDuplicateName: vi.fn(() =>
+      Promise.resolve({
+        data: {
+          hasDuplicateTitle: false
+        }
+      })
+    ),
     postNuxeoDocument: vi.fn(() =>
       Promise.resolve({
         data: {
@@ -30,6 +37,14 @@ export const clientApi = {
         data: {
           watermarkSettings: []
         }
+      })
+    ),
+    getWatermarkTemplatesAll: vi.fn(() =>
+      Promise.resolve({
+        data: [
+          { id: 'template-1', name: 'Template A' },
+          { id: 'template-2', name: 'Template B' }
+        ]
       })
     ),
     postWatermarkTemplates: vi.fn(() =>

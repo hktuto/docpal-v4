@@ -35,6 +35,7 @@ export const mockRouterProvider = {
   navigateTo: vi.fn(),
   updateProps: vi.fn(),
   addToHistory: vi.fn(),
+  updateTabName: vi.fn(),
   back: vi.fn(),
   menuSymbol: 'mockMenuSymbol',
   message: {
