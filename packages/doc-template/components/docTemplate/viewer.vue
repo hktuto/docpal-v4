@@ -216,7 +216,9 @@ defineExpose({ initEditor })
     page-break-inside: avoid;
     break-inside: avoid;
   }
-
+  p {
+    margin-block: 0.5rem;
+  }
   /* 允许标题在页面顶部断开 */
 
   h1, h2, h3, h4, h5, h6 {
