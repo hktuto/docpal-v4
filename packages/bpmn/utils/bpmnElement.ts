@@ -1084,10 +1084,12 @@ export const bpmnElement: BpmnElement = {
             ['attr_flowable:delegateExpression']: '${createAuditLogDelegate}',
             extensionElements: {
               ['flowable:field']: [
-                { attr_name: 'userId', 'flowable:expression': { __cdata: '' } },
-                { attr_name: 'uniqueIdentifier', 'flowable:expression': { __cdata: '' } },
                 { attr_name: 'category', 'flowable:expression': { __cdata: 'case' } },
-                { attr_name: 'id', 'flowable:expression': { __cdata: '' } }
+                { attr_name: 'uniqueIdentifier', 'flowable:expression': { __cdata: '' } },
+                { attr_name: 'id', 'flowable:expression': { __cdata: '' } },
+                { attr_name: 'userId', 'flowable:expression': { __cdata: '' } },
+                { attr_name: 'activities', 'flowable:expression': { __cdata: '' } },
+                { attr_name: 'status', 'flowable:expression': { __cdata: '' } },
               ]
             }
           }),
@@ -1098,10 +1100,12 @@ export const bpmnElement: BpmnElement = {
             ['attr_flowable:delegateExpression']: '${createAuditLogDelegate}',
             extensionElements: {
               ['flowable:field']: [
-                { attr_name: 'userId', 'flowable:expression': { __cdata: '' } },
-                { attr_name: 'uniqueIdentifier', 'flowable:expression': { __cdata: '' } },
                 { attr_name: 'category', 'flowable:expression': { __cdata: 'case' } },
-                { attr_name: 'id', 'flowable:expression': { __cdata: '' } }
+                { attr_name: 'uniqueIdentifier', 'flowable:expression': { __cdata: '' } },
+                { attr_name: 'id', 'flowable:expression': { __cdata: '' } },
+                { attr_name: 'userId', 'flowable:expression': { __cdata: '' } },
+                { attr_name: 'activities', 'flowable:expression': { __cdata: '' } },
+                { attr_name: 'status', 'flowable:expression': { __cdata: '' } },
               ]
             }
           })

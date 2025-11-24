@@ -12,24 +12,11 @@ const { setting, displayColumns, dates, sql } = defineProps<{
 
 const CMDProvider = inject(CaseManagementDashboardKey)
 const caseId = CMDProvider?.instanceId?.value || null
-let where = ref({})
 const { t } = useI18n()
 const emits = defineEmits(['close'])
-const routerProvider = inject(MenuRouterKey)
 const tabProvider = inject(TabManagerKey)
-type TableState = {
-  columns: any
-  where: any[]
-}
-const caseEvents = ref<any>([])
+let extraParams: any = {}
 const tableReady = ref(false)
-const pageParams: any = {
-  pageNum: 0,
-  pageSize: 20,
-  orderBy: 'created_date',
-  isDesc: true
-}
-
 const { tableConfig, tableEvent, tableRef, query, reload, cleanSelectedRows } = useVxeTable({
   id: 'dashboardRelatedCaseTable',
   refresh: false,
@@ -55,6 +42,8 @@ const { tableConfig, tableEvent, tableRef, query, reload, cleanSelectedRows } = 
     // setTimeout(() => {
     //   tableRef.value.setAllTreeExpand(true)
     // })
+    console.log('data', data)
+    console.log('extraParams', extraParams)
     return data
   },
   columns: [],
@@ -71,16 +60,16 @@ const dialogRef = ref()
 
 async function reorderColumn(fields: any) {
   try {
-    const columns = []
+    const columns: any = []
     if (fields.length > 0) {
       const columneFromSetting = fields.reduce((prev: any, item: any) => {
         const newItem: any = {
           field: item.id,
-          title: item.name.toLowerCase().replace(/\b\w/g, (s) => s.toUpperCase()),
+          title: item.name.toLowerCase().replace(/\b\w/g, (s: any) => s.toUpperCase()),
           minWidth: 200
         }
         if (item.type === 'date') {
-          newItem.formatter = ({ cellValue }) => {
+          newItem.formatter = ({ cellValue }: any) => {
             return formatDate(cellValue)
           }
         } else if (item.formatter) {
@@ -120,7 +109,7 @@ watch(
   (newVal) => {
     try {
       const fields = JSON.parse(setting.fields)
-      const columns = newVal.reduce((prev: any, columnId: any) => {
+      const columns: any = newVal.reduce((prev: any, columnId: any) => {
         const columnItem = {
           id: columnId,
           name: columnId
@@ -170,6 +159,11 @@ function groupTree(data: any[]) {
   }
   return treeData
 }
+function handleFilterFormChange(form: any) {
+  console.log('form', form)
+  extraParams = form
+  reload()
+}
 onMounted(() => {
   console.log('setting', setting)
 })
@@ -177,7 +171,11 @@ defineExpose({ reorderColumn, reload, query })
 </script>
 
 <template>
-  <VxeGrid v-if="tableReady" ref="tableRef" v-bind="tableConfig" v-on="tableEvent"> </VxeGrid>
+  <VxeGrid v-if="tableReady" ref="tableRef" v-bind="tableConfig" v-on="tableEvent">
+    <!-- <template #toolbar_buttons>
+      <ResponsiveFilter ref="ResponsiveFilterRef" :inputPlaceHolder="$t('common_filter')" @form-change="handleFilterFormChange" inputKey="q" />
+    </template> -->
+  </VxeGrid>
   <DashboardActionHumanTaskDialog ref="dialogRef" @refresh="reload()" />
 </template>
 
