@@ -226,7 +226,7 @@ function openSignatureSettingDialog() {
 }
 async function handleSubmit() {
   // if displayMode is signature, and signSubmitStage is beforeSubmit, do not submit form, open signature setting dialog
-  if(displayMode.value === 'signature' && signSubmitStage.value === 'beforeSubmit') {
+  if(displayMode.value === 'signature' && signSubmitStage.value === 'beforeSubmit' && signatureDetail.value.signatureVariableSetting) {
     openSignatureSettingDialog()
     return
   }
@@ -567,7 +567,14 @@ onMounted(() => {
   &--btns {
     box-shadow: var(--el-box-shadow-light);
     padding: var(--app-space-s);
+    display: flex;
+    flex-flow: row nowrap;
+    gap: var(--app-space-s);
+    justify-content: flex-start;
     // text-align: right;
+    :deep(.el-button + .el-button){
+      margin-left: 0;
+    }
   }
 }
 

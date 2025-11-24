@@ -5,6 +5,7 @@ import { clientApi } from 'api'
 const platform = useAppPlatform()
 const CMDProvider = inject(CaseManagementDashboardKey)
 const caseId = CMDProvider?.instanceId?.value || null
+const caseTypeId = CMDProvider?.caseTypeId?.value || null
 
 const props = withDefaults(
   defineProps<{
@@ -29,7 +30,7 @@ const { settingRef, cardRef, refresh, loading } = useDashboardCard({
   }
 })
 const routerProvider = inject(MenuRouterKey)
-const emits = defineEmits(['delete'])
+const emits = defineEmits(['delete', 'refreshSetting'])
 
 async function handleDelete() {
   emits('delete')
@@ -44,28 +45,56 @@ const { tableConfig, tableEvent, tableRef, query, reload, cleanSelectedRows } = 
   saveColumnOrder: false
 })
 
-const params = ref({
-  pageNum: 0,
-  pageSize: 10000,
-  userId: '',
-  stream: "workflow",
-  request: {
-    uniqueIdentifier: ''
-  },
-  startTime: '',
-  endTime: dayjs().format('YYYY-MM-DDTHH:mm:ss')
-})
-
 async function queryLog() {
-  // if (platform.value === 'admin') {
-  //   return
-  // }
+  if (platform.value === 'admin') {
+    return
+  }
 
-  await clientApi.api.postAuditLogWorkflowPage(params.value)
+  const params = {
+    pageNum: 0,
+    pageSize: 10000,
+    stream: 'workflow',
+    request: {
+      category: props.setting.category,
+      uniqueIdentifier: ''
+    },
+    userId: '',
+    startTime: '2025-01-01T00:00:00',
+    endTime: dayjs().format('YYYY-MM-DDTHH:mm:ss')
+  }
+
+  try {
+    if (props.setting.category == 'masterTable') {
+      if (props.setting.uniqueIdentifier == '') {
+        routerProvider?.message.error('Please select Master Table.')
+        return
+      } else {
+        params.request.uniqueIdentifier = props.setting.uniqueIdentifier
+      }
+    } else if (props.setting.category == 'case') {
+      if (!caseTypeId) {
+        routerProvider?.message.error('Case Type ID is empty')
+        return
+      } else {
+        params.request.uniqueIdentifier = caseTypeId
+        params.request.id = caseId
+      }
+    }
+    const data = await clientApi.api.postAuditLogWorkflowPage(params).then(r => r.data)
+    tableConfig.data = data.entryList.map((item: any) => {
+      return {
+        date: item.createDate,
+        activities: item.request.activities,
+        status: item.request.status,
+        user: item.userId
+      }
+    })
+  } catch (e) {
+    console.log('queryLog', e)
+  }
 }
 
 async function handleRefreshSetting(data: any) {
-  console.log(22,data)
   if (data.startDate != '') {
     params.value.startTime = data.startDate
   }
@@ -74,17 +103,50 @@ async function handleRefreshSetting(data: any) {
   params.value.request.uniqueIdentifier = data.uniqueIdentifier
 
   tableConfig.columns = data.columns.map((item: any) => {
-    return {
+    let filed = {
       field: item.id,
       title: item.label || item.id,
       width: item.width
     }
+
+    if (item.id.includes('date')) {
+      filed = {
+        ...filed,
+        formatter: ({ cellValue }) => {
+          return formatDate(cellValue)
+        }
+      }
+    }
+
+    return filed
   })
-  await queryLog()
+
+  emits('refreshSetting', data)
 }
 
 async function init() {
-  console.log(22, props.setting)
+  if (!!props.setting && props.setting.columns) {
+    tableConfig.columns = props.setting.columns.map((item: any) => {
+      let filed = {
+        field: item.id,
+        title: item.label || item.id,
+        width: item.width
+      }
+
+      if (item.id.includes('date')) {
+        filed = {
+          ...filed,
+          formatter: ({ cellValue }) => {
+            return formatDate(cellValue)
+          }
+        }
+      }
+
+      return filed
+    })
+  }
+
+  await queryLog()
 }
 
 onMounted(async () => {
