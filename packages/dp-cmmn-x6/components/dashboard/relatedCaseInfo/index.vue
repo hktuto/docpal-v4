@@ -12,7 +12,7 @@
   >
     <div class="flex-zoom">
       <div :style="`--field-width: ${item.width}`" class="list-group-item" v-for="item in state.layout">
-        <div class="header">{{ displayLabel(item.label) }}</div>
+        <div class="header">{{ item.label }}</div>
         <div :class="{ content: true, 'content--link': item.linkType }" @click="handleLink(item)">
           {{ displayValue(item) }}
         </div>

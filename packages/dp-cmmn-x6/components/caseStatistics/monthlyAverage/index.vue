@@ -18,6 +18,7 @@
       :after-open="handleAfterOpen"
       :formJson="formJson"
       :title="title"
+      :big="true"
       @delete="handleDelete"
       @refresh="handleRefresh"
     />
@@ -66,6 +67,9 @@ const option = {
   },
   xAxis: [
     {
+      name: 'Month',
+      nameLocation: 'middle',
+      nameGap: 24,
       type: 'category',
       data: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
       axisPointer: {
@@ -75,31 +79,35 @@ const option = {
   ],
   grid: {
     left: '10%', // 调整整个图表左侧的留白，增加偏移
-    right: '10%',
+    right: '15%',
     bottom: '15%',
-    top: '10%'
+    top: '15%'
   },
   yAxis: [
     {
       type: 'value',
       name: 'Number of Cases',
       nameRotate: 90,
+      nameGap: 32,
       nameLocation: 'middle',
       minInterval: 1,
       axisLabel: {
         formatter: '{value}',
-        margin: -8
       }
     },
     {
       type: 'value',
       name: '',
+      nameRotate: 270,
+      nameLocation: 'middle',
       axisLabel: {
         formatter: '{value}'
       },
       splitLine: {
         show: false // 隐藏分隔线
-      }
+      },
+      nameGap: 80,
+
     }
   ],
   series: [
@@ -108,7 +116,7 @@ const option = {
       type: 'bar',
       tooltip: {
         valueFormatter: function (value) {
-          return value + ' ' + props.setting.yAxisUnit
+          return value
         }
       },
       data: []
@@ -125,7 +133,11 @@ const option = {
       smooth: true,
       data: []
     }
-  ]
+  ],
+  legend: {
+    top: '5%',
+    data: ['Number of Cases', 'Average Value']
+  }
 }
 const dialogRef = ref()
 
@@ -135,14 +147,22 @@ const { cardRef, chartRef, settingRef, resize, handleInitCard, loading } = useDa
     if (!chartSetting.tableName) {
       return option
     }
-    if (props.setting.averageTitle) {
-      option.legend = {
-        bottom: '5%',
-        data: ['Number of Cases', props.setting.averageTitle]
-      }
-      option.series[1].name = props.setting.averageTitle
+    option.yAxis[0].name = props.setting.barTitle
+    option.legend.data[0] = props.setting.barLabel || props.setting.barTitle
+    option.series[0].name = props.setting.barLabel || props.setting.barTitle
+    option.series[0].tooltip.valueFormatter = function (value) {
+      const unit = props.setting.barUnit ? ' ' + props.setting.barUnit : ''
+      return FinancialComputing(Number(value)) + unit
+    }
+    option.grid.left = props.setting.leftMargin + '%' || '10%'
+    option.grid.right = props.setting.rightMargin + '%' || '10%'
+    option.yAxis[0].nameGap = props.setting.barGap || 32
+    option.yAxis[1].nameGap = props.setting.averageGap || 32
+    if (props.setting.averageField) {
+      option.legend.data[1] = props.setting.averageLabel || props.setting.averageTitle
+      option.series[1].name = props.setting.averageLegend || props.setting.averageTitle
       if (props.setting.averageUnit) {
-        option.yAxis[1].name = props.setting.averageUnit
+        option.yAxis[1].name = props.setting.averageTitle
         // option.yAxis[1].axisLabel.formatter = '{value} ' + props.setting.averageUnit
         option.series[1].tooltip.valueFormatter = function (value) {
           return FinancialComputing(Number(value)) + ' ' + props.setting.averageUnit
@@ -164,7 +184,7 @@ const { cardRef, chartRef, settingRef, resize, handleInitCard, loading } = useDa
     } else {
       dates = JSON.parse(JSON.stringify(props.dates))
     }
-    const year = dayjs(dates[0]).year()
+    const year = dayjs(dates[0]).year() + props.setting.yearOffset
     const month = params.dataIndex + 1
     const startDate = dayjs(`${year}-${month}-01`).format('YYYY-MM-DD 00:00:00')
     const endDate = dayjs(`${year}-${month}-01`).endOf('month').format('YYYY-MM-DD 23:59:59')
@@ -214,7 +234,7 @@ async function getCaseCount(chartSetting) {
   const rpcParams = {
     _table_name: chartSetting.tableName,
     _date_column: chartSetting.dateField, // 合同到期日期字段
-    _target_year: dayjs().year(),
+    _target_year: dayjs().year() + chartSetting.yearOffset,
     _filters: {}
   }
   if (chartSetting.relatedField && caseInstanceId) {
@@ -236,7 +256,7 @@ async function getAverageDuration(chartSetting) {
   const rpcParams = {
     _table_name: chartSetting.tableName,
     _date_column: chartSetting.dateField, // 合同到期日期字段
-    _target_year: dayjs().year(),
+    _target_year: dayjs().year() + chartSetting.yearOffset,
     _value_column: chartSetting.averageField,
     _filters: {}
   }

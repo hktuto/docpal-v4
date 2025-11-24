@@ -79,22 +79,24 @@ const option = {
   series: [
     {
       type: 'pie',
-      radius: ['40%', '80%'],
+      radius: ['20%', '50%'],
       center: ['50%', '44%'],
-      avoidLabelOverlap: false,
-      label: {
-        show: false,
-        position: 'center'
-      },
+
       emphasis: {
         label: {
           show: true,
-          fontSize: 40,
+          fontSize: 16,
           fontWeight: 'bold'
         }
       },
       labelLine: {
-        show: false
+        show: true
+      },
+      label: {
+        show: true,
+        formatter: (params) => {
+          return `${params.value}`
+        }
       },
       data: []
     }

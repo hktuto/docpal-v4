@@ -7,7 +7,7 @@ const formData = ref({
   condition: 'or',
   resourceRules: []
 })
-
+const SelectorRoleRef = ref()
 async function setFormData(data) {
   if (!data) {
     formData.value = {
@@ -26,7 +26,6 @@ async function setFormData(data) {
   while (props.targetOptions.length === 0) {
     await new Promise((resolve) => setTimeout(resolve, 100))
   }
-  
   formData.value = {
     condition: 'or',
     resourceRules: data?.map((item: any) => {
@@ -38,7 +37,9 @@ async function setFormData(data) {
       }
     }) || []
   }
-  console.log(formData.value)
+  formData.value.resourceRules.forEach((item: any) => {
+    SelectorRoleRef.value.onResourceAttributeChange(item, item.attribute, true)
+  })
 }
 function getFormData() {
   return formData.value.resourceRules.map((item: any) => {
@@ -49,7 +50,6 @@ function getFormData() {
     }
   })
 }
-const SelectorRoleRef = ref()
 
 defineExpose({
   setFormData,

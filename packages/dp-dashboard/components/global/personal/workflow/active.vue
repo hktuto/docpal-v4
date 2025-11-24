@@ -19,7 +19,7 @@ const { tableConfig, tableEvent, tableRef, query, reload, cleanSelectedRows } = 
   zoom: false,
   api: (pageParams: any) => getData(pageParams),
   columns: [
-    { field: 'taskInstance.businessKey', title: 'table_name', fixed: 'left' },
+    { field: 'taskInstance.businessKey', title: 'Task Name', fixed: 'left' },
     { field: 'name', title: 'workflow_taskName' }
     // { field: "taskInstance.processDefinitionName", title: "workflow_workflowName" },
   ],
