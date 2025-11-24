@@ -70,6 +70,7 @@ export const useDashboardCard = (params: useDashboardCardParams) => {
   }
   const handleInitCard = async (chartSetting?: any) => {
     try {
+      if(!chartSetting) chartSetting = props.setting
       loading.value = true
       if (!params.handleInitCardAction) {
         const options = params.getOptions ? await params.getOptions(chartSetting) : params.options ? params.options : null

@@ -16,7 +16,7 @@ const state = reactive({
   layout: [] as DashboardWidgetSetting[],
   loading: false,
   saveLoading: false,
-  dates: [dayjs().startOf('year').format('YYYY-MM-DD'), dayjs(new Date()).format('YYYY-MM-DD')]
+  dates: [dayjs().startOf('year').format('YYYY-MM-DDT00:00:00'), dayjs(new Date()).format('YYYY-MM-DDT23:59:59')]
 })
 let dashboardWidgetByType = getDashboardWidgetByType(dashboardWidgetSetting)
 function handleRefresh(layoutSetting: any) {

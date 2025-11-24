@@ -22,7 +22,7 @@ const state = reactive<any>({
   dashboardList: [],
   selectedDashboard: {},
   time: 3,
-  dates: [dayjs().startOf('year').format('YYYY-MM-DD'), formatDate(new Date(), 'YYYY-MM-DD')]
+  dates: [dayjs().startOf('year').format('YYYY-MM-DDT00:00:00'), formatDate(new Date(), 'YYYY-MM-DDT23:59:59')]
 })
 const { t } = useI18n()
 
