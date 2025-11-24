@@ -65,9 +65,10 @@ function handleShowColumn() {
         }
       })
     } else if (columnId.includes('Date')) {
+      const field = state.detail.primaryForm.fields.find((p: any) => p.id === columnId)
       prev.push({
         id: columnId,
-        name: columnId,
+        name: field?.name || columnId,
         minWidth: 200,
         formatter({ cellValue }: any) {
           const format = 'DD-MMM-YYYY'
