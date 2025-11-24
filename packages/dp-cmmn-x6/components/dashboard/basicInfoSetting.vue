@@ -37,6 +37,9 @@
                   <el-option key="case" label="Case" value="case" />
                 </el-select>
               </ElFormItem>
+              <ElFormItem v-if="element.type === 'date'" label="Date format">
+                <el-input v-model="element.dateFormat" placeholder="Date Format" size="small" />
+              </ElFormItem>
             </ElForm>
           </div>
         </template>

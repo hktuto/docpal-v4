@@ -55,7 +55,8 @@ async function handleShowColumn() {
       }
       if(item.displayType === 'Date') {
         newItem.formatter = ({ cellValue }: any) => {
-          return formatDate(cellValue)
+          const format = item.dateFormat || 'DD-MMM-YYYY'
+          return formatDate(cellValue, format)
         }
       }
       return newItem

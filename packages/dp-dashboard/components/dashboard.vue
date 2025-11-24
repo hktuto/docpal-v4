@@ -95,6 +95,7 @@ function handleDelete(i: any) {
 
 function handleFinish() {
   state.editMode = false
+  DashboardDetailRef.value.handleResize()
   handleSave()
 }
 
