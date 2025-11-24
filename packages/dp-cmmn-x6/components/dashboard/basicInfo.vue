@@ -26,6 +26,7 @@ import { useEventBus, EventType } from 'eventbus'
 
 import { set, watchDebounced } from '@vueuse/core'
 import { clientApi, globalApi } from 'api'
+import dayjs from 'dayjs'
 const platform = useAppPlatform()
 
 const props = withDefaults(
@@ -53,6 +54,11 @@ function displayValue(item: any) {
     return state.defaultValue[item.id]
   }
   if (item.type === 'date') {
+    if (item.dateDisplay === 'duration') {
+      if(!item.value) return '0 day'
+      const diff = dayjs(item.value).diff(dayjs(), 'day')
+      return diff + ' days'
+    }
     const format = item.dateFormat || 'DD-MMM-YYYY'
     return formatDate(item.value, format)
   }
