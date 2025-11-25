@@ -7,9 +7,9 @@
 </template>
 
 <script lang="ts" setup>
-import { ElNotification } from 'element-plus'
+import { ElNotification, ElButton } from 'element-plus'
 import { clientApi } from 'api'
-import { allowFeature } from '#imports'
+import { allowFeature, caseManageDashboardPage } from '#imports'
 import { TabManagerKey } from '#imports'
 const tabProvider = inject(TabManagerKey)
 
@@ -48,7 +48,15 @@ function messageChange(notiData) {
         handleReplaceFileWithAi(content)
         break
       default:
-        if (messageJson.showNotification) handleShowNotification(content)
+        if (messageJson.showNotification){
+          handleShowNotification(content)
+          break
+        }
+
+        if(messageJson.type==='Workflow'){
+          handleOpenCaseDashboard(content)
+          break
+        }
         break
     }
   } catch (error) {}
@@ -111,6 +119,26 @@ function handleShowNotification(content) {
     }
   })
 }
+function handleOpenCaseDashboard(content){
+  const noti = ElNotification({
+    title: $i18n.t('tip.notification'),
+    message: 'Open Case Dashboard.',
+    type: 'success',
+    duration: 6000,
+    onClick: async () => {
+      console.log(2222,content)
+      // const caseInstance = await clientApi.api.getCaseInstanceCaseidCaseid(content.additionalContent).then((res) => res.data)
+      // const data = {
+      //   instanceId: content.additionalContent,
+      //   versionId: caseInstance.cmmnVersionId
+      // }
+      // const newItem = caseManageDashboardPage(data)
+      // tabProvider?.openTab(newItem, true)
+      noti.close()
+    }
+  })
+}
+
 onMounted(() => {
   getUnreadCount()
   messageHandlers.value.push({

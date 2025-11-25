@@ -106,7 +106,6 @@ function fieldMappingUpdate(newVal: any | string, name: string) {
 }
 
 function handelMessageObject() {
-  console.log(22,state.messageObject)
   state.message = JSON.stringify(state.messageObject)
   fieldMappingUpdate(state.message, 'system_notification_message')
 }
