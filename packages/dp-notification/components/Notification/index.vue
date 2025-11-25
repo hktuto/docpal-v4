@@ -3,36 +3,40 @@
     <SvgIcon src="/icons/notification.svg" @click="handleOpen"></SvgIcon>
   </el-badge>
   <!-- <NotificationDialog ref="NotificationDialogRef" :unreadCount="unreadCount" @unreadCountChange="handleUnreadCountChange"></NotificationDialog> -->
-  <NotificationTabDialog ref="NotificationDialogRef" :unreadCount="unreadCount" @unreadCountChange="handleUnreadCountChange"></NotificationTabDialog>
+  <NotificationTabDialog ref="NotificationDialogRef" :unreadCount="unreadCount"
+                         @unreadCountChange="handleUnreadCountChange" />
 </template>
 
 <script lang="ts" setup>
 import { ElNotification } from 'element-plus'
 import { clientApi } from 'api'
-import { allowFeature } from '#imports'
+import { allowFeature, caseManageDashboardPage, routeCalendarManagement } from '#imports'
 import { TabManagerKey } from '#imports'
-const tabProvider = inject(TabManagerKey)
 
+const tabProvider = inject(TabManagerKey)
 const unreadCount = ref(0)
 const notificationStore = ref()
 const NotificationDialogRef = ref()
 const { uploadState } = useUploadAIStore()
 const { messageHandlers } = useNotification()
-
 const userId = useUserId()
 const failList = ['FAIL']
+
 function handleOpen() {
   NotificationDialogRef.value.handleOpen()
 }
+
 async function getUnreadCount() {
   const { data: res } = await clientApi.api.getNotificationUnreadNumber()
   unreadCount.value = res
 }
+
 function handleUnreadCountChange(count: number) {
   console.log('handleUnreadCountChange', count)
   if (count >= 0) unreadCount.value = count
   else getUnreadCount()
 }
+
 function messageChange(notiData) {
   console.log('messageChange', notiData)
   getUnreadCount()
@@ -47,16 +51,24 @@ function messageChange(notiData) {
       case 'Ai-analysis_REPLACE_FILE':
         handleReplaceFileWithAi(content)
         break
-      default:
-        if (messageJson.showNotification) handleShowNotification(content)
+      case 'Workflow_CUSTOM':
+        handleWorkflow(content)
         break
+      default:
+        if (messageJson.showNotification) {
+          handleShowNotification(content)
+          break
+        }
     }
-  } catch (error) {}
+  } catch (error) {
+    console.log(error)
+  }
 }
+
 function handleAiUpload(content) {
   if (content.uploadId) {
     const message = content['upload status'] === 'FAIL' ? 'ai.uploadCompleteAndAIFail' : 'ai.uploadClick'
-      // : 'ai.uploadAndAIComplete'
+    // : 'ai.uploadAndAIComplete'
     const noti = ElNotification({
       title: $i18n.t('ai.uploadcomplete'),
       message: allowFeature('AI_CLASSIFICATION') ? $i18n.t(message) : '',
@@ -78,6 +90,7 @@ function handleAiUpload(content) {
     if (requetUpload) requetUpload.aiFinish = true
   }
 }
+
 function handleReplaceFileWithAi(content) {
   if (content.idOrPath) {
     const noti = ElNotification({
@@ -98,6 +111,7 @@ function handleReplaceFileWithAi(content) {
     if (requetUpload) requetUpload.aiFinish = true
   }
 }
+
 function handleShowNotification(content) {
   let type = 'success'
   if (content.notiStatus && failList.includes(content.notiStatus)) type = 'error'
@@ -111,6 +125,77 @@ function handleShowNotification(content) {
     }
   })
 }
+
+function handleWorkflow(content: any) {
+  const message = JSON.parse(content.message)
+
+  const eventType = message.eventType
+  switch (eventType) {
+    case 'calendar' :
+      handleCalendar(message)
+      break
+    case 'caseDashboard':
+      handleOpenCaseDashboard(message)
+      break
+    default :
+      handleShowDefaultNotification(content)
+      break
+  }
+}
+
+function handleShowDefaultNotification(content: any) {
+  const notification = ElNotification({
+    title: $i18n.t('tip.notification'),
+    message: content,
+    type: 'success',
+    duration: 6000,
+    onClick: () => {
+      notification.close()
+    }
+  })
+}
+
+function handleCalendar(message: any) {
+  let msg
+  try {
+    const contentMsg = JSON.parse(message.additionalContent)
+    msg = `${contentMsg.title}\n${contentMsg.data}`
+  } catch (e) {
+    msg = message.additionalContent
+  }
+
+  const notification = ElNotification({
+    title: $i18n.t('tip.notification'),
+    message: msg,
+    type: 'success',
+    duration: 6000,
+    onClick: async () => {
+      const newItem = routeCalendarManagement(message.processInstanceId, 'calendar')
+      tabProvider?.openTab(newItem, true)
+      notification.close()
+    }
+  })
+}
+
+function handleOpenCaseDashboard(message: any) {
+  const notification = ElNotification({
+    title: $i18n.t('tip.notification'),
+    message: 'Open Case Dashboard.',
+    type: 'success',
+    duration: 6000,
+    onClick: async () => {
+      const caseInstance = await clientApi.api.getCaseInstanceCaseidCaseid(message.additionalContent).then((res) => res.data)
+      const data = {
+        instanceId: message.additionalContent,
+        versionId: caseInstance.cmmnVersionId
+      }
+      const newItem = caseManageDashboardPage(data)
+      tabProvider?.openTab(newItem, true)
+      notification.close()
+    }
+  })
+}
+
 onMounted(() => {
   getUnreadCount()
   messageHandlers.value.push({
