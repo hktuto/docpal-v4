@@ -96,7 +96,6 @@ onMounted(async () => {
     flex: 1 0 auto;
   }
   .stage-item-label{
-    
     --light-color: var(--el-color-info-light-8);
     --lighter-color: var(--el-color-info-light-9);
     --label-color: var(--app-text-color-primary);
@@ -140,18 +139,14 @@ onMounted(async () => {
     --lighter-color: var(--el-color-primary-light-3);
     --label-color: #fff;
     font-weight: 700;
-    &:after{
-      border-left-color: var(--app-primary-color);
-    }
+    
   }
   .stage-item-label.current{
     --light-color: var(--el-color-success);
     --lighter-color: var(--el-color-success-light-3);
     --label-color: #fff;
     font-weight: 700;
-    &:after{
-      border-left-color: var(--app-accent-color);
-    }
+    
   }
 }
 </style>
