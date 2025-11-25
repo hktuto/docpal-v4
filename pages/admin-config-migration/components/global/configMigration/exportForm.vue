@@ -26,7 +26,7 @@ const relatedIdGenerator = new Set<string>()
 const relatedEmailTemplate = new Set<string>()
 const relatedHomePage = new Set<string>()
 const relatedUserGroup = new Set<string>()
-const relatedUserRole = new Set<string>()n
+const relatedUserRole = new Set<string>()
 
 const exportData = ref<any>({
   case:{},
