@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import type { Node } from '@antv/x6'
-import { getUserSelectOption } from '#imports'
 import { ElMessage } from 'element-plus'
 import { adminApi } from 'api'
 
@@ -14,7 +13,6 @@ if (!graphProvider || !editorProvider) {
   throw createError('graph provider not found')
 }
 const { bpmnGlobalRules } = editorProvider.BpmnRule
-const userFields = ref<any[]>([])
 const caseList = ref([])
 
 async function getCaseLise() {
@@ -34,23 +32,11 @@ async function getCaseLise() {
 const masterTableList = ref([])
 
 async function getMasterTableList() {
-  const { data } = await adminApi.api.postMasterTablesPage({
-    pageSize: 100
-  })
+  const { data } = await adminApi.api.postMasterTablesPage({ pageSize: 100 })
   masterTableList.value = data.entryList.map((item) => ({
     id: item.id,
     name: item.name
   }))
-}
-
-async function getUserFields() {
-  const userList = await getUserSelectOption()
-  userFields.value = userList.map((item: any) => {
-    return {
-      id: item.id,
-      name: item.name
-    }
-  })
 }
 
 const tableData = ref<any[]>([])
@@ -78,7 +64,6 @@ const list = ['userId', 'uniqueIdentifier', 'category', 'id']
 async function init() {
   await getCaseLise()
   await getMasterTableList()
-  await getUserFields()
 
   const fields = node.getData().data.extensionElements['flowable:field']
   fields.forEach((item: any) => {
@@ -214,7 +199,7 @@ onMounted(async () => {
   <el-form label-position="top" :disabled="editorProvider.readonly.value">
     <el-form-item label="Operator" required>
       <el-select v-model="form.userId" filterable :placeholder="t('common_selectedIsRequiredMsg')" @change="updateData">
-        <el-option v-for="item in userFields" :key="item.id" :label="item.name" :value="item.id" />
+        <el-option v-for="item in allFields" :key="item.id" :label="item.name" :value="item.id" />
       </el-select>
     </el-form-item>
     <el-form-item label="Category">
