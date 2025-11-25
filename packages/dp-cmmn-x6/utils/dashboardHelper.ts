@@ -11,6 +11,7 @@ import RelatedMaster from '../components/dashboard/relatedMaster/index.vue'
 import MasterTableInfo from '../components/dashboard/masterTableInfo/index.vue'
 import RelatedCaseInfo from '../components/dashboard/relatedCaseInfo/index.vue'
 import AuditLog from '../components/dashboard/auditLog/index.vue'
+import Stage from '../components/dashboard/stage/index.vue'
 import { CaseStatisticsWidgetSetting, CaseStatisticsWidgetComponent } from './dashboardCaseStatistics'
 import type { CaseStatisticsWidget as CaseStatisticsWidgetType } from './dashboardCaseStatistics'
 
@@ -28,6 +29,8 @@ export type CmmnDashboardWidget =
   | 'MasterTableInfo'
   | 'RelatedCaseInfo'
   | 'AuditLog'
+  | 'Stage'
+
 export const CmmnDashboardWidgetSetting: { [key in CmmnDashboardWidget]: DashboardWidgetSetting } = {
   BasicInfo: {
     label: 'cmmnBasicInfo',
@@ -196,6 +199,21 @@ export const CmmnDashboardWidgetSetting: { [key in CmmnDashboardWidget]: Dashboa
       displayColumns: []
     }
   },
+  Stage: {
+    label: 'Stage',
+    minW: 6,
+    minH: 1,
+    maxW: 12,
+    maxH: 2,
+    w: 6,
+    h: 1,
+    component: 'Stage',
+    setting: {
+      label: "Stage",
+      selectedField: "",
+      steps:[],
+    }
+  },
   ...CaseStatisticsWidgetSetting
 }
 
@@ -225,5 +243,6 @@ export const CmmnWidgetComponent = {
   RelatedMaster: RelatedMaster,
   MasterTableInfo: MasterTableInfo,
   AuditLog: AuditLog,
+  Stage: Stage,
   ...CaseStatisticsWidgetComponent
 }
