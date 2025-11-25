@@ -3,8 +3,8 @@
     <el-progress type="circle" :percentage="state.percentage" :stroke-width="state.width / 8" :width="state.width" :color="setting.color">
       <SvgIcon :content="`${state.percentage}%`" :src="setting.icon" @dblclick="openSetting" />
     </el-progress>
-    <div class="dashboard-item-progress-count">{{ state.data[setting.documentType] }}</div>
-    <div class="dashboard-item-progress-title">
+    <div class="dashboard-item-progress-count">{{ state.data[setting.documentType] || 0 }}</div>
+    <div class="dashboard-item-progress-title" :title="$t(setting.documentType)">
       {{ $t(setting.documentType) }}
     </div>
     <DocCountSetting ref="settingRef" @delete="handleDelete" @refresh="handleRefresh" />
@@ -29,7 +29,7 @@ const props = withDefaults(
 )
 
 const emits = defineEmits(['refreshSetting', 'delete'])
-const state = reactive({
+const state = reactive<any>({
   initData: [],
   data: {},
   percentage: 0,
@@ -38,6 +38,7 @@ const state = reactive({
 })
 
 function initStyle() {
+  if (!cardRef.value) return
   const pHeight = cardRef.value.offsetHeight - 70
   const pWidth = cardRef.value.offsetWidth - 15
   state.width = Math.min(pWidth, pHeight)
@@ -47,7 +48,9 @@ function initStyle() {
 const { chartRef, cardRef, settingRef, resize } = useDashboardCard({
   props,
   initStyleAction: () => {
-    initStyle()
+    setTimeout(() => {
+      initStyle()
+    }, 100)
   },
   handleInitCardAction: (chartSetting) => {
     getData(chartSetting.documentType)
@@ -70,7 +73,7 @@ async function getData(documentType: string) {
     const res = await publicApi.api.postDashboardDocumenttypeofcountbyrange(params).then((res) => res.data)
     state.initData = res
     let others = 0
-    state.data = state.initData.reduce((prev, item) => {
+    state.data = state.initData.reduce((prev:any, item: any) => {
       if (item.key === documentType) {
         prev[item.key] = item.count
       } else others += item.count
@@ -89,7 +92,7 @@ function handleDelete() {
   emits('delete')
 }
 
-function handleRefresh(chartSetting) {
+function handleRefresh(chartSetting: any) {
   emits('refreshSetting', chartSetting)
 }
 
@@ -117,6 +120,16 @@ defineExpose({
 
   &-title {
     color: #373d43;
+    text-align: center;
+    // word-break: break-all;
+    vertical-align: middle;
+    height: 2.5rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    // 超出两行显示省略号
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
   }
 }
 </style>
