@@ -26,7 +26,7 @@ const relatedIdGenerator = new Set<string>()
 const relatedEmailTemplate = new Set<string>()
 const relatedHomePage = new Set<string>()
 const relatedUserGroup = new Set<string>()
-const relatedUserRole = new Set<string>()
+const relatedUserRole = new Set<string>()n
 
 const exportData = ref<any>({
   case:{},
@@ -147,6 +147,10 @@ async function handleMasterTableExport(masterTableId: string) {
   }
 }
 
+async function handleIdGeneratorExport(idGeneratorId: string) {
+  console.log("idGeneratorId", idGeneratorId)
+}
+
 async function handleDocumentTemplateExport(documentTemplateId: string) {
   const templateData = await adminApi.api.getTemplateDocumentId(documentTemplateId)
   if(!templateData.data) {
@@ -253,6 +257,10 @@ async function handleExport() {
     // loop master table and handleMasterTableExport
     for(let masterTableId of relatedMasterTable) {
       await handleMasterTableExport(masterTableId)
+    }
+
+    for(let idGeneratorId of relatedIdGenerator) {
+      await handleIdGeneratorExport(idGeneratorId)
     }
 
     // Remark: over data may add item to relatedUserGroup                                                       
