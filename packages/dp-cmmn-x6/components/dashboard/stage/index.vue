@@ -73,7 +73,9 @@ onMounted(async () => {
             current: index === currentStage, 
             isLast: index === setting.steps.length - 1,
             isFirst: index === 0
-          }">{{ item.label }}</div>
+          }">
+          <Icon name="mdi:check" v-if="index < currentStage" />
+          {{ item.label }}</div>
         </div>
       </div>
     </template>
@@ -97,13 +99,12 @@ onMounted(async () => {
   }
   .stage-item-label{
     --light-color: var(--el-color-info-light-8);
-    --lighter-color: var(--el-color-info-light-9);
     --label-color: var(--app-text-color-primary);
     color: var(--label-color);
     font-size: var(--app-font-size-l);
     width: 100%;
     height: 40px;
-    background: linear-gradient(to right,var(--light-color) 80%, var(--lighter-color) 100%);
+    background: var(--light-color);
     padding: var(--app-space-s);
     padding-left: calc(20px + var(--app-space-s));
     position: relative;
@@ -113,6 +114,14 @@ onMounted(async () => {
     align-items: center;
     text-overflow: ellipsis;
     white-space: nowrap;
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: flex-start;
+    align-items: center;
+    gap: var(--app-space-s);
+    .iconify{
+      background: var(--label-color);
+    }
     &.isFirst{
       padding-left: var(--app-space-s);
     }
@@ -130,7 +139,19 @@ onMounted(async () => {
       height: 0;
       border-top: 20px solid transparent;
       border-bottom: 20px solid transparent;
-      border-left: 10px solid var(--lighter-color);
+      border-left: 10px solid var(--light-color);
+      z-index: 3;
+    }
+    &:before{
+      content: '';
+      position: absolute;
+      right: -12px;
+      top: 0;
+      width: 0;
+      height: 0;
+      border-top: 20px solid transparent;
+      border-bottom: 20px solid transparent;
+      border-left: 10px solid #fff;
       z-index: 2;
     }
   }
@@ -143,7 +164,6 @@ onMounted(async () => {
   }
   .stage-item-label.current{
     --light-color: var(--el-color-success);
-    --lighter-color: var(--el-color-success-light-3);
     --label-color: #fff;
     font-weight: 700;
     
