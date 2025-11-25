@@ -78,7 +78,9 @@ async function handleDownload() {
   display: grid;
   grid-template-rows: 1fr min-content;
   gap: var(--app-space-xs);
-
+  @container (max-width: 1200px) {
+    grid-template-rows: min-content 1fr min-content;
+  }
   .el-tab-pane {
     height: 100%;
 
