@@ -580,6 +580,7 @@ onMounted(() => {
 
 .workflowFormContainer{
   position: relative;
+  max-height: calc(100vh - 150px);
   &.form{}
   &.signature{
     position: fixed;

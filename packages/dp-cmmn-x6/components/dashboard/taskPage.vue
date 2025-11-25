@@ -57,24 +57,23 @@ const { tableConfig, tableEvent, tableRef, reload, query } = useVxeTable({
     const paramsWithExtra = {
       ...params,
       ...state.extraParams,
-      category: 'Personal'
+      // assignee: useUserId().value,
+      // category: 'Personal'
     }
 
     const { data: res }: any = await globalApi.api.postCaseDashboardInstanceCaseidProcessInstancePage(
       _instanceId,
       paramsWithExtra
     )
-
     return {
-      entryList: res.entryList || [],
-      totalSize: res.totalSize || 0
+      data: res
     }
   },
   saveColumnOrder: false,
   zoom: false,
   defaultSort: [{ field: 'createdDate', order: 'desc' }],
   columns: [
-    { field: 'taskInstance.businessKey', title: 'table_name', fixed: 'left' },
+    { field: 'taskInstance.businessKey', title: 'Task Name', fixed: 'left' },
     { field: 'name', title: 'Step' },
     {field:'taskInstance.startUserId', title: 'Creator'},
     {
