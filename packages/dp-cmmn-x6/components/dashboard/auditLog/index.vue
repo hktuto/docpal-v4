@@ -1,7 +1,11 @@
 <script setup lang="ts">
 import dayjs from 'dayjs'
+import utc from 'dayjs/plugin/utc'
+import timezone from 'dayjs/plugin/timezone'
 import { clientApi } from 'api'
 
+dayjs.extend(utc)
+dayjs.extend(timezone)
 const platform = useAppPlatform()
 const CMDProvider = inject(CaseManagementDashboardKey)
 const caseId = CMDProvider?.instanceId?.value || null
@@ -83,7 +87,7 @@ async function queryLog() {
     const data = await clientApi.api.postAuditLogWorkflowPage(params).then(r => r.data)
     tableConfig.data = data.entryList.map((item: any) => {
       return {
-        date: item.createDate,
+        date: item.logDate,
         activities: item.request.activities,
         status: item.request.status,
         user: item.userId
@@ -95,32 +99,6 @@ async function queryLog() {
 }
 
 async function handleRefreshSetting(data: any) {
-  if (data.startDate != '') {
-    params.value.startTime = data.startDate
-  }
-  params.value.endTime = data.endDate == '' ? dayjs().format('YYYY-MM-DDTHH:mm:ss') : dayjs(data.endDate).format('YYYY-MM-DDTHH:mm:ss')
-
-  params.value.request.uniqueIdentifier = data.uniqueIdentifier
-
-  tableConfig.columns = data.columns.map((item: any) => {
-    let filed = {
-      field: item.id,
-      title: item.label || item.id,
-      width: item.width
-    }
-
-    if (item.id.includes('date')) {
-      filed = {
-        ...filed,
-        formatter: ({ cellValue }) => {
-          return formatDate(cellValue)
-        }
-      }
-    }
-
-    return filed
-  })
-
   emits('refreshSetting', data)
 }
 
@@ -137,11 +115,11 @@ async function init() {
         filed = {
           ...filed,
           formatter: ({ cellValue }) => {
-            return formatDate(cellValue)
+            const utcTime = dayjs.utc(`${cellValue}.000Z`)
+            return utcTime.tz('Asia/Shanghai').format('YYYY-MM-DD HH:mm:ss')
           }
         }
       }
-
       return filed
     })
   }
