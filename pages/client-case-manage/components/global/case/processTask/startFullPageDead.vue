@@ -88,7 +88,7 @@ function formKeyToCaseKey(formKey: string) {
 async function handleSubmit() {
   try {
     loading.value = true
-    const data = await vFormRef.value.getFormData(false, false)
+    const data = await vFormRef.value.getFormData(true, false)
     let variables = Object.keys(inParameters.value).reduce((prev: any, item: any) => {
       const otherKeys = inParameters.value[item]
       if (data[otherKeys]) {

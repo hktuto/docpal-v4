@@ -277,7 +277,7 @@ async function handleSubmit() {
     routerProvider?.back(fallbackRoute)
   } catch (error) {
     console.log('error', error)
-    // routerProvider?.message.error(error.message)
+    routerProvider?.message.error(error.message)
   } finally {
     state.loading = false
   }
