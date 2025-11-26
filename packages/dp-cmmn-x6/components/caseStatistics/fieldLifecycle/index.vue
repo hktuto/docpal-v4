@@ -125,8 +125,8 @@ const { cardRef, chartRef, settingRef, resize, handleInitCard, loading } = useDa
     }
     const rpcParams = {
       _table_name: chartSetting.tableName,
-      _create_date_column: 'created_date',
-      _target_date_column: chartSetting.dateField,
+      _create_date_column: chartSetting.dateField,
+      // _target_date_column: chartSetting.dateField,
       _status_column: chartSetting.filterKey,
       _status_list: chartSetting.filterList.map((item) => item.filterValue),
       _target_year: dayjs(props.dates[0]).year(),
