@@ -7,6 +7,7 @@ const form = reactive({
       password: '',
     })
 const usernameEl = ref();
+const errorMessage = ref('');
 const rules = {
     username: [
         { required: true, message: 'Please input Username', trigger: 'blur' },
@@ -19,6 +20,7 @@ async function submit() {
     const router = useRouter()
     try {
         loading.value = true;
+        errorMessage.value = '';
         const {data} = await clientApi.instance.post('/auth/nuxeo/login', {
             username: form.username,
             password: form.password,
@@ -45,8 +47,7 @@ async function submit() {
         }
         window.location.href = url
     } catch (error) {
-        // form.username = "";
-        // form.password = "";
+        errorMessage.value = 'Username or password is incorrect';
     }finally{
         loading.value = false;
     }
@@ -89,7 +90,10 @@ onMounted(async() => {
                             @keyup.enter.native="submit"
                             show-password/>
                     </ElFormItem>
-                    <ElFormItem >
+                    <ElFormItem>
+                        <ElAlert v-if="errorMessage" :title="errorMessage" type="error" />
+                    </ElFormItem>
+                    <ElFormItem>
                         <ElButton class="fullSize"  size="large"  type="primary" @click="submit" :loading="loading">Submit</ElButton>
                     </ElFormItem>
                 </ElForm>
