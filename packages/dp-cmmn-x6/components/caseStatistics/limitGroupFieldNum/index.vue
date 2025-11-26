@@ -115,8 +115,8 @@ const { cardRef, chartRef, settingRef, resize, handleInitCard, loading } = useDa
       _top_n: 5,
       _group_column: chartSetting.groupField,
       _tcv_column: chartSetting.sortBy,
-      _start_date: '2024-10-27 00:44:40',
-      _end_date: '2026-11-03 17:12:00',
+      _start_date: props.dates[0],
+      _end_date: props.dates[1],
       _filters: {}
     }
     if (chartSetting.filterKey && chartSetting.filterValue) {
@@ -153,12 +153,12 @@ function handleShowAll(groupField: string = '') {
     {
       key: 'created_date',
       type: 'gt',
-      value: '2024-10-27 00:44:40'
+      value: props.dates[0]
     },
     {
       key: 'created_date',
       type: 'lt',
-      value: '2026-11-03 17:12:00'
+      value: props.dates[1]
     },
     // {
     //   type: 'select',
