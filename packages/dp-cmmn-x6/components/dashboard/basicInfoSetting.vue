@@ -8,7 +8,11 @@
   >
     <div>
       <h3>{{ $t('caseManage.fieldsLayout') }}</h3>
-      <draggable class="list-group flex-zoom" :list="state.setting.layout" group="people" itemKey="id" >
+      <draggable class="list-group flex-zoom" 
+      :list="state.setting.layout" 
+      
+      group="people" 
+      itemKey="id" >
         <template #item="{ element, index }">
           <div :style="`--field-width: ${element.width}`" class="list-group-item">
             <div class="topRow">
@@ -37,7 +41,22 @@
                   <el-option key="case" label="Case" value="case" />
                 </el-select>
               </ElFormItem>
-              <ElFormItem v-if="element.type === 'date'" label="Date format">
+              <template v-if="element.type === 'float'">
+                <ElFormItem  label="Format">
+                <el-select v-model="element.numDisplay" clearable placeholder="Select Number display">
+                  <el-option key="date" label="Currency" value="currency" />
+                  <el-option key="dateTime" label="Percentage" value="percentage" />
+                  <el-option key="dateTime" label="Number" value="number" />
+                </el-select>
+              </ElFormItem>
+              </template>
+              <ElFormItem v-if="element.type === 'date'" label="Date Display">
+                <el-select v-model="element.dateDisplay" clearable placeholder="Select date display">
+                  <el-option key="date" label="Duration" value="duration" />
+                  <el-option key="dateTime" label="Date Time" value="dateTime" />
+                </el-select>
+              </ElFormItem>
+              <ElFormItem v-if="element.type === 'date' && element.dateDisplay === 'dateTime'" label="Date format">
                 <el-input v-model="element.dateFormat" placeholder="Date Format" size="small" />
               </ElFormItem>
             </ElForm>
@@ -48,7 +67,9 @@
     <div class="avalibleFields">
       <h3>{{ $t('caseManage.avalibleFields') }}</h3>
       <ElInput v-model="filterText" placeholder="Filter" class="filter-input" />
-      <draggable class="list-group" :list="filterList" group="people" itemKey="id">
+      <draggable class="list-group"
+        :clone="cloneItem" 
+        :list="filterList" group="people" itemKey="id">
         <template #item="{ element, index }">
           <div class="list-group-item list-group-item--right">
             <SvgIcon class="handle-icon" src="/icons/drag.svg" />
@@ -76,7 +97,7 @@ const filterList = computed(() => {
   return state.allList
     .filter((item: any) => {
       return !filterText.value || item.name.toLowerCase().includes(filterText.value.toLowerCase())
-    }).filter((item: any) => !state.setting.layout.find((l: any) => item.id === l.id))
+    })
 })
 
 const widthList = [
@@ -93,6 +114,13 @@ const state = reactive<any>({
   setting: {},
   allList: []
 })
+
+function cloneItem(item: any) {
+  return {
+    ...item,
+    key: item.id + new Date().getTime()
+  }
+}
 async function handleSubmit() {
   state.loading = true
   try {
@@ -110,7 +138,14 @@ async function handleSubmit() {
 function handleOpen(setting: any) {
   state.visible = true
   setTimeout(async () => {
-    if (!setting.layout) setting.layout = []
+    if (!setting.layout){ 
+      setting.layout = []
+    } else{
+      setting.layout = setting.layout.map((item: any) => ({
+        ...item,
+        key: item.key || item.id + new Date().getTime()
+      }))
+    }
     if (!setting.label)
       setting.label = setting.layout.reduce((prev: any, item: any) => {
         prev[item.id] = item.name

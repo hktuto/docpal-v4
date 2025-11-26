@@ -117,7 +117,8 @@ async function generatePreview(){
                 try{
                   let data = JSON.parse(value)
                   if(typeof data === 'number') {
-                    data = data.toString()
+                    console.log(" number data", data)
+                    data = data.toFixed(2)
                   }
                   map[obj.key] = data
                 }catch(err){
@@ -201,7 +202,7 @@ onMounted(() => {
 
 <template>
    <ElButton type="primary" :loading="loading" @click="openPreivew">{{  props.attr_previewButtonText }}</ElButton>
-   <ElDialog v-model="dialogOpened" class="big"  width="90%" height="90%" :align-center="true" apped-to-body>
+   <ElDialog v-model="dialogOpened" class="big"  width="90%" height="90%" :align-center="true" append-to-body>
         <div  class="readerContainer" :style="`--height: ${dialogHeight}px`">
             <Reader v-if="previewFile.blob" v-bind="previewFile" />
         </div>
