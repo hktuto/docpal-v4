@@ -99,11 +99,11 @@ const option = {
       type: 'value',
       name: 'Number of Cases',
       nameRotate: 90,
+      nameGap: 16,
       nameLocation: 'middle',
       minInterval: 1,
       axisLabel: {
         formatter: '{value}',
-        margin: -8
       }
     }
   ],
