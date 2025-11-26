@@ -1,7 +1,7 @@
 .dashboard-item{ 
   // --el-card-border-radius: var(--app-border-radius-m);
   // --el-box-shadow-light: 0 0 5px rgba(0,0,0,.07);
-  // --el-card-padding: var(--app-space-m);
+  --el-card-padding: var(--app-space-s) !important;
   // --el-card-border-color: var(--app-grey-850);
   .vue-resizable-handle{
     //border-top-right-radius: var(--el-card-border-radius);

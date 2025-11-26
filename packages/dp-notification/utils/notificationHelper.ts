@@ -63,10 +63,10 @@ export async function notiHandleView(row: any, tabProvider: any) {
         break
       case 'caseDashboard':
         try {
-          const content = JSON.parse(event.additionalContent)
+          const caseInstance = await clientApi.api.getCaseInstanceCaseidCaseid(event.additionalContent).then((res) => res.data)
           const data = {
-            instanceId: content.instanceId,
-            versionId: content.versionId
+            instanceId: event.additionalContent,
+            versionId: caseInstance.cmmnVersionId
           }
           newItem = caseManageDashboardPage(data)
           tabProvider?.openTab(newItem, true)

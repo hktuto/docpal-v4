@@ -26,6 +26,7 @@ import { useEventBus, EventType } from 'eventbus'
 
 import { set, watchDebounced } from '@vueuse/core'
 import { clientApi, globalApi } from 'api'
+import dayjs from 'dayjs'
 const platform = useAppPlatform()
 
 const props = withDefaults(
@@ -48,17 +49,39 @@ const caseProvider: any = inject(CaseManagementDashboardKey)
 const emits = defineEmits(['refreshSetting', 'delete'])
 const { t } = useI18n()
 const tabProvider = inject(TabManagerKey)
+const usdFormatter = new Intl.NumberFormat('en-US', {
+  style: 'currency',
+  currency: 'USD',
+});
+
 function displayValue(item: any) {
   if (platform.value === 'admin') {
     return state.defaultValue[item.id]
   }
   if (item.type === 'date') {
+    if (item.dateDisplay === 'duration') {
+      if(!item.value) return '0 day'
+      const diff = dayjs(item.value).diff(dayjs(), 'day')
+      return diff + ' days'
+    }
     const format = item.dateFormat || 'DD-MMM-YYYY'
     return formatDate(item.value, format)
   }
   if (item.type === 'boolean') {
     // TODO: translate later
     return item.value ? 'Yes' : 'No'
+  }
+  if(item.type === 'float') {
+    console.log('item', item)
+    if(!item.value) return '--'
+
+    if(item.numDisplay === 'currency') {
+      return usdFormatter.format(item.value)
+    }
+    if(item.numDisplay === 'percentage') {
+      return item.value.toFixed(2) + ' %'
+    }
+    return item.value
   }
   return item.value || '--'
 }

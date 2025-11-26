@@ -277,7 +277,7 @@ async function handleSubmit() {
     routerProvider?.back(fallbackRoute)
   } catch (error) {
     console.log('error', error)
-    // routerProvider?.message.error(error.message)
+    routerProvider?.message.error(error.message)
   } finally {
     state.loading = false
   }
@@ -580,6 +580,7 @@ onMounted(() => {
 
 .workflowFormContainer{
   position: relative;
+  max-height: calc(100vh - 150px);
   &.form{}
   &.signature{
     position: fixed;

@@ -6,30 +6,20 @@
     :hideSetting="hideSetting"
     :title="$t('dashboard.cmmnTaskPage')"
     :setting="setting"
-    :settingRef="settingRef"
     @delete="handleDelete"
     @refresh="refresh"
   >
-    <div>
-      <Table
-        v-loading="state.loading"
-        :columns="tableSetting.columns"
-        :table-data="state.tableData"
-        :options="state.options"
-        @command="handleAction"
-        @row-dblclick="handleDblclick"
-        @pagination-change="handlePaginationChange"
-      >
-        <template #preSortButton>
-          <!-- {{ $t('msg.confirmWhetherToDeactivate') }} -->
+    <div style="width: 100%; height: 100%; overflow: hidden; position: relative">
+      <VxeGrid v-if="CMDProvider?.instanceId" ref="tableRef" v-bind="tableConfig" v-on="tableEvent">
+        <template #toolbar_buttons>
           <ResponsiveFilter ref="ResponsiveFilterRef" @form-change="handleFilterFormChange" inputKey="q" />
         </template>
-      </Table>
+      </VxeGrid>
     </div>
   </DashboardCard>
 </template>
 <script lang="ts" setup>
-import { globalApi } from 'api'
+import { globalApi, clientApi } from 'api'
 const props = withDefaults(
   defineProps<{
     dates?: any
@@ -45,99 +35,109 @@ const emits = defineEmits(['delete'])
 async function handleDelete() {
   emits('delete')
 }
-const pageParams = {
-  pageNum: 0,
-  pageSize: 20,
-  orderBy: 'createdDate',
-  isDesc: true,
-  category: 'Personal'
-}
+
 const state = reactive<any>({
-  loading: false,
-  tableData: [],
-  options: {
-    showPagination: true,
-    paginationConfig: {
-      total: 0,
-      currentPage: 1,
-      pageSize: pageParams.pageSize
-    },
-    rowKey: 'id'
-  },
   extraParams: {}
 })
-const { t } = useI18n()
 
 const CMDProvider = inject(CaseManagementDashboardKey)
-// #region module:
-const tableSetting = {
-  columns: [
-    { id: '1', label: 'table_name', prop: 'name', defaultColumn: true },
-    { id: '2', label: 'workflow_workflowName', prop: 'taskInstance.processDefinitionName' }
-  ],
-  events: ['delete'],
-  slots: [],
-  options: { pageSize: 20 }
-}
-function handlePaginationChange(page: number, pageSize?: number) {
-  pageParams.pageNum = Number(page) - 1 || 0
-  pageParams.pageSize = Number(pageSize) || pageParams.pageSize
-  getList(pageParams)
-}
-async function getList(param) {
-  try {
-    state.loading = true
-    const _instanceId = CMDProvider.instanceId?.value || null
+
+const { tableConfig, tableEvent, tableRef, reload, query } = useVxeTable({
+  id: 'case-management-dashboard-task-table',
+  api: async (params: any) => {
+    const _instanceId = CMDProvider?.instanceId?.value || null
 
     if (!_instanceId) {
-      state.tableData = []
-      state.options.paginationConfig.total = 0
-      state.options.paginationConfig.pageSize = 20
-      state.options.paginationConfig.currentPage = 1
-      return
+      return {
+        entryList: [],
+        totalSize: 0
+      }
     }
-    const { data: res }: any = await globalApi.api.postCaseDashboardInstanceCaseidProcessInstancePage(_instanceId, { ...param, ...state.extraParams })
-    state.tableData = res.entryList
-    state.options.paginationConfig.total = res.totalSize
-    state.options.paginationConfig.pageSize = param.pageSize
-    state.options.paginationConfig.currentPage = param.pageNum + 1
+
+    const paramsWithExtra = {
+      ...params,
+      ...state.extraParams,
+      // assignee: useUserId().value,
+      // category: 'Personal'
+    }
+
+    const { data: res }: any = await globalApi.api.postCaseDashboardInstanceCaseidProcessInstancePage(
+      _instanceId,
+      paramsWithExtra
+    )
+    return {
+      data: res
+    }
+  },
+  saveColumnOrder: false,
+  zoom: false,
+  defaultSort: [{ field: 'createdDate', order: 'desc' }],
+  columns: [
+    { field: 'taskInstance.businessKey', title: 'Task Name', fixed: 'left' },
+    { field: 'name', title: 'Step' },
+    {field:'taskInstance.startUserId', title: 'Creator'},
+    {
+      field: 'createDate',
+      title: 'Start Date',
+      formatter({ cellValue }: any) {
+        return formatDate(cellValue)
+      }
+    }
+  ],
+  dblClickAction: ({ row, column, event }) => {
+    handleDblclick(row)
+  }
+})
+
+function handleFilterFormChange(formModel: any) {
+  state.extraParams = formModel
+  reload()
+}
+
+async function handleDblclick(row: any) {
+  try {
+    // router.push(`/caseManage/dashboard?id=${row.id}&instanceId=${instance.businessKey}&caseId=${route.params.id}`)
   } catch (error) {
-  } finally {
-    state.loading = false
+    console.error(error)
   }
 }
 
-function handleAction(command: string, row: any, rowIndex: number) {
-  switch (command) {
-    case 'edit':
-      handleDblclick(row)
-      break
-  }
-}
-async function handleDblclick(row) {
+const ResponsiveFilterRef = ref()
+async function initCondition() {
+  const _instanceId = CMDProvider?.instanceId?.value || null
+  if (!_instanceId) return
   try {
-    state.loading = true
-    // router.push(`/caseManage/dashboard?id=${row.id}&instanceId=${instance.businessKey}&caseId=${route.params.id}`)
+    const data = await clientApi.api.getCaseDashboardInstanceCaseidProcessInstancePageConditions(_instanceId)
+    ResponsiveFilterRef.value?.init(data)
   } catch (error) {
-  } finally {
-    setTimeout(() => {
-      state.loading = false
-    }, 300)
+    console.error(error)
   }
 }
-function handleFilterFormChange(formModel) {
-  state.extraParams = formModel
-  handlePaginationChange(1)
-}
-// #endregion
+
 const { cardRef, refresh, loading } = useDashboardCard({
   props,
   handleRefreshAction: async (setting: any) => {
-    handlePaginationChange(1)
+    query({})
+    initCondition()
   }
 })
+
 onMounted(() => {
-  handlePaginationChange(1)
+  initCondition()
 })
 </script>
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.el-card {
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+  :deep(.el-card__body) {
+    height: 100%;
+    overflow: hidden;
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: flex-start;
+    align-items: flex-start;
+  }
+}
+</style>

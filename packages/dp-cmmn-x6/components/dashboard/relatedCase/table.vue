@@ -74,7 +74,7 @@ async function reorderColumn(fields: any) {
       const columneFromSetting = fields.reduce((prev: any, item: any) => {
         const newItem: any = {
           field: item.id,
-          title: item.name.toLowerCase().replace(/\b\w/g, (s) => s.toUpperCase()),
+          title: item.id === 'case_id' ? 'Case ID' : item.name.toLowerCase().replace(/\b\w/g, (s) => s.toUpperCase()),
           minWidth: 200
         }
         if (item.formatter) {
