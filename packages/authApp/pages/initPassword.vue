@@ -170,8 +170,9 @@ onMounted(async () => {
 
 <style scoped>
 .logo {
-  width: 80%;
-  margin: 0 auto var(--el-component-size-small) auto;
+  --icon-size: clamp(100px, 80%, 200px);
+    max-width: 200px;
+    margin: 0 auto var(--app-space-s) auto;
 }
 .title {
   font-size: 1.5rem;
