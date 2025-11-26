@@ -27,20 +27,7 @@ const state = reactive({
 const exportVariables = ref<any[]>([])
 
 const FormRendererRef = ref()
-// TODO : the server should add to nuxtConfig runtime
-// const nodeBackendEndpoint = 'http://localhost:3333'
-const nodeBackendEndpoint = 'https://sit-v2.wclsolution.com/open-api/template'
 
-async function fetchExportBlob(endpoint: string, data: any): Promise<Blob> {
-  const res = await fetch(nodeBackendEndpoint + endpoint, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(data)
-  })
-  return await res.blob()
-}
 
 async function performExport(exportType: 'html' | 'docx' | 'pdf', configuredVariables: any[]) {
   console.log(11,configuredVariables)
