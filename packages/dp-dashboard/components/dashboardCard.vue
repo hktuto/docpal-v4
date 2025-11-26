@@ -102,7 +102,7 @@ defineExpose({
 
 <style lang="scss" scoped>
 .el-card {
-  --dashboard-item-padding: var(--el-card-padding);
+  --dashboard-item-padding: var(--app-space-s) !important;
 
   height: 100%;
   display: grid;
@@ -136,12 +136,12 @@ defineExpose({
   }
 }
 .dp-dashboard--card__padding {
-  padding: var(--app-space-s);
+  padding: var(--app-space-xs);
   :deep(.el-card__body) {
     padding: var(--el-card-padding);
   }
   :deep(.el-card__header) {
-    padding: var(--el-card-padding) !important;
+    // padding: var(--el-card-padding) !important;
   }
 }
 .dp-dashboard--card__scroll {

@@ -38,7 +38,7 @@
           <el-switch v-model="form.allow" class="mb-2" active-text="Yes" inactive-text="No" />
         </template>
         <template v-else>
-          <el-row :gutter="20">
+          <el-row :gutter="24">
             <el-col :span="12">
               <div class="grid-content ep-bg-purple" />
               <h3>{{ $t('folderCabinet.multiple') }}</h3>
@@ -53,7 +53,7 @@
           </el-row>
         </template>
 
-        <el-divider style="margin-bottom: 5px" />
+        <el-divider />
         <FolderCabinetSettingPermission :id="state.setting.id" :isFolder="state.setting.folder ? 'folder' : 'file'" :tableData="state.acls" @refresh="emits('update')" />
       </div>
     </div>

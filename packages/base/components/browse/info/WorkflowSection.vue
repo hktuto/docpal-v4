@@ -4,7 +4,7 @@
       {{ $t('workflow.adHocApproval') }}
     </div>
     <div class="infoContetn">
-      <div class="block">
+      <div class="block" style="margin-bottom: var(--app-space-s)">
         <el-button v-if="status==='NotAllocated' || status==='Approval'" type="primary" size="small"
                    :loading="checkLoading || loading"
                    @click="dialogShow = true">
