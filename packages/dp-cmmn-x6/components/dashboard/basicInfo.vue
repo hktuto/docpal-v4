@@ -61,9 +61,10 @@ function displayValue(item: any) {
   if (item.type === 'date') {
     if (item.dateDisplay === 'duration') {
       if(!item.value) return '0 day'
-      const diff = dayjs(item.value).diff(dayjs(), 'day')
+      const diff = dayjs().diff(item.value, 'day')
       return diff + ' days'
     }
+    
     const format = item.dateFormat || 'DD-MMM-YYYY'
     return formatDate(item.value, format)
   }
@@ -72,7 +73,6 @@ function displayValue(item: any) {
     return item.value ? 'Yes' : 'No'
   }
   if(item.type === 'float') {
-    console.log('item', item)
     if(!item.value) return '--'
 
     if(item.numDisplay === 'currency') {
@@ -170,7 +170,8 @@ const { settingRef, cardRef, refresh, loading } = useDashboardCard({
   handleInitCardAction: async (setting: any) => {
     const data = await getCDBasciInfo()
     state.layout = setting.layout.reduce((prev: any, item: any) => {
-      const _item = data.rows.find((d: any) => d.id === item.id) // 获取 item.value
+      // because old _item id has add timestamp, so need to check if item.id container rows id to get value
+      const _item = data.rows.find((d: any) => d.id === item.id || item.id.includes(d.id)) // 获取 item.value
 
       if (_item) {
         if (!item.width) item.width = '50%'
