@@ -4,7 +4,7 @@
     <div class="loadState-container">
       <div>
         <!-- <img src="/logoWithName.png" /> -->
-        <h3>{{ $t(`dpTip_${tip}`) }}</h2>
+        <h3>{{ $t(`dpTip_${tip}`) }}</h3>
       </div>
     </div>
   </div>
