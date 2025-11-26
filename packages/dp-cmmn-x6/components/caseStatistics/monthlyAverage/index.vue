@@ -9,6 +9,9 @@
     @delete="handleDelete"
     @refresh="handleInitCard"
   >
+    <template #action_prefix>
+      <el-date-picker style="width: 6rem" v-model="targetYear" size="small" type="year" format="YYYY" value-format="YYYY" @change="handleChangeYear"/>
+    </template>
     <div id="myEcharts" ref="chartRef" class="echart"></div>
     <CaseStatisticsTableDialog :setting="setting" :dates="tableDates" ref="dialogRef"> </CaseStatisticsTableDialog>
 
@@ -48,6 +51,8 @@ const { t } = useI18n()
 const title = $t('dashboard.cmmnCaseMonthlyAverage')
 const total = ref(0)
 const tableDates = ref([])
+const currentYear = dayjs(new Date()).year().toString()
+const targetYear = ref(currentYear)
 const emits = defineEmits(['refreshSetting', 'delete'])
 function handleRefresh(chartSetting) {
   emits('refreshSetting', chartSetting)
@@ -92,7 +97,7 @@ const option = {
       nameLocation: 'middle',
       minInterval: 1,
       axisLabel: {
-        formatter: '{value}',
+        formatter: '{value}'
       }
     },
     {
@@ -106,8 +111,7 @@ const option = {
       splitLine: {
         show: false // 隐藏分隔线
       },
-      nameGap: 80,
-
+      nameGap: 80
     }
   ],
   series: [
@@ -234,7 +238,7 @@ async function getCaseCount(chartSetting) {
   const rpcParams = {
     _table_name: chartSetting.tableName,
     _date_column: chartSetting.dateField, // 合同到期日期字段
-    _target_year: dayjs().year() + chartSetting.yearOffset,
+    _target_year: Number(targetYear.value),
     _filters: {}
   }
   if (chartSetting.relatedField && caseInstanceId) {
@@ -256,7 +260,7 @@ async function getAverageDuration(chartSetting) {
   const rpcParams = {
     _table_name: chartSetting.tableName,
     _date_column: chartSetting.dateField, // 合同到期日期字段
-    _target_year: dayjs().year() + chartSetting.yearOffset,
+    _target_year: Number(targetYear.value),
     _value_column: chartSetting.averageField,
     _filters: {}
   }
@@ -276,6 +280,10 @@ async function getAverageDuration(chartSetting) {
   }
   const response = await clientApi.api.postPostgrestRpcFunc('avg_by_month_generic', rpcParams).then((res) => res.data)
   return response.map((item) => item.avg_value)
+}
+function handleChangeYear(year: string) {
+  targetYear.value = year
+  handleInitCard()
 }
 function handleAfterOpen(formRendererRef: any) {
   if (props.type === 'caseManagement') {
