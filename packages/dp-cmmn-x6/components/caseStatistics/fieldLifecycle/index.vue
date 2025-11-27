@@ -75,19 +75,19 @@ const seriesConfig = {
   itemStyle: {},
   tooltip: {
     valueFormatter: function (value) {
-      return value
+      return Math.round(value)
     }
   }
 }
 const option = {
   tooltip: {
     trigger: 'axis',
-    axisPointer: {
-      type: 'cross',
-      crossStyle: {
-        color: '#999'
-      }
-    }
+    // axisPointer: {
+    //   type: 'cross',
+    //   crossStyle: {
+    //     color: '#999'
+    //   }
+    // }
   },
   grid: {
     left: '10%', // 调整整个图表左侧的留白，增加偏移
