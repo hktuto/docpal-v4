@@ -41,7 +41,7 @@ function init(bpmnXml :string, x6Json?:any){
             }
         },
         scaling:{
-            min: 0.01, max: 2
+            min: 0.005, max: 2
         },
         background: {
             color: 'var(--app-grey-9000)',
@@ -237,6 +237,9 @@ function fitIn(){
         graph.value?.zoomToFit({padding: 100})
     }
     graph.value?.zoomToFit({padding: 40})
+    // get current zoom level
+    const zoomLevel = graph.value?.zoom()
+    console.log('zoomLevel', zoomLevel)
 }
 
 const allFormField = ref({});
