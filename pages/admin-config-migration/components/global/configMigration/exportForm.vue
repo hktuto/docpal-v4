@@ -17,7 +17,7 @@ const mode = ref<'select' | 'confirm'>('select')
 const selectedWorkflow = ref<any[]>([])
 const selectedHomePage = ref<any[]>([])
 //  store related data
-const relatedCase  = new Set<string>()
+const relatedCase = new Set<string>()
 const relatedWorkflow = new Set<string>()
 const relatedDocumentTemplate = new Set<string>()
 const relatedFolderCabinet = new Set<string>()
@@ -54,10 +54,11 @@ async function getListData() {
     getCaseList(),
     getWorkflowList(),
     getHomePageList(),
-    getUserGroupList(),
+    getUserGroupList()
   ]
   await Promise.all(promiseList)
 }
+
 async function getCaseList() {
   const res = await adminApi.api.postCaseTypesPage({ pageNum: 0, pageSize: 1000 })
   caseList.value = res.data?.entryList.filter((item: any) => item.productionVersion) || []
@@ -67,6 +68,7 @@ async function getUserGroupList() {
   const res = await adminApi.api.postNuxeoIdentityGroups()
   userGroupList.value = res.data || []
 }
+
 async function getWorkflowList() {
   const res = await adminApi.api.postWorkflowProcessList({ pageNum: 0, pageSize: 1000 })
   workflowList.value = res.data || []
@@ -88,13 +90,13 @@ async function handleCaseExport(caseId: string) {
 }
 
 async function handleHomePageExport(homePageId: string) {
-    const homePageDetail = homePageList.value.find((item: any) => item.id === homePageId)
-    relatedHomePage.add(homePageId)
-    exportData.value.homePage[homePageId] = homePageDetail
-    const group = homePageDetail.groupId.split(',')
-    group.forEach((groupId: string) => {
-      relatedUserGroup.add(groupId)
-    })
+  const homePageDetail = homePageList.value.find((item: any) => item.id === homePageId)
+  relatedHomePage.add(homePageId)
+  exportData.value.homePage[homePageId] = homePageDetail
+  const group = homePageDetail.groupId.split(',')
+  group.forEach((groupId: string) => {
+    relatedUserGroup.add(groupId)
+  })
 }
 
 async function handleUserGroupExport(groupId: string) {
@@ -106,7 +108,7 @@ async function handleUserGroupExport(groupId: string) {
 async function handleWorkflowExport(workflowKey: string) {
   const workflowInfo = await getWorkflowExportData(workflowKey)
   relatedWorkflow.add(workflowKey)
-  if(!exportData.value.workflow[workflowKey]) {
+  if (!exportData.value.workflow[workflowKey]) {
     exportData.value.workflow[workflowKey] = workflowInfo.workflowData
   }
   workflowInfo.relatedCase.forEach((caseId: string) => {
@@ -130,8 +132,7 @@ async function handleWorkflowExport(workflowKey: string) {
 }
 
 async function handleMasterTableExport(masterTableId: string) {
-
-  const {data:masterTableDetail} = await adminApi.api.getMasterTablesId(masterTableId)
+  const { data: masterTableDetail } = await adminApi.api.getMasterTablesId(masterTableId)
   const aclsData = await adminApi.api.getMasterTablesIdAcls(masterTableId) as any
   // loop acls data and remove user permission
   if(!aclsData || !aclsData?.data ) {
@@ -148,7 +149,7 @@ async function handleMasterTableExport(masterTableId: string) {
 }
 
 async function handleIdGeneratorExport(idGeneratorId: string) {
-  console.log("idGeneratorId", idGeneratorId)
+  exportData.value.idGenerator[idGeneratorId] = await adminApi.api.getIdTemplatesId(idGeneratorId).then(res => res.data)
 }
 
 async function handleDocumentTemplateExport(documentTemplateId: string) {
@@ -173,7 +174,6 @@ async function handleDocumentTemplateExport(documentTemplateId: string) {
       fileBlob: null
     }
   }
-  
 }
 
 async function handleFolderCabinetExport(folderCabinetId: string) {
@@ -189,7 +189,7 @@ async function handleFolderCabinetExport(folderCabinetId: string) {
 async function handleExport() {
   mode.value = 'confirm'
   loading.value = true
-  try{
+  try {
     // step1 reset all related data
     relatedCase.clear()
     relatedWorkflow.clear()
@@ -238,10 +238,8 @@ async function handleExport() {
       await handleWorkflowExport(workflowKey)
     }
 
-    
     // loop email template and handleExportEmailTemplate
-    for(let emailTemplateId of relatedEmailTemplate) {
-      console.log("emailTemplateId", emailTemplateId)
+    for (let emailTemplateId of relatedEmailTemplate) {
       await handleExportEmailTemplate(emailTemplateId)
     }
 
@@ -268,14 +266,12 @@ async function handleExport() {
     for(let groupId of relatedUserGroup) {
       await handleUserGroupExport(groupId)
     }
-    
-  }catch(err:any){
+  } catch (err: any) {
     console.error(err)
     routerProvider?.message.error(err.message)
   }finally{
     loading.value = false
   }
-  
 }
 
 function handleCancelSelect() {
@@ -283,8 +279,8 @@ function handleCancelSelect() {
   selectedCase.value = []
   selectedWorkflow.value = []
   selectedHomePage.value = []
-
 }
+
 function handleConfirm() {
   // export exportData to a json file and download
   const jsonData = JSON.stringify(exportData.value)
@@ -360,7 +356,7 @@ onMounted(() => {
         <template v-if="Object.keys(exportData.homePage).length > 0">
           <h3>Home Page</h3>
           <div class="exportInfoContainer">
-            
+
             <div v-for="item in exportData.homePage" :key="item.id" class="exportInfoCard">
               <div class="cardContent">
                 {{ item.name }}
@@ -373,7 +369,7 @@ onMounted(() => {
         <template v-if="Object.keys(exportData.userGroup).length > 0">
           <h3>User Group</h3>
           <div class="exportInfoContainer">
-            
+
             <div v-for="item in exportData.userGroup" :key="item.id" class="exportInfoCard">
               <div class="cardContent">
                 {{ item.name }}
@@ -406,25 +402,25 @@ onMounted(() => {
         </div>
       </template>
       <div class="exportedEmailTemplateContainer">
-        
+
         <template v-if="Object.keys(exportData.emailTemplate).length > 0">
           <h3>Email Template</h3>
           <div class="exportInfoContainer">
-          
+
             <div v-for="item in exportData.emailTemplate" :key="item.id" class="exportInfoCard">
               <div class="cardContent">
                 {{ item.label }}
               </div>
             </div>
           </div>
-          
+
         </template>
       </div>
       <div class="exportedDocumentTemplateContainer">
         <template v-if="Object.keys(exportData.documentTemplate).length > 0">
           <h3>Document Template</h3>
           <div class="exportInfoContainer">
-            
+
             <div v-for="item in exportData.documentTemplate" :key="item.id" class="exportInfoCard">
               <div class="cardContent">
                 {{ item.name }}
@@ -450,14 +446,13 @@ onMounted(() => {
         <template v-if="Object.keys(exportData.masterTable).length > 0">
           <h3>Master Table</h3>
           <div class="exportInfoContainer">
-            
+
             <div v-for="item in exportData.masterTable" :key="item.id" class="exportInfoCard">
               <div class="cardContent">
                 {{ item.name }}
               </div>
             </div>
           </div>
-         
         </template>
       </div>
       <div class="exportedIdGeneratorContainer">
@@ -476,33 +471,32 @@ onMounted(() => {
       <ElButton type="text" @click="handleCancelSelect">Cancel</ElButton>
       <ElButton type="primary" @click="handleConfirm">Confirm</ElButton>
     </div>
-    
-
   </div>
 </template>
 
-
-<
 <style lang="scss" scoped>
-.exportInfoContainer{
+.exportInfoContainer {
   display: flex;
   flex-flow: row wrap;
   gap: var(--app-space-s);
 }
-.listContainer{
+
+.listContainer {
   display: flex;
   flex-flow: row wrap;
   gap: var(--app-space-xs);
   overflow: auto;
   height: 100%;
 }
+
 .exportInfoCard {
   border: 1px solid #ccc;
   position: relative;
   padding: var(--app-space-s);
   border-radius: var(--app-border-radius-s);
 }
-.selectedContainer{
+
+.selectedContainer {
   position: absolute;
   top: var(--app-space-xxs);
   right: var(--app-space-xxs);

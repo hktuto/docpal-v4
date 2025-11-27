@@ -79,22 +79,20 @@ const option = {
   series: [
     {
       type: 'pie',
-      radius: ['40%', '80%'],
+      radius: ['30%', '60%'],
       center: ['50%', '44%'],
-      avoidLabelOverlap: false,
       label: {
-        show: false,
-        position: 'center'
+        show: true,
+        formatter: (params) => {
+          return handleCompute(params.value)
+        }
       },
       emphasis: {
         label: {
           show: true,
-          fontSize: 40,
+          fontSize: 16,
           fontWeight: 'bold'
         }
-      },
-      labelLine: {
-        show: false
       },
       data: []
     }
@@ -107,6 +105,16 @@ const { cardRef, chartRef, settingRef, resize, handleInitCard, loading } = useDa
     if (!chartSetting.tableName) {
       return option
     }
+    option.series[0].label.formatter = (params) => {
+      return handleCompute(params.value)
+    }
+    option.tooltip.valueFormatter = (value) => {
+      return handleCompute(value)
+    }
+    option.series[0].radius = [
+      chartSetting.innerRingProportion ? chartSetting.innerRingProportion + '%' : '30%',
+      chartSetting.outerRingProportion ? chartSetting.outerRingProportion + '%' : '60%'
+    ]
     option.series[0].data = []
     const data = option.series[0].data
     const rpcParams = {
@@ -115,8 +123,8 @@ const { cardRef, chartRef, settingRef, resize, handleInitCard, loading } = useDa
       _top_n: 5,
       _group_column: chartSetting.groupField,
       _tcv_column: chartSetting.sortBy,
-      _start_date: '2024-10-27 00:44:40',
-      _end_date: '2026-11-03 17:12:00',
+      _start_date: props.dates[0],
+      _end_date: props.dates[1],
       _filters: {}
     }
     if (chartSetting.filterKey && chartSetting.filterValue) {
@@ -153,12 +161,12 @@ function handleShowAll(groupField: string = '') {
     {
       key: 'created_date',
       type: 'gt',
-      value: '2024-10-27 00:44:40'
+      value: props.dates[0]
     },
     {
       key: 'created_date',
       type: 'lt',
-      value: '2026-11-03 17:12:00'
+      value: props.dates[1]
     },
     // {
     //   type: 'select',
@@ -218,6 +226,21 @@ function handleAfterOpen(formRendererRef: any) {
   if (props.type === 'caseManagement') {
     displaySettingFields(['relatedField'], formRendererRef)
   }
+}
+function handleCompute(value: number) {
+  const prefix = props.setting.prefix || ''
+  try {
+    if (props.setting.displayMethod === 'count') {
+      return prefix + FinancialComputing(value)
+
+    } else if (props.setting.displayMethod === 'fileSize') {
+      return prefix + fileSize(value)
+    }
+  } catch (error) {
+    console.error(error)
+    return prefix + value
+  } 
+  return prefix + value
 }
 defineExpose({ resize })
 </script>

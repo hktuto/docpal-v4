@@ -191,5 +191,6 @@ onMounted(async () => {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  font-weight: bold;
 }
 </style>
