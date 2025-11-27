@@ -238,8 +238,10 @@ function fitIn(){
     }
     graph.value?.zoomToFit({padding: 40})
     // get current zoom level
-    const zoomLevel = graph.value?.zoom(0.5)
-    console.log('zoomLevel', zoomLevel)
+    const currentZoom = graph.value?.zoom()
+    if(!currentZoom || currentZoom < 0.3){
+      graph.value?.zoom(0.35)
+    }
 }
 
 const allFormField = ref({});
