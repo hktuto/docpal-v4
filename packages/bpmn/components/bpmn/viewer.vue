@@ -238,7 +238,7 @@ function fitIn(){
     }
     graph.value?.zoomToFit({padding: 40})
     // get current zoom level
-    const zoomLevel = graph.value?.zoom()
+    const zoomLevel = graph.value?.zoom(0.5)
     console.log('zoomLevel', zoomLevel)
 }
 
