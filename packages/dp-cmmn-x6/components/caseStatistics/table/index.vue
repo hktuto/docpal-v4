@@ -65,7 +65,7 @@ async function reorderColumn(fields: any) {
       const columneFromSetting = fields.reduce((prev: any, item: any) => {
         const newItem: any = {
           field: item.id,
-          title: item.name.toLowerCase().replace(/\b\w/g, (s: any) => s.toUpperCase()),
+          title: item.name.includes('ID') ? item.name : item.name.toLowerCase().replace(/\b\w/g, (s: any) => s.toUpperCase()),
           minWidth: 200
         }
         if (item.type === 'date') {
