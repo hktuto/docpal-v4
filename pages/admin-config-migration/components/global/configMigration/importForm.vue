@@ -54,8 +54,35 @@ function readFileAsText(file: File): Promise<string> {
   })
 }
 
-function handleSubmit() {
+const userGroupRef = ref()
+const userRoleRef = ref()
+const documentTemplateRef = ref()
+const emailTemplateRef = ref()
+const folderCabinetRef = ref()
+const idGeneratorRef = ref()
+const masterTableRef = ref()
+const workflowRef = ref()
+const caseRef = ref()
+const homePageRef = ref()
 
+async function handleSubmit() {
+  const userGroupResult = await userGroupRef.value.handleCreateUserGroup()
+  if (!userGroupResult.status) {
+    routerProvider?.message.error(userGroupResult.message)
+    return
+  }
+
+  const userRoleResult = await userRoleRef.value.handleCreateUserRole()
+  if (!userRoleResult.status) {
+    routerProvider?.message.error(userRoleResult.message)
+    return
+  }
+
+  const idGeneratorResult = await idGeneratorRef.value.handleCreateIdGenerator()
+  if (!idGeneratorResult.status) {
+    routerProvider?.message.error(idGeneratorResult.message)
+    return
+  }
 
   mode.value = 'upload'
   fileList.value = []
@@ -96,63 +123,67 @@ function handleSubmit() {
     <div v-if="!!jsonData">
       <div v-if="Object.keys(jsonData.case).length > 0">
         <h3>Case</h3>
-        <LazyConfigMigrationComponentsCase :caseList="jsonData.case" />
+        <LazyConfigMigrationComponentsCase ref="caseRef" :caseList="jsonData.case" />
       </div>
       <el-divider />
 
       <div v-if="Object.keys(jsonData.workflow).length > 0">
         <h3>Workflow</h3>
-        <LazyConfigMigrationComponentsWorkflow :workflowList="jsonData.workflow" />
+        <LazyConfigMigrationComponentsWorkflow ref="workflowRef" :workflowList="jsonData.workflow" />
       </div>
       <el-divider />
 
       <div v-if="Object.keys(jsonData.masterTable).length > 0">
         <h3>Master Table</h3>
-        <LazyConfigMigrationComponentsMasterTable :masterTableList="jsonData.masterTable" />
+        <LazyConfigMigrationComponentsMasterTable ref="masterTableRef" :masterTableList="jsonData.masterTable" />
       </div>
       <el-divider />
 
       <div v-if="Object.keys(jsonData.idGenerator).length > 0">
         <h3>ID Generator</h3>
-        <LazyConfigMigrationComponentsIdGenerator :idGeneratorList="jsonData.idGenerator" />
+        <LazyConfigMigrationComponentsIdGenerator ref="idGeneratorRef" :idGeneratorList="jsonData.idGenerator" />
       </div>
       <el-divider />
 
       <div v-if="Object.keys(jsonData.homePage).length > 0">
         <h3>Home Page</h3>
-        <LazyConfigMigrationComponentsHomePage :homePageList="jsonData.homePage" />
+        <LazyConfigMigrationComponentsHomePage ref="homePageRef" :homePageList="jsonData.homePage" />
       </div>
       <el-divider />
 
       <div v-if="Object.keys(jsonData.userGroup).length > 0">
         <h3>User Group</h3>
-        <LazyConfigMigrationComponentsUserGroup :userGroupList="jsonData.userGroup" />
+        <LazyConfigMigrationComponentsUserGroup ref="userGroupRef" :userGroupList="jsonData.userGroup" />
       </div>
       <el-divider />
 
       <div v-if="Object.keys(jsonData.userRole).length > 0">
         <h3>User Role</h3>
-        <LazyConfigMigrationComponentsUserRole :userRoleList="jsonData.userRole" />
+        <LazyConfigMigrationComponentsUserRole ref="userRoleRef" :userRoleList="jsonData.userRole" />
       </div>
 
       <div v-if="Object.keys(jsonData.documentTemplate).length > 0">
         <h3>Document Template</h3>
-        <LazyConfigMigrationComponentsDocumentTemplate :documentTemplateList="jsonData.documentTemplate" />
+        <LazyConfigMigrationComponentsDocumentTemplate ref="documentTemplateRef"
+                                                       :documentTemplateList="jsonData.documentTemplate" />
       </div>
       <el-divider />
 
       <div v-if="Object.keys(jsonData.emailTemplate).length > 0">
         <h3>Email Template</h3>
-        <LazyConfigMigrationComponentsEmailTemplate :emailTemplateList="jsonData.emailTemplate" />
+        <LazyConfigMigrationComponentsEmailTemplate ref="emailTemplateRef"
+                                                    :emailTemplateList="jsonData.emailTemplate" />
       </div>
       <el-divider />
 
       <div v-if="Object.keys(jsonData.folderCabinet).length > 0">
         <h3>Folder Cabinet</h3>
-        <LazyConfigMigrationComponentsFolderCabinet :folderCabinetList="jsonData.folderCabinet" />
+        <LazyConfigMigrationComponentsFolderCabinet ref="folderCabinetRef"
+                                                    :folderCabinetList="jsonData.folderCabinet" />
       </div>
       <el-divider />
 
+      <el-button @click="mode = 'upload'">{{ $t('dpButtom_cancel') }}</el-button>
       <el-button type="primary" @click="handleSubmit">{{ $t('submit') }}</el-button>
     </div>
   </template>
