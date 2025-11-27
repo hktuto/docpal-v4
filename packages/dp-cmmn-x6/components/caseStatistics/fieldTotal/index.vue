@@ -69,12 +69,12 @@ const { cardRef, settingRef, resize, handleInitCard, loading } = useDashboardCar
       {
         key: 'created_date',
         type: 'gt',
-        value: '2024-10-27 00:44:40'
+        value: props.dates[0]
       },
       {
         key: 'created_date',
         type: 'lt',
-        value: '2026-11-03 17:12:00'
+        value: props.dates[1]
       },
       {
         type: 'select',
@@ -110,12 +110,12 @@ function handleDrillDown() {
     {
       key: 'created_date',
       type: 'gt',
-      value: '2024-10-27 00:44:40'
+      value: props.dates[0]
     },
     {
       key: 'created_date',
       type: 'lt',
-      value: '2026-11-03 17:12:00'
+      value: props.dates[1]
     },
     {
       type: 'order',
