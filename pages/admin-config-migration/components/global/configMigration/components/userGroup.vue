@@ -1,7 +1,34 @@
 <script setup lang="ts">
+import { adminApi } from 'api'
+
 const props = defineProps<{
   userGroupList: any[]
 }>()
+
+async function handleCreateUserGroup() {
+  const groupList: any = Object.values(props.userGroupList)
+  let status = true
+  const noAdditionsList: any[] = []
+
+  for (const group of groupList) {
+    const params = {
+      groupId: group.id,
+      groupName: group.name
+    }
+    try {
+      await adminApi.api.postNuxeoIdentityGroup(params).then(r => r.data)
+    } catch (e) {
+      console.log('Create User Group', e)
+      status = false
+      noAdditionsList.push(group.name)
+    }
+  }
+  return { status: status, message: noAdditionsList.join(',') }
+}
+
+defineExpose({
+  handleCreateUserGroup
+})
 </script>
 
 <template>
@@ -19,7 +46,7 @@ const props = defineProps<{
 </template>
 
 <style scoped lang="scss">
-.el-col{
+.el-col {
   padding-block: 2px;
   padding-right: 5px;
   padding-left: 5px;
