@@ -4136,6 +4136,7 @@
   "workflow_myTask": "我的任务",
   "workflow_newWorkflow": "创建任务",
   "workflow_personalWorkflow": "个人工作流程",
+  "workflow_resign": "编辑签名",
   "workflow_retryFilter": "Filter by Workflow Name",
   "workflow_retryInitiator": "Workflow Initiator",
   "workflow_retryStartDate": "Workflow Start Date",
