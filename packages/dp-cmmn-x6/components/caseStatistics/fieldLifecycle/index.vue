@@ -165,8 +165,9 @@ const { cardRef, chartRef, settingRef, resize, handleInitCard, loading } = useDa
   },
   clickAction: (params: any) => {
     const daysRange = params.name.split('-')
-    const startDate = daysRange[1] ? dayjs(props.dates[0]).subtract(daysRange[1], 'day').format('YYYY-MM-DD 00:00:00') : ''
-    const endDate = dayjs(props.dates[0]).subtract(daysRange[0], 'day').format('YYYY-MM-DD 23:59:59')
+    const currentDate = dayjs(new Date()).format('YYYY-MM-DD 00:00:00')
+    const startDate = daysRange[1] ? dayjs(currentDate).subtract(daysRange[1], 'day').format('YYYY-MM-DD 00:00:00') : ''
+    const endDate = dayjs(currentDate).subtract(daysRange[0], 'day').format('YYYY-MM-DD 23:59:59')
 
     const sortBy = props.setting.sortBy || 'created_date'
     const sortOrder = props.setting.sortOrder || 'desc'
