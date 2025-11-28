@@ -115,11 +115,9 @@ function handleStart() {
       }
       loading.value = true
       try {
-        // TODO : add api
         await clientApi.api.postWorkflowProcessStart(param)
         dialogShow.value = false
         FormRef.value.resetFields()
-        // TODO : add api
         getNewHistory()
       } catch (error) {
         await checkAdhocStatus()
@@ -162,9 +160,7 @@ async function handelAudit(approved: boolean) {
   loading.value = false
   if (result) {
     canApproval.value = false
-    // 有延迟
-    // TODO : add api
-    await checkAdhocStatus()
+    getNewHistory()
   }
 }
 
@@ -200,6 +196,8 @@ async function getWorkflowAdhoc(documentId) {
 
     isReviewer.value = userId.value == data.pendingApproval.user_approver_id
     return
+  } else {
+    pendingApproval.value = null
   }
 
   //
