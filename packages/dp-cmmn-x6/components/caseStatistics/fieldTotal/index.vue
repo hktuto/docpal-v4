@@ -88,6 +88,13 @@ const { cardRef, settingRef, resize, handleInitCard, loading } = useDashboardCar
         value: caseInstanceId
       })
     }
+    if(chartSetting.additionalFilterKey && chartSetting.additionalFilterValue){
+      sqlParams.push({
+        key: chartSetting.additionalFilterKey,
+        type: 'eq',
+        value: chartSetting.additionalFilterValue
+      })
+    }
     if (chartSetting.currentUserField) {
       sqlParams.push({
         key: chartSetting.currentUserField,
@@ -127,6 +134,13 @@ function handleDrillDown() {
       key: props.setting.currentUserField,
       type: 'eq',
       value: userId
+    })
+  }
+  if(props.setting.additionalFilterKey && props.setting.additionalFilterValue){
+    sqlParams.push({
+      key: props.setting.additionalFilterKey,
+      type: 'eq',
+      value: props.setting.additionalFilterValue
     })
   }
   if (props.setting.relatedField && caseInstanceId) {
