@@ -64,26 +64,52 @@ const masterTableRef = ref()
 const workflowRef = ref()
 const caseRef = ref()
 const homePageRef = ref()
+type ReplaceListItem = {
+  oldKey: string,
+  newKey: string,
+}
 
 async function handleSubmit() {
-  const userGroupResult = await userGroupRef.value.handleCreateUserGroup()
-  if (!userGroupResult.status) {
-    routerProvider?.message.error(userGroupResult.message)
-    return
-  }
+  const replaceList: ReplaceListItem[] = []
 
-  const userRoleResult = await userRoleRef.value.handleCreateUserRole()
-  if (!userRoleResult.status) {
-    routerProvider?.message.error(userRoleResult.message)
-    return
-  }
+  // const userGroupResult = await userGroupRef.value.handleCreateUserGroup()
+  // if (!userGroupResult.status) {
+  //   routerProvider?.message.error(userGroupResult.message)
+  //   return
+  // }
+  //
+  // const userRoleResult = await userRoleRef.value.handleCreateUserRole()
+  // if (!userRoleResult.status) {
+  //   routerProvider?.message.error(userRoleResult.message)
+  //   return
+  // }
+  //
+  // const idGeneratorResult = await idGeneratorRef.value.handleCreateIdGenerator()
+  // if (!idGeneratorResult.status) {
+  //   routerProvider?.message.error(idGeneratorResult.message)
+  //   return
+  // }
 
-  const idGeneratorResult = await idGeneratorRef.value.handleCreateIdGenerator()
-  if (!idGeneratorResult.status) {
-    routerProvider?.message.error(idGeneratorResult.message)
-    return
-  }
+  // const emailTemplateResult = await emailTemplateRef.value.handleCreateEmailTemplate()
+  // if (!emailTemplateResult.status) {
+    // routerProvider?.message.error(emailTemplateResult.message)
+    // return
+  // }
 
+  // const documentTemplateResult = await documentTemplateRef.value.handleCreateDocumentTemplate()
+  // if (!documentTemplateResult.status) {
+  //   routerProvider?.message.error(documentTemplateResult.message)
+  //   return
+  // }
+
+
+  // step 1 : get all form in case
+  // TODO : replace all form and xml
+  // convert all form json to string
+  for (let item in replaceList) {
+    // replace xml
+    // xml = xml.repalceALL(item.oldKey, item.newKey)
+  }
   mode.value = 'upload'
   fileList.value = []
 }
