@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { adminApi } from 'api'
+
 const props = defineProps<{
   documentTemplateList: any[]
 }>()
@@ -6,6 +8,59 @@ const props = defineProps<{
 function handleEditDocumentTemplate(item: any) {
   console.log('item', item)
 }
+
+async function handleCreateDocumentTemplate() {
+  let status = true
+  const list = []
+
+  for (const item of Object.values(props.documentTemplateList)) {
+    try {
+      const fileName = item.name + '.json'
+      const jsonData = JSON.stringify(item.fileBlob)
+
+      const blob = new Blob([jsonData], { type: 'application/json; charset=utf-8' })
+      const file = new File([blob], fileName, { type: 'application/json' })
+
+      const data: any = await adminApi.api.postTemplateDocument({}, {
+        name: item.name,
+        file: file,
+        fileType: item.fileType,
+        description: item.description
+      }).then(r => r.data)
+
+      if (!data.id) {
+        status = false
+        list.push(item.name)
+        continue
+      }
+
+      await adminApi.api.patchTemplateDocumentUpdatetemplatevariable({
+        id: data.id,
+        templateVariable: JSON.stringify(item.fileBlob.variablesSchema)
+      }).then(r => r.data)
+
+    } catch (e) {
+      status = false
+      list.push(item.name)
+    }
+  }
+  return { status: status, message: list.join(',') }
+}
+
+async function createFile(fileType: 'Word' | 'Excel' | 'PPT' | 'PDF', name: string) {
+  if (fileType === 'Word') {
+    fileType = 'Json'
+  }
+
+  const path = `/docTemplate/template${ExtensionMap[fileType]}`
+  const file = await fetch(path)
+  const fileArrayBuffer = await file.arrayBuffer()
+  return new File([fileArrayBuffer], `${name}${ExtensionMap[fileType]}`, { type: ExtensionMimeTypeMap[fileType] })
+}
+
+defineExpose({
+  handleCreateDocumentTemplate
+})
 </script>
 
 <template>
@@ -23,7 +78,7 @@ function handleEditDocumentTemplate(item: any) {
 </template>
 
 <style scoped lang="scss">
-.el-col{
+.el-col {
   padding-block: 2px;
   padding-right: 5px;
   padding-left: 5px;
