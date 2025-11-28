@@ -139,6 +139,7 @@ const option = {
     }
   ],
   legend: {
+    show: false,
     top: '5%',
     data: ['Number of Cases', 'Average Value']
   }
@@ -152,6 +153,7 @@ const { cardRef, chartRef, settingRef, resize, handleInitCard, loading } = useDa
       return option
     }
     option.yAxis[0].name = props.setting.barTitle
+    
     option.legend.data[0] = props.setting.barLabel || props.setting.barTitle
     option.series[0].name = props.setting.barLabel || props.setting.barTitle
     option.series[0].tooltip.valueFormatter = function (value) {
@@ -177,6 +179,11 @@ const { cardRef, chartRef, settingRef, resize, handleInitCard, loading } = useDa
       }
       // option.series[0].data = chartSetting.data.map(item => item.value)
       // option.series[1].data = chartSetting.data.map(item => item.average)
+    }
+    if(props.setting.hideLegend) {
+      option.legend.show = false
+    }else{
+      option.legend.show = true
     }
     option.series[0].data = await getCaseCount(chartSetting)
     return option

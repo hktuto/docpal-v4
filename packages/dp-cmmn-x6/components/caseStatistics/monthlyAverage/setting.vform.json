@@ -38,94 +38,88 @@
                 "multipleLimit": 0,
                 "optionItems": [
                   {
-                    "value": "0fdb813b-e030-49bc-82b3-548715b51559",
-                    "label": "Backup Personal info Case Definition",
-                    "tableName": "ct_personal_info_case_backup",
-                    "uniqueName": "personal_info_case_backup"
+                    "value": "88f7d34d-973b-42a4-b368-4735b820e032",
+                    "label": " Case Info",
+                    "tableName": "ct_test1",
+                    "uniqueName": "test1"
                   },
                   {
-                    "value": "ab026779-f666-4ecd-9f87-4e4fe2afa091",
+                    "value": "9ed1f65a-8605-4413-b7c5-9aede4ebcdfe",
                     "label": "Company Case",
                     "tableName": "ct_company_case1",
                     "uniqueName": "company_case1"
                   },
                   {
-                    "value": "ed7975f0-4852-4536-a5ff-0c1d6d5ae01c",
+                    "value": "70aaa9b9-e699-4407-a56d-87cc5c386a1e",
                     "label": "Company Profile",
                     "tableName": "ct_company_profile1",
                     "uniqueName": "company_profile1"
                   },
                   {
-                    "value": "10c4ee08-2a29-4ce9-ba4e-77313d3d84b9",
-                    "label": "customer",
-                    "tableName": "ct_customer1",
-                    "uniqueName": "customer1"
+                    "value": "b2daaf14-9545-4be2-9d52-2a89ffeb1017",
+                    "label": "CPA Customer",
+                    "tableName": "ct_cpa_customer1",
+                    "uniqueName": "cpa_customer1"
                   },
                   {
-                    "value": "99789945-2d3a-4832-8306-a0ec8eae183f",
-                    "label": "Customer Case",
-                    "tableName": "ct_customer_case1",
-                    "uniqueName": "customer_case1"
+                    "value": "77c45105-5355-4219-9432-d2bd3c787ace",
+                    "label": "crystal",
+                    "tableName": "ct_crystal1",
+                    "uniqueName": "crystal1"
                   },
                   {
-                    "value": "ec287a3c-9add-4442-b0d6-525ce6f99d75",
-                    "label": "Joshua Test",
-                    "tableName": "ct_joshua_test1",
-                    "uniqueName": "joshua_test1"
+                    "value": "12d81007-53d3-4a94-84cf-6192ea88e798",
+                    "label": "HKCTA_Coach",
+                    "tableName": "ct_hkcta_coach1",
+                    "uniqueName": "hkcta_coach1"
                   },
                   {
-                    "value": "86a599cc-44c1-4ff6-b900-ab19b8db4797",
-                    "label": "Order Case",
-                    "tableName": "ct_order_case1",
-                    "uniqueName": "order_case1"
+                    "value": "6b359b55-3874-45e6-82bb-04a88b8beff5",
+                    "label": "HKCTA_Course",
+                    "tableName": "ct_hkcta_course1",
+                    "uniqueName": "hkcta_course1"
                   },
                   {
-                    "value": "51cc6d59-7f89-49b5-b350-f73a7f6ccdcd",
-                    "label": "ROC Parts",
-                    "tableName": "ct_roc_parts1",
-                    "uniqueName": "roc_parts1"
+                    "value": "16e10133-9221-4bca-8643-ff1bf7b3574b",
+                    "label": "Human Resources Case",
+                    "tableName": "ct_human_resources_case1",
+                    "uniqueName": "human_resources_case1"
                   },
                   {
-                    "value": "903ce611-65bf-4b3a-a16b-d31469c819d0",
-                    "label": "Single Case",
-                    "tableName": "ct_single_case1",
-                    "uniqueName": "single_case1"
+                    "value": "6c30279a-d926-4bfb-aeaf-9e34a1c63f6c",
+                    "label": "LT_AP",
+                    "tableName": "ct_lt_ap1",
+                    "uniqueName": "lt_ap1"
                   },
                   {
-                    "value": "1c7bcf0a-02e8-4608-8418-2ffc3bbd0f3f",
-                    "label": "SoWa",
-                    "tableName": "ct_sowa1",
-                    "uniqueName": "sowa1"
+                    "value": "f9cdc3a6-02b4-44d7-a979-0785a8237f6c",
+                    "label": "LT_CRM_Case",
+                    "tableName": "ct_lt_crm_case1",
+                    "uniqueName": "lt_crm_case1"
                   },
                   {
-                    "value": "7ede7103-0766-45cc-a83e-1e6a349b4f2c",
-                    "label": "Task Case",
-                    "tableName": "ct_task_case1",
-                    "uniqueName": "task_case1"
+                    "value": "ace31312-36c6-4d32-91f5-8ad63bcb7140",
+                    "label": "ROC_Events",
+                    "tableName": "ct_roc_events1",
+                    "uniqueName": "roc_events1"
                   },
                   {
-                    "value": "ccb2e58c-eed3-40b3-a6de-d2798a4b9836",
-                    "label": "test case by steve",
-                    "tableName": "ct_test_case_by_steve1",
-                    "uniqueName": "test_case_by_steve1"
+                    "value": "53b0a78d-9e2d-4ad0-9c8b-71b76762d665",
+                    "label": "ROC_Participants",
+                    "tableName": "ct_participants1",
+                    "uniqueName": "participants1"
                   },
                   {
-                    "value": "724a446b-510e-417d-9563-8058583315ef",
-                    "label": "test data sync",
-                    "tableName": "ct_test_data_sync1",
-                    "uniqueName": "test_data_sync1"
+                    "value": "968e1b15-dfb4-4659-9112-283c84181e53",
+                    "label": "ST_Test",
+                    "tableName": "ct_st_test1",
+                    "uniqueName": "st_test1"
                   },
                   {
-                    "value": "77090c07-a635-42eb-8610-380ce49ccaca",
-                    "label": "testOy",
-                    "tableName": "ct_testoy1",
-                    "uniqueName": "testoy1"
-                  },
-                  {
-                    "value": "a1a71851-1f9b-45a5-9ed8-0a21854dcadb",
-                    "label": "testOy2",
-                    "tableName": "ct_testoy2",
-                    "uniqueName": "testoy2"
+                    "value": "679157a8-d326-4bc2-8ee2-7a027247afc7",
+                    "label": "Test_Vendor",
+                    "tableName": "ct_test_vendor1",
+                    "uniqueName": "test_vendor1"
                   }
                 ],
                 "selectSetting": {
@@ -1094,6 +1088,37 @@
         "customClass": ""
       },
       "id": "grid80690"
+    },
+    {
+      "key": 41799,
+      "type": "switch",
+      "icon": "switch-field",
+      "formItemFlag": true,
+      "options": {
+        "name": "hideLegend",
+        "label": "Hide Legend",
+        "labelAlign": "",
+        "defaultValue": false,
+        "columnWidth": "200px",
+        "labelWidth": null,
+        "labelHidden": false,
+        "disabled": false,
+        "hidden": false,
+        "customClass": "",
+        "labelIconClass": null,
+        "labelIconPosition": "rear",
+        "labelTooltip": null,
+        "switchWidth": 40,
+        "activeText": "",
+        "inactiveText": "",
+        "activeColor": null,
+        "inactiveColor": null,
+        "onCreated": "",
+        "onMounted": "",
+        "onChange": "",
+        "onValidate": ""
+      },
+      "id": "switch94375"
     },
     {
       "key": 104344,
