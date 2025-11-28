@@ -9,7 +9,7 @@
     <FormRenderer ref="FormRendererRef" :form-json="formJson" />
     <template #footer>
       <div class="footer-grid">
-        <el-button id="WorkPanel__CreateNewWorkPanel__Submit" type="primary" :loading="state.loading"
+        <el-button id="browseHome__CreateNewWorkPanel__Submit" type="primary" :loading="state.loading"
                    @click="handleSubmit">
           {{ $t('common_submit') }}
         </el-button>
@@ -21,6 +21,7 @@
 import { adminApi } from 'api'
 import formJson from './dialog.vform.json'
 import { ElMessage } from 'element-plus'
+
 const emits = defineEmits(['refresh', 'delete', 'add'])
 const { t } = useI18n()
 const state = reactive({

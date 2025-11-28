@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { adminApi } from 'api'
+
 const props = defineProps<{
   homePageList: any[]
 }>()
@@ -10,6 +12,29 @@ function handelJson(json: string) {
 function handleEditStyle(styleItem: any) {
   console.log('styleItem', styleItem)
 }
+
+async function handleCreateHomePage() {
+  let status = true
+  const list = []
+
+  for (const item of Object.values(props.homePageList)) {
+    try {
+      const data = await adminApi.api.postPersonalDashboardSave({
+        name: item.name,
+        groupId: item.groupId,
+        styleJson: item.styleJson
+      }).then(res => res.data)
+    } catch (e) {
+      status = false
+      list.push(item.name)
+    }
+  }
+  return { status: status, message: list.join(',') }
+}
+
+defineExpose({
+  handleCreateHomePage
+})
 
 </script>
 
