@@ -2,6 +2,9 @@
 import { clientApi } from 'api'
 import { MoreFilled } from '@element-plus/icons-vue'
 import { ElMessage } from 'element-plus'
+import dayjs from 'dayjs'
+import '../../../../../packages/dp-dashboard/components/formSlot/displayColumn/vxeTableRender.ts'
+import { formSlotOrderDisplayColumns } from '../../../../../packages/dp-dashboard/components/formSlot/displayColumn/reorderColumn'
 const platform = useAppPlatform()
 const { setting, displayColumns, dates, sql } = defineProps<{
   setting: any
@@ -59,71 +62,23 @@ const { tableConfig, tableEvent, tableRef, query, reload, cleanSelectedRows } = 
 const dialogRef = ref()
 
 async function reorderColumn(fields: any) {
-  try {
-    const columns: any = []
-    if (fields.length > 0) {
-      const columneFromSetting = fields.reduce((prev: any, item: any) => {
-        const newItem: any = {
-          field: item.id,
-          title: item.name.includes('ID') ? item.name : item.name.toLowerCase().replace(/\b\w/g, (s: any) => s.toUpperCase()),
-          minWidth: 200
-        }
-        if (item.type === 'date') {
-          newItem.formatter = ({ cellValue }: any) => {
-            return formatDate(cellValue)
-          }
-        } else if (item.formatter) {
-          newItem.formatter = item.formatter
-        }
-
-        if (setting.groupField === item.id) {
-          newItem.treeNode = true
-        }
-        prev.push(newItem)
-        return prev
-      }, [])
-      columns.splice(0, 0, ...columneFromSetting)
-    }
-    const index = columns.findIndex((item: any) => item.treeNode)
-    if (index !== -1) {
-      // tableConfig.treeConfig = {
-      //   // expandAll: true,
-      //   rowField: 'id',
-      //   parentField: 'parent_id',
-      //   transform: true,
-      //   indent: 20
-      // }
-      const removedElement = columns.splice(index, 1)[0]
-      columns.unshift(removedElement)
-    }
-    tableConfig.columns = columns
-  } catch (e) {
-    console.log('error', e)
-  }
+  tableReady.value = false
+  const columns = await formSlotOrderDisplayColumns(fields, tabProvider, closeDialog)
+  tableConfig.columns = [...columns]
+  console.log('columns', columns)
   setTimeout(() => {
     tableReady.value = true
   }, 200)
+}
+function closeDialog() {
+  emits('close')
 }
 watch(
   () => setting?.displayColumns,
   (newVal) => {
     try {
-      const fields = JSON.parse(setting.fields)
-      const columns: any = newVal.reduce((prev: any, columnId: any) => {
-        const columnItem = {
-          id: columnId,
-          name: columnId
-        }
-        const field = fields.find((item: any) => item.value === columnId)
-        if (field) {
-          columnItem.id = field.value
-          columnItem.name = field.label
-          columnItem.type = field.type
-        }
-        prev.push(columnItem)
-        return prev
-      }, [])
-      reorderColumn(columns)
+      console.log('newVal', newVal)
+      reorderColumn(newVal)
     } catch (error) {
       console.log('error', error)
     }
