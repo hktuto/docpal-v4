@@ -21,7 +21,7 @@ const { uploadState } = useUploadAIStore()
 const { messageHandlers } = useNotification()
 const userId = useUserId()
 const failList = ['FAIL']
-
+const { t } = useI18n()
 function handleOpen() {
   NotificationDialogRef.value.handleOpen()
 }
@@ -70,8 +70,8 @@ function handleAiUpload(content) {
     const message = content['upload status'] === 'FAIL' ? 'ai.uploadCompleteAndAIFail' : 'ai.uploadClick'
     // : 'ai.uploadAndAIComplete'
     const noti = ElNotification({
-      title: $i18n.t('ai.uploadcomplete'),
-      message: allowFeature('AI_CLASSIFICATION') ? $i18n.t(message) : '',
+      title: t('ai.uploadcomplete'),
+      message: allowFeature('AI_CLASSIFICATION') ? t(message) : '',
       type: 'success',
       duration: 0,
       customClass: 'cursorPointer',
@@ -94,8 +94,8 @@ function handleAiUpload(content) {
 function handleReplaceFileWithAi(content) {
   if (content.idOrPath) {
     const noti = ElNotification({
-      title: $i18n.t('status.completed'),
-      message: $i18n.t('ai.confirmAiMetadataExtractionViewDocument'),
+      title: t('status.completed'),
+      message: t('ai.confirmAiMetadataExtractionViewDocument'),
       type: 'success',
       duration: 0,
       onClick: () => {
@@ -116,8 +116,8 @@ function handleShowNotification(content) {
   let type = 'success'
   if (content.notiStatus && failList.includes(content.notiStatus)) type = 'error'
   const noti = ElNotification({
-    title: $i18n.t('tip.notification'),
-    message: $i18n.t(content.templateId),
+    title: t('tip.notification'),
+    message: t(content.templateId),
     type,
     duration: 6000,
     onClick: () => {
@@ -130,6 +130,7 @@ function handleWorkflow(content: any) {
   const message = JSON.parse(content.message)
 
   const eventType = message.eventType
+  console.log('handleWorkflow', message, content)
   switch (eventType) {
     case 'calendar' :
       handleCalendar(message)
@@ -145,7 +146,7 @@ function handleWorkflow(content: any) {
 
 function handleShowDefaultNotification(content: any) {
   const notification = ElNotification({
-    title: $i18n.t('tip.notification'),
+    title: t('tip.notification'),
     message: content,
     type: 'success',
     duration: 6000,
@@ -165,7 +166,7 @@ function handleCalendar(message: any) {
   }
 
   const notification = ElNotification({
-    title: $i18n.t('tip.notification'),
+    title: t('tip.notification'),
     message: msg,
     type: 'success',
     duration: 6000,
@@ -179,10 +180,10 @@ function handleCalendar(message: any) {
 
 function handleOpenCaseDashboard(message: any) {
   const notification = ElNotification({
-    title: $i18n.t('tip.notification'),
+    title: t('tip.notification'),
     message: 'Open Case Dashboard.',
     type: 'success',
-    duration: 6000,
+    duration: 0,
     onClick: async () => {
       const caseInstance = await clientApi.api.getCaseInstanceCaseidCaseid(message.additionalContent).then((res) => res.data)
       const data = {
