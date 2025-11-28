@@ -36,6 +36,11 @@ async function handleDelete() {
   emits('delete')
 }
 
+const routerProvider = inject(MenuRouterKey)
+if (!routerProvider) {
+  throw new Error('MenuRouterKey is not provided')
+}
+
 const state = reactive<any>({
   extraParams: {}
 })
@@ -96,6 +101,11 @@ function handleFilterFormChange(formModel: any) {
 
 async function handleDblclick(row: any) {
   try {
+    routerProvider?.navigateTo(routeWorkflowDetail({
+    ...row,
+    name: row.taskInstance.businessKey,
+    workflowType: 'myTask'
+  }), false)
     // router.push(`/caseManage/dashboard?id=${row.id}&instanceId=${instance.businessKey}&caseId=${route.params.id}`)
   } catch (error) {
     console.error(error)

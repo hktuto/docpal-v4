@@ -474,8 +474,6 @@ onMounted(() => {
   </div>
 </template>
 
-
-<
 <style lang="scss" scoped>
 .exportInfoContainer {
   display: flex;

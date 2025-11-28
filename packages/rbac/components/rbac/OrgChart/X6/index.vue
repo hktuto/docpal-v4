@@ -109,7 +109,7 @@ const createGraph = () => {
       allowMulti: true
     },
     scaling: {
-      min: 0.2,
+      min: 0.01,
       max: 1.2
     },
     panning: true,
