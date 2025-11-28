@@ -84,13 +84,13 @@ onMounted(() => {
 <template>
   <div class="cardListContainer">
     <div v-for="item in list" :key="item.id" class="card">
-      <template v-for="column in columnsSetting" :key="column.field">
+      <div v-for="column in columnsSetting" :key="column.field" class="card-item">
         <div class="card-item-label">{{ column.title }}</div>
         <!-- value -->
         <div class="card-item-value">
           {{ column.formatter ? column.formatter(item[column.field]) : item[column.field] }}
         </div>
-    </template>
+    </div>
   </div>
 </div>
 </template>
@@ -109,12 +109,13 @@ onMounted(() => {
   gap: var(--app-space-xs);
 }
 .card-item-label{
-  font-size: var(--app-font-size-s);
+  font-size: var(--app-font-size-m);
   color: var(--app-grey-600);
 }
 .card-item-value{
-  font-size: var(--app-font-size-m);
-  color: var(--app-grey-300);
+  font-size: var(--app-font-size-l);
+  color: var(--el-text-color-primary);
+  font-weight: 600;
 }
 .card + .card {
   padding-top: var(--app-space-xs);
