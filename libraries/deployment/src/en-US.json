@@ -4135,6 +4135,7 @@
   "workflow_myTask": "My Task",
   "workflow_newWorkflow": "New Workflow",
   "workflow_personalWorkflow": "Personal Workflow",
+  "workflow_resign": "Edit Signature",
   "workflow_retryFilter": "Filter by Task Name",
   "workflow_retryInitiator": "Workflow Initiator",
   "workflow_retryStartDate": "Workflow Start Date",

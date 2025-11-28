@@ -10,7 +10,7 @@
     @refresh="handleInitCard"
   >
   <template #action_prefix>
-    <el-button type="primary" size="small" @click="handleOpenDialog">{{ $t('common_filter') }}</el-button>
+    <el-button type="primary" size="small" @click="handleOpenDialog">{{ $t('common_filter') }} {{  displayFilter }}</el-button>
   </template>
     <div id="myEcharts" ref="chartRef" class="echart"></div>
     <CaseStatisticsTableDialog :setting="setting" :dates="tableDates" ref="dialogRef"> </CaseStatisticsTableDialog>
@@ -51,7 +51,7 @@ const { t } = useI18n()
 const title = $t('dashboard.cmmnCaseFieldLifecycle')
 const total = ref(0)
 const tableDates = ref([])
-let filterParams = []
+const filterParams = ref([])
 const emits = defineEmits(['refreshSetting', 'delete'])
 function handleRefresh(chartSetting) {
   emits('refreshSetting', chartSetting)
@@ -60,24 +60,34 @@ function handleDelete() {
   emits('delete')
 }
 
+const displayFilter = computed(() => {
+  if (filterParams.value.length > 0) {
+    return `(${filterParams.value.map((item) => item.value).join(', ')})`
+  }
+  return ''
+}, {
+  deep: true,
+  immediate: true
+})
+
 const seriesConfig = {
   type: 'bar',
   itemStyle: {},
   tooltip: {
     valueFormatter: function (value) {
-      return value
+      return Math.round(value)
     }
   }
 }
 const option = {
   tooltip: {
     trigger: 'axis',
-    axisPointer: {
-      type: 'cross',
-      crossStyle: {
-        color: '#999'
-      }
-    }
+    // axisPointer: {
+    //   type: 'cross',
+    //   crossStyle: {
+    //     color: '#999'
+    //   }
+    // }
   },
   grid: {
     left: '10%', // 调整整个图表左侧的留白，增加偏移
@@ -91,7 +101,10 @@ const option = {
       data: [],
       axisPointer: {
         type: 'shadow'
-      }
+      },
+      name: "Days",
+      nameGap: 20,
+      nameLocation: 'middle',
     }
   ],
   yAxis: [
@@ -107,7 +120,7 @@ const option = {
       }
     }
   ],
-  series: []
+  series: [],
 }
 const dialogRef = ref()
 
@@ -121,7 +134,7 @@ const { cardRef, chartRef, settingRef, resize, handleInitCard, loading } = useDa
     option.series = []
     option.legend = {
       data: [],
-      bottom: '0%'
+      top: '5%'
     }
     const rpcParams = {
       _table_name: chartSetting.tableName,
@@ -138,8 +151,8 @@ const { cardRef, chartRef, settingRef, resize, handleInitCard, loading } = useDa
     if(chartSetting.currentUserField ) {
       rpcParams._filters[chartSetting.currentUserField] = userId
     }
-    if (filterParams && filterParams.length > 0) {
-      filterParams.forEach((item) => {
+    if (filterParams.value && filterParams.value.length > 0) {
+      filterParams.value.forEach((item) => {
         rpcParams._filters[item.key] = item.value
       })
     }
@@ -194,8 +207,8 @@ const { cardRef, chartRef, settingRef, resize, handleInitCard, loading } = useDa
         value: userId
       })
     }
-    if (filterParams && filterParams.length > 0) {
-      sqlParams = [...sqlParams, ...filterParams]
+    if (filterParams.value && filterParams.value.length > 0) {
+      sqlParams = [...sqlParams, ...filterParams.value]
     }
     dialogRef.value.handleOpen(sqlParams)
   }
@@ -225,13 +238,18 @@ function getData(data: any) {
 }
 const filterDialogRef = ref()
 function handleOpenDialog() {
-  filterDialogRef.value.handleOpen(JSON.parse(JSON.stringify(filterParams)))
+  filterDialogRef.value.handleOpen(JSON.parse(JSON.stringify(filterParams.value)))
 }
 function handleFilter(params: any) {
-  filterParams = params
+  filterParams.value = params
+  console.log(filterParams.value)
   handleInitCard()
 }
 defineExpose({ resize })
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.echart{
+  padding: var(--app-space-xs);
+}
+</style>
