@@ -41,7 +41,9 @@ async function getData() {
   if(selectedData && selectedData.value) {
     // loop
     const trimmedValue = selectedData.value.split('-')[0]
-    currentStage.value = props.setting.steps.findIndex((item: any) => item.value.includes(trimmedValue))
+    console.log('trimmedValue', trimmedValue)
+    currentStage.value = props.setting.steps.findIndex((item: any) => item.value === trimmedValue )
+    console.log('currentStage', currentStage.value, props.setting.steps)
   }else{
     currentStage.value = -1
   }
