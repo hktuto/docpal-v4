@@ -102,6 +102,11 @@ async function handleSubmit() {
   //   return
   // }
 
+  // const homePageResult = await homePageRef.value.handleCreateHomePage()
+  // if (!homePageResult.status) {
+  //   routerProvider?.message.error(homePageResult.message)
+  //   return
+  // }
 
   // step 1 : get all form in case
   // TODO : replace all form and xml
