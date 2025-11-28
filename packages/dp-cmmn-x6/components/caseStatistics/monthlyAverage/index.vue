@@ -188,7 +188,7 @@ const { cardRef, chartRef, settingRef, resize, handleInitCard, loading } = useDa
     } else {
       dates = JSON.parse(JSON.stringify(props.dates))
     }
-    const year = dayjs(dates[0]).year() + props.setting.yearOffset
+    const year = dayjs(dates[0]).year()
     const month = params.dataIndex + 1
     const startDate = dayjs(`${year}-${month}-01`).format('YYYY-MM-DD 00:00:00')
     const endDate = dayjs(`${year}-${month}-01`).endOf('month').format('YYYY-MM-DD 23:59:59')
