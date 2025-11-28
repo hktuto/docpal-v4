@@ -64,7 +64,16 @@ const dialogRef = ref()
 async function reorderColumn(fields: any) {
   tableReady.value = false
   const columns = await formSlotOrderDisplayColumns(fields, tabProvider, closeDialog)
+  if (setting.groupField) {
+    const groupColumn = columns.find((item: any) => item.field === setting.groupField)
+    if (groupColumn) {
+      groupColumn.treeNode = true
+    }
+    columns.splice(columns.indexOf(groupColumn), 1)
+    columns.unshift(groupColumn)
+  }
   tableConfig.columns = [...columns]
+
   console.log('columns', columns)
   setTimeout(() => {
     tableReady.value = true
