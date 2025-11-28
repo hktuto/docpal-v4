@@ -28,7 +28,8 @@ function handleOpen(sqlParams: any) {
   if (!setting.fields) return
   if (sqlParams) {
     const _sqlParams = JSON.parse(JSON.stringify(sqlParams))
-    const columns = [...setting.displayColumns, 'case_id'].join(',')
+    const displayColumns = setting.displayColumns.map((item: any) => item.value || item)
+    const columns = [...displayColumns, 'case_id'].join(',')
     const selectSql = _sqlParams.find((item) => item.type === 'select')
     if (!selectSql) {
       _sqlParams.push({
