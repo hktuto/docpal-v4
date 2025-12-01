@@ -24,7 +24,7 @@ async function handleCreateFolderCabinet() {
   for (const item of Object.values(props.folderCabinetList)) {
     const data = await adminApi.api.postCabinetTemplate({
       documentType: 'Folder',
-      label: item.label + '-1',
+      label: item.label,
       userGroups: item.userGroups,
       binds: item.binds,
       rootId: item.newRootId[0],

@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ElMessageBox } from 'element-plus'
+import { adminApi } from 'api'
 
 const props = defineProps<{
   masterTableList: any[]
@@ -13,8 +14,6 @@ function handleOpenEditDialog(item: any) {
   console.log('item', item)
   masterTableItem.value = item
   tableConfig.data = item.fields
-
-
   showDialog.value = true
 }
 
@@ -55,10 +54,65 @@ function handleEditField(fieldItem: any) {
 }
 
 function handleUpdate(item: any) {
-
   // emit('update', item)
   showDialog.value = false
 }
+
+async function handleCreateMasterTable() {
+
+  for (const item of Object.values(props.masterTableList)) {
+    const createFields = item.fields.map((fieldItem: any) => {
+      const fieldName = fieldItem.columnName
+      let dataType
+
+      switch (fieldItem.dataType) {
+        case 'varchar':
+          dataType = `${fieldItem.dataType}:${fieldItem.length}`
+          break
+        case 'text':
+          dataType = 'clob'
+          break
+        case  'longtext':
+          dataType = 'clob'
+          break
+        case 'timestamp':
+          dataType = fieldItem.dataType
+          break
+        case 'bit':
+          dataType = 'boolean'
+          break
+        case 'bigint':
+          dataType = 'bigint'
+          break
+        case 'json':
+          dataType = 'json'
+          break
+        case 'decimal':
+          dataType = 'decimal'
+          break
+        default:
+          dataType = fieldItem.dataType
+          break
+      }
+
+      return {
+        fieldName,
+        dataType,
+        required: fieldItem.required,
+        unique: fieldItem.unique
+      }
+    })
+
+    const data = await adminApi.api.postMasterTables({
+      name: item.name,
+      fields: createFields
+    }).then(r => r.data)
+  }
+}
+
+defineExpose({
+  handleCreateMasterTable
+})
 </script>
 
 <template>
