@@ -17,13 +17,13 @@ async function handleCreateUserRole() {
       type: role.status
     }
     try {
-      await adminApi.api.postAclRole(params).then(r => r.data)
+      const newVar = await adminApi.api.postAclRole(params).then(r => r.data)
     } catch (e) {
       status = false
-      noAdditionsList.push(role.name)
+      noAdditionsList.push({ name: role.name, newId: newVar.id })
     }
   }
-  return { status: status, message: noAdditionsList.join(',') }
+  return { status: status, data: noAdditionsList }
 }
 
 defineExpose({ handleCreateUserRole })
