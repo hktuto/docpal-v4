@@ -493,7 +493,7 @@
                 "optionItems": [
                   {
                     "value": "count",
-                    "label": "Count"
+                    "label": "Compact Notation"
                   },
                   {
                     "value": "fileSize",
