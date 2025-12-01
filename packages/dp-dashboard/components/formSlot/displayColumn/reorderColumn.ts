@@ -6,7 +6,7 @@ export async function formSlotOrderDisplayColumns(fields: any, tabProvider: any,
       const columneFromSetting = fields.reduce((prev: any, item: any) => {
         const newItem: any = {
           field: item.value,
-          title: item.label.includes('ID') ? item.label : item.label.toLowerCase().replace(/\b\w/g, (s: any) => s.toUpperCase()),
+          title: item.label && item.label.includes('ID') ? item.label : item.label.toLowerCase().replace(/\b\w/g, (s: any) => s.toUpperCase()),
           minWidth: 200
         }
         if (item.type === 'date') {
