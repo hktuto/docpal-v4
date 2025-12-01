@@ -16,14 +16,14 @@ async function handleCreateUserGroup() {
       groupName: group.name
     }
     try {
-      await adminApi.api.postNuxeoIdentityGroup(params).then(r => r.data)
+      const newVar = await adminApi.api.postNuxeoIdentityGroup(params).then(r => r.data)
     } catch (e) {
       console.log('Create User Group', e)
       status = false
-      noAdditionsList.push(group.name)
+      noAdditionsList.push({ name: group.name, newId: newVar.id })
     }
   }
-  return { status: status, message: noAdditionsList.join(',') }
+  return { status: status, data: noAdditionsList }
 }
 
 defineExpose({
