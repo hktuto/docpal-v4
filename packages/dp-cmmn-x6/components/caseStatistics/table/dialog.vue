@@ -3,7 +3,7 @@
     v-model="state.visible"
     :title="setting.dialogSettingTitle"
     class="big caseStatistics-table-dialog"
-    append-to-body
+    :append-to-body="appendToBody"
     :close-on-click-modal="false"
     @close="state.visible = false"
   >
@@ -23,10 +23,12 @@ const state = reactive({
   visible: false,
   sql: ''
 })
+const appendToBody = ref(true)
 const tableRef = ref()
 function handleOpen(sqlParams: any) {
   if (!setting.fields) return
   if (sqlParams) {
+    appendToBody.value = document.fullscreenElement ? false : true
     const _sqlParams = JSON.parse(JSON.stringify(sqlParams))
     const displayColumns = setting.displayColumns.map((item: any) => item.value || item)
     const columns = [...displayColumns, 'case_id'].join(',')
