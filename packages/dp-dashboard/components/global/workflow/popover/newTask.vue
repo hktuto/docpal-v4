@@ -180,7 +180,7 @@ async function handleAdditionalSetting(xml: any, taskDetail: any, formData: any)
     components,
     signatureSetting,
     buttonSetting
-  } = await getBpmnAddtionalElement(xml, 'Start', taskDetail, formData)
+  } = await getBpmnAdditionalElement(xml, 'Start', taskDetail, formData)
   additionalButton.value = buttons
   if (buttonSetting) {
     pageButtonSetting.value = buttonSetting

@@ -5,7 +5,7 @@ const generateDocumentComponent = 'LazyBpmnButtonGenerateDocument'
 const booleanButtonComponent = 'LazyBpmnButtonBoolean'
 import { generateData, replaceVariables } from 'docpal-document-editor/src/utils'
 
-export async function getBpmnAddtionalElement(xml: any, taskDefinitionKey: string, taskDetail: any, formData: any) {
+export async function getBpmnAdditionalElement(xml: any, taskDefinitionKey: string, taskDetail: any, formData: any) {
   const xmlJson = bpmnStringToJson(xml)
   const currentTask = xmlJson.flatObj[taskDefinitionKey]
   let signatureSetting: any = null
