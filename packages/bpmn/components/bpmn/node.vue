@@ -21,6 +21,11 @@ function setupNode(){
         graphProvider?.graph.value?.zoomToFit({
             padding: 24
         })
+        const currentZoom = graphProvider?.graph.value?.zoom()
+        console.log("currentZoom", currentZoom)
+        if(currentZoom && currentZoom < 0.18){
+            graphProvider?.graph.value?.zoom(0.16)
+        }
         opened.value = false
     })
     graphProvider?.graph.value?.on('node:mouseenter', ({cell}:any) => {

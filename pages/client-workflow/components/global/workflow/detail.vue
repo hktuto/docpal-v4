@@ -234,6 +234,11 @@ async function handleCancel() {
     ...data
   }
   const templateVariables = convertWorkflowVariableToTemplateVariable(allFormData, signatureDetail.value.workflowToTemplateMapping)
+  
+  // check if current step need to sign
+  if(signatureDetail.value.signatureVariableSetting) {
+      templateVariables[signatureDetail.value.signatureVariableSetting.id] = signatureDetail.value.templateVariables[signatureDetail.value.signatureVariableSetting.id]
+    }
   const newVariables = generateData(templateVariables, JSON.parse(JSON.stringify(signatureDetail.value.templateDetail)))
   const content = signatureDetail.value.templateDetail.json.content.content
   signatureDetail.value.templateDetail.json.content.content = replaceVariables(content, newVariables.variables)
@@ -333,7 +338,7 @@ async function handleApplySignature(newSignature: any) {
 }
 
 async function handleAdditionalSetting(xml: any, taskDetail: any, formData: any) {
-  const { buttons, components, signatureSetting, buttonSetting } = await getBpmnAddtionalElement(xml, state.taskDetail.taskDefinitionKey, taskDetail, formData)
+  const { buttons, components, signatureSetting, buttonSetting } = await getBpmnAdditionalElement(xml, state.taskDetail.taskDefinitionKey, taskDetail, formData)
   additionalButton.value = buttons
   if(buttonSetting) {
     pageButtonSetting.value = buttonSetting
@@ -357,10 +362,20 @@ async function handleFormChange() {
   if(displayMode.value === 'signature') {
     // get new form data and update signature preview
     let data = await vFormRef.value.getFormData(true, false)
-    const templateVariables = convertWorkflowVariableToTemplateVariable(data, signatureDetail.value.workflowToTemplateMapping)
+    const allFormData = {
+      ...formDataValue.value,
+      ...data
+    }
+    
+    const templateVariables = convertWorkflowVariableToTemplateVariable(allFormData, signatureDetail.value.workflowToTemplateMapping)
+    // check if current step need to sign
+    if(signatureDetail.value.signatureVariableSetting) {
+      templateVariables[signatureDetail.value.signatureVariableSetting.id] = signatureDetail.value.templateVariables[signatureDetail.value.signatureVariableSetting.id]
+    }
     const newVariables = generateData(templateVariables, JSON.parse(JSON.stringify(signatureDetail.value.templateDetail)))
     const content = signatureDetail.value.templateDetail.json.content.content
     signatureDetail.value.templateDetail.json.content.content = replaceVariables(content, newVariables.variables)
+    console.log("signatureDetail.value", signatureDetail.value)
   }
 }
 
