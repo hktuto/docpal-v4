@@ -384,6 +384,7 @@
   "case": {
     "UserGroupId": "User Group",
     "UserId": "User",
+    "addFilterConditionsToThePopUpTable": "Add filter conditions to the pop-up table",
     "averageField": "Average by Field",
     "averageGap": "Average Chart Title Margin",
     "averageLabel": "Average Chart Label",
@@ -1488,6 +1489,7 @@
     "stopSharing": "Stop sharing"
   },
   "dpTable": {
+    "columnSetting": "Column Setting",
     "latestVersion": "Latest Version",
     "name": "Name",
     "productionVersion": "Production Version"

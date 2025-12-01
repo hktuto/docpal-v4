@@ -1,5 +1,5 @@
 <template>
-  <el-dialog v-model="state.visible" :title="title" class="scroll-dialog" destroy-on-close append-to-body :close-on-click-modal="false" @close="handleClose">
+  <el-dialog v-model="state.visible" :title="$t('dpTable.columnSetting')" class="scroll-dialog" destroy-on-close append-to-body :close-on-click-modal="false" @close="handleClose">
     <FormRenderer ref="FormRendererRef" :form-json="formJson" />
     <template #footer>
       <div class="footer-grid">
