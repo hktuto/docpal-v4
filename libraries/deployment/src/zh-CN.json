@@ -383,6 +383,7 @@
   "case": {
     "UserGroupId": "用户组",
     "UserId": "用户",
+    "addFilterConditionsToThePopUpTable": "添加至弹框表格的过滤条件",
     "averageField": "字段平均值",
     "averageGap": "平均图标题边距",
     "averageLabel": "平均图标签",
@@ -1487,6 +1488,7 @@
     "stopSharing": "停止分享"
   },
   "dpTable": {
+    "columnSetting": "列设置",
     "latestVersion": "最新版本",
     "name": "名称",
     "productionVersion": "生产版本"

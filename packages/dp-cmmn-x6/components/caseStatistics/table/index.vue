@@ -53,8 +53,8 @@ const { tableConfig, tableEvent, tableRef, query, reload, cleanSelectedRows } = 
     notiHandleView({ content: { caseInstanceId: row.case_id } }, tabProvider)
     emits('close')
   },
-  zoom: false,
-  saveColumnOrder: false
+  // zoom: false,
+  // saveColumnOrder: false
 })
 
 const dialogRef = ref()

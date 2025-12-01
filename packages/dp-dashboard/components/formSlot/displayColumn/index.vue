@@ -1,7 +1,8 @@
 <template>
   <div class="display-columns-setting">
+    <div class="display-columns-setting-title">{{ $t('singleCase.displayColumns') }}</div>
     <!-- {{allColumns}} -->
-    <div class="display-columns-setting-list">
+    <div class="display-columns-setting-list left-list">
       <el-button style="width: fit-content" type="danger" size="small" @click="handleRemoveAllColumn">Remove All Column</el-button>
       <draggable class="list-group" :list="displayColumns" group="tableColumn" :clone="cloneColumn" @change="moveColumn" item-key="id">
         <template #item="{ element }">
@@ -12,7 +13,7 @@
         </template>
       </draggable>
     </div>
-    <div class="display-columns-setting-list">
+    <div class="display-columns-setting-list right-list">
       <el-button style="width: fit-content" type="primary" size="small" @click="filterSelectedColumn(!isFilter)">
         {{ isFilter ? 'Show All Column' : 'Filter Selected Column' }}
       </el-button>
@@ -100,8 +101,20 @@ defineExpose({
 </script>
 <style lang="scss" scoped>
 .display-columns-setting {
-  display: flex;
-  gap: 10px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: min-content 1fr;
+  grid-column-gap: var(--app-space-s);
+  grid-row-gap: var(--app-space-s);
+  .display-columns-setting-title {
+    grid-area: 1 / 1 / 2 / 3;
+  }
+  .left-list {
+    grid-area: 2 / 1 / 3 / 2;
+  }
+  .right-list {
+    grid-area: 2 / 2 / 3 / 3;
+  }
 }
 .display-columns-setting-list {
   flex: 1;

@@ -41,7 +41,7 @@ export const useStatsTableFilter = (setting: any, sql: string) => {
   }
   function initFilter() {
     const filterList = setting.displayColumns.reduce((prev: any, item: any) => {
-      if (item.value && ['short_text', 'float'].includes(item.type)) {
+      if (item.value && ['short_text', 'float'].includes(item.type) && item.showInFilter) {
         prev.push({
           label: item.label,
           key: item.value,

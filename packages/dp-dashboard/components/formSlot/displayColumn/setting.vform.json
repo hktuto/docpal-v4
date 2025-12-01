@@ -81,7 +81,7 @@
                 "labelWidth": null,
                 "labelHidden": false,
                 "disabled": false,
-                "hidden": true,
+                "hidden": false,
                 "clearable": true,
                 "filterable": true,
                 "allowCreate": false,
@@ -115,7 +115,7 @@
                 "onCreated": "",
                 "onMounted": "",
                 "onRemoteQuery": "",
-                "onChange": "if (!value) return\nconst _this = this\nif (['date'].includes(value)) {\n  handleList('dateDisplay')\n} else if(['short_text'].includes(value)) {\n  handleList('clickAction')\n} else if(['float'].includes(value)) {\n  handleList('displayMethod')\n} else {\n  handleList('')\n}\nfunction handleList(field) {\n  ['displayMethod', 'clickAction','dateDisplay'].forEach(key => {\n    const widgetRef = _this.getWidgetRef(key)\n    const isField = key === field\n    widgetRef.setHidden(!isField)\n    if (!isField && oldValue)  widgetRef.setValue('')\n  })\n}\n",
+                "onChange": "if (!value) return\nconst _this = this\nif (['date'].includes(value)) {\n  handleList('dateDisplay')\n} else if(['short_text'].includes(value)) {\n  handleList('clickAction')\n} else if(['float'].includes(value)) {\n  handleList('displayMethod')\n} else {\n  handleList('')\n}\n\nfunction handleList(field) {\n  ['displayMethod', 'clickAction','dateDisplay'].forEach(key => {\n    const widgetRef = _this.getWidgetRef(key)\n    const isField = key === field\n    widgetRef.setHidden(!isField)\n    if (!isField && oldValue)  widgetRef.setValue('')\n  })\n}\n\nconst showInFilter = this.getWidgetRef('showInFilter')\nif(['short_text', 'float'].includes(value)) {\n  showInFilter.setHidden(false)\n} else {\n  showInFilter.setHidden(true)\n  showInFilter.setValue(false)\n}\n",
                 "changeSettings": [],
                 "onChangeSetting": true,
                 "onFocus": "",
@@ -462,6 +462,37 @@
                 "onAppendButtonClick": ""
               },
               "id": "input20948"
+            },
+            {
+              "key": 13451,
+              "type": "switch",
+              "icon": "switch-field",
+              "formItemFlag": true,
+              "options": {
+                "name": "showInFilter",
+                "label": "case.addFilterConditionsToThePopUpTable",
+                "labelAlign": "",
+                "defaultValue": false,
+                "columnWidth": "200px",
+                "labelWidth": null,
+                "labelHidden": false,
+                "disabled": false,
+                "hidden": true,
+                "customClass": "",
+                "labelIconClass": null,
+                "labelIconPosition": "rear",
+                "labelTooltip": null,
+                "switchWidth": 40,
+                "activeText": "el.popconfirm.confirmButtonText",
+                "inactiveText": "el.popconfirm.cancelButtonText",
+                "activeColor": null,
+                "inactiveColor": null,
+                "onCreated": "",
+                "onMounted": "",
+                "onChange": "",
+                "onValidate": ""
+              },
+              "id": "switch8147"
             }
           ],
           "options": {
@@ -583,9 +614,9 @@
     "onFormMounted": "",
     "onFormDataChange": "",
     "dhList": [],
+    "onFormValidate": "",
     "saveRemoteOptions": "never",
     "labelFormUniqueName": true,
-    "onFormValidate": "",
     "dataSources": []
   }
 }
