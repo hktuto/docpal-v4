@@ -54,7 +54,7 @@ const additionalButton = ref<AdditionalButton[]>([])
 const additionalButtonRef = ref<any[]>([])
 const pageButtonSetting = ref<any>(null)
 async function handleAdditionalSetting(xml: any, taskDetail: any, formData: any) {
-  const { buttons, components, buttonSetting } = await getBpmnAddtionalElement(xml, userTaskId, taskDetail, formData)
+  const { buttons, components, buttonSetting } = await getBpmnAdditionalElement(xml, userTaskId, taskDetail, formData)
   additionalButton.value = buttons
   if(buttonSetting) {
     pageButtonSetting.value = buttonSetting
