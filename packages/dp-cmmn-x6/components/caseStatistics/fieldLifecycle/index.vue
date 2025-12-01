@@ -9,9 +9,9 @@
     @delete="handleDelete"
     @refresh="handleInitCard"
   >
-  <template #action_prefix>
-    <el-button type="primary" size="small" @click="handleOpenDialog">{{ $t('common_filter') }} {{  displayFilter }}</el-button>
-  </template>
+    <template #action_prefix>
+      <el-button type="primary" size="small" @click="handleOpenDialog">{{ $t('common_filter') }} {{ displayFilter }}</el-button>
+    </template>
     <div id="myEcharts" ref="chartRef" class="echart"></div>
     <CaseStatisticsTableDialog :setting="setting" :dates="tableDates" ref="dialogRef"> </CaseStatisticsTableDialog>
 
@@ -60,15 +60,18 @@ function handleDelete() {
   emits('delete')
 }
 
-const displayFilter = computed(() => {
-  if (filterParams.value.length > 0) {
-    return `(${filterParams.value.map((item) => item.value).join(', ')})`
+const displayFilter = computed(
+  () => {
+    if (filterParams.value.length > 0) {
+      return `(${filterParams.value.map((item) => item.value).join(', ')})`
+    }
+    return ''
+  },
+  {
+    deep: true,
+    immediate: true
   }
-  return ''
-}, {
-  deep: true,
-  immediate: true
-})
+)
 
 const seriesConfig = {
   type: 'bar',
@@ -81,7 +84,7 @@ const seriesConfig = {
 }
 const option = {
   tooltip: {
-    trigger: 'axis',
+    trigger: 'axis'
     // axisPointer: {
     //   type: 'cross',
     //   crossStyle: {
@@ -102,9 +105,9 @@ const option = {
       axisPointer: {
         type: 'shadow'
       },
-      name: "Days",
+      name: 'Days',
       nameGap: 20,
-      nameLocation: 'middle',
+      nameLocation: 'middle'
     }
   ],
   yAxis: [
@@ -116,11 +119,11 @@ const option = {
       nameLocation: 'middle',
       minInterval: 1,
       axisLabel: {
-        formatter: '{value}',
+        formatter: '{value}'
       }
     }
   ],
-  series: [],
+  series: []
 }
 const dialogRef = ref()
 
@@ -148,7 +151,7 @@ const { cardRef, chartRef, settingRef, resize, handleInitCard, loading } = useDa
     if (chartSetting.relatedField && caseInstanceId) {
       rpcParams._filters[chartSetting.relatedField] = caseInstanceId
     }
-    if(chartSetting.currentUserField ) {
+    if (chartSetting.currentUserField) {
       rpcParams._filters[chartSetting.currentUserField] = userId
     }
     if (filterParams.value && filterParams.value.length > 0) {
@@ -159,6 +162,14 @@ const { cardRef, chartRef, settingRef, resize, handleInitCard, loading } = useDa
     if (Object.keys(rpcParams._filters).length === 0) {
       delete rpcParams._filters
     }
+    chartSetting.filterList.forEach((item) => {
+      option.series.push({
+        ...seriesConfig,
+        name: item.filterValue,
+        data: []
+      })
+      option.legend.data.push(item)
+    })
     const response = await clientApi.api.postPostgrestRpcFunc('case_status_lifecycle_stats', rpcParams)
     getData(response.data)
     return option
@@ -224,14 +235,7 @@ function getData(data: any) {
   data.forEach((item) => {
     Object.keys(item.status_counts).forEach((status) => {
       const sIndex = option.series.findIndex((s) => s.name === status)
-      if (sIndex === -1) {
-        option.series.push({
-          ...seriesConfig,
-          name: status,
-          data: [item.status_counts[status]]
-        })
-        option.legend.data.push(status)
-      } else {
+      if (sIndex !== -1) {
         option.series[sIndex].data.push(item.status_counts[status])
       }
     })
@@ -243,14 +247,13 @@ function handleOpenDialog() {
 }
 function handleFilter(params: any) {
   filterParams.value = params
-  console.log(filterParams.value)
   handleInitCard()
 }
 defineExpose({ resize })
 </script>
 
 <style lang="scss" scoped>
-.echart{
+.echart {
   padding: var(--app-space-xs);
 }
 </style>
