@@ -168,7 +168,7 @@ const { cardRef, chartRef, settingRef, resize, handleInitCard, loading } = useDa
         name: item.filterValue,
         data: []
       })
-      option.legend.data.push(item)
+      option.legend.data.push(item.filterValue)
     })
     const response = await clientApi.api.postPostgrestRpcFunc('case_status_lifecycle_stats', rpcParams)
     getData(response.data)
