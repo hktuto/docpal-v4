@@ -94,6 +94,7 @@ onMounted(async () => {
   justify-content: flex-start;
   align-items: center;
   gap: 0;
+  height: 100%;
   border-radius: var(--app-border-radius-m);
   overflow: hidden;
   .stage-item{
