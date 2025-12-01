@@ -1,6 +1,7 @@
 <template>
   <DashboardCard
     v-loading="loading"
+    ref="cardRef"
     :title="setting.title"
     :hideSetting="hideSetting"
     :setting="setting"
@@ -9,8 +10,9 @@
     @refresh="handleInitCard"
   >
     <div class="chartContainer">
-      <div ref="cardRef">
-        <div id="myEcharts" ref="chartRef" class="echart"></div>
+      <div class="mainChartWrapper">
+
+      <div id="myEcharts" ref="chartRef" class="echart"></div>
       </div>
       <el-button type="primary" @click="handleShowAll()">{{ $t('button.showAll') }}</el-button>
     </div>
@@ -73,7 +75,7 @@ const option = {
     }
   },
   legend: {
-    bottom: '0%',
+    bottom: '40px',
     left: 'center'
   },
   series: [
@@ -253,5 +255,12 @@ defineExpose({ resize })
   grid-template-rows: 1fr min-content;
   padding: 0 var(--app-space-s) var(--app-space-s);
   overflow: hidden;
+}
+
+.mainChartWrapper{
+  flex: 1 0 auto;
+  overflow: hidden;
+  position: relative;
+  height: 100%;;
 }
 </style>
