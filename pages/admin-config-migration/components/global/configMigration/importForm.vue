@@ -74,39 +74,50 @@ async function handleSubmit() {
 
   // const userGroupResult = await userGroupRef.value.handleCreateUserGroup()
   // if (!userGroupResult.status) {
-  //   routerProvider?.message.error(userGroupResult.message)
+  //   routerProvider?.message.error(userGroupResult.data)
   //   return
   // }
   //
   // const userRoleResult = await userRoleRef.value.handleCreateUserRole()
   // if (!userRoleResult.status) {
-  //   routerProvider?.message.error(userRoleResult.message)
+  //   routerProvider?.message.error(userRoleResult.data)
   //   return
   // }
   //
   // const idGeneratorResult = await idGeneratorRef.value.handleCreateIdGenerator()
   // if (!idGeneratorResult.status) {
-  //   routerProvider?.message.error(idGeneratorResult.message)
+  //   routerProvider?.message.error(idGeneratorResult.data)
   //   return
   // }
 
   // const emailTemplateResult = await emailTemplateRef.value.handleCreateEmailTemplate()
   // if (!emailTemplateResult.status) {
-    // routerProvider?.message.error(emailTemplateResult.message)
-    // return
+  // routerProvider?.message.error(emailTemplateResult.data)
+  // return
   // }
 
   // const documentTemplateResult = await documentTemplateRef.value.handleCreateDocumentTemplate()
   // if (!documentTemplateResult.status) {
-  //   routerProvider?.message.error(documentTemplateResult.message)
+  //   routerProvider?.message.error(documentTemplateResult.data)
   //   return
   // }
 
   // const homePageResult = await homePageRef.value.handleCreateHomePage()
   // if (!homePageResult.status) {
-  //   routerProvider?.message.error(homePageResult.message)
+  //   routerProvider?.message.error(homePageResult.data)
   //   return
   // }
+
+  // TODO: 不需要打開
+  // const folderCabinetResult = await folderCabinetRef.value.handleCreateFolderCabinet()
+  // if (!folderCabinetResult.status) {
+  //   routerProvider?.message.error(folderCabinetResult.data)
+  //   return
+  // }
+
+
+
+
 
   // step 1 : get all form in case
   // TODO : replace all form and xml
@@ -115,7 +126,7 @@ async function handleSubmit() {
     // replace xml
     // xml = xml.repalceALL(item.oldKey, item.newKey)
   }
-  mode.value = 'upload'
+  // mode.value = 'upload'
   fileList.value = []
 }
 
