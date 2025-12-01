@@ -24,7 +24,10 @@ type CaseExportData = {
   xml: string,
   styleJson: any,
   dashboard: any[]
-  form: FormExportData[]
+  form: FormExportData[],
+  caseIdDigit: string,
+  caseIdPrefix: string,
+  startNumber: string
 }
 
 type WorkflowExportData = {
@@ -128,6 +131,12 @@ export async function getCaseExportData(caseId: string) {
   }
   result.id = selectedCaseData.id
   result.name = selectedCaseData.name
+
+  const caseDetails = await adminApi.api.getCaseTypesId(selectedCaseData.id).then(r=>r.data)
+  result.caseIdDigit = caseDetails.caseIdDigit
+  result.caseIdPrefix = caseDetails.caseIdPrefix
+  result.startNumber = caseDetails.startNumber
+
   let {data: caseStyleJson} = await adminApi.api.getCaseTypesIdStylejson(selectedCaseData.id, {versionNumber: selectedCaseData?.latestVersion})
   caseStyleJson = caseStyleJson ? JSON.parse(caseStyleJson) : null
   const blob = await adminApi.api.getCaseTypesIdDownloadXml(selectedCaseData.id, {versionNumber: selectedCaseData?.latestVersion}, {
