@@ -383,6 +383,7 @@
   "case": {
     "UserGroupId": "使用者群組",
     "UserId": "用戶",
+    "addFilterConditionsToThePopUpTable": "新增至彈框表格的篩選條件",
     "averageField": "字段平均值",
     "averageGap": "平均圖標題邊距",
     "averageLabel": "平均圖標籤",
@@ -1486,6 +1487,7 @@
     "stopSharing": "停止分享"
   },
   "dpTable": {
+    "columnSetting": "列設定",
     "latestVersion": "最新版本",
     "name": "名稱",
     "productionVersion": "生產版本"
