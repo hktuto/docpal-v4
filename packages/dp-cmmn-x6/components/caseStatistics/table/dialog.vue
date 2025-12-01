@@ -29,7 +29,13 @@ function handleOpen(sqlParams: any) {
   if (sqlParams) {
     const _sqlParams = JSON.parse(JSON.stringify(sqlParams))
     const displayColumns = setting.displayColumns.map((item: any) => item.value || item)
-    const columns = [...displayColumns, 'case_id'].join(',')
+    if(!displayColumns.includes('case_id')) {
+      displayColumns.unshift('case_id')
+    }
+    if(setting.groupField && !displayColumns.includes(setting.groupField)) {
+      displayColumns.unshift(setting.groupField)
+    }
+    const columns = displayColumns.join(',')
     const selectSql = _sqlParams.find((item) => item.type === 'select')
     if (!selectSql) {
       _sqlParams.push({
@@ -42,7 +48,7 @@ function handleOpen(sqlParams: any) {
     state.sql = PostgREST_Decorate(_sqlParams)
     setTimeout(() => {
       tableRef.value.reload()
-    }, 100)
+    }, 300)
   }
   state.visible = true
 }
