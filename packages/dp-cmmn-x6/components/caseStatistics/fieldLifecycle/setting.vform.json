@@ -342,7 +342,7 @@
                 "onCreated": "",
                 "onMounted": "",
                 "onRemoteQuery": "",
-                "onChange": "const _this = this\nconst filterKey = 'masterTableColumn'\nasync function getList() {\n  try {\n    const data = await $api.post('/docpal/master/tables/record/page/nonPermission',{where:{key: 'case_status', }, name: 'basic', }).then(res => res.data.data)\n    return data.reduce((prev, item) => {\n      if(!item.name || !item.name || prev.find(p => p.value === item.name)) return prev \n      const resultItem = {\n        value: item.name,\n        label: item.name || '' ,\n        order_num: item.order_num\n      }\n      if(filterKey === 'user') resultItem.disabled = item.status === 'A' ? false : true \n      else if(filterKey === 'masterTableColumn') resultItem.disabled = !item.status\n      prev.push(resultItem) \n      return prev\n    }, []).sort((a,b)=> (a.order_num - b.order_num ))\n  } catch (e) { return [] }\n}\nasync function init() {\n  const refList = _this.refList\n  const filterOptionsRef = _this.getWidgetRef('filterOptions')\n  if(value.includes('Case_Status')) {\n    const options = await getList()\n    Object.keys(refList).forEach(key => {\n      if(key.includes('filterValue@row')) {\n        const filterValueRef = refList[key]\n        filterValueRef.loadOptions(options)\n      }\n    })\n    filterOptionsRef.setValue(JSON.stringify(options))\n  } else {\n     Object.keys(refList).forEach(key => {\n      if(key.includes('filterValue@row')) {\n        const filterValueRef = refList[key]\n        filterValueRef.loadOptions([])\n      }\n    })\n    filterOptionsRef.setValue('[]')\n  }\n}\n\ninit()\n",
+                "onChange": "const _this = this\nconst filterKey = 'masterTableColumn'\nasync function getList() {\n  try {\n    const data = await $api.post('/docpal/master/tables/record/page/nonPermission',{where:{key: 'case_status', }, name: 'basic', }).then(res => res.data.data)\n    return data.reduce((prev, item) => {\n      if(!item.name || !item.name || prev.find(p => p.value === item.name)) return prev \n      const resultItem = {\n        value: item.name,\n        label: item.name || '' ,\n        order_num: item.order_num\n      }\n      if(filterKey === 'user') resultItem.disabled = item.status === 'A' ? false : true \n      else if(filterKey === 'masterTableColumn') resultItem.disabled = !item.status\n      prev.push(resultItem) \n      return prev\n    }, []).sort((a,b)=> (a.order_num - b.order_num ))\n  } catch (e) { return [] }\n}\nasync function init() {\n  const refList = _this.refList\n  \n  const filterOptionsRef = _this.getWidgetRef('filterOptions')\n  if(value.includes('Case_Status')) {\n    const options = await getList()\n    Object.keys(refList).forEach(key => {\n      if(key.includes('filterValue@row')) {\n        const filterValueRef = refList[key]\n        filterValueRef.loadOptions(options)\n      }\n    })\n    filterOptionsRef.setValue(JSON.stringify(options))\n  } else {\n     Object.keys(refList).forEach(key => {\n      if(key.includes('filterValue@row')) {\n        const filterValueRef = refList[key]\n        filterValueRef.loadOptions([])\n      }\n    })\n    filterOptionsRef.setValue('[]')\n  }\n}\n\ninit()\n",
                 "changeSettings": [],
                 "onChangeSetting": true,
                 "onFocus": "",
@@ -563,6 +563,96 @@
                 "onSubFormRowChange": ""
               },
               "id": "subform97224"
+            },
+            {
+              "key": 10005,
+              "type": "divider",
+              "icon": "divider",
+              "formItemFlag": false,
+              "options": {
+                "name": "divider23867",
+                "label": "case.filterDialogSetting",
+                "columnWidth": "200px",
+                "direction": "horizontal",
+                "contentPosition": "left",
+                "hidden": false,
+                "customClass": "",
+                "onCreated": "",
+                "onMounted": ""
+              },
+              "id": "divider23867"
+            },
+            {
+              "key": 69305,
+              "type": "sub-form",
+              "category": "container",
+              "icon": "sub-form",
+              "widgetList": [
+                {
+                  "key": 91462,
+                  "type": "select",
+                  "icon": "select-field",
+                  "formItemFlag": true,
+                  "options": {
+                    "name": "filterDialogField",
+                    "label": "dataField.apiField",
+                    "labelAlign": "",
+                    "defaultValue": "",
+                    "placeholder": "",
+                    "columnWidth": "200px",
+                    "size": "",
+                    "labelWidth": null,
+                    "labelHidden": false,
+                    "disabled": false,
+                    "hidden": false,
+                    "clearable": true,
+                    "filterable": true,
+                    "allowCreate": false,
+                    "popperClass": "",
+                    "remote": false,
+                    "automaticDropdown": false,
+                    "multiple": false,
+                    "multipleLimit": 0,
+                    "optionItems": [],
+                    "required": false,
+                    "requiredHint": "",
+                    "validation": "",
+                    "validationHint": "",
+                    "customClass": "",
+                    "labelIconClass": null,
+                    "labelIconPosition": "rear",
+                    "labelTooltip": null,
+                    "onCreated": "",
+                    "onMounted": "",
+                    "onRemoteQuery": "",
+                    "onChange": "",
+                    "changeSettings": [],
+                    "onChangeSetting": true,
+                    "onFocus": "",
+                    "onBlur": "",
+                    "onValidate": ""
+                  },
+                  "id": "select9735"
+                }
+              ],
+              "options": {
+                "name": "filterDialogList",
+                "showBlankRow": true,
+                "showRowNumber": false,
+                "label": "",
+                "labelAlign": "label-left-align",
+                "hidden": false,
+                "disabled": false,
+                "maxLength": null,
+                "customClass": [
+                  "form-no-insert"
+                ],
+                "onSubFormRowAdd": "const _this = this\n\nsetTimeout(function() {\n  try {\n    const relativeRef = _this.getWidgetRef('relatedField')\n    const options = relativeRef.getOptionItems()\n    const filterValueRef = _this.getWidgetRef(`filterDialogField@row${newRowId}`)\n    filterValueRef.loadOptions(options)\n  } catch (e) {}\n}, 10)",
+                "onSubFormRowInsert": "",
+                "onSubFormRowDelete": "",
+                "onSubFormRowChange": ""
+              },
+              "id": "subform74236"
             }
           ],
           "options": {
