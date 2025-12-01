@@ -430,7 +430,7 @@
                 "optionItems": [
                   {
                     "value": "FinancialComputing",
-                    "label": "Count"
+                    "label": "Compact Notation"
                   },
                   {
                     "value": "fileSize",
