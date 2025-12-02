@@ -10,7 +10,7 @@
     @refresh="handleInitCard"
   >
     <template #action_prefix>
-      <el-date-picker style="width: 6rem" v-model="targetYear" size="small" type="year" format="YYYY" value-format="YYYY" @change="handleChangeYear"/>
+      <el-date-picker style="width: 6rem" v-model="targetYear" size="small" type="year" format="YYYY" value-format="YYYY" @change="handleChangeYear" />
     </template>
     <div id="myEcharts" ref="chartRef" class="echart"></div>
     <CaseStatisticsTableDialog :setting="setting" :dates="tableDates" ref="dialogRef"> </CaseStatisticsTableDialog>
@@ -97,7 +97,9 @@ const option = {
       nameLocation: 'middle',
       minInterval: 1,
       axisLabel: {
-        formatter: '{value}'
+        formatter: function (value) {
+          return formatValue(value, props.setting.numDisplayMethod)
+        }
       }
     },
     {
@@ -106,7 +108,9 @@ const option = {
       nameRotate: 270,
       nameLocation: 'middle',
       axisLabel: {
-        formatter: '{value}'
+        formatter: function (value) {
+          return formatValue(value, props.setting.averageDisplayMethod)
+        }
       },
       splitLine: {
         show: false // 隐藏分隔线
@@ -145,7 +149,17 @@ const option = {
   }
 }
 const dialogRef = ref()
-
+function formatValue(value, displayMethod) {
+  if (displayMethod === 'count') {
+    return FinancialComputing(Number(value))
+  } else if (displayMethod === 'currency') {
+    return value.toLocaleString('en-US', { style: 'currency', currency: 'USD' }).replace('$', '')
+  } else if (displayMethod === 'fileSize') {
+    return fileSize(Number(value))
+  } else {
+    return value
+  }
+}
 const { cardRef, chartRef, settingRef, resize, handleInitCard, loading } = useDashboardCard({
   props,
   getOptions: async (chartSetting) => {
@@ -153,7 +167,7 @@ const { cardRef, chartRef, settingRef, resize, handleInitCard, loading } = useDa
       return option
     }
     option.yAxis[0].name = props.setting.barTitle
-    
+
     option.legend.data[0] = props.setting.barLabel || props.setting.barTitle
     option.series[0].name = props.setting.barLabel || props.setting.barTitle
     option.series[0].tooltip.valueFormatter = function (value) {
@@ -164,6 +178,7 @@ const { cardRef, chartRef, settingRef, resize, handleInitCard, loading } = useDa
     option.grid.right = props.setting.rightMargin + '%' || '10%'
     option.yAxis[0].nameGap = props.setting.barGap || 32
     option.yAxis[1].nameGap = props.setting.averageGap || 32
+
     if (props.setting.averageField) {
       option.legend.data[1] = props.setting.averageLabel || props.setting.averageTitle
       option.series[1].name = props.setting.averageLegend || props.setting.averageTitle
@@ -180,9 +195,15 @@ const { cardRef, chartRef, settingRef, resize, handleInitCard, loading } = useDa
       // option.series[0].data = chartSetting.data.map(item => item.value)
       // option.series[1].data = chartSetting.data.map(item => item.average)
     }
-    if(props.setting.hideLegend) {
+    option.yAxis[0].axisLabel.formatter = function (value) {
+      return formatValue(value, props.setting.numDisplayMethod)
+    }
+    option.yAxis[1].axisLabel.formatter = function (value) {
+      return formatValue(value, props.setting.averageDisplayMethod)
+    }
+    if (props.setting.hideLegend) {
       option.legend.show = false
-    }else{
+    } else {
       option.legend.show = true
     }
     option.series[0].data = await getCaseCount(chartSetting)
