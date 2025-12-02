@@ -10,7 +10,7 @@
     @refresh="handleInitCard"
   >
     <template #action_prefix>
-      <el-button type="primary" size="small" @click="handleOpenDialog">{{ $t('common_filter') }} {{ displayFilter }}</el-button>
+      <el-button v-if="showFilterButton" type="primary" size="small" @click="handleOpenDialog">{{ $t('common_filter') }} {{ displayFilter }}</el-button>
     </template>
     <div id="myEcharts" ref="chartRef" class="echart"></div>
     <CaseStatisticsTableDialog :setting="setting" :dates="tableDates" ref="dialogRef"> </CaseStatisticsTableDialog>
@@ -59,20 +59,18 @@ function handleRefresh(chartSetting) {
 function handleDelete() {
   emits('delete')
 }
-
-const displayFilter = computed(
-  () => {
-    if (filterParams.value.length > 0) {
-      return `(${filterParams.value.map((item) => item.value).join(', ')})`
-    }
-    return ''
-  },
-  {
-    deep: true,
-    immediate: true
+const showFilterButton = computed(() => {
+  return props.setting.filterDialogList.filter((item) => item.filterDialogField).length > 0
+})
+const displayFilter = computed(() => {
+  if (filterParams.value.length > 0) {
+    return `(${filterParams.value.map((item) => item.value).join(', ')})`
   }
-)
-
+  return ''
+}, {
+  deep: true,
+  immediate: true
+})
 const seriesConfig = {
   type: 'bar',
   itemStyle: {},
