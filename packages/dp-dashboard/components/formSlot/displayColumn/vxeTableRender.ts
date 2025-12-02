@@ -8,6 +8,9 @@ VxeUI.renderer.add('ClickActionCell', {
 })
 export const rendererFunction: any = {
   ClickActionCell: (renderOpts: any, renderParams: any) => {
+    if (!renderParams.row[renderParams.column.field]) {
+      return h('div', {}, '-')
+    }
     const prefix = renderOpts.params.setting.prefix || ''
     const suffix = renderOpts.params.setting.suffix || ''
     return h(
