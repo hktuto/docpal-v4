@@ -20,12 +20,6 @@ const allFields = computed(() => {
   return bpmnGlobalRules.value
 })
 
-const stringFields = computed(() => {
-  if (!bpmnGlobalRules.value || bpmnGlobalRules.value.length === 0) return []
-
-  return bpmnGlobalRules.value.filter((item: any) => item.validationRule.type === 'text')
-})
-
 const form = ref<any>({
   attr_caseTypeId: '',
   attr_name: '',
@@ -60,6 +54,12 @@ async function init() {
   form.value.attr_caseTypeId = extensionElements['flowable:newCase'].attr_caseTypeId
   form.value.attr_name = extensionElements['flowable:newCase'].attr_name
 
+  const find = caseList.value.find((item: any) => item.id === form.value.attr_caseTypeId)
+  if (!find) {
+    caseOptionList.value = []
+    return
+  }
+
   if ('' !== form.value.attr_caseTypeId) {
     await getCaseOption()
   }
@@ -71,6 +71,10 @@ async function init() {
     if ('case_id' != item.attr_metadata) {
       fieldsList.value.push(item.attr_metadata)
     }
+    if (!find) {
+      return
+    }
+
     find.formProperty = item.attr_formProperty
     form.value.field.push({
       attr_formProperty: item.attr_formProperty,
@@ -115,6 +119,10 @@ async function getCaseOption() {
   loading.value = true
   try {
     const caseData: any = await adminApi.api.getCaseTypesIdStarttask(form.value.attr_caseTypeId).then(r => r.data)
+    if (!caseData) {
+      caseOptionList.value = []
+      return
+    }
 
     if (caseData.length == 0) {
       caseOptionList.value = []
