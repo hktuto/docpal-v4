@@ -105,12 +105,12 @@ defineExpose({
 
 <style lang="scss" scoped>
 .fullscreen{
-  position: fixed;
+  position: fixed !important;
   top: 0;
   left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 2;
+  width: 100% !important;
+  height: 100% !important;
+  z-index: 2 !important;
 }
 .el-card {
   --dashboard-item-padding: var(--app-space-s) !important;
