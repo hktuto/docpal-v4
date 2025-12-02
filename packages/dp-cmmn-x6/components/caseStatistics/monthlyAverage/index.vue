@@ -203,12 +203,12 @@ const { cardRef, chartRef, settingRef, resize, handleInitCard, loading } = useDa
     const sortBy = props.setting.sortBy || 'created_date'
     const sqlParams = [
       {
-        key: 'created_date',
+        key: props.setting.dateField,
         type: 'gt',
         value: startDate
       },
       {
-        key: 'created_date',
+        key: props.setting.dateField,
         type: 'lt',
         value: endDate
       },
