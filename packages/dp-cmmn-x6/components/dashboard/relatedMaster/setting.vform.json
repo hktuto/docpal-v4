@@ -24,88 +24,7 @@
         "automaticDropdown": false,
         "multiple": false,
         "multipleLimit": 0,
-        "optionItems": [
-          {
-            "value": "42fa87dd-efde-44c4-b7d2-ea7e3a2fdac7",
-            "label": "abc"
-          },
-          {
-            "value": "28d77c37-9d28-4af3-b905-f7eaa61e1653",
-            "label": "basic"
-          },
-          {
-            "value": "e0c70399-d265-4373-aa77-96bc22b408e8",
-            "label": "CRM_contacts"
-          },
-          {
-            "value": "7eabb0b0-0358-49e4-b873-a6082070b6f0",
-            "label": "CRM_contract"
-          },
-          {
-            "value": "8ad10572-db67-45b8-af00-a82561aaeac9",
-            "label": "CRM_quotation"
-          },
-          {
-            "value": "e0702e9d-9728-4b8d-b7be-ea38ad35353d",
-            "label": "Department"
-          },
-          {
-            "value": "36520be0-c685-4b95-9885-9c324aabd9a1",
-            "label": "District"
-          },
-          {
-            "value": "ddece92d-45ab-4673-bdc6-8cf941dcbf46",
-            "label": "Districts"
-          },
-          {
-            "value": "168a503c-686d-4e7e-b733-5712c660943f",
-            "label": "DocumentType"
-          },
-          {
-            "value": "event_categories",
-            "label": "Event Categories"
-          },
-          {
-            "value": "event_location",
-            "label": "Event Location"
-          },
-          {
-            "value": "411fa5ba-60ef-4bc8-bbc2-84aa634b592a",
-            "label": "HKCTA_Attendance"
-          },
-          {
-            "value": "f40867eb-f55b-4e4a-ace1-8460ed772dd3",
-            "label": "HKCTA_CoachesInfo"
-          },
-          {
-            "value": "4ce31f5c-fe6f-4855-a091-07f67ac3c2d7",
-            "label": "HKCTA_ProgramsInfo"
-          },
-          {
-            "value": "de7bf053-6288-4c59-96b2-637c6a1c52ec",
-            "label": "HKCTA_ProgramStaff"
-          },
-          {
-            "value": "fc452d65-91ea-4b4e-996a-3e1410457f38",
-            "label": "HKCTA_Venues"
-          },
-          {
-            "value": "8e15e457-3988-4560-b47b-84fa2cfcfce1",
-            "label": "Industry"
-          },
-          {
-            "value": "62213dd7-ea45-47c5-8d2c-c35769fd15c8",
-            "label": "LeadSource"
-          },
-          {
-            "value": "1cd92738-ce6b-4637-ac6b-8140981f4d66",
-            "label": "RegistrationForm"
-          },
-          {
-            "value": "530d1fb3-ff77-41e4-9886-7c06a807d0cd",
-            "label": "Solutions"
-          }
-        ],
+        "optionItems": [],
         "selectSetting": {
           "api": "masterTableColumn",
           "method": "get",
@@ -131,7 +50,7 @@
         "onCreatedPlus": "",
         "onMounted": "",
         "onRemoteQuery": "",
-        "onChange": "const _this = this\nloadColumn()\ninitLabel()\nfunction initLabel () {\n  try {\n    const optionsItems = _this.getOptionItems()\n    const curItem = optionsItems.find(item => item.value === value)\n    const labelRef =  _this.getWidgetRef('label')\n    const nameRef = _this.getWidgetRef('name')\n    labelRef.setValue(curItem.label)\n    nameRef.setValue(curItem.label)\n  } catch(error) {\n    console.error(error)\n  }\n}\n\nasync function loadColumn() {\n  const displayColumnsRef = _this.getWidgetRef('displayColumns')\n  if(!!oldValue) {\n    displayColumnsRef.setValue([])\n    displayColumnsRef.loadOptions([]) \n  }\n  if(!value) {\n    return\n  }\n  const options = await getOptions(value)\n  displayColumnsRef.loadOptions(options) \n  \n  const relatedFieldRef =  _this.getWidgetRef('relatedField')\n  const clickActionIdRef = _this.getWidgetRef('clickActionId')\n  relatedFieldRef.loadOptions(options) \n  clickActionIdRef.loadOptions(options) \n} \n\nasync function getOptions(id) {\n try {\n    const data = await $api.get(`/docpal/master/tables/${id}`).then(res => res.data.data)\n    return data.fields.reduce((prev, item) => {\n      const resultItem = {\n        value: item.columnName,\n        label: item.columnName || '' ,\n      }\n      prev.push(resultItem) \n      return prev\n    }, []).sort((a,b)=> (a.label.localeCompare(b.label) ))\n  } catch (e) { return [] }\n}",
+        "onChange": "const _this = this\nloadColumn()\ninitLabel()\nfunction initLabel () {\n  try {\n    const optionsItems = _this.getOptionItems()\n    const curItem = optionsItems.find(item => item.value === value)\n    const labelRef =  _this.getWidgetRef('label')\n    const nameRef = _this.getWidgetRef('name')\n    labelRef.setValue(curItem.label)\n    nameRef.setValue(curItem.label)\n  } catch(error) {\n    console.error(error)\n  }\n}\n\nasync function loadColumn() {\n\n  if(!value) {\n    return\n  }\n  const options = await getOptions(value)\n  const fieldsRef = _this.getWidgetRef('fields')\n  fieldsRef.setValue(JSON.stringify(options))\n  const relatedFieldRef =  _this.getWidgetRef('relatedField')\n  const clickActionIdRef = _this.getWidgetRef('clickActionId')\n  relatedFieldRef.loadOptions(options) \n  clickActionIdRef.loadOptions(options) \n} \n\nasync function getOptions(id) {\n try {\n    const data = await $api.get(`/docpal/master/tables/${id}`).then(res => res.data.data)\n    return data.fields.reduce((prev, item) => {\n      const resultItem = {\n        value: item.columnName,\n        label: item.columnName || '' ,\n        type: item.dataType\n      }\n      prev.push(resultItem) \n      return prev\n    }, []).sort((a,b)=> (a.label.localeCompare(b.label) ))\n  } catch (e) { return [] }\n}",
         "onChangePlus": "",
         "onFocus": "",
         "onBlur": "",
@@ -456,32 +375,39 @@
       "id": "select28011"
     },
     {
-      "key": 46294,
-      "type": "select",
-      "icon": "select-field",
+      "key": 26336,
+      "type": "slot",
+      "icon": "slot-field",
+      "formItemFlag": false,
+      "options": {
+        "name": "dialog_displayColumns",
+        "label": "dialog_displayColumns",
+        "hidden": false
+      },
+      "id": "slot27566"
+    },
+    {
+      "key": 65785,
+      "type": "input",
+      "icon": "text-field",
       "formItemFlag": true,
       "options": {
-        "name": "displayColumns",
-        "label": "singleCase.displayColumns",
+        "name": "fields",
+        "label": "fields",
         "labelAlign": "",
-        "defaultValue": [],
+        "type": "text",
+        "defaultValue": "",
         "placeholder": "",
         "columnWidth": "200px",
         "size": "",
         "labelWidth": null,
         "labelHidden": false,
+        "readonly": false,
         "disabled": false,
         "hidden": false,
         "clearable": true,
-        "filterable": true,
-        "allowCreate": false,
-        "popperClass": "",
-        "remote": false,
-        "automaticDropdown": false,
-        "multiple": true,
-        "multipleLimit": 0,
-        "optionItems": [],
-        "required": true,
+        "showPassword": false,
+        "required": false,
         "requiredHint": "",
         "validation": "",
         "validationHint": "",
@@ -489,17 +415,29 @@
         "labelIconClass": null,
         "labelIconPosition": "rear",
         "labelTooltip": null,
+        "minLength": null,
+        "maxLength": null,
+        "showWordLimit": false,
+        "prefixIcon": "",
+        "suffixIcon": "",
+        "appendButton": false,
+        "appendButtonText": "",
+        "prependText": "",
+        "appendButtonDisabled": false,
+        "buttonIcon": "custom-search",
         "onCreated": "",
         "onMounted": "",
-        "onRemoteQuery": "",
+        "onInput": "",
         "onChange": "",
         "changeSettings": [],
         "onChangeSetting": true,
         "onFocus": "",
         "onBlur": "",
-        "onValidate": ""
+        "onEnter": "",
+        "onValidate": "",
+        "onAppendButtonClick": ""
       },
-      "id": "select27075"
+      "id": "input33630"
     }
   ],
   "formConfig": {

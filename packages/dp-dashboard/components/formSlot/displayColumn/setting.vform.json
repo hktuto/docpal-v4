@@ -115,7 +115,7 @@
                 "onCreated": "",
                 "onMounted": "",
                 "onRemoteQuery": "",
-                "onChange": "if (!value) return\nconst _this = this\nif (['date'].includes(value)) {\n  handleList('dateDisplay')\n} else if(['short_text'].includes(value)) {\n  handleList('clickAction')\n} else if(['float'].includes(value)) {\n  handleList('displayMethod')\n} else {\n  handleList('')\n}\n\nfunction handleList(field) {\n  ['displayMethod', 'clickAction','dateDisplay'].forEach(key => {\n    const widgetRef = _this.getWidgetRef(key)\n    const isField = key === field\n    widgetRef.setHidden(!isField)\n    if (!isField && oldValue)  widgetRef.setValue('')\n  })\n}\n\nconst showInFilter = this.getWidgetRef('showInFilter')\nif(['short_text', 'float'].includes(value)) {\n  showInFilter.setHidden(false)\n} else {\n  showInFilter.setHidden(true)\n  showInFilter.setValue(false)\n}\n",
+                "onChange": "if (!value) return\nconst _this = this\nif (['date','timestamp'].includes(value)) {\n  handleList('dateDisplay')\n} else if(['short_text','varchar'].includes(value)) {\n  handleList('clickAction')\n} else if(['float'].includes(value)) {\n  handleList('displayMethod')\n} else {\n  handleList('')\n}\n\nfunction handleList(field) {\n  ['displayMethod', 'clickAction','dateDisplay'].forEach(key => {\n    const widgetRef = _this.getWidgetRef(key)\n    const isField = key === field\n    widgetRef.setHidden(!isField)\n    if (!isField && oldValue)  widgetRef.setValue('')\n  })\n}\n\nconst showInFilter = this.getWidgetRef('showInFilter')\nif(['short_text', 'float'].includes(value)) {\n  showInFilter.setHidden(false)\n} else {\n  showInFilter.setHidden(true)\n  showInFilter.setValue(false)\n}\n",
                 "changeSettings": [],
                 "onChangeSetting": true,
                 "onFocus": "",
@@ -614,9 +614,9 @@
     "onFormMounted": "",
     "onFormDataChange": "",
     "dhList": [],
-    "onFormValidate": "",
     "saveRemoteOptions": "never",
     "labelFormUniqueName": true,
+    "onFormValidate": "",
     "dataSources": []
   }
 }
