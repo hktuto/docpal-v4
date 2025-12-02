@@ -2,6 +2,7 @@
 import { clientApi } from 'api'
 import { MoreFilled } from '@element-plus/icons-vue'
 import { ElMessage } from 'element-plus'
+import '../../../../../packages/dp-dashboard/components/formSlot/displayColumn/vxeTableRender.ts'
 const platform = useAppPlatform()
 const { name, detail, relatedField } = defineProps<{
   name: string
@@ -50,24 +51,8 @@ const { tableConfig, tableEvent, tableRef, query, reload, cleanSelectedRows } = 
 
 const dialogRef = ref()
 
-async function reorderColumn(fields: any) {
+async function reorderColumn(columns: any) {
   try {
-    const columns: any = []
-    if (fields.length > 0) {
-      const columneFromSetting = fields.reduce((prev: any, item: any) => {
-        const newItem: any = {
-          field: item.id,
-          title: item.name.toLowerCase().replace(/\b\w/g, (s) => s.toUpperCase()),
-          minWidth: 200
-        }
-        if (item.formatter) {
-          newItem.formatter = item.formatter
-        }
-        prev.push(newItem)
-        return prev
-      }, [])
-      columns.splice(0, 0, ...columneFromSetting)
-    }
     tableConfig.columns = columns
   } catch (e) {
     console.error('error', e)

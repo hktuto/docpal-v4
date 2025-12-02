@@ -42,25 +42,9 @@ if (platform.value === 'admin') {
   list.value = data || []
 }
 const columnsSetting = ref<any>([])
-async function reorderColumn(fields: any) {
+async function reorderColumn(columns: any) {
   try {
-    const columns: any = []
-    if (fields.length > 0) {
-      const columneFromSetting = fields.reduce((prev: any, item: any) => {
-        console.log('columneFromSetting item', item)
-        const newItem: any = {
-          field: item.id,
-          title: item.name.toLowerCase().replace(/\b\w/g, (s) => s.toUpperCase()),
-          minWidth: 200
-        }
-        if (item.formatter) {
-          newItem.formatter = item.formatter
-        }
-        prev.push(newItem)
-        return prev
-      }, [])
-      columns.splice(0, 0, ...columneFromSetting)
-    }
+    console.log('reorderColumn', columns)
     columnsSetting.value = columns
   } catch (e) {
     console.error('error', e)

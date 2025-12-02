@@ -9,7 +9,7 @@ export async function formSlotOrderDisplayColumns(fields: any, tabProvider: any,
           title: item.label && item.label.includes('ID') ? item.label : item.label.toLowerCase().replace(/\b\w/g, (s: any) => s.toUpperCase()),
           minWidth: 200
         }
-        if (item.type === 'date') {
+        if (['date', 'timestamp'].includes(item.type)) {
           const prefix = item.prefix || ''
           const suffix = item.suffix || ''
           newItem.formatter = ({ cellValue }: any) => {
@@ -40,6 +40,10 @@ export async function formSlotOrderDisplayColumns(fields: any, tabProvider: any,
           }
         } else if (item.formatter) {
           newItem.formatter = item.formatter
+        } else if (item.prefix || item.suffix) {
+          newItem.formatter = ({ cellValue }: any) => {
+            return item.prefix + cellValue + item.suffix
+          }
         }
         prev.push(newItem)
         return prev
