@@ -60,7 +60,12 @@ async function handleShowColumn() {
   }, 100)
 }
 function handleRefreshTable() {
-  tableRef.value.reload()
+  if(tableRef.value) {
+    tableRef.value.reload()
+  }
+  if(cardsRef.value) {
+    cardsRef.value.reload()
+  }
 }
 // #endregion
 

@@ -24,7 +24,96 @@
         "automaticDropdown": false,
         "multiple": false,
         "multipleLimit": 0,
-        "optionItems": [],
+        "optionItems": [
+          {
+            "value": "d72afa4d-c75d-47b9-b336-83cee5e3b421",
+            "label": "basic"
+          },
+          {
+            "value": "cfe01254-cf19-4be1-933e-90083616ee6d",
+            "label": "BasicFunction"
+          },
+          {
+            "value": "feefbc3a-e7e3-4355-8823-f1c584fa33ea",
+            "label": "CRM_contacts"
+          },
+          {
+            "value": "18af1acb-35bc-4f47-9629-3efcb0048515",
+            "label": "CRM_quotation"
+          },
+          {
+            "value": "605116f2-830b-4985-8c8e-dfb17ae7b055",
+            "label": "Customer"
+          },
+          {
+            "value": "50adc2fe-e82b-4e46-8418-c15444a8cf46",
+            "label": "Department"
+          },
+          {
+            "value": "60ed909f-363f-455c-96f7-b4990457804b",
+            "label": "Districts"
+          },
+          {
+            "value": "140070e7-49d2-4b95-9178-2bbe62a5769b",
+            "label": "DocumentType_Test"
+          },
+          {
+            "value": "event_categories",
+            "label": "Event Categories"
+          },
+          {
+            "value": "event_location",
+            "label": "Event Location"
+          },
+          {
+            "value": "f4fe86bc-063e-44c6-985b-0c4ed9f2b7f4",
+            "label": "Industry"
+          },
+          {
+            "value": "129daafb-a987-4e82-90d9-7316ca4f25d0",
+            "label": "Joshua_Test_Q"
+          },
+          {
+            "value": "61c2a466-818d-44d8-a5d4-b297d8973397",
+            "label": "LeadSource"
+          },
+          {
+            "value": "d090678d-24ae-4a1c-b231-988afa63ac47",
+            "label": "OrderStatus"
+          },
+          {
+            "value": "b1ef626d-4d66-4217-8990-d6412b189acc",
+            "label": "oy_quotation"
+          },
+          {
+            "value": "00ea7826-a046-43cb-be54-a1eac5eeb9e3",
+            "label": "Product"
+          },
+          {
+            "value": "83e82e93-4ab8-4e2c-aa3e-4b5f621f8f25",
+            "label": "Solutions"
+          },
+          {
+            "value": "307d696a-6b27-4c94-bc3e-34fd1e67863d",
+            "label": "Test_Master_Table_001"
+          },
+          {
+            "value": "cba673dc-e247-4508-aaea-de7e6441f8ec",
+            "label": "Test_Master_Table_002"
+          },
+          {
+            "value": "2d7e60ca-51e6-47f8-b441-f003f2eee398",
+            "label": "test_schema"
+          },
+          {
+            "value": "e41dd848-60fa-48ca-9aa9-af9978c2ea06",
+            "label": "test_table_name"
+          },
+          {
+            "value": "633d60a8-acd1-415a-ac85-ff65cc1ea3b7",
+            "label": "test22"
+          }
+        ],
         "selectSetting": {
           "api": "masterTableColumn",
           "method": "get",
@@ -404,7 +493,7 @@
         "labelHidden": false,
         "readonly": false,
         "disabled": false,
-        "hidden": false,
+        "hidden": true,
         "clearable": true,
         "showPassword": false,
         "required": false,

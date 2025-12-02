@@ -3,6 +3,11 @@ import { VxeUI } from 'vxe-pc-ui'
 VxeUI.renderer.add('ClickActionCell', {
   // 默认显示模板
   renderTableDefault(renderOpts: any, renderParams: any) {
+    return rendererFunction.ClickActionCell(renderOpts, renderParams)
+  }
+})
+export const rendererFunction: any = {
+  ClickActionCell: (renderOpts: any, renderParams: any) => {
     const prefix = renderOpts.params.setting.prefix || ''
     const suffix = renderOpts.params.setting.suffix || ''
     return h(
@@ -13,7 +18,7 @@ VxeUI.renderer.add('ClickActionCell', {
           const content: any = {}
           switch (renderOpts.params.linkType) {
             case 'openCase':
-              content.caseInstanceId =renderParams.row[renderParams.column.field]
+              content.caseInstanceId = renderParams.row[renderParams.column.field]
               break
             case 'openWorkflow':
               content.processInstanceId = renderParams.row[renderParams.column.field]
@@ -26,9 +31,10 @@ VxeUI.renderer.add('ClickActionCell', {
           if (renderOpts.params.closeDialog) {
             renderOpts.params.closeDialog()
           }
-        }
+        },
+        class: 'click-action-cell'
       },
       prefix + renderParams.row[renderParams.column.field] + suffix
     )
   }
-})
+}
