@@ -85,7 +85,7 @@ async function queryLog() {
       }
     }
     // params.orderBy = 'logDate'
-    // params.isDesc = true
+    params.isDesc = true
     const data = await clientApi.api.postAuditLogWorkflowPage(params).then(r => r.data)
     tableConfig.data = data.entryList.map((item: any) => {
       return {
