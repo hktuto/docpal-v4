@@ -1,4 +1,6 @@
 import { VxeUI } from 'vxe-pc-ui'
+import { clientApi } from 'api'
+import DocumentLink from './link/document.vue'
 // 创建一个单元格超链接
 VxeUI.renderer.add('ClickActionCell', {
   // 默认显示模板
@@ -13,6 +15,14 @@ export const rendererFunction: any = {
     }
     const prefix = renderOpts.params.setting.prefix || ''
     const suffix = renderOpts.params.setting.suffix || ''
+    let label = "";
+    if(renderOpts.params.linkType === 'openDocument') {
+      return h(DocumentLink, {
+        docId: renderParams.row[renderParams.column.field]
+      })
+    }else{
+      label = prefix + renderParams.row[renderParams.column.field] + suffix
+    }
     return h(
       'a',
       {
@@ -37,7 +47,7 @@ export const rendererFunction: any = {
         },
         class: 'click-action-cell'
       },
-      prefix + renderParams.row[renderParams.column.field] + suffix
+      label
     )
   }
 }
