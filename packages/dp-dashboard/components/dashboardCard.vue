@@ -105,7 +105,7 @@ defineExpose({
 
 <style lang="scss" scoped>
 .fullscreen{
-  position: fixed !important;
+  position: fixed !important; 
   top: 0;
   left: 0;
   width: 100% !important;
