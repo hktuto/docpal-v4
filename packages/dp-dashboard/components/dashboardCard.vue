@@ -1,6 +1,7 @@
 <script lang="ts" setup>
+import { getCurrentInstance } from 'vue'
 import { ElMessageBox } from 'element-plus'
-const emits = defineEmits(['delete', 'refreshSetting', 'openSetting', 'refresh'])
+const emits = defineEmits(['delete', 'refreshSetting', 'openSetting', 'refresh', 'resize'])
 const { t } = useI18n()
 
 const props = withDefaults(
@@ -19,27 +20,27 @@ const props = withDefaults(
     extraParams: []
   }
 )
-const cardRef = ref<HTMLElement>()
+const cardRef = ref<any>()
 const fullscreen = ref(false)
+const fullscreenTransform = ref('none')
+
 function openFullscreen() {
-  if(!cardRef.value || !cardRef.value.$el) return
-  if(cardRef.value.$el.requestFullscreen) {
-    cardRef.value.$el.requestFullscreen()
-  } else if(cardRef.value.$el.webkitRequestFullscreen) {
-    cardRef.value.$el.webkitRequestFullscreen()
-  } else if(cardRef.value.$el.msRequestFullscreen) {
-    cardRef.value.$el.msRequestFullscreen()
-  }
+  // get parent element and found if there any transform 
+  const cardElement = cardRef.value?.$el  as HTMLElement
+  const parentElement = cardElement.parentElement as HTMLElement
+  if(!cardElement) return
+  const transform = getComputedStyle(parentElement).transform
+  fullscreenTransform.value = transform
+  parentElement.style.transform = ''
+  const ev: any = new CustomEvent('fullscreenchange')
+  cardElement.dispatchEvent(ev)
 }
 function exitFullscreen() {
-  if(!cardRef.value || !cardRef.value.$el) return
-  if(document.exitFullscreen) {
-    document.exitFullscreen()
-  } else if(document.webkitExitFullscreen) {
-    document.webkitExitFullscreen()
-  } else if(document.msExitFullscreen) {
-    document.msExitFullscreen()
-  }
+  const cardElement = cardRef.value?.$el  as HTMLElement
+  const parentElement = cardElement.parentElement as HTMLElement
+  parentElement.style.transform = fullscreenTransform.value
+  const ev: any = new CustomEvent('fullscreenchange')
+  cardElement.dispatchEvent(ev)
 }
 function toggleFullscreen() {
   if(fullscreen.value) {
@@ -50,7 +51,9 @@ function toggleFullscreen() {
     fullscreen.value = true
   }
 }
-function resize() {}
+function resize() {
+
+}
 
 function openSetting() {
   console.log(props.settingRef, props.setting)
@@ -77,7 +80,7 @@ defineExpose({
 </script>
 
 <template>
-  <ElCard ref="cardRef" class="dp-dashboard--card">
+  <ElCard ref="cardRef" :class="['dp-dashboard--card', { 'fullscreen': fullscreen }]">
     <template #header>
       <slot name="header">
         <h4 class="dp-dashboard--card__title">
@@ -101,6 +104,14 @@ defineExpose({
 </template>
 
 <style lang="scss" scoped>
+.fullscreen{
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 2;
+}
 .el-card {
   --dashboard-item-padding: var(--app-space-s) !important;
 

@@ -16,7 +16,9 @@ export enum EventType {
   FILE_PREVIEW_OPEN = 'file-preview-open',
   FILE_PREVIEW_CLOSE = 'file-preview-close',
   CASE_NEED_REFRESH = 'case-need-refresh',
-  FILE_CLEAN_SELECTED_ROWS = 'file-clean-selected-rows'
+  FILE_CLEAN_SELECTED_ROWS = 'file-clean-selected-rows',
+  FULLSCREEN_OPEN = 'fullscreen-open',
+  FULLSCREEN_CLOSE = 'fullscreen-close',
 }
 
 export enum GlobalPasteEvent {

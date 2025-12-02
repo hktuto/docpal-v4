@@ -72,18 +72,21 @@ type ReplaceListItem = {
 async function handleSubmit() {
   const replaceList: ReplaceListItem[] = []
 
+  // TODO: 不需要打開
   // const userGroupResult = await userGroupRef.value.handleCreateUserGroup()
   // if (!userGroupResult.status) {
   //   routerProvider?.message.error(userGroupResult.data)
   //   return
   // }
-  //
+
+  // TODO: 不需要打開
   // const userRoleResult = await userRoleRef.value.handleCreateUserRole()
   // if (!userRoleResult.status) {
   //   routerProvider?.message.error(userRoleResult.data)
   //   return
   // }
-  //
+
+  // TODO: 不需要打開
   // const idGeneratorResult = await idGeneratorRef.value.handleCreateIdGenerator()
   // if (!idGeneratorResult.status) {
   //   routerProvider?.message.error(idGeneratorResult.data)
@@ -96,6 +99,7 @@ async function handleSubmit() {
   // return
   // }
 
+  // TODO: 不需要打開
   // const documentTemplateResult = await documentTemplateRef.value.handleCreateDocumentTemplate()
   // if (!documentTemplateResult.status) {
   //   routerProvider?.message.error(documentTemplateResult.data)
@@ -115,8 +119,14 @@ async function handleSubmit() {
   //   return
   // }
 
+  // TODO: 不需要打開
+  // const masterTableResult = await masterTableRef.value.handleCreateMasterTable()
+  // if (!masterTableResult.status) {
+  //   routerProvider?.message.error(masterTableResult.data)
+  //   return
+  // }
 
-
+  // const caseResult = await caseRef.value.handleCreateCase()
 
 
   // step 1 : get all form in case
@@ -166,38 +176,38 @@ async function handleSubmit() {
       <div v-if="Object.keys(jsonData.case).length > 0">
         <h3>Case</h3>
         <LazyConfigMigrationComponentsCase ref="caseRef" :caseList="jsonData.case" />
+        <el-divider />
       </div>
-      <el-divider />
 
       <div v-if="Object.keys(jsonData.workflow).length > 0">
         <h3>Workflow</h3>
         <LazyConfigMigrationComponentsWorkflow ref="workflowRef" :workflowList="jsonData.workflow" />
+        <el-divider />
       </div>
-      <el-divider />
 
       <div v-if="Object.keys(jsonData.masterTable).length > 0">
         <h3>Master Table</h3>
         <LazyConfigMigrationComponentsMasterTable ref="masterTableRef" :masterTableList="jsonData.masterTable" />
+        <el-divider />
       </div>
-      <el-divider />
 
       <div v-if="Object.keys(jsonData.idGenerator).length > 0">
         <h3>ID Generator</h3>
         <LazyConfigMigrationComponentsIdGenerator ref="idGeneratorRef" :idGeneratorList="jsonData.idGenerator" />
+        <el-divider />
       </div>
-      <el-divider />
 
       <div v-if="Object.keys(jsonData.homePage).length > 0">
         <h3>Home Page</h3>
         <LazyConfigMigrationComponentsHomePage ref="homePageRef" :homePageList="jsonData.homePage" />
+        <el-divider />
       </div>
-      <el-divider />
 
       <div v-if="Object.keys(jsonData.userGroup).length > 0">
         <h3>User Group</h3>
         <LazyConfigMigrationComponentsUserGroup ref="userGroupRef" :userGroupList="jsonData.userGroup" />
+        <el-divider />
       </div>
-      <el-divider />
 
       <div v-if="Object.keys(jsonData.userRole).length > 0">
         <h3>User Role</h3>
@@ -208,22 +218,22 @@ async function handleSubmit() {
         <h3>Document Template</h3>
         <LazyConfigMigrationComponentsDocumentTemplate ref="documentTemplateRef"
                                                        :documentTemplateList="jsonData.documentTemplate" />
+        <el-divider />
       </div>
-      <el-divider />
 
       <div v-if="Object.keys(jsonData.emailTemplate).length > 0">
         <h3>Email Template</h3>
         <LazyConfigMigrationComponentsEmailTemplate ref="emailTemplateRef"
                                                     :emailTemplateList="jsonData.emailTemplate" />
+        <el-divider />
       </div>
-      <el-divider />
 
       <div v-if="Object.keys(jsonData.folderCabinet).length > 0">
         <h3>Folder Cabinet</h3>
         <LazyConfigMigrationComponentsFolderCabinet ref="folderCabinetRef"
                                                     :folderCabinetList="jsonData.folderCabinet" />
+        <el-divider />
       </div>
-      <el-divider />
 
       <el-button @click="mode = 'upload'">{{ $t('dpButtom_cancel') }}</el-button>
       <el-button type="primary" @click="handleSubmit">{{ $t('submit') }}</el-button>
