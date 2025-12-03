@@ -5,9 +5,13 @@
     </div>
     <div class="infoContetn">
       <div class="block" style="margin-bottom: var(--app-space-s)">
-        <el-button v-if="status==='NotAllocated' || status==='Approval'" type="primary" size="small"
-                   :loading="checkLoading || loading"
-                   @click="dialogShow = true">
+        <el-button
+          v-if="status === 'NotAllocated' || status === 'Approval'"
+          type="primary"
+          size="small"
+          :loading="checkLoading || loading"
+          @click="dialogShow = true"
+        >
           {{ $t('workflow_startAdhocWorkflow') }}
         </el-button>
 
@@ -40,9 +44,7 @@
     </el-dialog>
 
     <!-- <template> -->
-
   </div>
-
 </template>
 
 <script lang="ts" setup>
@@ -59,7 +61,9 @@ const checkLoading = ref(false)
 const adHocHistory = ref<any>()
 const pendingApproval = ref<any>()
 const { formatDate } = useTime()
-
+const currentHistory = ref<any>({
+  pendingApproverId: null
+})
 // 'NotAllocated' | 'NotReviewed' | 'Approval'
 const status = ref<string>('NotAllocated')
 const isReviewer = ref<boolean>(false)
@@ -81,7 +85,7 @@ const userList = ref([])
 // const { userList } = toRefs(UseUser())
 const userListFilter = computed(() => {
   if (!userList) return []
-  return userList.value.filter(item => item.userId !== userId.value)
+  return userList.value.filter((item) => item.userId !== userId.value)
 })
 const dialogShow = ref(false)
 const form = ref({
@@ -90,7 +94,7 @@ const form = ref({
 
 async function checkAdhocStatus() {
   checkLoading.value = true
-  await new Promise(resolve => setTimeout(resolve, 2000)) // Delay of 1000ms occasionally fails
+  await new Promise((resolve) => setTimeout(resolve, 2000)) // Delay of 1000ms occasionally fails
   await getWorkflowAdhoc(props.doc.id)
   checkLoading.value = false
 }
@@ -111,12 +115,10 @@ function handleStart() {
       }
       loading.value = true
       try {
-        // TODO : add api
         await clientApi.api.postWorkflowProcessStart(param)
         dialogShow.value = false
         FormRef.value.resetFields()
-        // TODO : add api
-        await checkAdhocStatus()
+        getNewHistory()
       } catch (error) {
         await checkAdhocStatus()
       }
@@ -124,7 +126,20 @@ function handleStart() {
     }
   })
 }
-
+let intervalId = null
+function getNewHistory() {
+  checkLoading.value = true
+  intervalId = setInterval(async () => {
+    const _pendingApproverId = pendingApproval.value?.user_approver_id ? pendingApproval.value.user_approver_id : ''
+    if (currentHistory.value.pendingApproverId !== _pendingApproverId) {
+      currentHistory.value.pendingApproverId = _pendingApproverId
+      clearInterval(intervalId)
+      checkLoading.value = false
+    } else {
+      await getWorkflowAdhoc(props.doc.id)
+    }
+  }, 2000, { immediate: true })
+}
 const canApproval = ref(false)
 
 async function handelAudit(approved: boolean) {
@@ -141,13 +156,11 @@ async function handelAudit(approved: boolean) {
     }
   }
   loading.value = true
-  const result = await clientApi.api.postWorkflowAdhocApproval(param as any).then(res => res.code)
+  const result = await clientApi.api.postWorkflowAdhocApproval(param as any).then((res) => res.code)
   loading.value = false
   if (result) {
     canApproval.value = false
-    // 有延迟
-    // TODO : add api
-    await checkAdhocStatus()
+    getNewHistory()
   }
 }
 
@@ -163,12 +176,12 @@ function tagTextFilter(status: number) {
 }
 
 async function getWorkflowAdhoc(documentId) {
-  adHocHistory.value = null
-
-  const data = await clientApi.api.getWorkflowAdhocList({
-    documentId: documentId,
-    userId: userId.value
-  }).then(res => res.data) as any
+  const data = (await clientApi.api
+    .getWorkflowAdhocList({
+      documentId: documentId,
+      userId: userId.value
+    })
+    .then((res) => res.data)) as any
 
   // data is null
   if (!data.id && !data.histories) {
@@ -183,6 +196,8 @@ async function getWorkflowAdhoc(documentId) {
 
     isReviewer.value = userId.value == data.pendingApproval.user_approver_id
     return
+  } else {
+    pendingApproval.value = null
   }
 
   //
@@ -190,22 +205,30 @@ async function getWorkflowAdhoc(documentId) {
     adHocHistory.value = data.histories?.[0]
     status.value = 'Approval'
   }
-
 }
 
 // doc
-watch(doc, async (newValue) => {
-  await getWorkflowAdhoc(newValue.id)
-}, { immediate: true })
+watch(
+  doc,
+  async (newValue) => {
+    await getWorkflowAdhoc(newValue.id)
+    currentHistory.value.pendingApproverId = pendingApproval.value?.user_approver_id ? pendingApproval.value.user_approver_id : ''
+    console.log('start currentHistory.value.pendingApproverId', currentHistory.value.pendingApproverId)
+  },
+  { immediate: true }
+)
 
 onMounted(async () => {
-  const res = await clientApi.api.postNuxeoIdentityUsers().then(res => res.data) as any
+  const res = (await clientApi.api.postNuxeoIdentityUsers().then((res) => res.data)) as any
   userList.value = res.sort((a, b) => a.username.localeCompare(b.username))
+})
+onUnmounted(() => {
+  if (intervalId) clearInterval(intervalId)
 })
 </script>
 
 <style lang="scss" scoped>
-.small-text{
+.small-text {
   display: block;
   margin-block: var(--app-space-xs);
 }

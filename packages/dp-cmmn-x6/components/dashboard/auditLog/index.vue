@@ -84,6 +84,8 @@ async function queryLog() {
         params.request.id = caseId
       }
     }
+    // params.orderBy = 'logDate'
+    params.isDesc = true
     const data = await clientApi.api.postAuditLogWorkflowPage(params).then(r => r.data)
     tableConfig.data = data.entryList.map((item: any) => {
       return {
@@ -127,6 +129,12 @@ async function init() {
   await queryLog()
 }
 
+function handleExport() {
+  tableRef.value?.exportData({
+      type: 'xlsx'
+    })
+}
+
 onMounted(async () => {
   await init()
 })
@@ -145,8 +153,13 @@ onMounted(async () => {
     @delete="handleDelete"
     @refresh="refresh"
   >
-    <VxeGrid ref="tableRef" v-bind="tableConfig" v-on="tableEvent" />
-
+    <VxeGrid ref="tableRef" v-bind="tableConfig" v-on="tableEvent" >
+      <template #toolbar_buttons>
+        <VxeButton type="primary" @click="handleExport">
+          {{ $t('Export') }}
+        </VxeButton>
+      </template>
+    </VxeGrid>
     <DashboardAuditLogSetting v-if="!hideSetting" ref="settingRef" @refresh="handleRefreshSetting" />
   </DashboardCard>
 </template>

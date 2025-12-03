@@ -28,6 +28,8 @@ import {
 import 'vxe-pc-ui/lib/style.css'
 import 'vxe-table/lib/style.css'
 
+import VxeUIPluginExportXLSX from '@vxe-ui/plugin-export-xlsx'
+import ExcelJS from 'exceljs'
 
 function lazyVxeUI (app:any) {
   
@@ -50,7 +52,9 @@ export default defineNuxtPlugin(nuxtApp => {
   nuxtApp.vueApp.use(lazyVxeUI).use(lazyVxeTable);
   const i18n = nuxtApp.$i18n as any;
   // VxeUI.use(VxeUIPluginRenderElement);
-
+  VxeUI.use(VxeUIPluginExportXLSX,{
+    ExcelJS
+  });
   VxeUI.setConfig({
     // 对组件内置的提示语进行国际化翻译
     i18n: (key, args) => i18n.t(key, args),

@@ -2,6 +2,8 @@
 import { clientApi } from 'api'
 import { MoreFilled } from '@element-plus/icons-vue'
 import { ElMessage } from 'element-plus'
+import { formSlotOrderDisplayColumns } from '../../../../../packages/dp-dashboard/components/formSlot/displayColumn/reorderColumn'
+import '../../../../../packages/dp-dashboard/components/formSlot/displayColumn/vxeTableRender.ts'
 const platform = useAppPlatform()
 const { id, name, detail, relatedField } = defineProps<{
   id: string
@@ -59,6 +61,7 @@ const { tableConfig, tableEvent, tableRef, query, reload, cleanSelectedRows } = 
 const dialogRef = ref()
 
 async function reorderColumn(fields: any) {
+  console.log('fields', fields)
   try {
     const columns = [
       {
@@ -70,22 +73,8 @@ async function reorderColumn(fields: any) {
         }
       }
     ]
-    if (fields.length > 0) {
-      const columneFromSetting = fields.reduce((prev: any, item: any) => {
-        const newItem: any = {
-          field: item.id,
-          title: item.id === 'case_id' ? 'Case ID' : item.name.toLowerCase().replace(/\b\w/g, (s) => s.toUpperCase()),
-          minWidth: 200
-        }
-        if (item.formatter) {
-          newItem.formatter = item.formatter
-        }
-        prev.push(newItem)
-        return prev
-      }, [])
-      columns.splice(0, 0, ...columneFromSetting)
-    }
-    tableConfig.columns = columns
+    const _columns = await formSlotOrderDisplayColumns(fields, tabProvider)
+    tableConfig.columns = [..._columns, ...columns]
   } catch (e) {
     console.log('error', e)
   }

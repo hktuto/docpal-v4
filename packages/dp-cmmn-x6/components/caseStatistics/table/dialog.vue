@@ -3,7 +3,7 @@
     v-model="state.visible"
     :title="setting.dialogSettingTitle"
     class="big caseStatistics-table-dialog"
-    append-to-body
+    :append-to-body="appendToBody"
     :close-on-click-modal="false"
     @close="state.visible = false"
   >
@@ -23,12 +23,21 @@ const state = reactive({
   visible: false,
   sql: ''
 })
+const appendToBody = ref(true)
 const tableRef = ref()
 function handleOpen(sqlParams: any) {
   if (!setting.fields) return
   if (sqlParams) {
+    appendToBody.value = document.fullscreenElement ? false : true
     const _sqlParams = JSON.parse(JSON.stringify(sqlParams))
-    const columns = [...setting.displayColumns, 'case_id'].join(',')
+    const displayColumns = setting.displayColumns.map((item: any) => item.value || item)
+    if(!displayColumns.includes('case_id')) {
+      displayColumns.unshift('case_id')
+    }
+    if(setting.groupField && !displayColumns.includes(setting.groupField)) {
+      displayColumns.unshift(setting.groupField)
+    }
+    const columns = displayColumns.join(',')
     const selectSql = _sqlParams.find((item) => item.type === 'select')
     if (!selectSql) {
       _sqlParams.push({
@@ -41,7 +50,7 @@ function handleOpen(sqlParams: any) {
     state.sql = PostgREST_Decorate(_sqlParams)
     setTimeout(() => {
       tableRef.value.reload()
-    }, 100)
+    }, 300)
   }
   state.visible = true
 }

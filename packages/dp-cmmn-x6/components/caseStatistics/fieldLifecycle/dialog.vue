@@ -1,5 +1,5 @@
 <template>
-  <el-dialog v-model="state.visible" :title="$t('common_filter')" append-to-body :close-on-click-modal="false" @close="state.visible = false">
+  <el-dialog v-model="state.visible" :title="$t('common_filter')" :append-to-body="appendToBody" :close-on-click-modal="false" @close="state.visible = false">
     <FormVariablesRenderer ref="formVariablesRendererRef" />
     <template #footer>
       <el-button type="danger" @click="handleClear">{{ $t('common_clear') }}</el-button>
@@ -18,6 +18,7 @@ const props = withDefaults(
     setting: {}
   }
 )
+const appendToBody = ref(true)
 const emits = defineEmits(['filter'])
 const state = reactive({
   visible: false
@@ -26,6 +27,8 @@ const formVariablesRendererRef = ref()
 async function handleOpen(sqlParams?: any) {
   state.visible = true
   const fields = JSON.parse(props.setting.fields)
+  console.log("document.fullscreenElement", document.fullscreenElement)
+  appendToBody.value = document.fullscreenElement ? false : true
   const formList = []
   for (const item of props.setting.filterDialogList) {
     const filterItem = fields.find((field: any) => field.value === item.filterDialogField)

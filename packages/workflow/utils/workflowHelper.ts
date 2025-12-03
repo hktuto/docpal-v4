@@ -5,7 +5,7 @@ const generateDocumentComponent = 'LazyBpmnButtonGenerateDocument'
 const booleanButtonComponent = 'LazyBpmnButtonBoolean'
 import { generateData, replaceVariables } from 'docpal-document-editor/src/utils'
 
-export async function getBpmnAddtionalElement(xml: any, taskDefinitionKey: string, taskDetail: any, formData: any) {
+export async function getBpmnAdditionalElement(xml: any, taskDefinitionKey: string, taskDetail: any, formData: any) {
   const xmlJson = bpmnStringToJson(xml)
   const currentTask = xmlJson.flatObj[taskDefinitionKey]
   let signatureSetting: any = null
@@ -166,17 +166,9 @@ export function convertWorkflowVariableToTemplateVariable(variables: any, mappin
       try {
         const json = JSON.parse(variables[valueKey])
         // REMARK : number will not throw error in JSON.parse, so we need to check it manually
-        if (typeof json === 'number') {
-          prev[key] = json.toFixed(2)
-        } else {
-          prev[key] = json
-        }
+        prev[key] = json
       } catch (e) {
-        if (typeof variables[valueKey] === 'number') {
-          prev[key] = variables[valueKey].toFixed(2)
-        } else {
-          prev[key] = variables[valueKey]
-        }
+        prev[key] = variables[valueKey]
       }
     }
     return prev
