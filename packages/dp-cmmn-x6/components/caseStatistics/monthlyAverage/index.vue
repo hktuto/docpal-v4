@@ -152,6 +152,7 @@ const option = {
 }
 const dialogRef = ref()
 function formatValue(value, displayMethod) {
+  if(!value) return '--'
   if (displayMethod === 'count') {
     return FinancialComputing(Number(value))
   } else if (displayMethod === 'currency') {
