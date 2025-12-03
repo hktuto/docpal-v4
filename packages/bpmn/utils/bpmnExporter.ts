@@ -12,7 +12,8 @@ type WorkflowExportData = {
   name: string,
   xml: string,
   styleJson: any,
-  form: any[]
+  form: any[],
+  fields: any[]
 }
 
 const useAllWorkflowList = () => useState<any[]>('all-workflow-list', () => [])
@@ -49,6 +50,7 @@ export async function getWorkflowExportData(workflowKey:string) {
       xml: "",
       styleJson: "",
       form: [],
+      fields: []
     } as WorkflowExportData
     console.log("try to get workflow export data", selectedWorkflowData)
   
@@ -69,6 +71,10 @@ export async function getWorkflowExportData(workflowKey:string) {
     const allForms = await getAllFormFromXML(file, selectedWorkflowData.key, selectedWorkflowData.versionId)
     console.log("allForms", allForms)
     result.form = allForms
+    // get field List
+    const fieldData:any = await adminApi.api.getValidationRulesVersiondraftid(selectedWorkflowData.versionId).then(r => r.data)
+    console.log("fieldData", fieldData)
+    result.fields = fieldData.validationRules
     // get all services task from xmlJson
     let relatedCase = new Set<string>()
     let relatedDocumentTemplate = new Set<string>()
