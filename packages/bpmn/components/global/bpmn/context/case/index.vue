@@ -61,7 +61,15 @@ async function init() {
   form.value.attr_name = extensionElements['flowable:newCase'].attr_name
   form.value.attr_systemCaseInstanceId = extensionElements['flowable:newCase'].attr_systemCaseInstanceId
 
-  await getCaseOption()
+  const find = caseList.value.find((item: any) => item.id === form.value.attr_caseTypeId)
+  if (!find) {
+    caseOptionList.value = []
+    return
+  }
+
+  if ('' !== form.value.attr_caseTypeId) {
+    await getCaseOption()
+  }
 
   if (extensionElements['flowable:newCase'].field.length === 0) return
 
