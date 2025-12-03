@@ -13,8 +13,8 @@ export async function formSlotOrderDisplayColumns(fields: any, tabProvider: any,
           const prefix = item.prefix || ''
           const suffix = item.suffix || ''
           newItem.formatter = ({ cellValue }: any) => {
+            if (!cellValue) return '-'
             if (item.dateDisplay === 'duration') {
-              if (!cellValue) return prefix + '0 day' + suffix
               const diff = dayjs().diff(cellValue, 'day')
               return prefix + diff + ' days' + suffix
             }
