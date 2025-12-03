@@ -127,12 +127,14 @@ const option = {
           return value
         }
       },
+      itemStyle: {},
       data: []
     },
     {
       name: 'Average Duration',
       type: 'line',
       yAxisIndex: 1,
+      itemStyle: {},
       tooltip: {
         valueFormatter: function (value) {
           return FinancialComputing(Number(value))
@@ -178,6 +180,9 @@ const { cardRef, chartRef, settingRef, resize, handleInitCard, loading } = useDa
     option.grid.right = props.setting.rightMargin + '%' || '10%'
     option.yAxis[0].nameGap = props.setting.barGap || 32
     option.yAxis[1].nameGap = props.setting.averageGap || 32
+
+    option.series[0].itemStyle.color = props.setting.numColor || ''
+    option.series[1].itemStyle.color = props.setting.averageColor || ''
 
     if (props.setting.averageField) {
       option.legend.data[1] = props.setting.averageLabel || props.setting.averageTitle

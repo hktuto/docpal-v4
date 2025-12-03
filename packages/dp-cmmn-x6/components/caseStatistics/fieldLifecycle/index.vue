@@ -164,7 +164,10 @@ const { cardRef, chartRef, settingRef, resize, handleInitCard, loading } = useDa
       option.series.push({
         ...seriesConfig,
         name: item.filterValue,
-        data: []
+        data: [],
+        itemStyle: {
+          color: item.color || ''
+        }
       })
       option.legend.data.push(item.filterValue)
     })
