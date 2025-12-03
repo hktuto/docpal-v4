@@ -421,76 +421,21 @@
                   "id": "asyncselect50846"
                 },
                 {
-                  "key": 114361,
-                  "type": "select",
-                  "icon": "select-field",
+                  "key": 20350,
+                  "type": "color",
+                  "icon": "color-field",
                   "formItemFlag": true,
                   "options": {
                     "name": "color",
                     "label": "Color",
                     "labelAlign": "",
-                    "defaultValue": "",
-                    "placeholder": "",
+                    "defaultValue": null,
                     "columnWidth": "200px",
                     "size": "",
                     "labelWidth": null,
                     "labelHidden": false,
                     "disabled": false,
                     "hidden": false,
-                    "clearable": true,
-                    "filterable": true,
-                    "allowCreate": false,
-                    "popperClass": "",
-                    "remote": false,
-                    "automaticDropdown": false,
-                    "multiple": false,
-                    "multipleLimit": 0,
-                    "optionItems": [
-                      {
-                        "value": "#c23531",
-                        "label": "Red"
-                      },
-                      {
-                        "value": "#2f4554",
-                        "label": "Dark Slate Gray"
-                      },
-                      {
-                        "value": "#61a0a8",
-                        "label": "Light Sea Green"
-                      },
-                      {
-                        "value": "#d48265",
-                        "label": "Sandy Brown"
-                      },
-                      {
-                        "value": "#91c7ae",
-                        "label": "Medium Aquamarine"
-                      },
-                      {
-                        "value": "#749f83",
-                        "label": "Medium Sea Green"
-                      },
-                      {
-                        "value": "#ca8622",
-                        "label": "Orange"
-                      },
-                      {
-                        "value": "#bda29a",
-                        "label": "Light Brown"
-                      },
-                      {
-                        "value": "#6e7074",
-                        "label": "Dim Gray"
-                      },
-                      {
-                        "value": "#546570",
-                        "label": "Dark Cyan"
-                      },
-                      {
-                        "value": "#c4ccd3",
-                        "label": "Light Gray"
-                      }
-                    ],
                     "required": false,
                     "requiredHint": "",
                     "validation": "",
@@ -499,50 +444,25 @@
                     "labelIconClass": null,
                     "labelIconPosition": "rear",
                     "labelTooltip": null,
-                    "onCreated": "",
-                    "onMounted": "",
-                    "onRemoteQuery": "",
-                    "onChange": "const _this = this\n\nconst displayColorRef = _this.getWidgetRef(`displayColor@row${rowId}`)\ndisplayColorRef.setValue(value)\n",
-                    "changeSettings": [],
-                    "onChangeSetting": true,
-                    "onFocus": "",
-                    "onBlur": "",
-                    "onValidate": ""
-                  },
-                  "id": "select12012"
-                },
-                {
-                  "key": 47939,
-                  "type": "color",
-                  "icon": "color-field",
-                  "formItemFlag": true,
-                  "options": {
-                    "name": "displayColor",
-                    "label": "",
-                    "labelAlign": "",
-                    "defaultValue": null,
-                    "columnWidth": "200px",
-                    "size": "",
-                    "labelWidth": null,
-                    "labelHidden": false,
-                    "disabled": true,
-                    "hidden": false,
-                    "required": false,
-                    "requiredHint": "",
-                    "validation": "",
-                    "validationHint": "",
-                    "customClass": [
-                      "color-picker"
+                    "predefineColors": [
+                      "#c23531",
+                      "#2f4554",
+                      "#61a0a8",
+                      "#d48265",
+                      "#91c7ae",
+                      "#749f83",
+                      "#ca8622",
+                      "#bda29a",
+                      "#6e7074",
+                      "#546570",
+                      "#c4ccd3"
                     ],
-                    "labelIconClass": null,
-                    "labelIconPosition": "rear",
-                    "labelTooltip": null,
                     "onCreated": "",
                     "onMounted": "",
                     "onChange": "",
                     "onValidate": ""
                   },
-                  "id": "color54849"
+                  "id": "color100113"
                 }
               ],
               "options": {
