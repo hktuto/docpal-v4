@@ -40,8 +40,10 @@ async function getData() {
   console.log('selectedData', selectedData)
   if(selectedData && selectedData.value) {
     // loop
-    currentStage.value = props.setting.steps.findIndex((item: any) => item.value.includes(selectedData.value))
-    console.log('currentStage', currentStage.value)
+    const trimmedValue = selectedData.value.split('-')[0]
+    console.log('trimmedValue', trimmedValue)
+    currentStage.value = props.setting.steps.findIndex((item: any) => item.value === trimmedValue )
+    console.log('currentStage', currentStage.value, props.setting.steps)
   }else{
     currentStage.value = -1
   }
@@ -92,6 +94,7 @@ onMounted(async () => {
   justify-content: flex-start;
   align-items: center;
   gap: 0;
+  height: 100%;
   border-radius: var(--app-border-radius-m);
   overflow: hidden;
   .stage-item{

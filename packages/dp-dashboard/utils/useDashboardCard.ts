@@ -90,6 +90,7 @@ export const useDashboardCard = (params: useDashboardCardParams) => {
     return echartInstance
   }
   const resize = () => {
+    console.log('resize')
     setTimeout(async () => {
       if (params.resizeAction) {
         params.resizeAction(echartInstance)
@@ -100,15 +101,28 @@ export const useDashboardCard = (params: useDashboardCardParams) => {
     })
   }
 
+  function offsetResize() {
+    setTimeout(() => {
+      resize()
+    }, 300)
+  }
   onMounted(async () => {
     setTimeout(async () => {
       initStyle()
       // 随着屏幕大小调节图表
       useEventListener(window, 'resize', resize)
+
+      const cardElement = cardRef.value?.$el as HTMLElement
+      
+      if (!cardElement) return
+      cardElement.addEventListener('fullscreenchange', offsetResize)
     })
   })
   onUnmounted(() => {
     if (!!echartInstance) echartInstance.dispose()
+    const cardElement = cardRef.value?.$el as HTMLElement
+    if (!cardElement) return
+    cardElement.removeEventListener('fullscreenchange', offsetResize)
   })
   watchDebounced(
     () => [props.setting, props.dates],

@@ -94,8 +94,20 @@
             "label": "Solutions"
           },
           {
+            "value": "307d696a-6b27-4c94-bc3e-34fd1e67863d",
+            "label": "Test_Master_Table_001"
+          },
+          {
+            "value": "cba673dc-e247-4508-aaea-de7e6441f8ec",
+            "label": "Test_Master_Table_002"
+          },
+          {
             "value": "2d7e60ca-51e6-47f8-b441-f003f2eee398",
             "label": "test_schema"
+          },
+          {
+            "value": "e41dd848-60fa-48ca-9aa9-af9978c2ea06",
+            "label": "test_table_name"
           },
           {
             "value": "633d60a8-acd1-415a-ac85-ff65cc1ea3b7",
@@ -127,7 +139,7 @@
         "onCreatedPlus": "",
         "onMounted": "",
         "onRemoteQuery": "",
-        "onChange": "const _this = this\nloadColumn()\ninitLabel()\nfunction initLabel () {\n  try {\n    const optionsItems = _this.getOptionItems()\n    const curItem = optionsItems.find(item => item.value === value)\n    const labelRef =  _this.getWidgetRef('label')\n    const nameRef = _this.getWidgetRef('name')\n    labelRef.setValue(curItem.label)\n    nameRef.setValue(curItem.label)\n  } catch(error) {\n    console.error(error)\n  }\n}\n\nasync function loadColumn() {\n  const displayColumnsRef = _this.getWidgetRef('displayColumns')\n  if(!!oldValue) {\n    displayColumnsRef.setValue([])\n    displayColumnsRef.loadOptions([]) \n  }\n  if(!value) {\n    return\n  }\n  const options = await getOptions(value)\n  displayColumnsRef.loadOptions(options) \n  \n  const relatedFieldRef =  _this.getWidgetRef('relatedField')\n  relatedFieldRef.loadOptions(options) \n} \n\nasync function getOptions(id) {\n try {\n    const data = await $api.get(`/docpal/master/tables/${id}`).then(res => res.data.data)\n    return data.fields.reduce((prev, item) => {\n      const resultItem = {\n        value: item.columnName,\n        label: item.columnName || '' ,\n      }\n      prev.push(resultItem) \n      return prev\n    }, []).sort((a,b)=> (a.label.localeCompare(b.label) ))\n  } catch (e) { return [] }\n}",
+        "onChange": "const _this = this\nloadColumn()\ninitLabel()\nfunction initLabel () {\n  try {\n    const optionsItems = _this.getOptionItems()\n    const curItem = optionsItems.find(item => item.value === value)\n    const labelRef =  _this.getWidgetRef('label')\n    const nameRef = _this.getWidgetRef('name')\n    labelRef.setValue(curItem.label)\n    nameRef.setValue(curItem.label)\n  } catch(error) {\n    console.error(error)\n  }\n}\n\nasync function loadColumn() {\n\n  if(!value) {\n    return\n  }\n  const options = await getOptions(value)\n  const fieldsRef = _this.getWidgetRef('fields')\n  fieldsRef.setValue(JSON.stringify(options))\n  const relatedFieldRef =  _this.getWidgetRef('relatedField')\n  const clickActionIdRef = _this.getWidgetRef('clickActionId')\n  relatedFieldRef.loadOptions(options) \n  clickActionIdRef.loadOptions(options) \n} \n\nasync function getOptions(id) {\n try {\n    const data = await $api.get(`/docpal/master/tables/${id}`).then(res => res.data.data)\n    return data.fields.reduce((prev, item) => {\n      const resultItem = {\n        value: item.columnName,\n        label: item.columnName || '' ,\n        type: item.dataType\n      }\n      prev.push(resultItem) \n      return prev\n    }, []).sort((a,b)=> (a.label.localeCompare(b.label) ))\n  } catch (e) { return [] }\n}",
         "onChangePlus": "",
         "onFocus": "",
         "onBlur": "",
@@ -297,6 +309,115 @@
       "id": "select28767"
     },
     {
+      "key": 65788,
+      "type": "select",
+      "icon": "select-field",
+      "formItemFlag": true,
+      "options": {
+        "name": "clickAction",
+        "label": "Double Click Action",
+        "labelAlign": "",
+        "defaultValue": "none",
+        "placeholder": "",
+        "columnWidth": "200px",
+        "size": "",
+        "labelWidth": null,
+        "labelHidden": false,
+        "disabled": false,
+        "hidden": false,
+        "clearable": true,
+        "filterable": true,
+        "allowCreate": false,
+        "popperClass": "",
+        "remote": false,
+        "automaticDropdown": false,
+        "multiple": false,
+        "multipleLimit": 0,
+        "optionItems": [
+          {
+            "value": "none",
+            "label": "None"
+          },
+          {
+            "value": "document",
+            "label": "Open Document"
+          },
+          {
+            "value": "case",
+            "label": "Open Case"
+          },
+          {
+            "value": "workflow",
+            "label": "Open Workflow"
+          }
+        ],
+        "required": false,
+        "requiredHint": "",
+        "validation": "",
+        "validationHint": "",
+        "customClass": "",
+        "labelIconClass": null,
+        "labelIconPosition": "rear",
+        "labelTooltip": null,
+        "onCreated": "",
+        "onMounted": "",
+        "onRemoteQuery": "",
+        "onChange": "const clickActionIdREf = this.getWidgetRef('clickActionId')\n\nclickActionIdREf.setHidden(value === 'none')",
+        "changeSettings": [],
+        "onChangeSetting": true,
+        "onFocus": "",
+        "onBlur": "",
+        "onValidate": ""
+      },
+      "id": "select57919"
+    },
+    {
+      "key": 65788,
+      "type": "select",
+      "icon": "select-field",
+      "formItemFlag": true,
+      "options": {
+        "name": "clickActionId",
+        "label": "Click Action ID",
+        "labelAlign": "",
+        "defaultValue": "",
+        "placeholder": "",
+        "columnWidth": "200px",
+        "size": "",
+        "labelWidth": null,
+        "labelHidden": false,
+        "disabled": false,
+        "hidden": true,
+        "clearable": true,
+        "filterable": true,
+        "allowCreate": false,
+        "popperClass": "",
+        "remote": false,
+        "automaticDropdown": false,
+        "multiple": false,
+        "multipleLimit": 0,
+        "optionItems": [],
+        "required": false,
+        "requiredHint": "",
+        "validation": "",
+        "validationHint": "",
+        "customClass": "",
+        "labelIconClass": null,
+        "labelIconPosition": "rear",
+        "labelTooltip": null,
+        "onCreated": "",
+        "onMounted": "",
+        "onRemoteQuery": "",
+        "onChange": "",
+        "changeSettings": [],
+        "onChangeSetting": true,
+        "onFocus": "",
+        "onBlur": "",
+        "onValidate": ""
+      },
+      "id": "select89461"
+    },
+    {
       "key": 98582,
       "type": "select",
       "icon": "select-field",
@@ -343,32 +464,39 @@
       "id": "select28011"
     },
     {
-      "key": 46294,
-      "type": "select",
-      "icon": "select-field",
+      "key": 26336,
+      "type": "slot",
+      "icon": "slot-field",
+      "formItemFlag": false,
+      "options": {
+        "name": "dialog_displayColumns",
+        "label": "dialog_displayColumns",
+        "hidden": false
+      },
+      "id": "slot27566"
+    },
+    {
+      "key": 65785,
+      "type": "input",
+      "icon": "text-field",
       "formItemFlag": true,
       "options": {
-        "name": "displayColumns",
-        "label": "singleCase.displayColumns",
+        "name": "fields",
+        "label": "fields",
         "labelAlign": "",
-        "defaultValue": [],
+        "type": "text",
+        "defaultValue": "",
         "placeholder": "",
         "columnWidth": "200px",
         "size": "",
         "labelWidth": null,
         "labelHidden": false,
+        "readonly": false,
         "disabled": false,
-        "hidden": false,
+        "hidden": true,
         "clearable": true,
-        "filterable": true,
-        "allowCreate": false,
-        "popperClass": "",
-        "remote": false,
-        "automaticDropdown": false,
-        "multiple": true,
-        "multipleLimit": 0,
-        "optionItems": [],
-        "required": true,
+        "showPassword": false,
+        "required": false,
         "requiredHint": "",
         "validation": "",
         "validationHint": "",
@@ -376,17 +504,29 @@
         "labelIconClass": null,
         "labelIconPosition": "rear",
         "labelTooltip": null,
+        "minLength": null,
+        "maxLength": null,
+        "showWordLimit": false,
+        "prefixIcon": "",
+        "suffixIcon": "",
+        "appendButton": false,
+        "appendButtonText": "",
+        "prependText": "",
+        "appendButtonDisabled": false,
+        "buttonIcon": "custom-search",
         "onCreated": "",
         "onMounted": "",
-        "onRemoteQuery": "",
+        "onInput": "",
         "onChange": "",
         "changeSettings": [],
         "onChangeSetting": true,
         "onFocus": "",
         "onBlur": "",
-        "onValidate": ""
+        "onEnter": "",
+        "onValidate": "",
+        "onAppendButtonClick": ""
       },
-      "id": "select27075"
+      "id": "input33630"
     }
   ],
   "formConfig": {

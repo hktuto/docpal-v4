@@ -1,6 +1,11 @@
 <script lang="ts" setup>
 import { clientApi } from 'api'
+import formJson from './setting.vform.json'
 import Cards from './cards.vue'
+import { formSlotOrderDisplayColumns } from '../../../../../packages/dp-dashboard/components/formSlot/displayColumn/reorderColumn'
+
+
+const tabProvider = inject(TabManagerKey)
 const emits = defineEmits(['delete', 'refreshSetting'])
 const props = withDefaults(
   defineProps<{
@@ -43,73 +48,24 @@ async function getMasterTableDetail(id: string) {
 }
 // #region module: tableRef
 async function handleShowColumn() {
-  // if displayColumnSetting is not empty, use it
-  let result:any[] = [];
-  const list = props.setting.displayColumnSetting;
-  if(list && list.length > 0) {
-    result = list.map((item: any) => {
-      const newItem:any = {
-        id: item.field,
-        name: item.label,
-        minWidth: 200
-      }
-      if(item.displayType === 'Date') {
-        newItem.formatter = ({ cellValue }: any) => {
-          const format = item.dateFormat || 'DD-MMM-YYYY'
-          return formatDate(cellValue, format)
-        }
-      }
-      return newItem
-    })
-  }else{
-    result = props.setting.displayColumns.reduce((prev: any, columnId: any) => {
-      const column = state.detail?.fields?.find((p: any) => p.columnName === columnId)
-      // check if the field is default fields
-      if (columnId === 'case_id') {
-        prev.push({ id: 'case_id', name: 'Case Id', minWidth: 200 })
-      } else if (columnId === 'created_date') {
-        prev.push({
-          id: 'created_date',
-          name: 'workflow_createDate',
-          minWidth: 200,
-          formatter({ cellValue }: any) {
-            return formatDate(cellValue)
-          }
-        })
-      } else if (columnId === 'modified_date') {
-        prev.push({
-          id: 'modified_date',
-          name: 'table_modifiedDate',
-          minWidth: 200,
-          formatter({ cellValue }: any) {
-            return formatDate(cellValue)
-          }
-        })
-      } else if (!!column) {
-        // get label from primaryForm
-        // TODO : this is a backend bug, the information is not returning correct label/name
-        const field = state.detail.fields.find((p: any) => p.id === columnId)
-        prev.push({
-          id: columnId,
-          name: field?.name || columnId
-        })
-      }
-      return prev
-    }, [])
-  }
+  const _columns = await formSlotOrderDisplayColumns(props.setting.displayColumns, tabProvider)
   setTimeout(() => {
-    console.log('handleShowColumn', result, tableRef)
     if(tableRef.value) {
-      tableRef.value.reorderColumn(result)
+      tableRef.value.reorderColumn(_columns)
     }
     if(cardsRef.value) {
-      cardsRef.value.reorderColumn(result)
+      cardsRef.value.reorderColumn(_columns)
     }
     handleRefreshTable()
   }, 100)
 }
 function handleRefreshTable() {
-  tableRef.value.reload()
+  if(tableRef.value) {
+    tableRef.value.reload()
+  }
+  if(cardsRef.value) {
+    cardsRef.value.reload()
+  }
 }
 // #endregion
 
@@ -145,7 +101,14 @@ watch(
     <div v-if="setting.view === 'card'" class="cards-container">
       <Cards ref="cardsRef" :name="setting.name" :detail="state.detail" :relatedField="setting.relatedField"></Cards>
     </div>
-    <DashboardRelatedMasterSetting v-if="!hideSetting" ref="settingRef" @delete="handleDelete" @refresh="handleRefresh" />
+    <DashboardSetting
+      v-if="!hideSetting"
+      ref="settingRef"
+      :title="title"
+      :formJson="formJson"
+      @delete="handleDelete"
+      @refresh="handleRefresh"
+    />
   </DashboardCard>
 </template>
 <style lang="scss" scoped>

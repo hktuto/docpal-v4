@@ -152,7 +152,7 @@
                 "onCreatedPlus": "",
                 "onMounted": "",
                 "onRemoteQuery": "",
-                "onChange": "const _this = this\nif(!value) return\nasync function getList() {\n  try {\n    const data = await $api.get(`/docpal/case/types/${value}/caseInfo`).then(res => res.data.data)\n    return data.reduce((prev, item) => {\n      if(!item.id || !item.name) return prev \n      const resultItem = {\n        value: item.id,\n        label: item.name || '' ,\n        type: item.type\n      }\n      prev.push(resultItem) \n      return prev\n    }, []).sort((a,b)=> (a.label.localeCompare(b.label) ))\n  } catch (e) { return [] }\n}\nasync function init() {\n  const options = await getList()\n  const relatedFieldRef = _this.getWidgetRef('relatedField')\n  relatedFieldRef.loadOptions(options)\n  const filterKeyRef = _this.getWidgetRef('filterKey')\n  filterKeyRef.loadOptions(options)\n  const sortByRef = _this.getWidgetRef('sortBy')\n  sortByRef.loadOptions(options)\n  \n  const strOptions = options.filter(i => ['string','short_text'].includes(i.type))\n  console.log(strOptions)\n  const currentUserFieldRef = _this.getWidgetRef('currentUserField')\n  currentUserFieldRef.loadOptions(strOptions)\n  \n  const dateOptions = options.filter(i => ['date'].includes(i.type))\n  const dateFieldRef = _this.getWidgetRef('dateField')\n  dateFieldRef.loadOptions(dateOptions)\n  \n  const displayColumnsRef = _this.getWidgetRef('displayColumns')\n  displayColumnsRef.loadOptions(options)\n  const displayColumnsValue = displayColumnsRef.getValue()\n  if(!displayColumnsValue || displayColumnsValue.length === 0) displayColumnsRef.setValue(['case_id'])\n  const fields = _this.getWidgetRef('fields')\n  fields.setValue(JSON.stringify(options))\n  \n  initSubForm(options)\n}\n\nfunction initDialogTitle() {\n  const optionItems = _this.getOptionItems()\n  const dialogSettingTitleRef = _this.getWidgetRef('dialogSettingTitle')\n  const title = dialogSettingTitleRef.getValue()\n  const cur = optionItems.find(i => i.value === value)\n  const isTitle = !title || optionItems.find(i => i.label === title)\n  if(cur && isTitle) dialogSettingTitleRef.setValue(cur.label)\n}\nfunction initTableName() {\n  if(!value) return\n  const optionItems = _this.getOptionItems()\n  const cur = optionItems.find(i => i.value === value)\n  if(!cur) return\n  const tableNameRef = _this.getWidgetRef('tableName')\n  tableNameRef.setValue(cur.tableName)\n}\nasync function initSubForm(options) {\n  const refList = _this.refList\n  Object.keys(refList).forEach(key => {\n    if(key.includes('filterDialogField@row')) {\n      const filterKeyRef = refList[key]\n      filterKeyRef.loadOptions(options)\n    }\n  })\n}\n\ninitTableName()\ninitDialogTitle()\ninit()\n\n",
+                "onChange": "const _this = this\nif(!value) return\nasync function getList() {\n  try {\n    const data = await $api.get(`/docpal/case/types/${value}/caseInfo`).then(res => res.data.data)\n    return data.reduce((prev, item) => {\n      if(!item.id || !item.name) return prev \n      const resultItem = {\n        value: item.id,\n        label: item.name || '' ,\n        type: item.type\n      }\n      prev.push(resultItem) \n      return prev\n    }, []).sort((a,b)=> (a.label.localeCompare(b.label) ))\n  } catch (e) { return [] }\n}\nasync function init() {\n  const options = await getList()\n  const relatedFieldRef = _this.getWidgetRef('relatedField')\n  relatedFieldRef.loadOptions(options)\n  const filterKeyRef = _this.getWidgetRef('filterKey')\n  filterKeyRef.loadOptions(options)\n  const sortByRef = _this.getWidgetRef('sortBy')\n  sortByRef.loadOptions(options)\n  \n  const strOptions = options.filter(i => ['string','short_text'].includes(i.type))\n  console.log(strOptions)\n  const currentUserFieldRef = _this.getWidgetRef('currentUserField')\n  currentUserFieldRef.loadOptions(strOptions)\n  \n  const dateOptions = options.filter(i => ['date'].includes(i.type))\n  const dateFieldRef = _this.getWidgetRef('dateField')\n  dateFieldRef.loadOptions(dateOptions)\n  \n  const fields = _this.getWidgetRef('fields')\n  fields.setValue(JSON.stringify(options))\n  \n  initSubForm(options)\n}\n\nfunction initDialogTitle() {\n  const optionItems = _this.getOptionItems()\n  const dialogSettingTitleRef = _this.getWidgetRef('dialogSettingTitle')\n  const title = dialogSettingTitleRef.getValue()\n  const cur = optionItems.find(i => i.value === value)\n  const isTitle = !title || optionItems.find(i => i.label === title)\n  if(cur && isTitle) dialogSettingTitleRef.setValue(cur.label)\n}\nfunction initTableName() {\n  if(!value) return\n  const optionItems = _this.getOptionItems()\n  const cur = optionItems.find(i => i.value === value)\n  if(!cur) return\n  const tableNameRef = _this.getWidgetRef('tableName')\n  tableNameRef.setValue(cur.tableName)\n}\nasync function initSubForm(options) {\n  const refList = _this.refList\n  Object.keys(refList).forEach(key => {\n    if(key.includes('filterDialogField@row')) {\n      const filterKeyRef = refList[key]\n      filterKeyRef.loadOptions(options)\n    }\n  })\n}\n\ninitTableName()\ninitDialogTitle()\ninit()\n\n",
                 "onChangePlus": "",
                 "onFocus": "",
                 "onBlur": "",
@@ -342,7 +342,7 @@
                 "onCreated": "",
                 "onMounted": "",
                 "onRemoteQuery": "",
-                "onChange": "const _this = this\nconst filterKey = 'masterTableColumn'\nasync function getList() {\n  try {\n    const data = await $api.post('/docpal/master/tables/record/page/nonPermission',{where:{key: 'case_status', }, name: 'basic', }).then(res => res.data.data)\n    return data.reduce((prev, item) => {\n      if(!item.name || !item.name || prev.find(p => p.value === item.name)) return prev \n      const resultItem = {\n        value: item.name,\n        label: item.name || '' ,\n        order_num: item.order_num\n      }\n      if(filterKey === 'user') resultItem.disabled = item.status === 'A' ? false : true \n      else if(filterKey === 'masterTableColumn') resultItem.disabled = !item.status\n      prev.push(resultItem) \n      return prev\n    }, []).sort((a,b)=> (a.order_num - b.order_num ))\n  } catch (e) { return [] }\n}\nasync function init() {\n  const refList = _this.refList\n  if(value.includes('Case_Status')) {\n    const options = await getList()\n    Object.keys(refList).forEach(key => {\n      if(key.includes('filterValue@row')) {\n        const filterValueRef = refList[key]\n        filterValueRef.loadOptions(options)\n      }\n    })\n    const filterOptionsRef = _this.getWidgetRef('filterOptions')\n    filterOptionsRef.setValue(JSON.stringify(options))\n  } else {\n     Object.keys(refList).forEach(key => {\n      if(key.includes('filterValue@row')) {\n        const filterValueRef = refList[key]\n        filterValueRef.loadOptions([])\n      }\n    })\n    filterOptionsRef.setValue('[]')\n  }\n}\n\ninit()\n",
+                "onChange": "const _this = this\nconst filterKey = 'masterTableColumn'\nasync function getList() {\n  try {\n    const data = await $api.post('/docpal/master/tables/record/page/nonPermission',{where:{key: 'case_status', }, name: 'basic', }).then(res => res.data.data)\n    return data.reduce((prev, item) => {\n      if(!item.name || !item.name || prev.find(p => p.value === item.name)) return prev \n      const resultItem = {\n        value: item.name,\n        label: item.name || '' ,\n        order_num: item.order_num\n      }\n      if(filterKey === 'user') resultItem.disabled = item.status === 'A' ? false : true \n      else if(filterKey === 'masterTableColumn') resultItem.disabled = !item.status\n      prev.push(resultItem) \n      return prev\n    }, []).sort((a,b)=> (a.order_num - b.order_num ))\n  } catch (e) { return [] }\n}\nasync function init() {\n  const refList = _this.refList\n  \n  const filterOptionsRef = _this.getWidgetRef('filterOptions')\n  if(value.includes('Case_Status')) {\n    const options = await getList()\n    Object.keys(refList).forEach(key => {\n      if(key.includes('filterValue@row')) {\n        const filterValueRef = refList[key]\n        filterValueRef.loadOptions(options)\n      }\n    })\n    filterOptionsRef.setValue(JSON.stringify(options))\n  } else {\n     Object.keys(refList).forEach(key => {\n      if(key.includes('filterValue@row')) {\n        const filterValueRef = refList[key]\n        filterValueRef.loadOptions([])\n      }\n    })\n    filterOptionsRef.setValue('[]')\n  }\n}\n\ninit()\n",
                 "changeSettings": [],
                 "onChangeSetting": true,
                 "onFocus": "",
@@ -421,76 +421,21 @@
                   "id": "asyncselect50846"
                 },
                 {
-                  "key": 114361,
-                  "type": "select",
-                  "icon": "select-field",
+                  "key": 20350,
+                  "type": "color",
+                  "icon": "color-field",
                   "formItemFlag": true,
                   "options": {
                     "name": "color",
                     "label": "Color",
                     "labelAlign": "",
-                    "defaultValue": "",
-                    "placeholder": "",
+                    "defaultValue": null,
                     "columnWidth": "200px",
                     "size": "",
                     "labelWidth": null,
                     "labelHidden": false,
                     "disabled": false,
                     "hidden": false,
-                    "clearable": true,
-                    "filterable": true,
-                    "allowCreate": false,
-                    "popperClass": "",
-                    "remote": false,
-                    "automaticDropdown": false,
-                    "multiple": false,
-                    "multipleLimit": 0,
-                    "optionItems": [
-                      {
-                        "value": "#c23531",
-                        "label": "Red"
-                      },
-                      {
-                        "value": "#2f4554",
-                        "label": "Dark Slate Gray"
-                      },
-                      {
-                        "value": "#61a0a8",
-                        "label": "Light Sea Green"
-                      },
-                      {
-                        "value": "#d48265",
-                        "label": "Sandy Brown"
-                      },
-                      {
-                        "value": "#91c7ae",
-                        "label": "Medium Aquamarine"
-                      },
-                      {
-                        "value": "#749f83",
-                        "label": "Medium Sea Green"
-                      },
-                      {
-                        "value": "#ca8622",
-                        "label": "Orange"
-                      },
-                      {
-                        "value": "#bda29a",
-                        "label": "Light Brown"
-                      },
-                      {
-                        "value": "#6e7074",
-                        "label": "Dim Gray"
-                      },
-                      {
-                        "value": "#546570",
-                        "label": "Dark Cyan"
-                      },
-                      {
-                        "value": "#c4ccd3",
-                        "label": "Light Gray"
-                      }
-                    ],
                     "required": false,
                     "requiredHint": "",
                     "validation": "",
@@ -499,50 +444,25 @@
                     "labelIconClass": null,
                     "labelIconPosition": "rear",
                     "labelTooltip": null,
-                    "onCreated": "",
-                    "onMounted": "",
-                    "onRemoteQuery": "",
-                    "onChange": "const _this = this\n\nconst displayColorRef = _this.getWidgetRef(`displayColor@row${rowId}`)\ndisplayColorRef.setValue(value)\n",
-                    "changeSettings": [],
-                    "onChangeSetting": true,
-                    "onFocus": "",
-                    "onBlur": "",
-                    "onValidate": ""
-                  },
-                  "id": "select12012"
-                },
-                {
-                  "key": 47939,
-                  "type": "color",
-                  "icon": "color-field",
-                  "formItemFlag": true,
-                  "options": {
-                    "name": "displayColor",
-                    "label": "",
-                    "labelAlign": "",
-                    "defaultValue": null,
-                    "columnWidth": "200px",
-                    "size": "",
-                    "labelWidth": null,
-                    "labelHidden": false,
-                    "disabled": true,
-                    "hidden": false,
-                    "required": false,
-                    "requiredHint": "",
-                    "validation": "",
-                    "validationHint": "",
-                    "customClass": [
-                      "color-picker"
+                    "predefineColors": [
+                      "#c23531",
+                      "#2f4554",
+                      "#61a0a8",
+                      "#d48265",
+                      "#91c7ae",
+                      "#749f83",
+                      "#ca8622",
+                      "#bda29a",
+                      "#6e7074",
+                      "#546570",
+                      "#c4ccd3"
                     ],
-                    "labelIconClass": null,
-                    "labelIconPosition": "rear",
-                    "labelTooltip": null,
                     "onCreated": "",
                     "onMounted": "",
                     "onChange": "",
                     "onValidate": ""
                   },
-                  "id": "color54849"
+                  "id": "color100113"
                 }
               ],
               "options": {
@@ -699,50 +619,16 @@
       "id": "divider19248"
     },
     {
-      "key": 86158,
-      "type": "select",
-      "icon": "select-field",
-      "formItemFlag": true,
+      "key": 88164,
+      "type": "slot",
+      "icon": "slot-field",
+      "formItemFlag": false,
       "options": {
-        "name": "displayColumns",
-        "label": "singleCase.displayColumns",
-        "labelAlign": "",
-        "defaultValue": [],
-        "placeholder": "",
-        "columnWidth": "200px",
-        "size": "",
-        "labelWidth": null,
-        "labelHidden": false,
-        "disabled": false,
-        "hidden": false,
-        "clearable": true,
-        "filterable": true,
-        "allowCreate": false,
-        "popperClass": "",
-        "remote": false,
-        "automaticDropdown": false,
-        "multiple": true,
-        "multipleLimit": 0,
-        "optionItems": [],
-        "required": true,
-        "requiredHint": "",
-        "validation": "",
-        "validationHint": "",
-        "customClass": "",
-        "labelIconClass": null,
-        "labelIconPosition": "rear",
-        "labelTooltip": null,
-        "onCreated": "",
-        "onMounted": "",
-        "onRemoteQuery": "",
-        "onChange": "",
-        "changeSettings": [],
-        "onChangeSetting": true,
-        "onFocus": "",
-        "onBlur": "",
-        "onValidate": ""
+        "name": "dialog_displayColumns",
+        "label": "dialog_displayColumns",
+        "hidden": false
       },
-      "id": "select55546"
+      "id": "slot93172"
     },
     {
       "key": 14801,

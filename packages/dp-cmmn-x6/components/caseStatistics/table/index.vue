@@ -2,6 +2,9 @@
 import { clientApi } from 'api'
 import { MoreFilled } from '@element-plus/icons-vue'
 import { ElMessage } from 'element-plus'
+import dayjs from 'dayjs'
+import '../../../../../packages/dp-dashboard/components/formSlot/displayColumn/vxeTableRender.ts'
+import { formSlotOrderDisplayColumns } from '../../../../../packages/dp-dashboard/components/formSlot/displayColumn/reorderColumn'
 const platform = useAppPlatform()
 const { setting, displayColumns, dates, sql } = defineProps<{
   setting: any
@@ -9,21 +12,20 @@ const { setting, displayColumns, dates, sql } = defineProps<{
   dates: any
   sql: string
 }>()
-
+const { setOriginalData, handleFilterData, setFilterParams, ResponsiveFilterRef, initFilter } = useStatsTableFilter(setting, sql)
 const CMDProvider = inject(CaseManagementDashboardKey)
 const caseId = CMDProvider?.instanceId?.value || null
 const { t } = useI18n()
 const emits = defineEmits(['close'])
 const tabProvider = inject(TabManagerKey)
-let extraParams: any = {}
+let inFilter = false
 const tableReady = ref(false)
 const { tableConfig, tableEvent, tableRef, query, reload, cleanSelectedRows } = useVxeTable({
   id: 'dashboardRelatedCaseTable',
-  refresh: false,
   virtualScroll: true,
   optionalConfig: {
     treeConfig: {
-      // expandAll: true,
+      expandAll: true,
       rowField: 'id',
       parentField: 'parent_id',
       transform: true,
@@ -31,19 +33,18 @@ const { tableConfig, tableEvent, tableRef, query, reload, cleanSelectedRows } = 
     }
   },
   api: async (params: any) => {
-    // if (platform.value === 'admin') {
-    //   return {
-    //     entryList: [],
-    //     totalSize: 0
-    //   }
-    // }
+    if (inFilter) {
+      const filteredData = handleFilterData()
+      const groupData = groupTree(filteredData)
+      return groupData
+    }
     const response = await clientApi.api.getPostgrestTable(`${setting.tableName}?${sql}`)
     const data = groupTree(response.data)
-    // setTimeout(() => {
-    //   tableRef.value.setAllTreeExpand(true)
-    // })
-    console.log('data', data)
-    console.log('extraParams', extraParams)
+    setOriginalData(data)
+    initFilter()
+    setTimeout(() => {
+      tableRef.value.setAllTreeExpand(true)
+    }, 100)
     return data
   },
   columns: [],
@@ -52,78 +53,52 @@ const { tableConfig, tableEvent, tableRef, query, reload, cleanSelectedRows } = 
     notiHandleView({ content: { caseInstanceId: row.case_id } }, tabProvider)
     emits('close')
   },
-  zoom: false,
-  saveColumnOrder: false
+  // zoom: false,
+  // saveColumnOrder: false
 })
 
 const dialogRef = ref()
 
 async function reorderColumn(fields: any) {
-  try {
-    const columns: any = []
-    if (fields.length > 0) {
-      const columneFromSetting = fields.reduce((prev: any, item: any) => {
-        const newItem: any = {
-          field: item.id,
-          title: item.name.includes('ID') ? item.name : item.name.toLowerCase().replace(/\b\w/g, (s: any) => s.toUpperCase()),
-          minWidth: 200
-        }
-        if (item.type === 'date') {
-          newItem.formatter = ({ cellValue }: any) => {
-            return formatDate(cellValue)
-          }
-        } else if (item.formatter) {
-          newItem.formatter = item.formatter
-        }
+  tableReady.value = false
+  const columns = await formSlotOrderDisplayColumns(fields, tabProvider, closeDialog)
 
-        if (setting.groupField === item.id) {
-          newItem.treeNode = true
-        }
-        prev.push(newItem)
-        return prev
-      }, [])
-      columns.splice(0, 0, ...columneFromSetting)
-    }
-    const index = columns.findIndex((item: any) => item.treeNode)
-    if (index !== -1) {
-      // tableConfig.treeConfig = {
-      //   // expandAll: true,
-      //   rowField: 'id',
-      //   parentField: 'parent_id',
-      //   transform: true,
-      //   indent: 20
-      // }
-      const removedElement = columns.splice(index, 1)[0]
-      columns.unshift(removedElement)
-    }
-    tableConfig.columns = columns
-  } catch (e) {
-    console.log('error', e)
+  if (!columns.find((item: any) => item.field === 'case_id')) {
+    columns.unshift({
+      field: 'case_id',
+      title: 'Case ID',
+      minWidth: 200
+    })
   }
+  if (setting.groupField && !columns.find((item: any) => item.field === setting.groupField)) {
+    columns.unshift({
+      field: setting.groupField,
+      title: setting.groupField,
+      minWidth: 200
+    })
+  }
+  if (setting.groupField) {
+    const groupColumn = columns.find((item: any) => item.field === setting.groupField)
+    if (groupColumn) {
+      groupColumn.treeNode = true
+    }
+    columns.splice(columns.indexOf(groupColumn), 1)
+    columns.unshift(groupColumn)
+  }
+  tableConfig.columns = [...columns]
+
   setTimeout(() => {
     tableReady.value = true
   }, 200)
+}
+function closeDialog() {
+  emits('close')
 }
 watch(
   () => setting?.displayColumns,
   (newVal) => {
     try {
-      const fields = JSON.parse(setting.fields)
-      const columns: any = newVal.reduce((prev: any, columnId: any) => {
-        const columnItem = {
-          id: columnId,
-          name: columnId
-        }
-        const field = fields.find((item: any) => item.value === columnId)
-        if (field) {
-          columnItem.id = field.value
-          columnItem.name = field.label
-          columnItem.type = field.type
-        }
-        prev.push(columnItem)
-        return prev
-      }, [])
-      reorderColumn(columns)
+      reorderColumn(newVal)
     } catch (error) {
       console.log('error', error)
     }
@@ -160,10 +135,14 @@ function groupTree(data: any[]) {
   return treeData
 }
 function handleFilterFormChange(form: any) {
-  console.log('form', form)
-  extraParams = form
+  inFilter = true
+  setFilterParams(form)
   reload()
+  setTimeout(() => {
+    inFilter = false
+  }, 100)
 }
+
 onMounted(() => {
   console.log('setting', setting)
 })
@@ -172,27 +151,27 @@ defineExpose({ reorderColumn, reload, query })
 
 <template>
   <VxeGrid v-if="tableReady" ref="tableRef" v-bind="tableConfig" v-on="tableEvent">
-    <!-- <template #toolbar_buttons>
+    <template #toolbar_buttons>
       <ResponsiveFilter ref="ResponsiveFilterRef" :inputPlaceHolder="$t('common_filter')" @form-change="handleFilterFormChange" inputKey="q" />
-    </template> -->
+    </template>
   </VxeGrid>
   <DashboardActionHumanTaskDialog ref="dialogRef" @refresh="reload()" />
 </template>
 
 <style lang="scss" scoped>
-.tableActions {
-  display: flex;
-  flex-flow: row nowrap;
-  justify-content: flex-start;
-  align-items: center;
-  width: 100%;
-  overflow: hidden;
-  gap: var(--app-space-s);
-  .responsive-container {
-    flex: 1 0 auto;
-    width: auto;
-  }
-}
+// .tableActions {
+//   display: flex;
+//   flex-flow: row nowrap;
+//   justify-content: flex-start;
+//   align-items: center;
+//   width: 100%;
+//   overflow: hidden;
+//   gap: var(--app-space-s);
+//   .responsive-container {
+//     flex: 1 0 auto;
+//     width: auto;
+//   }
+// }
 :deep(.el-input) {
   width: 200px;
 }

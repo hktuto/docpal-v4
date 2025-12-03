@@ -149,7 +149,9 @@ export const useVxeTable = (params: UseVxeTableParams) => {
             if (perference.value && perference.value.tableSettings && perference.value.tableSettings[id]) {
               return perference.value.tableSettings[id]
             }
-          } catch (error) {}
+          } catch (error) {
+            console.error('error', error)
+          }
         },
         updateStore({ id, storeData }) {
           // TODO : move useUserPreference to a composable to store and cache tabel config
@@ -160,7 +162,9 @@ export const useVxeTable = (params: UseVxeTableParams) => {
             perference.value.tableSettings[id] = storeData
             // save perference
             return clientApi.api.putUserSetting(perference.value)
-          } catch (error) {}
+          } catch (error) {
+            console.error('error', error)
+          }
         }
       },
       sortConfig: {

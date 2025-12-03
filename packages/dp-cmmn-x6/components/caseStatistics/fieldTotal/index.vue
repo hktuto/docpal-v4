@@ -88,6 +88,13 @@ const { cardRef, settingRef, resize, handleInitCard, loading } = useDashboardCar
         value: caseInstanceId
       })
     }
+    if(chartSetting.additionalFilterKey && chartSetting.additionalFilterValue){
+      sqlParams.push({
+        key: chartSetting.additionalFilterKey,
+        type: 'eq',
+        value: chartSetting.additionalFilterValue
+      })
+    }
     if (chartSetting.currentUserField) {
       sqlParams.push({
         key: chartSetting.currentUserField,
@@ -129,6 +136,13 @@ function handleDrillDown() {
       value: userId
     })
   }
+  if(props.setting.additionalFilterKey && props.setting.additionalFilterValue){
+    sqlParams.push({
+      key: props.setting.additionalFilterKey,
+      type: 'eq',
+      value: props.setting.additionalFilterValue
+    })
+  }
   if (props.setting.relatedField && caseInstanceId) {
     sqlParams.push({
       key: props.setting.relatedField,
@@ -166,15 +180,33 @@ defineExpose({ resize })
   justify-content: center;
   height: 100%;
   padding-bottom: 2rem;
+  --title-font-size: var(--app-font-size-l);
+  --total-font-size: var(--app-font-size-xl);
   .quantity-title {
-    font-size: var(--app-font-size-l);
+    font-size: var(--title-font-size);
     font-weight: bold;
   }
   .quantity-total {
     padding-top: var(--app-space-xs);
-    font-size: var(--app-font-size-xl);
+    font-size: var(--total-font-size);
     font-weight: bolder;
     color: var(--app-primary-color);
+  }
+  @container (max-width: 320px ) {
+    --title-font-size: var(--app-font-size-l);
+    --total-font-size: var(--app-font-size-xl);
+  }
+  @container (min-width: 320px) and (max-width: 640px) {
+    --title-font-size: calc(var(--app-font-size-l) * 1.5);
+    --total-font-size: calc(var(--app-font-size-xl) * 1.5);
+  }
+  @container (min-width: 640px) and (max-width: 1024px) {
+    --title-font-size: calc(var(--app-font-size-l) * 2);
+    --total-font-size: calc(var(--app-font-size-xl) * 2);
+  }
+  @container (min-width: 1024px){
+    --title-font-size: calc(var(--app-font-size-l) * 2.5);
+    --total-font-size: calc(var(--app-font-size-xl) * 2.5);
   }
 }
 </style>

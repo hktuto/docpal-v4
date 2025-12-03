@@ -219,10 +219,34 @@ async function handleSave() {
   }
 }
 
-const signSubmitStage = ref<'beforeSubmit' | 'afterSubmit' >('beforeSubmit')
+const signSubmitStage = ref<'beforeSubmit' | 'afterSubmit'>('beforeSubmit')
 const signatureSettingDialogRef = ref<any>(null)
 function openSignatureSettingDialog() {
   signatureSettingDialogRef.value.open()
+}
+
+async function handleCancel() {
+  
+  let data = await vFormRef.value.getFormData(false, false)
+  data[signatureDetail.value.workflowKeyToStoreSignature] = null
+  const allFormData = {
+    ...formDataValue.value,
+    ...data
+  }
+  const templateVariables = convertWorkflowVariableToTemplateVariable(allFormData, signatureDetail.value.workflowToTemplateMapping)
+  
+  // check if current step need to sign
+  if(signatureDetail.value.signatureVariableSetting) {
+      templateVariables[signatureDetail.value.signatureVariableSetting.id] = signatureDetail.value.templateVariables[signatureDetail.value.signatureVariableSetting.id]
+    }
+  const newVariables = generateData(templateVariables, JSON.parse(JSON.stringify(signatureDetail.value.templateDetail)))
+  const content = signatureDetail.value.templateDetail.json.content.content
+  signatureDetail.value.templateDetail.json.content.content = replaceVariables(content, newVariables.variables)
+  temSignatureData.value = null
+  signSubmitStage.value = 'beforeSubmit'
+}
+function handleResign() {
+  openSignatureSettingDialog()
 }
 async function handleSubmit() {
   // if displayMode is signature, and signSubmitStage is beforeSubmit, do not submit form, open signature setting dialog
@@ -314,7 +338,7 @@ async function handleApplySignature(newSignature: any) {
 }
 
 async function handleAdditionalSetting(xml: any, taskDetail: any, formData: any) {
-  const { buttons, components, signatureSetting, buttonSetting } = await getBpmnAddtionalElement(xml, state.taskDetail.taskDefinitionKey, taskDetail, formData)
+  const { buttons, components, signatureSetting, buttonSetting } = await getBpmnAdditionalElement(xml, state.taskDetail.taskDefinitionKey, taskDetail, formData)
   additionalButton.value = buttons
   if(buttonSetting) {
     pageButtonSetting.value = buttonSetting
@@ -338,10 +362,20 @@ async function handleFormChange() {
   if(displayMode.value === 'signature') {
     // get new form data and update signature preview
     let data = await vFormRef.value.getFormData(true, false)
-    const templateVariables = convertWorkflowVariableToTemplateVariable(data, signatureDetail.value.workflowToTemplateMapping)
+    const allFormData = {
+      ...formDataValue.value,
+      ...data
+    }
+    
+    const templateVariables = convertWorkflowVariableToTemplateVariable(allFormData, signatureDetail.value.workflowToTemplateMapping)
+    // check if current step need to sign
+    if(signatureDetail.value.signatureVariableSetting) {
+      templateVariables[signatureDetail.value.signatureVariableSetting.id] = signatureDetail.value.templateVariables[signatureDetail.value.signatureVariableSetting.id]
+    }
     const newVariables = generateData(templateVariables, JSON.parse(JSON.stringify(signatureDetail.value.templateDetail)))
     const content = signatureDetail.value.templateDetail.json.content.content
     signatureDetail.value.templateDetail.json.content.content = replaceVariables(content, newVariables.variables)
+    console.log("signatureDetail.value", signatureDetail.value)
   }
 }
 
@@ -439,6 +473,7 @@ onMounted(() => {
         <el-tab-pane class="workflow-detail-pane" :label="$t('workflow_form')" name="form" v-loading="state.loading">
             <div 
               ref="workflowFormContainerRef"
+              v-show="displayMode !== 'signature' || signSubmitStage !== 'afterSubmit'"
             :class="
               { workflowFormContainer:true, 
                 [displayMode]:true, 
@@ -472,7 +507,8 @@ onMounted(() => {
                           {{ $t('workflow_save') }}
                         </template>
                       </el-button>
-                      <el-button v-if="!pageButtonSetting || pageButtonSetting.showSumBitButton" id="Workflow__AvailableTask__Detail__Form__Submit" type="primary" :disabled="workflowType === 'completeTask'" @click="handleSubmit">
+                      
+                      <el-button v-if="(!pageButtonSetting || pageButtonSetting.showSumBitButton) && (displayMode !== 'signature' || signSubmitStage === 'beforeSubmit')" id="Workflow__AvailableTask__Detail__Form__Submit" type="primary" :disabled="workflowType === 'completeTask'" @click="handleSubmit">
                         <template v-if="pageButtonSetting && pageButtonSetting.submitButtonLabel">
                           {{ pageButtonSetting.submitButtonLabel }}
                         </template>
@@ -480,6 +516,7 @@ onMounted(() => {
                           {{ $t('common_submit') }}
                         </template>
                       </el-button>
+                      
                     </div>
                   </template>
                 </WorkflowDetailFormRender>
@@ -490,6 +527,17 @@ onMounted(() => {
                 <!-- {{ signatureDetail.templateDetail }} -->
                 <DocTemplateViewer ref="templateViewerRef" v-if="!state.isEdit && signatureDetail" :options="signatureDetail.templateDetail.json.options"
                                 :json="signatureDetail.templateDetail.json.content" />
+              </div>
+              <div v-if="signSubmitStage === 'afterSubmit'" class="floatingButtonContainer glass">
+                <el-button  id="Workflow__AvailableTask__Detail__Form__Cancel" :disabled="workflowType === 'completeTask'" @click="handleCancel">
+                  {{ $t('cancelText') }}
+                </el-button>
+                <el-button  id="Workflow__AvailableTask__Detail__Form__Confirm" type="primary" :disabled="workflowType === 'completeTask'" @click="handleResign">
+                  {{ $t('workflow_resign') }}
+                </el-button>
+                <el-button  id="Workflow__AvailableTask__Detail__Form__Confirm" type="primary" :disabled="workflowType === 'completeTask'" @click="handleSubmit">
+                  {{ $t('common_submit') }}
+                </el-button>
               </div>
               <WorkflowSignatureDialog 
                 ref="signatureSettingDialogRef" 
@@ -525,6 +573,18 @@ onMounted(() => {
   </div>
 </template>
 <style lang="scss" scoped>
+.floatingButtonContainer{
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: var(--app-space-s);
+  z-index: 99;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: center;
+  gap: var(--app-space-xs);
+  padding: var(--app-space-s);
+}
 .pageContainer--padding.workflow-detail {
   display: grid;
   grid-template-columns: 1fr min-content;

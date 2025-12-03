@@ -123,6 +123,11 @@ function confirmApplySignature() {
 }
 
 
+function toTitleCase(str: string) {
+  return str.charAt(0).toUpperCase() + str.slice(1)
+}
+
+
 const canDrawNewSignature = computed(() => {
   return props.signatureSetting.signatureVariableSetting.value.type === 'personal' || props.signatureSetting.signatureVariableSetting.value.type === 'both'
 })
@@ -138,7 +143,7 @@ defineExpose({
     <div class="signatureContainer">
       <div class="signatureItem" v-for="signature in signaturePreview" :key="signature">
         <div class="signatureType">
-          {{ signature.type }}
+          {{ toTitleCase(signature.type) }}
         </div>
         <div class="signatureImageContainer">
           <template v-if="signature.img" >
