@@ -5,10 +5,15 @@ const props = defineProps<{
   userRoleList: any[]
 }>()
 
+type userRoleItem = {
+  oldId: string,
+  newId: string
+}
+
+const userRoleList = ref<userRoleItem[]>([])
+
 async function handleCreateUserRole() {
   const roleList: any = Object.values(props.userRoleList)
-  let status = true
-  const noAdditionsList: any[] = []
 
   for (const role of roleList) {
     const params = {
@@ -18,12 +23,15 @@ async function handleCreateUserRole() {
     }
     try {
       const newVar = await adminApi.api.postAclRole(params).then(r => r.data)
+      userRoleList.value.push({
+        oldId: role.id,
+        newId: newVar.id
+      })
     } catch (e) {
-      status = false
-      noAdditionsList.push({ name: role.name, newId: newVar.id })
+      throw new Error('Create UserRole Error')
     }
   }
-  return { status: status, data: noAdditionsList }
+  return userRoleList.value
 }
 
 defineExpose({ handleCreateUserRole })

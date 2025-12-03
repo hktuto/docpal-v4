@@ -75,9 +75,9 @@ function handleCancel() {
 
 async function handleSubmit() {
   try {
-    // const userGroupResult = await userGroupRef.value.handleCreateUserGroup()
+    const userGroupResult = await userGroupRef.value.handleCreateUserGroup()
 
-    // const userRoleResult = await userRoleRef.value.handleCreateUserRole()
+    const userRoleResult = await userRoleRef.value.handleCreateUserRole()
 
     const idGeneratorResult = await idGeneratorRef.value.handleCreateIdGenerator()
 
@@ -92,7 +92,7 @@ async function handleSubmit() {
     //   return
     // }
 
-    // const masterTableResult = await masterTableRef.value.handleCreateMasterTable()
+    const masterTableResult = await masterTableRef.value.handleCreateMasterTable()
 
     const caseResult: any = await caseRef.value.handleCreateCase()
 
