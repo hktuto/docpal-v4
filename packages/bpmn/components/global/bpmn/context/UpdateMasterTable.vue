@@ -73,6 +73,12 @@ async function refreshData() {
   if (data.data.extensionElements['flowable:mastertableRecord']) {
     form.value = data.data.extensionElements['flowable:mastertableRecord']
   }
+
+  const find = allMasterTables.value.find((item: any) => item.id == form.value.attr_masterTableId)
+  if (!find) {
+    return
+  }
+
   if (form.value.attr_masterTableId) {
     const { data } = await adminApi.api.getMasterTablesId(form.value.attr_masterTableId)
     allColumnInMasterTable.value = data.fields
@@ -162,7 +168,8 @@ async function importFields() {
     }
   })
 
-  refreshData()
+  await refreshData()
+
   function getType(type: string) {
     switch (type) {
       case 'timestamp':
@@ -183,7 +190,7 @@ async function importFields() {
 onMounted(async () => {
   await getMasterTableList()
   setUpListener()
-  refreshData()
+  await refreshData()
 })
 </script>
 
