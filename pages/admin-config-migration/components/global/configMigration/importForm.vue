@@ -4,13 +4,16 @@ import { MenuRouterKey } from '#imports'
 
 const { t } = useI18n()
 const routerProvider = inject(MenuRouterKey)
-const upload = ref()
+const uploadRef = ref()
 const mode = ref<'upload' | 'confirm'>('upload')
 const fileList = ref<any[]>([])
 const jsonData = ref<any>()
 
 function handleExceed(files: any[]) {
-  fileList.value[0] = files[0]
+  uploadRef.value!.clearFiles()
+  const file = files[0]
+  file.uid = Date.now()
+  uploadRef.value!.handleStart(file)
 }
 
 function handleChange(uploadFile: any, uploadFiles: any[]) {
@@ -64,78 +67,46 @@ const masterTableRef = ref()
 const workflowRef = ref()
 const caseRef = ref()
 const homePageRef = ref()
-type ReplaceListItem = {
-  oldKey: string,
-  newKey: string,
+
+function handleCancel() {
+  fileList.value = []
+  mode.value = 'upload'
 }
 
 async function handleSubmit() {
-  const replaceList: ReplaceListItem[] = []
+  try {
+    const userGroupResult = await userGroupRef.value.handleCreateUserGroup()
 
-  // TODO: 不需要打開
-  // const userGroupResult = await userGroupRef.value.handleCreateUserGroup()
-  // if (!userGroupResult.status) {
-  //   routerProvider?.message.error(userGroupResult.data)
-  //   return
-  // }
+    const userRoleResult = await userRoleRef.value.handleCreateUserRole()
 
-  // TODO: 不需要打開
-  // const userRoleResult = await userRoleRef.value.handleCreateUserRole()
-  // if (!userRoleResult.status) {
-  //   routerProvider?.message.error(userRoleResult.data)
-  //   return
-  // }
+    const idGeneratorResult = await idGeneratorRef.value.handleCreateIdGenerator()
 
-  // TODO: 不需要打開
-  // const idGeneratorResult = await idGeneratorRef.value.handleCreateIdGenerator()
-  // if (!idGeneratorResult.status) {
-  //   routerProvider?.message.error(idGeneratorResult.data)
-  //   return
-  // }
+    const documentTemplateResult = await documentTemplateRef.value.handleCreateDocumentTemplate()
 
-  // const emailTemplateResult = await emailTemplateRef.value.handleCreateEmailTemplate()
-  // if (!emailTemplateResult.status) {
-  // routerProvider?.message.error(emailTemplateResult.data)
-  // return
-  // }
+    const emailTemplateResult = await emailTemplateRef.value.handleCreateEmailTemplate()
 
-  // TODO: 不需要打開
-  // const documentTemplateResult = await documentTemplateRef.value.handleCreateDocumentTemplate()
-  // if (!documentTemplateResult.status) {
-  //   routerProvider?.message.error(documentTemplateResult.data)
-  //   return
-  // }
+    // TODO: 不需要打開
+    // const folderCabinetResult = await folderCabinetRef.value.handleCreateFolderCabinet()
+    // if (!folderCabinetResult.status) {
+    //   routerProvider?.message.error(folderCabinetResult.data)
+    //   return
+    // }
 
-  // const homePageResult = await homePageRef.value.handleCreateHomePage()
-  // if (!homePageResult.status) {
-  //   routerProvider?.message.error(homePageResult.data)
-  //   return
-  // }
+    const masterTableResult = await masterTableRef.value.handleCreateMasterTable()
 
-  // TODO: 不需要打開
-  // const folderCabinetResult = await folderCabinetRef.value.handleCreateFolderCabinet()
-  // if (!folderCabinetResult.status) {
-  //   routerProvider?.message.error(folderCabinetResult.data)
-  //   return
-  // }
+    const caseResult: any = await caseRef.value.handleCreateCase()
 
-  // TODO: 不需要打開
-  // const masterTableResult = await masterTableRef.value.handleCreateMasterTable()
-  // if (!masterTableResult.status) {
-  //   routerProvider?.message.error(masterTableResult.data)
-  //   return
-  // }
+    const workflowResult = await workflowRef.value.handleCreateWorkflow(caseResult, documentTemplateResult,
+      emailTemplateResult, idGeneratorResult)
 
-  // const caseResult = await caseRef.value.handleCreateCase()
+    await caseRef.value.updateDesign(caseResult, workflowResult)
 
+    // await homePageRef.value.handleCreateHomePage()
 
-  // step 1 : get all form in case
-  // TODO : replace all form and xml
-  // convert all form json to string
-  for (let item in replaceList) {
-    // replace xml
-    // xml = xml.repalceALL(item.oldKey, item.newKey)
+  } catch (e) {
+    console.log(e)
   }
+
   // mode.value = 'upload'
   fileList.value = []
 }
@@ -147,7 +118,7 @@ async function handleSubmit() {
     <h3>import data</h3>
     <div style="width: 400px">
       <el-upload
-        ref="upload"
+        ref="uploadRef"
         class="upload-demo"
         action="#"
         v-model:file-list="fileList"
@@ -235,11 +206,10 @@ async function handleSubmit() {
         <el-divider />
       </div>
 
-      <el-button @click="mode = 'upload'">{{ $t('dpButtom_cancel') }}</el-button>
+      <el-button @click="handleCancel">{{ $t('dpButtom_cancel') }}</el-button>
       <el-button type="primary" @click="handleSubmit">{{ $t('submit') }}</el-button>
     </div>
   </template>
-
 </template>
 
 <style lang="scss" scoped>
