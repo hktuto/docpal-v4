@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { ElMessageBox } from 'element-plus'
 import { adminApi } from 'api'
 
 const props = defineProps<{
@@ -17,6 +16,7 @@ type masterTableItem = {
 }
 
 const masterTableList = ref<masterTableItem[]>([])
+
 async function handleCreateMasterTable() {
 
   for (const item of Object.values(props.masterTableList)) {
@@ -73,6 +73,8 @@ async function handleCreateMasterTable() {
       fields: createFields
     })
   }
+
+  return masterTableList.value
 }
 
 defineExpose({
