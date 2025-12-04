@@ -248,8 +248,7 @@ onMounted(async () => {
     </el-form-item>
 
     <el-form-item :label="form.category === 'case' ? 'Case Record ID' : 'Master Table Record ID'" required>
-      <el-select v-model="form.id" clearable filterable :placeholder="t('common_selectedIsRequiredMsg')"
-                 @change="updateData">
+      <el-select v-model="form.id" filterable :placeholder="t('common_selectedIsRequiredMsg')" @change="updateData">
         <el-option v-for="item in allFields" :key="item.id" :label="item.name" :value="item.id" />
       </el-select>
     </el-form-item>
