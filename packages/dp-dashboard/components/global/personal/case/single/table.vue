@@ -2,9 +2,6 @@
 import { clientApi } from 'api'
 import { MoreFilled } from '@element-plus/icons-vue'
 import { ElMessage } from 'element-plus'
-import { formSlotOrderDisplayColumns } from '../../../../../components/formSlot/displayColumn/reorderColumn'
-
-const tabProvider = inject(TabManagerKey)
 const platform = useAppPlatform()
 const { id, name, detail } = defineProps<{
   id: string
@@ -94,9 +91,26 @@ async function handleTask(actionItem: any, row?: any) {
     routerProvider?.navigateTo(routerItem)
   }
 }
-async function reorderColumn(displayColumns: any) {
+async function reorderColumn(fields: any) {
   try {
     const columns = [
+      // { field: "case_id", title: "caseManagement.id", width: 200 },
+      // {
+      //   field: "created_date",
+      //   title: "workflow_createDate",
+      //   width: 200,
+      //   formatter({ cellValue }: any) {
+      //     return formatDate(cellValue)
+      //   },
+      // },
+      // {
+      //   field: "modified_date",
+      //   title: "table_modifiedDate",
+      //   width: 200,
+      //   formatter({ cellValue }: any) {
+      //     return formatDate(cellValue)
+      //   },
+      // },
       {
         title: 'dpTable_actions',
         width: 80,
@@ -106,8 +120,31 @@ async function reorderColumn(displayColumns: any) {
         }
       }
     ]
-    const _columns = await formSlotOrderDisplayColumns(displayColumns, tabProvider)
-    tableConfig.columns = [..._columns, ...columns]
+    if (fields.length > 0) {
+      // keep field order
+      const columneFromSetting = fields.reduce((prev: any, item: any) => {
+        // change name to title case
+        const newItem: any = {
+          field: item.id,
+          title: item.id === 'case_id' ? 'Case ID' : item.name.toLowerCase().replace(/\b\w/g, (s) => s.toUpperCase()),
+          minWidth: 200
+        }
+        if (item.formatter) {
+          newItem.formatter = item.formatter
+        }
+        prev.push(newItem)
+        return prev
+      }, [])
+      columns.splice(0, 0, ...columneFromSetting)
+    }
+    // fields.forEach((row: any) => {
+    //   columns.splice(1, 0, { field: row.id, title: row.name, width: 200 });
+    // });
+    // const actionColumn = tableConfig.columns.find(
+    //   (item) => item.title === "dpTable_actions"
+    // );
+    // if (!!actionColumn) columns.push(actionColumn);
+    tableConfig.columns = columns
   } catch (e) {
     console.log('error', e)
   }
@@ -156,7 +193,7 @@ defineExpose({ reorderColumn, reload, query })
               {{ item.name }}
             </el-dropdown-item>
           </el-dropdown-menu>
-          <div v-else>{{ $t('noData') }}</div>
+          <div v-else>{{$t('noData')}}</div>
         </template>
       </el-dropdown>
     </template>
@@ -178,7 +215,7 @@ defineExpose({ reorderColumn, reload, query })
     width: auto;
   }
 }
-:deep(.el-input) {
+:deep(.el-input ){
   width: 200px;
 }
 </style>
