@@ -77,7 +77,7 @@ async function handleSubmit() {
   try {
     const userGroupResult = await userGroupRef.value.handleCreateUserGroup()
 
-    const userRoleResult = await userRoleRef.value.handleCreateUserRole()
+    // const userRoleResult = await userRoleRef.value.handleCreateUserRole()
 
     const idGeneratorResult = await idGeneratorRef.value.handleCreateIdGenerator()
 
@@ -87,21 +87,19 @@ async function handleSubmit() {
 
     // TODO: 不需要打開
     // const folderCabinetResult = await folderCabinetRef.value.handleCreateFolderCabinet()
-    // if (!folderCabinetResult.status) {
-    //   routerProvider?.message.error(folderCabinetResult.data)
-    //   return
-    // }
 
     const masterTableResult = await masterTableRef.value.handleCreateMasterTable()
 
     const caseResult: any = await caseRef.value.handleCreateCase()
 
-    const workflowResult = await workflowRef.value.handleCreateWorkflow(caseResult, documentTemplateResult,
+    const workflowResult = await workflowRef.value.handleCreateWorkflow(caseResult, masterTableResult, documentTemplateResult,
       emailTemplateResult, idGeneratorResult)
 
-    await caseRef.value.updateDesign(caseResult, workflowResult)
+    if (caseResult.length > 0) {
+      await caseRef.value.updateDesign(caseResult, workflowResult, masterTableResult)
+    }
 
-    // await homePageRef.value.handleCreateHomePage()
+    await homePageRef.value.handleCreateHomePage()
 
   } catch (e) {
     console.log(e)
