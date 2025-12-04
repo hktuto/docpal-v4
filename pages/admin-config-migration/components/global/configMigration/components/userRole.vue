@@ -13,9 +13,7 @@ type userRoleItem = {
 const userRoleList = ref<userRoleItem[]>([])
 
 async function handleCreateUserRole() {
-  const roleList: any = Object.values(props.userRoleList)
-
-  for (const role of roleList) {
+  for (const role of Object.values(props.userRoleList)) {
     const params = {
       name: role.name,
       status: role.status,
@@ -34,7 +32,9 @@ async function handleCreateUserRole() {
   return userRoleList.value
 }
 
-defineExpose({ handleCreateUserRole })
+defineExpose({
+  handleCreateUserRole
+})
 </script>
 
 <template>
