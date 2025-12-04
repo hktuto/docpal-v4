@@ -63,6 +63,7 @@ export async function formSlotOrderDisplayColumns(fields: any, tabProvider: any,
 
 export function formSlotHandleDisplayMethod({ displayMethod, prefix, suffix }: any, value: any) {
   try {
+    if(!value) return '--'
     if (!prefix) prefix = ''
     if (!suffix) suffix = ''
     if (['FinancialComputing', 'count'].includes(displayMethod)) {

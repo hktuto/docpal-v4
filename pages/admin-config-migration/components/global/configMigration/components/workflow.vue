@@ -18,7 +18,7 @@ type workflowItem = {
 
 const workflowList = ref<workflowItem[]>([])
 
-async function handleCreateWorkflow(caseResult: any, documentTemplateResult: any, emailTemplateResult: any, idGeneratorResult: any) {
+async function handleCreateWorkflow(caseResult: any, masterTableResult: any, documentTemplateResult: any, emailTemplateResult: any, idGeneratorResult: any) {
   console.log('workflowList', props.workflowList)
 
   for (const item of Object.values(props.workflowList)) {
@@ -29,6 +29,12 @@ async function handleCreateWorkflow(caseResult: any, documentTemplateResult: any
     if (caseResult.length > 0) {
       caseResult.forEach((caseItem: any) => {
         bpmnFile = bpmnFile.replaceAll(caseItem.oldCaseTypeId, caseItem.caseTypeId)
+      })
+    }
+
+    if (masterTableResult.length > 0) {
+      masterTableResult.forEach((masterTableItem: any) => {
+        bpmnFile = bpmnFile.replaceAll(masterTableItem.oldId, masterTableItem.newId)
       })
     }
 
@@ -89,7 +95,7 @@ async function handleCreateWorkflow(caseResult: any, documentTemplateResult: any
     workflowList.value.push({
       oldId: item.id,
       newId: data.id,
-      oldKey: data.key,
+      oldKey: item.key,
       newKey: nameToId
     })
   }
