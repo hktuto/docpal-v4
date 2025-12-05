@@ -83,11 +83,12 @@ async function handleCreateCase() {
   return designList.value
 }
 
-async function updateDesign(caseResult: any, workflowResult: any) {
+async function updateDesign(caseResult: any, workflowResult: any, masterTableResult: any) {
   for (const design of caseResult) {
     if (workflowResult.length > 0) {
       workflowResult.forEach((workflowItem: any) => {
         design.xml = design.xml.replaceAll(workflowItem.oldKey, workflowItem.newKey)
+        design.styleJson = design.styleJson.replaceAll(workflowItem.oldKey, workflowItem.newKey)
       })
     }
 
@@ -105,7 +106,16 @@ async function updateDesign(caseResult: any, workflowResult: any) {
 
     // update Dashboard
     for (const dashboardItem of design.dashboard) {
-      // styleJSON 需要進行數據替換
+
+      caseResult.forEach((caseItem: any) => {
+        dashboardItem.styleJson = dashboardItem.styleJson.replaceAll(caseItem.oldCaseTypeId, caseItem.caseTypeId)
+      })
+
+      if (masterTableResult.length > 0) {
+        masterTableResult.forEach((masterTableItem: any) => {
+          dashboardItem.styleJson = dashboardItem.styleJson.replaceAll(masterTableItem.oldId, masterTableItem.newId)
+        })
+      }
 
       const form = {
         caseTypeId: design.caseTypeId,
