@@ -58,7 +58,7 @@ async function handleCreateWorkflow(caseResult: any, masterTableResult: any, doc
 
     const blob = new Blob([bpmnFile], { type: 'text/xml;charset=utf-8' })
     const form: any = new FormData()
-    form.append('name', item.name + Date.now())
+    form.append('name', item.name)
     form.append('attr_id', nameToId)
     form.append('versionId', 'V1')
     form.append('jsonValue', JSON.stringify(item.styleJson.data))
