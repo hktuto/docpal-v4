@@ -27,6 +27,7 @@ export type BrowseActionItem = {
   component: any
   groupBy: string
   hideAfterClick?: boolean
+  showInTrash?: boolean
   additionalCheck?: (docDetail: any) => boolean
 }
 export type ShareActionItem = {
@@ -159,10 +160,15 @@ export const actions: BrowseActionItem[] = [
 ]
 export const shareActions: ShareActionItem[] = []
 
-export const ActionsFilter = (actions: BrowseActionItem[], docDetail: any, booleanKey: 'showInFolder' | 'showInDetail' | 'showInShare') => {
+export const ActionsFilter = (actions: BrowseActionItem[], docDetail: any, booleanKey: 'showInFolder' | 'showInDetail' | 'showInShare', isTrash: boolean = false) => {
   console.log('actions', actions)
   console.log('docDetail', docDetail)
   console.log('booleanKey', booleanKey)
+  if(isTrash){
+    return actions.filter((item) => {
+      return item.showInTrash
+    })
+  }
   return actions
     .filter((item) => {
       if (!item.needFeature || item.needFeature.length === 0) return true
