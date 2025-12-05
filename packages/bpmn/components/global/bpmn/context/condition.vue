@@ -255,7 +255,8 @@ provide(CONDITION_PROVIDER,{
     align-items: center;
     gap: var(--app-space-xs);
     cursor: pointer;
-    font-size: var(--app-font-size-s);
+    font-size: var(--app-font-size-m);
+    margin-block: var(--app-space-xs);
     &:hover {
         color: var(--app-main-color);
     }
